@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">where-android</string>
+    <string name="logo_desc">앱 로고</string>
+    <string name="back_button_desc">뒤로가기</string>
+    <string name="character_desc">캐릭터 이미지</string>
+    <string name="skip_button_text">건너뛰기</string>
 </resources>
