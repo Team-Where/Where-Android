@@ -13,6 +13,7 @@
         android:theme="@style/Theme.Whereandroid"
         tools:targetApi="31">
 
+        <!-- SplashActivity (앱의 진입점 설정) -->
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -23,8 +24,15 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".MainActivity"
+        <!-- MainActivity -->
+        <activity android:name=".MainActivity" />
+
+        <activity android:name=".OnboardingActivity"
             android:exported="true" />
+
+        <activity android:name=".MainLoginActivity" />
+        <activity android:name=".LoginPage1Activity" />
+
     </application>
+
 </manifest>

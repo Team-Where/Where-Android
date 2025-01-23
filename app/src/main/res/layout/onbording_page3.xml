@@ -47,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/start_button"
+        app:layout_constraintBottom_toTopOf="@id/btnStart"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="200dp">
@@ -71,7 +71,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/start_button"
+        android:id="@+id/btnStart"
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:text="시작"
