@@ -14,4 +14,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "where-android"
-include ':app'
+include(":app")
