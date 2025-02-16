@@ -6,5 +6,6 @@ package com.sooum.domain.model
 data class User(
     val id: Long,
     val name: String,
-    val profileImage: String = ""
+    val profileImage: String = "",
+    val isFavorite :Boolean = false
 )
