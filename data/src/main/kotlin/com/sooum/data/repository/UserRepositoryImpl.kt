@@ -29,7 +29,7 @@ class UserRepositoryImpl(
                 User(4, "G_tester3", "", false),
                 User(5, "Q_tester3", "", true),
                 User(6, "U_tester3", "", false),
-                User(6, "K_tester3", "", true),
+                User(7, "K_tester3", "", true),
             )
             val sortedData = dummyData.sortedBy {
                 it.name
