@@ -1,4 +1,4 @@
-package com.sooum.where_android
+package com.sooum.where_android.view.onboarding
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.sooum.where_android
+package com.sooum.where_android.view.onboarding
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -6,7 +6,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class ViewPagerAdapter(
     private val fragmentActivity: FragmentActivity,
-    private val fragments : List<Fragment> = listOf(OnBoardingFirstFragment(),OnBoardingSecondFragment(),OnBoardingThirdFragment())
+    private val fragments : List<Fragment> = listOf(
+        OnBoardingFirstFragment(),
+        OnBoardingSecondFragment(),
+        OnBoardingThirdFragment()
+    )
 ) : FragmentStateAdapter(fragmentActivity)  {
     private val itemCount = Int.MAX_VALUE
 

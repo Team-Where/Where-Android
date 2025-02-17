@@ -1,4 +1,4 @@
-package com.sooum.where_android
+package com.sooum.where_android.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

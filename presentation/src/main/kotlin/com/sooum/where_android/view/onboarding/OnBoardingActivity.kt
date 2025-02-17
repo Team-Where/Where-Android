@@ -1,8 +1,9 @@
-package com.sooum.where_android
+package com.sooum.where_android.view.onboarding
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager2.widget.ViewPager2
+import com.sooum.where_android.view.MainActivity
 import com.sooum.where_android.databinding.ActivityOnBoardingBinding
 
 class OnBoardingActivity : AppCompatActivity(){
@@ -13,9 +14,11 @@ class OnBoardingActivity : AppCompatActivity(){
         binding = ActivityOnBoardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val viewPager: ViewPager2 = binding.container
-        viewPager.adapter = ViewPagerAdapter(this)
+        binding.container.adapter = ViewPagerAdapter(this)
 
-
+        binding.nextBtn.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
