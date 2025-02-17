@@ -92,7 +92,7 @@ sealed class UserViewType {
 fun UserItemView(
     user: User,
     type: UserViewType,
-    clickAction: (() -> Unit)? = null,
+    iconClickAction: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -129,7 +129,7 @@ fun UserItemView(
                 is UserViewType.Favorite -> {
                     IconButton(
                         onClick = {
-                            clickAction?.invoke()
+                            iconClickAction?.invoke()
                         }
                     ) {
                         Icon(
@@ -143,7 +143,7 @@ fun UserItemView(
                 is UserViewType.Delete -> {
                     IconButton(
                         onClick = {
-                            clickAction?.invoke()
+                            iconClickAction?.invoke()
                         }
                     ) {
                         Icon(
@@ -162,7 +162,7 @@ fun UserItemView(
                     if (type.alreadyAdd) {
                         Button(
                             onClick = {
-                                clickAction?.invoke()
+                                iconClickAction?.invoke()
                             },
                             modifier = buttonModifier,
                             enabled = false,
@@ -198,7 +198,7 @@ fun UserItemView(
                     } else {
                         Button(
                             onClick = {
-                                clickAction?.invoke()
+                                iconClickAction?.invoke()
                             },
                             modifier = buttonModifier,
                             contentPadding = PaddingValues(
@@ -225,7 +225,7 @@ fun UserItemView(
                 is UserViewType.Option -> {
                     IconButton(
                         onClick = {
-                            clickAction?.invoke()
+                            iconClickAction?.invoke()
                         }
                     ) {
                         Icon(
@@ -259,7 +259,7 @@ fun UserItemPreview() {
             UserItemView(
                 user = user,
                 type = type,
-                clickAction = {
+                iconClickAction = {
                     println("Click $type")
                 },
                 modifier = Modifier

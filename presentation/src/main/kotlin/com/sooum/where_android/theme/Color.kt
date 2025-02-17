@@ -20,4 +20,7 @@ val GrayScale600 = Color(0xff868E96)
 val GrayScale700 = Color(0xff495057)
 
 
+val Red500 = Color(0xffef4444)
+
+
 val Primary600 = Color(0xff4f46E5)

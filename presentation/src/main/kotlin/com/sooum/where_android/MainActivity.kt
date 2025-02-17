@@ -4,8 +4,12 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
 import com.sooum.data.repository.UserRepositoryImpl
 import com.sooum.domain.repository.UserRepository
 import com.sooum.where_android.databinding.ActivityMainBinding
@@ -27,10 +31,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-        binding.composeView.setContent {
-            val userData by userViewModel.userList.collectAsState()
-            Column {
-                UserListView(userData)
+        with(binding.composeView) {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool)
+            setContent {
+                val userData by userViewModel.userList.collectAsState()
+                Column(
+                    modifier = Modifier.padding(
+                        horizontal = 10.dp,
+                        vertical = 6.dp
+                    )
+                ) {
+                    UserListView(userData)
+                }
             }
         }
 
