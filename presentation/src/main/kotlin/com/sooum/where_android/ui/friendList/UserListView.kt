@@ -1,4 +1,4 @@
-package com.sooum.where_android.ui.main
+package com.sooum.where_android.ui.friendList
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,9 +13,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SearchBar
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -38,7 +37,9 @@ import androidx.compose.ui.unit.sp
 import com.sooum.domain.model.User
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray100
+import com.sooum.where_android.theme.Gray400
 import com.sooum.where_android.theme.Gray500
+import com.sooum.where_android.theme.Gray700
 import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.GrayScale600
 import com.sooum.where_android.theme.GrayScale700
@@ -47,11 +48,23 @@ import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.widget.UserItemView
 import com.sooum.where_android.widget.UserViewType
 
+
+sealed class UserListViewType(
+    val title: String
+) {
+    data object Default : UserListViewType("편집")
+    data object Edit : UserListViewType("완료")
+}
+
 @Composable
 fun UserListView(
     userList: List<User>,
     modifier: Modifier = Modifier
 ) {
+    var viewType: UserListViewType by remember {
+        mutableStateOf(UserListViewType.Default)
+    }
+
     Column(
         modifier = modifier
     ) {
@@ -77,11 +90,22 @@ fun UserListView(
             )
 
             TextButton(
-                onClick = {}
+                onClick = {
+                    viewType = when (viewType) {
+                        UserListViewType.Default -> {
+                            UserListViewType.Edit
+                        }
+
+                        UserListViewType.Edit -> {
+                            UserListViewType.Default
+                        }
+                    }
+                },
+                enabled = userList.isNotEmpty()
             ) {
                 Text(
-                    text = "편집",
-                    color = Primary600,
+                    text = viewType.title,
+                    color = if (userList.isEmpty()) Color.Gray else Primary600,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     fontFamily = pretendard
@@ -96,7 +120,24 @@ fun UserListView(
             },
             modifier = Modifier.fillMaxWidth(),
             leadingIcon = {
-                Icon(Icons.Filled.Search,null)
+                Icon(Icons.Filled.Search, null)
+            },
+            trailingIcon = if (searchValue.isEmpty()) {
+                null
+            } else {
+                {
+                    IconButton(
+                        onClick = {
+                            searchValue = ""
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.icon_clear),
+                            contentDescription = "search item clear",
+                            tint = Gray400
+                        )
+                    }
+                }
             },
             placeholder = {
                 Text(
@@ -117,10 +158,11 @@ fun UserListView(
         )
         Spacer(
             Modifier.height(
-                height = 21.dp
+                height = 31.dp
             )
         )
         if (userList.isEmpty()) {
+            //아에 정보가 없는 경우
             Column {
                 UserListHeader("친구(${userList.size})")
                 Column(
@@ -143,43 +185,97 @@ fun UserListView(
                 }
             }
         } else {
-            val filterNameList = userList.filter { it.name.contains(searchValue) }
-            val favoriteUserList = filterNameList.filter { it.isFavorite }
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                item {
-                    UserListHeader("즐겨찾기(${favoriteUserList.size})")
-                }
-                items(
-                    items = favoriteUserList,
-                    key = {
-                        "fv" + it.id
+
+            //검색 값을 가져옴
+            val filterValue = searchValue.trim()
+
+            if (filterValue.isEmpty()) {
+                //검색값이 없는 경우
+
+                val favoriteUserList = userList.filter { it.isFavorite }
+
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    if (viewType == UserListViewType.Default) {
+                        //즐겨 찾기는 기본 모드에서만(검색값이 없을때만)
+                        item {
+                            UserListHeader("즐겨찾기(${favoriteUserList.size})")
+                        }
+                        items(
+                            items = favoriteUserList,
+                            key = {
+                                "fv" + it.id
+                            }
+                        ) { user ->
+                            UserItemView(
+                                user = user,
+                                type = UserViewType.Favorite(user.isFavorite)
+                            )
+                        }
                     }
-                ) { user ->
-                    UserItemView(
-                        user,
-                        UserViewType.Favorite(user.isFavorite)
-                    )
-                }
-                item {
-                    UserListHeader("친구(${userList.size})")
-                }
-                items(
-                    items = filterNameList,
-                    key = {
-                        "df" + it.id
+
+                    item {
+                        UserListHeader("친구(${userList.size})")
                     }
-                ) { user ->
-                    UserItemView(
-                        user,
-                        UserViewType.Favorite(user.isFavorite)
-                    )
+                    items(
+                        items = userList,
+                        key = {
+                            "df" + it.id
+                        }
+                    ) { user ->
+                        UserItemView(
+                            user = user,
+                            type = if (viewType == UserListViewType.Default) {
+                                UserViewType.Favorite(user.isFavorite)
+                            } else {
+                                UserViewType.Delete
+                            }
+                        )
+                    }
+                }
+            } else {
+                //검색 값이 있는 경우
+                val filterNameList = userList.filter { it.name.contains(searchValue) }
+                if (filterNameList.isEmpty()) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "검색 결과가 없습니다.",
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 16.sp,
+                            color = Gray700
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(
+                            items = filterNameList,
+                            key = {
+                                "df_f" + it.id
+                            }
+                        ) { user ->
+                            UserItemView(
+                                user = user,
+                                type = if (viewType == UserListViewType.Default) {
+                                    UserViewType.Favorite(user.isFavorite)
+                                } else {
+                                    UserViewType.Delete
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
     }
 }
+
 
 @Composable
 private fun UserListHeader(
