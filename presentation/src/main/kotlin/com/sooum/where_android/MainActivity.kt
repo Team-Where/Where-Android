@@ -3,11 +3,14 @@ package com.sooum.where_android
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
 import com.sooum.data.repository.UserRepositoryImpl
@@ -41,7 +44,12 @@ class MainActivity : AppCompatActivity() {
                         vertical = 6.dp
                     )
                 ) {
-                    FriedListView(userData)
+                    FriedListView(
+                        userList = userData,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White)
+                    )
                 }
             }
         }

@@ -68,7 +68,7 @@ private fun ProfileDetailContent(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .height(462.dp)
+            .height(402.dp)
             .padding(
                 vertical = 8.dp,
                 horizontal = 10.dp
