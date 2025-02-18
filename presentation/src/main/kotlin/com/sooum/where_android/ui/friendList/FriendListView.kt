@@ -46,6 +46,7 @@ import com.sooum.where_android.theme.GrayScale700
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.ui.friendList.modal.DeleteUserModal
+import com.sooum.where_android.ui.friendList.modal.ProfileDetailModal
 import com.sooum.where_android.widget.UserItemView
 import com.sooum.where_android.widget.UserViewType
 
@@ -221,7 +222,9 @@ fun FriedListView(
                 //검색값이 없는 경우
 
                 val favoriteUserList = userList.filter { it.isFavorite }
-
+                var selectedUser : User? by remember {
+                    mutableStateOf(null)
+                }
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
@@ -238,7 +241,10 @@ fun FriedListView(
                         ) { user ->
                             UserItemView(
                                 user = user,
-                                type = UserViewType.Favorite(user.isFavorite)
+                                type = UserViewType.Favorite(user.isFavorite),
+                                userClickAction = {
+                                    selectedUser = user
+                                }
                             )
                         }
                     }
@@ -254,9 +260,24 @@ fun FriedListView(
                     ) { user ->
                         UserItemViewByListView(
                             user = user,
-                            viewType = viewType
+                            viewType = viewType,
+                            userClickAction = if (viewType == FriendListViewType.Default) {
+                                {
+                                    selectedUser = user
+                                }
+                            } else {
+                                null
+                            }
                         )
                     }
+                }
+                selectedUser?.let { user ->
+                    ProfileDetailModal(
+                        user = user,
+                        onDismiss = {
+                            selectedUser = null
+                        }
+                    )
                 }
             } else {
                 //검색 값이 있는 경우
@@ -314,6 +335,7 @@ private fun UserListHeader(
 private fun UserItemViewByListView(
     user: User,
     viewType: FriendListViewType,
+    userClickAction: (() -> Unit)? = null
 ) {
     var showDeleteUser by remember {
         mutableStateOf(false)
@@ -332,7 +354,8 @@ private fun UserItemViewByListView(
                 // 삭제 창
                 showDeleteUser = true
             }
-        }
+        },
+        userClickAction = userClickAction
     )
     if (showDeleteUser) {
         DeleteUserModal(
