@@ -3,6 +3,7 @@ package com.sooum.where_android.widget
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -92,11 +93,19 @@ sealed class UserViewType {
 fun UserItemView(
     user: User,
     type: UserViewType,
+    userClickAction: (() -> Unit)? = null,
     iconClickAction: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth()
+            .then(if (userClickAction == null) {
+                Modifier
+            } else {
+                Modifier.clickable(
+                    onClick = userClickAction
+                )
+            }),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

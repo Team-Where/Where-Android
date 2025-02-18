@@ -12,13 +12,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -48,8 +44,8 @@ import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.GrayScale600
 import com.sooum.where_android.theme.GrayScale700
 import com.sooum.where_android.theme.Primary600
-import com.sooum.where_android.theme.Red500
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.ui.friendList.modal.DeleteUserModal
 import com.sooum.where_android.widget.UserItemView
 import com.sooum.where_android.widget.UserViewType
 
@@ -314,7 +310,6 @@ private fun UserListHeader(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UserItemViewByListView(
     user: User,
@@ -340,40 +335,14 @@ private fun UserItemViewByListView(
         }
     )
     if (showDeleteUser) {
-        ModalBottomSheet(
-            onDismissRequest = {
+        DeleteUserModal(
+            onDismiss = {
                 showDeleteUser = false
             },
-            dragHandle = null,
-            containerColor = Color.White,
-        ) {
-            Column(
-                modifier = Modifier.height(150.dp),
-                verticalArrangement = Arrangement.Center
-            ) {
-                TextButton(
-                    onClick = {
-                        showDeleteUser = false
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Gray100
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(54.dp)
-                        .padding(horizontal = 10.dp),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Text(
-                        text = "친구 삭제",
-                        color = Red500,
-                        fontWeight = FontWeight.Medium,
-                        fontFamily = pretendard,
-                        fontSize = 16.sp
-                    )
-                }
+            onDelete = {
+                //TODO Logic
             }
-        }
+        )
     }
 }
 
