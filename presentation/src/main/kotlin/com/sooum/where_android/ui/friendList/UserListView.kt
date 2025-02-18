@@ -12,8 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -54,21 +54,30 @@ import com.sooum.where_android.widget.UserItemView
 import com.sooum.where_android.widget.UserViewType
 
 
-sealed class UserListViewType(
-    val title: String
+sealed class FriendListViewType(
+    val title :String,
+    val fontSize :Int,
+    val buttonTitle: String
 ) {
-    data object Default : UserListViewType("편집")
-    data object Edit : UserListViewType("완료")
+    data object Default : FriendListViewType(
+        "친구목록",
+        24,
+        "편집"
+    )
+    data object Edit : FriendListViewType(
+        "목록편집",
+        16,
+        "완료"
+    )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserListView(
+fun FriedListView(
     userList: List<User>,
     modifier: Modifier = Modifier
 ) {
-    var viewType: UserListViewType by remember {
-        mutableStateOf(UserListViewType.Default)
+    var viewType: FriendListViewType by remember {
+        mutableStateOf(FriendListViewType.Default)
     }
 
     Column(
@@ -80,37 +89,54 @@ fun UserListView(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .height(54.dp)
                 .padding(
-                    horizontal = 10.dp,
                     vertical = 5.dp
                 ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = "친구목록",
-                color = Gray800,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = pretendard
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                if (viewType == FriendListViewType.Edit) {
+                    IconButton(
+                        onClick = {
+                            viewType = FriendListViewType.Default
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.icon_back),
+                            contentDescription = null,
+                            tint = Gray800
+                        )
+                    }
+                }
+                Text(
+                    text = viewType.title,
+                    color = Gray800,
+                    fontSize = viewType.fontSize.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = pretendard
+                )
+            }
 
             TextButton(
                 onClick = {
                     viewType = when (viewType) {
-                        UserListViewType.Default -> {
-                            UserListViewType.Edit
+                        FriendListViewType.Default -> {
+                            FriendListViewType.Edit
                         }
 
-                        UserListViewType.Edit -> {
-                            UserListViewType.Default
+                        FriendListViewType.Edit -> {
+                            FriendListViewType.Default
                         }
                     }
                 },
                 enabled = userList.isNotEmpty()
             ) {
                 Text(
-                    text = viewType.title,
+                    text = viewType.buttonTitle,
                     color = if (userList.isEmpty()) Color.Gray else Primary600,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
@@ -203,7 +229,7 @@ fun UserListView(
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    if (viewType == UserListViewType.Default) {
+                    if (viewType == FriendListViewType.Default) {
                         //즐겨 찾기는 기본 모드에서만(검색값이 없을때만)
                         item {
                             UserListHeader("즐겨찾기(${favoriteUserList.size})")
@@ -292,20 +318,20 @@ private fun UserListHeader(
 @Composable
 private fun UserItemViewByListView(
     user: User,
-    viewType: UserListViewType,
+    viewType: FriendListViewType,
 ) {
     var showDeleteUser by remember {
         mutableStateOf(false)
     }
     UserItemView(
         user = user,
-        type = if (viewType == UserListViewType.Default) {
+        type = if (viewType == FriendListViewType.Default) {
             UserViewType.Favorite(user.isFavorite)
         } else {
             UserViewType.Delete
         },
         iconClickAction = {
-            if (viewType == UserListViewType.Default) {
+            if (viewType == FriendListViewType.Default) {
                 //즐겨 찾기 업데이트
             } else {
                 // 삭제 창
@@ -332,7 +358,8 @@ private fun UserItemViewByListView(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Gray100
                     ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .height(54.dp)
                         .padding(horizontal = 10.dp),
                     shape = RoundedCornerShape(16.dp)
@@ -374,7 +401,7 @@ internal class UserPreviewParameterProvider() : PreviewParameterProvider<List<Us
 fun UserListViewPreview(
     @PreviewParameter(UserPreviewParameterProvider::class) data: List<User>
 ) {
-    UserListView(
+    FriedListView(
         data,
         modifier = Modifier
             .fillMaxSize()

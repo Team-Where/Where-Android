@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.sooum.data.repository.UserRepositoryImpl
 import com.sooum.domain.repository.UserRepository
 import com.sooum.where_android.databinding.ActivityMainBinding
-import com.sooum.where_android.ui.friendList.UserListView
+import com.sooum.where_android.ui.friendList.FriedListView
 import com.sooum.where_android.viewmodel.UserViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
                         vertical = 6.dp
                     )
                 ) {
-                    UserListView(userData)
+                    FriedListView(userData)
                 }
             }
         }
