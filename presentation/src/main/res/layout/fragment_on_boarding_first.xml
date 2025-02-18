@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="친구들과 한 공간에서\n모임을 정할 수 있어요!"
+        android:text="@string/onboarding_logo1"
         android:fontFamily="@font/pretend_semibold"
         android:textColor="@color/black"
         android:textSize="24sp"

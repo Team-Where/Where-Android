@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="다른 친구들과\n원하는 장소를 확인해요"
+        android:text="@string/onboarding_logo2"
         android:textColor="@color/black"
         android:fontFamily="@font/pretend_semibold"
         android:textSize="24sp"
