@@ -49,26 +49,7 @@ sealed class UserViewType {
      */
     data class Favorite(
         val isFavorite: Boolean
-    ) : UserViewType() {
-
-        @DrawableRes
-        fun getImageSrc(): Int {
-            return if (isFavorite) {
-                R.drawable.icon_favorite_on
-            } else {
-                R.drawable.icon_favorite_off
-            }
-        }
-
-        @DrawableRes
-        fun getTintColor(): Color {
-            return if (isFavorite) {
-                Color(0xfffbbf24)
-            } else {
-                Gray300
-            }
-        }
-    }
+    ) : UserViewType()
 
     /**
      * 삭제 필요시
@@ -136,17 +117,12 @@ fun UserItemView(
 
             when (type) {
                 is UserViewType.Favorite -> {
-                    IconButton(
-                        onClick = {
+                    FavoriteIconButton(
+                        isFavorite = type.isFavorite,
+                        toggleFavorite = {
                             iconClickAction?.invoke()
                         }
-                    ) {
-                        Icon(
-                            painter = painterResource(type.getImageSrc()),
-                            contentDescription = "user favorite icon",
-                            tint = type.getTintColor()
-                        )
-                    }
+                    )
                 }
 
                 is UserViewType.Delete -> {
