@@ -10,8 +10,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="친구들과 한 공간에서\n모임을 정할 수 있어요!"
+        android:fontFamily="@font/pretend_semibold"
         android:textColor="@color/black"
-        android:textSize="23sp"
+        android:textSize="24sp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
         tools:ignore="MissingConstraints" />
