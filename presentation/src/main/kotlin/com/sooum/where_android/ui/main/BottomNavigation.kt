@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavBackStackEntry
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray200
 import com.sooum.where_android.theme.Primary600
@@ -35,7 +36,12 @@ import com.sooum.where_android.theme.pretendard
 
 
 @Composable
-fun BottomNavigation() {
+fun BottomNavigation(
+    navBackStackEntry: NavBackStackEntry?,
+    navigation: (BottomNavigationType) -> Unit = {},
+) {
+    val currentRoute = navBackStackEntry?.destination?.route ?: ""
+
     Column {
         HorizontalDivider()
         Spacer(Modifier.height(5.dp))
@@ -53,8 +59,12 @@ fun BottomNavigation() {
                 horizontalArrangement = Arrangement.Center
             ) {
                 BottomIconButton(
-                    R.drawable.icon_bottom_group,
-                    "내 모임"
+                    icon = R.drawable.icon_bottom_group,
+                    title = "내 모임",
+                    onClick = {
+                        navigation(BottomNavigationType.MeetList)
+                    },
+                    isSelected = currentRoute.contains(BottomNavigationType.MeetList.toString())
                 )
             }
             Row(
@@ -81,10 +91,12 @@ fun BottomNavigation() {
                 horizontalArrangement = Arrangement.Center
             ) {
                 BottomIconButton(
-                    R.drawable.icon_bottom_friend,
-                    "친구목록",
-                    {},
-                    true
+                    icon = R.drawable.icon_bottom_friend,
+                    title = "친구목록",
+                    onClick = {
+                        navigation(BottomNavigationType.FriendsList)
+                    },
+                    isSelected = currentRoute.contains(BottomNavigationType.FriendsList.toString())
                 )
             }
         }
@@ -94,10 +106,10 @@ fun BottomNavigation() {
 
 @Composable
 private fun BottomIconButton(
-    @DrawableRes icon : Int,
-    title : String,
-    onClick :() -> Unit = {},
-    isSelected : Boolean = false
+    @DrawableRes icon: Int,
+    title: String,
+    onClick: () -> Unit = {},
+    isSelected: Boolean = false
 ) {
     val color = if (isSelected) {
         Color(0xff111827)
@@ -137,5 +149,5 @@ private fun BottomIconButton(
 @Preview(showBackground = true)
 @Composable
 fun BottomNavigationPreview() {
-    BottomNavigation()
+    BottomNavigation(null)
 }
