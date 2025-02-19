@@ -13,19 +13,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.sooum.domain.model.User
+import com.sooum.where_android.model.BottomNavigationType
+import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.ui.friendList.FriedListView
-import kotlinx.serialization.Serializable
-
-
-sealed class BottomNavigationType {
-    @Serializable
-    data object MeetList :BottomNavigationType()
-
-    @Serializable
-    data object FriendsList : BottomNavigationType()
-}
 
 
 @Composable
@@ -51,26 +44,28 @@ fun MainScreenView(
 
         NavHost(
             navController = navController,
-            startDestination = BottomNavigationType.MeetList
+            startDestination = ScreenRoute.Main
         ) {
-            composable<BottomNavigationType.MeetList>() {
-                Column {
-                    Text(navBackStackEntry?.destination?.route ?: "")
-                    Text(BottomNavigationType.MeetList.toString())
-                    Text(BottomNavigationType.FriendsList.toString())
-                }
+            navigation<ScreenRoute.Main>(startDestination = BottomNavigationType.MeetList) {
+                composable<BottomNavigationType.MeetList>() {
+                    Column {
+                        Text(navBackStackEntry?.destination?.route ?: "")
+                        Text(BottomNavigationType.MeetList.toString())
+                        Text(BottomNavigationType.FriendsList.toString())
+                    }
 
-            }
-            composable<BottomNavigationType.FriendsList>() {
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .padding(
-                            horizontal = 10.dp,
-                            vertical = 6.dp
-                        )
-                ) {
-                    FriedListView(userList = userList)
+                }
+                composable<BottomNavigationType.FriendsList>() {
+                    Column(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .padding(
+                                horizontal = 10.dp,
+                                vertical = 6.dp
+                            )
+                    ) {
+                        FriedListView(userList = userList)
+                    }
                 }
             }
         }

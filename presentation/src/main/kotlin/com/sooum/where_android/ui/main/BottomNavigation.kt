@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import com.sooum.where_android.R
+import com.sooum.where_android.model.BottomNavigationType
 import com.sooum.where_android.theme.Gray200
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
