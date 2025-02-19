@@ -17,6 +17,7 @@ import com.sooum.data.repository.UserRepositoryImpl
 import com.sooum.domain.repository.UserRepository
 import com.sooum.where_android.databinding.ActivityMainBinding
 import com.sooum.where_android.ui.friendList.FriedListView
+import com.sooum.where_android.ui.main.MainScreenView
 import com.sooum.where_android.viewmodel.UserViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -38,19 +39,10 @@ class MainActivity : AppCompatActivity() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool)
             setContent {
                 val userData by userViewModel.userList.collectAsState()
-                Column(
-                    modifier = Modifier.padding(
-                        horizontal = 10.dp,
-                        vertical = 6.dp
-                    )
-                ) {
-                    FriedListView(
-                        userList = userData,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.White)
-                    )
-                }
+                MainScreenView(
+                    userList = userData,
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
 
