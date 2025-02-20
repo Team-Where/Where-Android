@@ -1,4 +1,4 @@
-package com.sooum.where_android.widget
+package com.sooum.where_android.ui.widget
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring

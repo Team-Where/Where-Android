@@ -1,4 +1,4 @@
-package com.sooum.where_android.widget
+package com.sooum.where_android.ui.widget
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column

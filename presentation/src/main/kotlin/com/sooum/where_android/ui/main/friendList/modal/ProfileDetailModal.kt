@@ -1,4 +1,4 @@
-package com.sooum.where_android.ui.friendList.modal
+package com.sooum.where_android.ui.main.friendList.modal
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,7 +36,7 @@ import com.sooum.domain.model.User
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
-import com.sooum.where_android.widget.FavoriteIconButton
+import com.sooum.where_android.ui.widget.FavoriteIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

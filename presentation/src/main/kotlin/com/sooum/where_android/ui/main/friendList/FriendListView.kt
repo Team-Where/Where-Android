@@ -1,4 +1,4 @@
-package com.sooum.where_android.ui.friendList
+package com.sooum.where_android.ui.main.friendList
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -54,11 +54,11 @@ import com.sooum.where_android.theme.GrayScale600
 import com.sooum.where_android.theme.GrayScale700
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
-import com.sooum.where_android.ui.friendList.modal.DeleteUserModal
-import com.sooum.where_android.ui.friendList.modal.ProfileDetailModal
+import com.sooum.where_android.ui.main.friendList.modal.DeleteUserModal
+import com.sooum.where_android.ui.main.friendList.modal.ProfileDetailModal
 import com.sooum.where_android.viewmodel.UserViewModel
-import com.sooum.where_android.widget.UserItemView
-import com.sooum.where_android.widget.UserViewType
+import com.sooum.where_android.ui.widget.UserItemView
+import com.sooum.where_android.ui.widget.UserViewType
 
 
 sealed class FriendListViewType(

@@ -19,7 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sooum.where_android.model.BottomNavigationType
 import com.sooum.where_android.model.ScreenRoute
-import com.sooum.where_android.ui.friendList.FriendListView
+import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.viewmodel.UserViewModel
 
 
