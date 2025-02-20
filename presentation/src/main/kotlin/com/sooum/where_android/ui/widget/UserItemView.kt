@@ -104,12 +104,8 @@ fun UserItemView(
             verticalAlignment = Alignment.CenterVertically
         ) {
             //TODO profileImage 값으로 부터 가져오도록 수정필요
-            Image(
-                painterResource(R.drawable.test_profile),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(50.dp)
-                    .clip(CircleShape)
+            CircleImageView(
+                size = 50.dp
             )
 
             Spacer(Modifier.width(16.dp))

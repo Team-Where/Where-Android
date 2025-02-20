@@ -36,6 +36,7 @@ import com.sooum.domain.model.User
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.ui.widget.CircleImageView
 import com.sooum.where_android.ui.widget.FavoriteIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -109,12 +110,8 @@ private fun ProfileDetailContent(
             verticalArrangement = Arrangement.spacedBy(21.dp)
         ) {
             //TODO profileImage 값으로 부터 가져오도록 수정필요
-            Image(
-                painterResource(R.drawable.test_profile),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
+            CircleImageView(
+                size = 120.dp
             )
 
             Column(
