@@ -42,7 +42,8 @@ import com.sooum.where_android.widget.FavoriteIconButton
 @Composable
 fun ProfileDetailModal(
     user: User,
-    onDismiss :() -> Unit
+    onDismiss :() -> Unit,
+    navigationMeetDetail : () -> Unit,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -54,7 +55,8 @@ fun ProfileDetailModal(
     ) {
         ProfileDetailContent(
             user = user,
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
+            navigationMeetDetail = navigationMeetDetail
         )
     }
 }
@@ -63,6 +65,7 @@ fun ProfileDetailModal(
 private fun ProfileDetailContent(
     user: User,
     onDismiss: () -> Unit,
+    navigationMeetDetail : () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -143,7 +146,7 @@ private fun ProfileDetailContent(
         }
 
         TextButton(
-            onClick = {},
+            onClick = navigationMeetDetail,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Primary600
             ),
@@ -171,6 +174,7 @@ private fun ProfileDetailContent(
 private fun ProfileDetailModalPreview() {
     ProfileDetailModal(
         user = User(7, "냠냠쩝쩝", "", true),
+        {},
         {}
     )
 }
@@ -181,6 +185,7 @@ private fun ProfileDetailModalPreview() {
 private fun ProfileDetailContentPreview() {
     ProfileDetailContent(
         user = User(7, "냠냠쩝쩝", "", true),
+        {},
         {}
     )
 }

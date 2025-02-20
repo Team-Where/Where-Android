@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sooum.domain.model.User
 import com.sooum.where_android.R
+import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.theme.Gray100
 import com.sooum.where_android.theme.Gray400
 import com.sooum.where_android.theme.Gray500
@@ -52,25 +53,27 @@ import com.sooum.where_android.widget.UserViewType
 
 
 sealed class FriendListViewType(
-    val title :String,
-    val fontSize :Int,
+    val title: String,
+    val fontSize: Int,
     val buttonTitle: String
 ) {
     data object Default : FriendListViewType(
-        "친구목록",
-        24,
-        "편집"
+        title = "친구목록",
+        fontSize = 24,
+        buttonTitle = "편집"
     )
+
     data object Edit : FriendListViewType(
-        "목록편집",
-        16,
-        "완료"
+        title = "목록편집",
+        fontSize = 16,
+        buttonTitle = "완료"
     )
 }
 
 @Composable
 fun FriedListView(
     userList: List<User>,
+    navigationMeetDetail :(ScreenRoute.MeetDetail) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var viewType: FriendListViewType by remember {
@@ -95,7 +98,7 @@ fun FriedListView(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 if (viewType == FriendListViewType.Edit) {
                     IconButton(
                         onClick = {
@@ -222,7 +225,7 @@ fun FriedListView(
                 //검색값이 없는 경우
 
                 val favoriteUserList = userList.filter { it.isFavorite }
-                var selectedUser : User? by remember {
+                var selectedUser: User? by remember {
                     mutableStateOf(null)
                 }
                 LazyColumn(
@@ -276,6 +279,9 @@ fun FriedListView(
                         user = user,
                         onDismiss = {
                             selectedUser = null
+                        },
+                        navigationMeetDetail = {
+                            navigationMeetDetail(ScreenRoute.MeetDetail(userId = user.id))
                         }
                     )
                 }
@@ -395,6 +401,7 @@ fun UserListViewPreview(
 ) {
     FriedListView(
         data,
+        {},
         modifier = Modifier
             .fillMaxSize()
             .padding(12.dp)

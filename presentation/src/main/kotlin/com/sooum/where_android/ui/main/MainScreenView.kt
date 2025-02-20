@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.sooum.domain.model.User
 import com.sooum.where_android.model.BottomNavigationType
 import com.sooum.where_android.model.ScreenRoute
@@ -64,9 +65,19 @@ fun MainScreenView(
                                 vertical = 6.dp
                             )
                     ) {
-                        FriedListView(userList = userList)
+                        FriedListView(
+                            userList = userList,
+                            navigationMeetDetail = { meetDetail ->
+                                navController.navigate(meetDetail)
+                            }
+                        )
                     }
                 }
+            }
+
+            composable<ScreenRoute.MeetDetail>() {
+                val meetDetail : ScreenRoute.MeetDetail = it.toRoute()
+                Text(meetDetail.toString())
             }
         }
     }
