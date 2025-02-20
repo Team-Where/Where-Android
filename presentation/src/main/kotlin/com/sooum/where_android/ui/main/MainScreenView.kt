@@ -10,22 +10,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.sooum.domain.model.User
 import com.sooum.where_android.model.BottomNavigationType
 import com.sooum.where_android.model.ScreenRoute
-import com.sooum.where_android.ui.friendList.FriedListView
+import com.sooum.where_android.ui.friendList.FriendListView
+import com.sooum.where_android.viewmodel.UserViewModel
 
 
 @Composable
 fun MainScreenView(
-    modifier: Modifier = Modifier,
-    userList: List<User>
+    modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -57,6 +57,7 @@ fun MainScreenView(
 
                 }
                 composable<BottomNavigationType.FriendsList>() {
+                    val userViewModel = hiltViewModel<UserViewModel>()
                     Column(
                         modifier = Modifier
                             .padding(innerPadding)
@@ -64,8 +65,8 @@ fun MainScreenView(
                                 horizontal = 10.dp,
                             )
                     ) {
-                        FriedListView(
-                            userList = userList,
+                        FriendListView(
+                            userViewModel = userViewModel,
                             navigationMeetDetail = { meetDetail ->
                                 navController.navigate(meetDetail)
                             }
@@ -86,7 +87,6 @@ fun MainScreenView(
 @Preview(showBackground = true, showSystemUi = true)
 fun MainScreenViewPreview() {
     MainScreenView(
-        Modifier,
-        emptyList()
+        Modifier
     )
 }

@@ -59,6 +59,7 @@ dependencies {
     //Hilt
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 
     //Compose
     val composeBom = "androidx.compose:compose-bom:2025.02.00"
