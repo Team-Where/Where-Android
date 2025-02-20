@@ -45,9 +45,4 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
     }
-
-    override fun onResume() {
-        super.onResume()
-        userViewModel.loadUserList()
-    }
 }

@@ -11,5 +11,15 @@ interface UserRepository {
     /**
      * 모든 User 목록을 가져옵니다.
      */
-    fun getUserList() : Flow<List<User>>
+    fun getUserList(): Flow<List<User>>
+
+    /**
+     * 즐겨 찾기를 변경합니다.
+     */
+    suspend fun updateUserFavorite(id: Long, favorite: Boolean)
+
+    /**
+     * 유저를 삭제합니다.
+     */
+    suspend fun deleteUser(id: Long)
 }
