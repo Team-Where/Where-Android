@@ -62,7 +62,6 @@ fun MainScreenView(
                             .padding(innerPadding)
                             .padding(
                                 horizontal = 10.dp,
-                                vertical = 6.dp
                             )
                     ) {
                         FriedListView(

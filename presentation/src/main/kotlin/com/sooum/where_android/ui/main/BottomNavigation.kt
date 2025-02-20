@@ -101,6 +101,7 @@ fun BottomNavigation(
                 )
             }
         }
+        Spacer(Modifier.height(20.dp))
     }
 
 }

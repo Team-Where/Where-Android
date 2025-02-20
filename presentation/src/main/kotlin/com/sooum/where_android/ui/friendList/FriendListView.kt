@@ -1,5 +1,13 @@
 package com.sooum.where_android.ui.friendList
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -99,7 +107,9 @@ fun FriedListView(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (viewType == FriendListViewType.Edit) {
+                AnimatedVisibility(
+                    viewType == FriendListViewType.Edit
+                ) {
                     IconButton(
                         onClick = {
                             viewType = FriendListViewType.Default
@@ -190,7 +200,7 @@ fun FriedListView(
         )
         Spacer(
             Modifier.height(
-                height = 31.dp
+                height = 21.dp
             )
         )
         if (userList.isEmpty()) {
@@ -228,20 +238,35 @@ fun FriedListView(
                 var selectedUser: User? by remember {
                     mutableStateOf(null)
                 }
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    if (viewType == FriendListViewType.Default) {
-                        //즐겨 찾기는 기본 모드에서만(검색값이 없을때만)
-                        item {
-                            UserListHeader("즐겨찾기(${favoriteUserList.size})")
+                val favoriteEnter =
+                    slideInVertically() + expandVertically() + fadeIn()
+
+                val favoriteExit =
+                    slideOutVertically() + shrinkVertically() + fadeOut()
+                LazyColumn() {
+                    //즐겨 찾기는 기본 모드에서만(검색값이 없을때만)
+                    item {
+                        androidx.compose.animation.AnimatedVisibility(
+                            visible = viewType == FriendListViewType.Default,
+                            enter = favoriteEnter,
+                            exit = favoriteExit
+                        ) {
+                            UserListHeader(
+                                title = "즐겨찾기(${favoriteUserList.size})"
+                            )
                         }
-                        items(
-                            items = favoriteUserList,
-                            key = {
-                                "fv" + it.id
-                            }
-                        ) { user ->
+                    }
+                    items(
+                        items = favoriteUserList,
+                        key = {
+                            "fv" + it.id
+                        }
+                    ) { user ->
+                        androidx.compose.animation.AnimatedVisibility(
+                            visible = viewType == FriendListViewType.Default,
+                            enter = favoriteEnter,
+                            exit = favoriteExit
+                        ) {
                             UserItemView(
                                 user = user,
                                 type = UserViewType.Favorite(user.isFavorite),
@@ -251,7 +276,6 @@ fun FriedListView(
                             )
                         }
                     }
-
                     item {
                         UserListHeader("친구(${userList.size})")
                     }
@@ -302,9 +326,7 @@ fun FriedListView(
                         )
                     }
                 } else {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
+                    LazyColumn() {
                         items(
                             items = filterNameList,
                             key = {
@@ -326,10 +348,14 @@ fun FriedListView(
 
 @Composable
 private fun UserListHeader(
-    title: String
+    title: String,
+    modifier: Modifier = Modifier
 ) {
     Text(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .then(modifier),
         text = title,
         fontSize = 16.sp,
         fontFamily = pretendard,
@@ -341,7 +367,8 @@ private fun UserListHeader(
 private fun UserItemViewByListView(
     user: User,
     viewType: FriendListViewType,
-    userClickAction: (() -> Unit)? = null
+    userClickAction: (() -> Unit)? = null,
+    modifier: Modifier = Modifier
 ) {
     var showDeleteUser by remember {
         mutableStateOf(false)
@@ -361,7 +388,8 @@ private fun UserItemViewByListView(
                 showDeleteUser = true
             }
         },
-        userClickAction = userClickAction
+        userClickAction = userClickAction,
+        modifier = modifier
     )
     if (showDeleteUser) {
         DeleteUserModal(

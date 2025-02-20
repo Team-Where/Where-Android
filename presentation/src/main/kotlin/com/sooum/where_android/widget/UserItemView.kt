@@ -1,6 +1,12 @@
 package com.sooum.where_android.widget
 
-import androidx.annotation.DrawableRes
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -33,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sooum.domain.model.User
 import com.sooum.where_android.R
-import com.sooum.where_android.theme.Gray300
 import com.sooum.where_android.theme.Gray500
 import com.sooum.where_android.theme.Gray600
 import com.sooum.where_android.theme.GrayScale100
@@ -79,14 +84,19 @@ fun UserItemView(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier.fillMaxWidth()
-            .then(if (userClickAction == null) {
-                Modifier
-            } else {
-                Modifier.clickable(
-                    onClick = userClickAction
-                )
-            }),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(6.dp)
+            .then(
+                if (userClickAction == null) {
+                    Modifier
+                } else {
+                    Modifier.clickable(
+                        onClick = userClickAction
+                    )
+                }
+            )
+            .then(modifier),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -111,12 +121,27 @@ fun UserItemView(
                 fontFamily = pretendard
             )
         }
+        val enterAni =
+            slideInHorizontally(animationSpec = tween(durationMillis = 200)) { fullWidth ->
+                -fullWidth / 3
+            } + fadeIn(
+                animationSpec = tween(durationMillis = 200)
+            )
+
+        val exitAni =
+            slideOutHorizontally(animationSpec = spring(stiffness = Spring.StiffnessHigh)) {
+                200
+            } + fadeOut()
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            when (type) {
-                is UserViewType.Favorite -> {
+            androidx.compose.animation.AnimatedVisibility(
+                visible = type is UserViewType.Favorite,
+                enter = enterAni,
+                exit = exitAni
+            ) {
+                if (type is UserViewType.Favorite) {
                     FavoriteIconButton(
                         isFavorite = type.isFavorite,
                         toggleFavorite = {
@@ -124,8 +149,14 @@ fun UserItemView(
                         }
                     )
                 }
+            }
 
-                is UserViewType.Delete -> {
+            androidx.compose.animation.AnimatedVisibility(
+                visible = type is UserViewType.Delete,
+                enter = enterAni,
+                exit = exitAni
+            ) {
+                if (type is UserViewType.Delete) {
                     IconButton(
                         onClick = {
                             iconClickAction?.invoke()
@@ -138,11 +169,18 @@ fun UserItemView(
                         )
                     }
                 }
+            }
 
-                is UserViewType.Invite -> {
+
+            androidx.compose.animation.AnimatedVisibility(
+                visible = type is UserViewType.Invite,
+                enter = enterAni,
+                exit = exitAni
+            ) {
+                if (type is UserViewType.Invite) {
                     val shape = RoundedCornerShape(8.dp)
                     val buttonModifier = Modifier
-                            .height(32.dp)
+                        .height(32.dp)
 
                     if (type.alreadyAdd) {
                         Button(
@@ -206,8 +244,14 @@ fun UserItemView(
                         }
                     }
                 }
+            }
 
-                is UserViewType.Option -> {
+            androidx.compose.animation.AnimatedVisibility(
+                visible = type is UserViewType.Option,
+                enter = enterAni,
+                exit = exitAni
+            ) {
+                if (type is UserViewType.Option) {
                     IconButton(
                         onClick = {
                             iconClickAction?.invoke()
