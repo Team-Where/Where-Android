@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -53,6 +55,10 @@ kotlin {
 dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
+
+    //Hilt
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
 
     //Compose
     val composeBom = "androidx.compose:compose-bom:2025.02.00"

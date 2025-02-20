@@ -19,17 +19,14 @@ import com.sooum.where_android.databinding.ActivityMainBinding
 import com.sooum.where_android.ui.friendList.FriedListView
 import com.sooum.where_android.ui.main.MainScreenView
 import com.sooum.where_android.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val userRepository: UserRepository = UserRepositoryImpl()
-
-    private val userViewModel: UserViewModel by viewModels(
-        factoryProducer = { UserViewModel.Companion.ScoreViewModelFactory(userRepository) }
-    )
-
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
