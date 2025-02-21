@@ -2,8 +2,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.ksp)
+    id(libs.plugins.where.hilt.get().pluginId)
 }
 
 android {
@@ -42,7 +41,4 @@ kotlin {
 
 dependencies {
     implementation(project(":domain"))
-    //Hilt
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
 }

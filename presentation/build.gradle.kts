@@ -4,8 +4,7 @@ plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.ksp)
+    id(libs.plugins.where.hilt.get().pluginId)
 }
 
 android {
@@ -57,8 +56,6 @@ dependencies {
     implementation(project(":domain"))
 
     //Hilt
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
     //Compose
