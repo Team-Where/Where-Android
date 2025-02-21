@@ -21,6 +21,7 @@ import com.sooum.where_android.model.BottomNavigationType
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
+import com.sooum.where_android.viewmodel.MeetDetailViewModel
 import com.sooum.where_android.viewmodel.UserViewModel
 
 
@@ -77,7 +78,6 @@ fun MainScreenView(
             }
 
             composable<ScreenRoute.MeetDetail>() {
-                val meetDetail : ScreenRoute.MeetDetail = it.toRoute()
                 MeetDetailView(
                     onBack = navController::popBackStack
                 )

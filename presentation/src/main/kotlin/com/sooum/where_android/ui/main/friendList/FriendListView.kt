@@ -328,7 +328,7 @@ private fun FriedListContent(
                         },
                         navigationMeetDetail = {
                             selectedUserId = null
-                            navigationMeetDetail(ScreenRoute.MeetDetail(userId = user.id))
+                            navigationMeetDetail(ScreenRoute.MeetDetail(detailUserId = user.id))
                         },
                         updateFavorite = updateFavorite
                     )
