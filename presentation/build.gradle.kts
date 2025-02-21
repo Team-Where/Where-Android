@@ -83,4 +83,10 @@ dependencies {
 
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+
+    //Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp) // Only available on Android/JVM.
+//    implementation("io.coil-kt.coil3:coil-network-ktor2:3.1.0")
+//    implementation("io.coil-kt.coil3:coil-network-ktor3:3.1.0")
 }
