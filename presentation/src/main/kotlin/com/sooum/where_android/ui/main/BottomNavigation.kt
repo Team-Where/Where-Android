@@ -1,7 +1,9 @@
 package com.sooum.where_android.ui.main
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -44,7 +46,12 @@ fun BottomNavigation(
     val currentRoute = navBackStackEntry?.destination?.route ?: ""
 
     Column {
-        HorizontalDivider()
+        Spacer(
+            Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(Gray200)
+        )
         Spacer(Modifier.height(5.dp))
         Row(
             modifier = Modifier
@@ -122,10 +129,10 @@ private fun BottomIconButton(
         onClick = onClick,
         enabled = !isSelected,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White,
-            contentColor = Color.White,
-            disabledContentColor = Color.White,
-            disabledContainerColor = Color.White
+            containerColor = Color.Transparent,
+            contentColor = Color.Transparent,
+            disabledContentColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent
         )
     ) {
         Column(

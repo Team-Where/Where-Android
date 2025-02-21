@@ -1,6 +1,8 @@
 package com.sooum.where_android.ui.main
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
@@ -41,18 +43,23 @@ fun MainScreenView(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-
     Scaffold(
         modifier = modifier,
         bottomBar = {
             BottomAppBar(
                 contentColor = Color.White,
-                containerColor = Color.White
+                containerColor = Color.White,
+                contentPadding = PaddingValues(0.dp)
             ) {
                 BottomNavigation(
                     navBackStackEntry = navBackStackEntry,
                     navigation = { type ->
-                        navController.navigate(type)
+                        scope.launch {
+                            if (drawerState.isOpen) {
+                                drawerState.close()
+                            }
+                            navController.navigate(type)
+                        }
                     }
                 )
             }
@@ -68,6 +75,13 @@ fun MainScreenView(
                     CompositionLocalProvider(
                         LocalLayoutDirection provides LayoutDirection.Ltr
                     ) {
+                        BackHandler(
+                            drawerState.isOpen
+                        ) {
+                            scope.launch {
+                                drawerState.close()
+                            }
+                        }
                         ModalDrawerSheet(
                             drawerState = drawerState,
                             drawerShape = RectangleShape
