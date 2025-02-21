@@ -380,7 +380,7 @@ private fun UserListHeader(
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(vertical = 8.dp)
             .then(modifier),
         text = title,
         fontSize = 16.sp,
