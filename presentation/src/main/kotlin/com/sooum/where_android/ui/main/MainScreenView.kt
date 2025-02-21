@@ -2,6 +2,7 @@ package com.sooum.where_android.ui.main
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,19 +36,25 @@ fun MainScreenView(
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            BottomNavigation(
-                navBackStackEntry = navBackStackEntry,
-                navigation = { type ->
-                    navController.navigate(type)
-                }
-            )
+            BottomAppBar(
+                contentColor = Color.White,
+                containerColor = Color.White
+            ) {
+                BottomNavigation(
+                    navBackStackEntry = navBackStackEntry,
+                    navigation = { type ->
+                        navController.navigate(type)
+                    }
+                )
+            }
         },
         containerColor = Color.White,
     ) { innerPadding ->
 
         NavHost(
             navController = navController,
-            startDestination = ScreenRoute.Main
+            startDestination = ScreenRoute.Main,
+            modifier = Modifier.padding(innerPadding)
         ) {
             navigation<ScreenRoute.Main>(startDestination = BottomNavigationType.MeetList) {
                 composable<BottomNavigationType.MeetList>() {
@@ -62,7 +69,6 @@ fun MainScreenView(
                     val userViewModel = hiltViewModel<UserViewModel>()
                     Column(
                         modifier = Modifier
-                            .padding(innerPadding)
                             .padding(
                                 horizontal = 10.dp,
                             )

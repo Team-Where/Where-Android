@@ -13,17 +13,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,11 +37,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.User
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray100
 import com.sooum.where_android.theme.Gray600
 import com.sooum.where_android.theme.Gray800
+import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.ui.widget.CircleProfileView
 import com.sooum.where_android.viewmodel.MeetDetailViewModel
@@ -46,16 +53,19 @@ fun MeetDetailView(
     meetDetailViewModel: MeetDetailViewModel = hiltViewModel(),
     onBack: () -> Unit
 ) {
+    val meetDetailList by meetDetailViewModel.meetDetailList.collectAsState()
     MeetDetailContent(
         onBack = onBack,
-        friend = meetDetailViewModel.getUserData()!!
+        friend = meetDetailViewModel.getUserData()!!,
+        meetDetailList = meetDetailList
     )
 }
 
 @Composable
 private fun MeetDetailContent(
     onBack: () -> Unit,
-    friend: User
+    friend: User,
+    meetDetailList: List<MeetDetail>,
 ) {
     Column {
         Box(
@@ -89,67 +99,180 @@ private fun MeetDetailContent(
                 )
             }
         }
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ){
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp),
-            ) {
-                val xOffset = 45.dp
+        ) {
+            item {
                 Box(
-                    modifier = Modifier.wrapContentSize()
-                        .align(Alignment.Center)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp),
                 ) {
+                    val xOffset = 45.dp
                     Box(
                         modifier = Modifier
-                            .wrapContentSize()
-                            .align(Alignment.TopCenter)
-                            .offset(x = -xOffset)
+                            .align(Alignment.Center)
                     ) {
-                        MeetDetailProfileImage(
-                            profileUrl = "",
-                            useBorder = false,
-                            name = "나"
-                        )
-                    }
+                        Box(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .align(Alignment.TopCenter)
+                                .offset(x = -xOffset)
+                        ) {
+                            MeetDetailProfileImage(
+                                profileUrl = "https://s3-alpha-sig.figma.com/img/9483/f88f/f5cb8c568739dce8dfccbd21052d5203?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=c2C9C3hRNYGTpTmc2607-BjDjlAsK5bACRu2X-UJ35KrgsJqjPTvJqFzbVYM-7FiNtlB7eO5d~yf3uM7VlXSQ1sxAN0rAIc8SB2wuYh48Z3s7SIdr8WtuRH0MGB7IjrPDLWS-UnBRyQ7joM~qzCev43D~iS1dHpA~vZn7jPe9kIYFaAs4v7EKSDUX3zo9ZaaRJxnLjd8GQ1B7dnAJOUVPF~TYjA1cpGIPfhcBwp5WM~uq5uC43ZtDcLE-baAU6k5VXjxlSRn9-av7GC8iP-yDcf94x5aLHOAjhtRcUCJZ9I5hsgt2VjLMxv4-m7dkK1hix63uAEuVo9awUC0RykU8g__",
+                                useBorder = false,
+                                name = "나"
+                            )
+                        }
 
-                    Box(
+                        Box(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .align(Alignment.TopCenter)
+                                .offset(x = xOffset)
+                        ) {
+                            MeetDetailProfileImage(
+                                profileUrl = friend.profileImage,
+                                name = friend.name,
+                                useBorder = true
+                            )
+                        }
+                    }
+                    Row(
                         modifier = Modifier
-                            .wrapContentSize()
-                            .align(Alignment.TopCenter)
-                            .offset(x = xOffset)
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 20.dp)
                     ) {
-                        MeetDetailProfileImage(
-                            profileUrl = friend.profileImage,
-                            name = friend.name,
-                            useBorder = true
+                        Text(
+                            text = "${friend.name}님과 함께한 모임을 확인해보세요.",
+                            color = Gray600,
+                            fontFamily = pretendard,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 14.sp
                         )
                     }
                 }
+            }
+            item {
+                Spacer(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(8.dp)
+                        .background(Gray100)
+                )
+            }
+
+            item {
                 Row(
                     modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 20.dp)
+                        .fillMaxWidth()
+                        .padding(
+                            all = 20.dp
+                        ),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "냠냠쩝쩝님과 함께한 모임을 확인해보세요.",
-                        color = Gray600,
+                        text = "2024",
+                        fontWeight = FontWeight.SemiBold,
                         fontFamily = pretendard,
+                        fontSize = 24.sp
+                    )
+
+                    Text(
+                        text = "3개월 지난 모임은 포함되지않습니다.",
                         fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp
+                        fontFamily = pretendard,
+                        fontSize = 12.sp
                     )
                 }
             }
+            items(
+                count = meetDetailList.size,
+                key = {
+                    meetDetailList[it].id
+                }
+            ) { index ->
+                val prevItem = kotlin.runCatching { meetDetailList[index - 1] }.getOrNull()
+                val meetDetail = meetDetailList[index]
+                val nextItem = kotlin.runCatching { meetDetailList[index + 1] }.getOrNull()
+                Row(
+                    Modifier.padding(horizontal = 20.dp)
+                ) {
+                    val cardHeight = 153.dp
+                    val bottomSpace = if (index == meetDetailList.size - 1) {
+                        0.dp
+                    } else {
+                        20.dp
+                    }
+                    Box(
+                        modifier = Modifier
+                            .width(60.dp)
+                            .height(cardHeight + bottomSpace)
+                    ) {
+                        if (meetDetail.month != nextItem?.month) {
+                            VerticalDivider(
+                                modifier = Modifier
+                                    .height(cardHeight + bottomSpace/2)
+                                    .align(Alignment.TopCenter)
+                            )
+                        } else {
+                            VerticalDivider(
+                                modifier = Modifier
+                                    .height(cardHeight + bottomSpace)
+                                    .align(Alignment.TopCenter)
+                            )
+                        }
 
-            Spacer(
-                Modifier.fillMaxWidth()
-                    .height(8.dp)
-                    .background(Gray100)
-            )
+
+                        if (
+                            prevItem == null ||
+                            (prevItem.month != meetDetail.month)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .height(40.dp)
+                                    .background(Color.White)
+                            ) {
+                                Spacer(
+                                    Modifier.height(5.dp)
+                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(CircleShape)
+                                            .size(10.dp)
+                                            .background(Color(0xffeef2ff))
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .align(Alignment.Center)
+                                                .clip(CircleShape)
+                                                .size(6.dp)
+                                                .background(Primary600)
+                                        )
+                                    }
+                                    Spacer(Modifier.width(8.dp))
+                                    Text(
+                                        text = "${meetDetail.month}월",
+                                        fontFamily = pretendard,
+                                        fontWeight = FontWeight.Medium,
+                                        fontSize = 16.sp
+                                    )
+                                }
+                            }
+                        }
+
+                    }
+                    MeetDetailCard(
+                        meetDetail = meetDetail,
+                    )
+                }
+            }
         }
 
     }
@@ -207,7 +330,27 @@ private fun MeetDetailContentPreview() {
     ) {
         MeetDetailContent(
             onBack = {},
-            friend = User(0,"우리동네 먹짱방방")
+            friend = User(0, "우리동네 먹짱방방"),
+            listOf(
+                MeetDetail(
+                    1,
+                    "2024 연말파티\uD83E\uDD42",
+                    "벌써 연말이다 신나게 놀아보장~~",
+                    "",
+                    2024,
+                    11,
+                    26
+                ),
+                MeetDetail(
+                    2,
+                    "행궁동 갈 사람\uD83C\uDF42",
+                    "선선해진 날씨에 같이 사람~!",
+                    "",
+                    2024,
+                    9,
+                    11
+                )
+            )
         )
 
     }
