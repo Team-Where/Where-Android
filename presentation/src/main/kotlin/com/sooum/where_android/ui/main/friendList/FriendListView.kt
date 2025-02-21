@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,6 +43,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sooum.domain.model.User
 import com.sooum.where_android.R
 import com.sooum.where_android.model.ScreenRoute
@@ -56,9 +58,9 @@ import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.ui.main.friendList.modal.DeleteUserModal
 import com.sooum.where_android.ui.main.friendList.modal.ProfileDetailModal
-import com.sooum.where_android.viewmodel.UserViewModel
 import com.sooum.where_android.ui.widget.UserItemView
 import com.sooum.where_android.ui.widget.UserViewType
+import com.sooum.where_android.viewmodel.UserViewModel
 
 
 sealed class FriendListViewType(
@@ -81,7 +83,7 @@ sealed class FriendListViewType(
 
 @Composable
 fun FriendListView(
-    userViewModel: UserViewModel,
+    userViewModel: UserViewModel = hiltViewModel(),
     navigationMeetDetail: (ScreenRoute.MeetDetail) -> Unit
 ) {
     val userList by userViewModel.userList.collectAsState()
@@ -452,7 +454,7 @@ internal class UserPreviewParameterProvider() : PreviewParameterProvider<List<Us
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 fun UserListViewPreview(
     @PreviewParameter(UserPreviewParameterProvider::class) data: List<User>
 ) {
@@ -462,7 +464,7 @@ fun UserListViewPreview(
         deleteUser = {},
         updateFavorite = { _, _ -> },
         modifier = Modifier
-            .fillMaxSize()
+            .safeDrawingPadding()
             .padding(12.dp)
     )
 }

@@ -3,13 +3,21 @@ package com.sooum.where_android.ui.main
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -22,8 +30,10 @@ import com.sooum.where_android.model.BottomNavigationType
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
+import com.sooum.where_android.ui.main.meetList.MeetListView
 import com.sooum.where_android.viewmodel.MeetDetailViewModel
 import com.sooum.where_android.viewmodel.UserViewModel
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -32,61 +42,91 @@ fun MainScreenView(
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
-    Scaffold(
-        modifier = modifier,
-        bottomBar = {
-            BottomAppBar(
-                contentColor = Color.White,
-                containerColor = Color.White
-            ) {
-                BottomNavigation(
-                    navBackStackEntry = navBackStackEntry,
-                    navigation = { type ->
-                        navController.navigate(type)
+    CompositionLocalProvider(
+        LocalLayoutDirection provides LayoutDirection.Rtl
+    ) {
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                CompositionLocalProvider(
+                    LocalLayoutDirection provides LayoutDirection.Ltr
+                ) {
+                    ModalDrawerSheet {
+                        Text("123")
                     }
-                )
+                }
             }
-        },
-        containerColor = Color.White,
-    ) { innerPadding ->
-
-        NavHost(
-            navController = navController,
-            startDestination = ScreenRoute.Main,
-            modifier = Modifier.padding(innerPadding)
         ) {
-            navigation<ScreenRoute.Main>(startDestination = BottomNavigationType.MeetList) {
-                composable<BottomNavigationType.MeetList>() {
-                    Column {
-                        Text(navBackStackEntry?.destination?.route ?: "")
-                        Text(BottomNavigationType.MeetList.toString())
-                        Text(BottomNavigationType.FriendsList.toString())
-                    }
-
-                }
-                composable<BottomNavigationType.FriendsList>() {
-                    val userViewModel = hiltViewModel<UserViewModel>()
-                    Column(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 10.dp,
+            CompositionLocalProvider(
+                LocalLayoutDirection provides LayoutDirection.Ltr
+            ) {
+                Scaffold(
+                    modifier = modifier,
+                    bottomBar = {
+                        BottomAppBar(
+                            contentColor = Color.White,
+                            containerColor = Color.White
+                        ) {
+                            BottomNavigation(
+                                navBackStackEntry = navBackStackEntry,
+                                navigation = { type ->
+                                    navController.navigate(type)
+                                }
                             )
+                        }
+                    },
+                    containerColor = Color.White,
+                ) { innerPadding ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = ScreenRoute.Main,
+                        modifier = Modifier.padding(innerPadding)
                     ) {
-                        FriendListView(
-                            userViewModel = userViewModel,
-                            navigationMeetDetail = { meetDetail ->
-                                navController.navigate(meetDetail)
+                        navigation<ScreenRoute.Main>(startDestination = BottomNavigationType.MeetList) {
+                            composable<BottomNavigationType.MeetList>() {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 10.dp,
+                                        )
+                                ) {
+                                    MeetListView(
+                                        openDrawer = {
+                                            scope.launch {
+                                                drawerState.apply {
+                                                    if (isClosed) open() else close()
+                                                }
+                                            }
+                                        }
+                                    )
+                                }
                             }
-                        )
+                            composable<BottomNavigationType.FriendsList>() {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 10.dp,
+                                        )
+                                ) {
+                                    FriendListView(
+                                        navigationMeetDetail = { meetDetail ->
+                                            navController.navigate(meetDetail)
+                                        }
+                                    )
+                                }
+                            }
+                        }
+
+                        composable<ScreenRoute.MeetDetail>() {
+                            MeetDetailView(
+                                onBack = navController::popBackStack
+                            )
+                        }
                     }
                 }
-            }
-
-            composable<ScreenRoute.MeetDetail>() {
-                MeetDetailView(
-                    onBack = navController::popBackStack
-                )
             }
         }
     }
