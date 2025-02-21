@@ -3,6 +3,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -53,12 +56,18 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
 
+    //Hilt
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
     //Compose
     val composeBom = "androidx.compose:compose-bom:2025.02.00"
     implementation(platform(composeBom))
     androidTestImplementation(platform(composeBom))
 
     implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.navigation:navigation-compose:2.8.7")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
@@ -71,4 +80,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 }
