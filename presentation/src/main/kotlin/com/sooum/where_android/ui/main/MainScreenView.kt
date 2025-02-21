@@ -7,7 +7,6 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -19,22 +18,17 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import com.sooum.where_android.model.BottomNavigationType
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
 import com.sooum.where_android.ui.main.meetList.MeetListView
-import com.sooum.where_android.viewmodel.MeetDetailViewModel
-import com.sooum.where_android.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
-
 
 @Composable
 fun MainScreenView(
@@ -55,7 +49,13 @@ fun MainScreenView(
                     LocalLayoutDirection provides LayoutDirection.Ltr
                 ) {
                     ModalDrawerSheet {
-                        Text("123")
+                        DrawerContent(
+                            closeDrawer = {
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                            }
+                        )
                     }
                 }
             }
