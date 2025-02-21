@@ -4,10 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.sooum.where_android.view.MainActivity
 import com.sooum.where_android.databinding.ActivityOnBoardingBinding
+import com.sooum.where_android.view.auth.AuthActivity
 
 class OnBoardingActivity : AppCompatActivity(){
     private lateinit var binding : ActivityOnBoardingBinding
@@ -33,7 +32,7 @@ class OnBoardingActivity : AppCompatActivity(){
         })
 
         binding.nextBtn.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, AuthActivity::class.java)
             startActivity(intent)
         }
 
@@ -44,7 +43,7 @@ class OnBoardingActivity : AppCompatActivity(){
             }
         }
 
-        binding.backImage.setOnClickListener {
+        binding.imageBack.setOnClickListener {
             val prevItem = binding.container.currentItem - 1
             if (prevItem >= 0) {
                 binding.container.currentItem = prevItem

@@ -16,6 +16,9 @@
             android:name=".view.MainActivity"
             android:exported="false" />
         <activity
+            android:name=".view.auth.AuthActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.onboarding.OnBoardingActivity"
             android:exported="false" />
         <activity
