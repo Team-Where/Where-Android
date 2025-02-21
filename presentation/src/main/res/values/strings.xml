@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">where-android</string>
+
+    온보딩
+    <string name="skip">건너뛰기</string>
+    <string name="start">시작</string>
+    <string name="onboarding_logo1">친구들과 한 공간에서\n모임을 정할 수 있어요!</string>
+    <string name="onboarding_logo2">다른 친구들과\n원하는 장소를 확인해요</string>
+    <string name="onboarding_logo3">장소를 결정하고\n위치까지 체크할 수 있어요</string>
+
+    소셜로그인 엑티비티
+    <string name="social_login_logo">약속을 새롭게 정의하다</string>
 </resources>
