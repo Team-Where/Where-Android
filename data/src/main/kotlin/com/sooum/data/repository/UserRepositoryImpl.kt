@@ -24,11 +24,11 @@ class UserRepositoryImpl @Inject constructor(
     private val _userListFlow = MutableStateFlow(
         listOf(
             User(1, "C_tester1", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fd9Iv4o%2FbtsMln2JnID%2FI8WURonJdDrWDHzEIGsmVk%2Fimg.png", false),
-            User(2, "A_tester2", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fbf1DwG%2FbtsMkKxg8Tl%2FYaMbRV8TsGVBKvfwwdAFY0%2Fimg.png", false),
+            User(2, "우리동네 먹짱방방", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fbf1DwG%2FbtsMkKxg8Tl%2FYaMbRV8TsGVBKvfwwdAFY0%2Fimg.png", false),
             User(3, "B_tester3", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fdf7dZ9%2FbtsMkZOs04N%2FGNr5VKFmoV56ucbOJL7pz1%2Fimg.png", true),
             User(4, "G_tester3", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FmK40G%2FbtsJqkf3kJO%2FoI8qV3pEjIvoqs2uJulCKK%2Fimg.png", false),
-            User(5, "Q_tester3", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FrRij7%2FbtsJqareHV1%2FHL6bxVNCKN5RDsDPNffkcK%2Fimg.png", true),
-            User(6, "U_tester3", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcnILSI%2FbtsJp5Q5Nc0%2FIlVZ0SixxRzoqDIKFDLlHK%2Fimg.png", false),
+            User(5, "천만팥", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FrRij7%2FbtsJqareHV1%2FHL6bxVNCKN5RDsDPNffkcK%2Fimg.png", true),
+            User(6, "뭘본거지", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcnILSI%2FbtsJp5Q5Nc0%2FIlVZ0SixxRzoqDIKFDLlHK%2Fimg.png", false),
             User(7, "K_tester3", "", true),
         ).sortedBy { it.name }
     )
@@ -36,6 +36,10 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun getUserList(): Flow<List<User>> {
         return userListFlow
+    }
+
+    override fun getUserById(userId: Long): User? {
+        return _userListFlow.value.find { it.id == userId }
     }
 
     override suspend fun updateUserFavorite(id: Long, favorite: Boolean) {
