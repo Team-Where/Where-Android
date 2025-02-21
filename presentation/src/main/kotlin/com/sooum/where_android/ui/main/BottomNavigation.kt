@@ -1,7 +1,6 @@
 package com.sooum.where_android.ui.main
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import com.sooum.where_android.R
 import com.sooum.where_android.model.BottomNavigationType
+import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.theme.Gray200
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
@@ -97,7 +97,7 @@ fun BottomNavigation(
                     onClick = {
                         navigation(BottomNavigationType.FriendsList)
                     },
-                    isSelected = currentRoute.contains(BottomNavigationType.FriendsList.toString())
+                    isSelected = currentRoute.contains(BottomNavigationType.FriendsList::class.java.simpleName) || currentRoute.contains(ScreenRoute.MeetDetail::class.java.simpleName)
                 )
             }
         }

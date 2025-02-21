@@ -14,6 +14,11 @@ interface UserRepository {
     fun getUserList(): Flow<List<User>>
 
     /**
+     * id에 해당하는 유저정보를 가져옵니다.
+     */
+    fun getUserById(userId:Long) : User?
+
+    /**
      * 즐겨 찾기를 변경합니다.
      */
     suspend fun updateUserFavorite(id: Long, favorite: Boolean)

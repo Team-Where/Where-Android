@@ -1,6 +1,5 @@
-package com.sooum.where_android.ui.friendList.modal
+package com.sooum.where_android.ui.main.friendList.modal
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,16 +8,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -36,7 +32,8 @@ import com.sooum.domain.model.User
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
-import com.sooum.where_android.widget.FavoriteIconButton
+import com.sooum.where_android.ui.widget.CircleProfileView
+import com.sooum.where_android.ui.widget.FavoriteIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,12 +106,9 @@ private fun ProfileDetailContent(
             verticalArrangement = Arrangement.spacedBy(21.dp)
         ) {
             //TODO profileImage 값으로 부터 가져오도록 수정필요
-            Image(
-                painterResource(R.drawable.test_profile),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
+            CircleProfileView(
+                user.profileImage,
+                size = 120.dp
             )
 
             Column(

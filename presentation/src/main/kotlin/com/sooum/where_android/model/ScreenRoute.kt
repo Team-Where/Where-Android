@@ -9,6 +9,6 @@ sealed class ScreenRoute {
 
     @Serializable
     data class MeetDetail(
-        val userId: Long
+        val detailUserId: Long
     ) : ScreenRoute()
 }

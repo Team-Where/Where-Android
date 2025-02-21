@@ -2,6 +2,7 @@ package com.sooum.where_android.ui.main
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +20,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sooum.where_android.model.BottomNavigationType
 import com.sooum.where_android.model.ScreenRoute
-import com.sooum.where_android.ui.friendList.FriendListView
+import com.sooum.where_android.ui.main.friendList.FriendListView
+import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
+import com.sooum.where_android.viewmodel.MeetDetailViewModel
 import com.sooum.where_android.viewmodel.UserViewModel
 
 
@@ -33,19 +36,25 @@ fun MainScreenView(
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            BottomNavigation(
-                navBackStackEntry = navBackStackEntry,
-                navigation = { type ->
-                    navController.navigate(type)
-                }
-            )
+            BottomAppBar(
+                contentColor = Color.White,
+                containerColor = Color.White
+            ) {
+                BottomNavigation(
+                    navBackStackEntry = navBackStackEntry,
+                    navigation = { type ->
+                        navController.navigate(type)
+                    }
+                )
+            }
         },
         containerColor = Color.White,
     ) { innerPadding ->
 
         NavHost(
             navController = navController,
-            startDestination = ScreenRoute.Main
+            startDestination = ScreenRoute.Main,
+            modifier = Modifier.padding(innerPadding)
         ) {
             navigation<ScreenRoute.Main>(startDestination = BottomNavigationType.MeetList) {
                 composable<BottomNavigationType.MeetList>() {
@@ -60,7 +69,6 @@ fun MainScreenView(
                     val userViewModel = hiltViewModel<UserViewModel>()
                     Column(
                         modifier = Modifier
-                            .padding(innerPadding)
                             .padding(
                                 horizontal = 10.dp,
                             )
@@ -76,8 +84,9 @@ fun MainScreenView(
             }
 
             composable<ScreenRoute.MeetDetail>() {
-                val meetDetail : ScreenRoute.MeetDetail = it.toRoute()
-                Text(meetDetail.toString())
+                MeetDetailView(
+                    onBack = navController::popBackStack
+                )
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.sooum.where_android.ui.friendList.modal
+package com.sooum.where_android.ui.main.friendList.modal
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
