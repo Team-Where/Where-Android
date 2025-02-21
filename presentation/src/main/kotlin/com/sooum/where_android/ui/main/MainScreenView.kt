@@ -1,6 +1,7 @@
 package com.sooum.where_android.ui.main
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DrawerValue
@@ -14,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
@@ -39,51 +41,57 @@ fun MainScreenView(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    CompositionLocalProvider(
-        LocalLayoutDirection provides LayoutDirection.Rtl
-    ) {
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
+
+    Scaffold(
+        modifier = modifier,
+        bottomBar = {
+            BottomAppBar(
+                contentColor = Color.White,
+                containerColor = Color.White
+            ) {
+                BottomNavigation(
+                    navBackStackEntry = navBackStackEntry,
+                    navigation = { type ->
+                        navController.navigate(type)
+                    }
+                )
+            }
+        },
+        containerColor = Color.White,
+    ) { innerPadding ->
+        CompositionLocalProvider(
+            LocalLayoutDirection provides LayoutDirection.Rtl
+        ) {
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    CompositionLocalProvider(
+                        LocalLayoutDirection provides LayoutDirection.Ltr
+                    ) {
+                        ModalDrawerSheet(
+                            drawerState = drawerState,
+                            drawerShape = RectangleShape
+                        ) {
+                            DrawerContent(
+                                closeDrawer = {
+                                    scope.launch {
+                                        drawerState.close()
+                                    }
+                                },
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                    }
+                },
+                modifier = Modifier.padding(innerPadding)
+            ) {
                 CompositionLocalProvider(
                     LocalLayoutDirection provides LayoutDirection.Ltr
                 ) {
-                    ModalDrawerSheet {
-                        DrawerContent(
-                            closeDrawer = {
-                                scope.launch {
-                                    drawerState.close()
-                                }
-                            }
-                        )
-                    }
-                }
-            }
-        ) {
-            CompositionLocalProvider(
-                LocalLayoutDirection provides LayoutDirection.Ltr
-            ) {
-                Scaffold(
-                    modifier = modifier,
-                    bottomBar = {
-                        BottomAppBar(
-                            contentColor = Color.White,
-                            containerColor = Color.White
-                        ) {
-                            BottomNavigation(
-                                navBackStackEntry = navBackStackEntry,
-                                navigation = { type ->
-                                    navController.navigate(type)
-                                }
-                            )
-                        }
-                    },
-                    containerColor = Color.White,
-                ) { innerPadding ->
                     NavHost(
                         navController = navController,
                         startDestination = ScreenRoute.Main,
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier
                     ) {
                         navigation<ScreenRoute.Main>(startDestination = BottomNavigationType.MeetList) {
                             composable<BottomNavigationType.MeetList>() {
