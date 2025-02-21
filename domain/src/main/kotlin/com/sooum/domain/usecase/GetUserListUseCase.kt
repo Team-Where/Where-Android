@@ -5,7 +5,7 @@ import com.sooum.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetUserUseCase @Inject constructor(
+class GetUserListUseCase @Inject constructor(
     private val repository: UserRepository
 ) {
     operator fun invoke(): Flow<List<User>> {
