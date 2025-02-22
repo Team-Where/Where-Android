@@ -17,10 +17,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -34,6 +36,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -53,11 +57,11 @@ fun MeetDetailView(
     meetDetailViewModel: MeetDetailViewModel = hiltViewModel(),
     onBack: () -> Unit
 ) {
-    val meetDetailList by meetDetailViewModel.meetDetailList.collectAsState()
+    val meetDetailList by meetDetailViewModel.meetDetailGroupList.collectAsState()
     MeetDetailContent(
         onBack = onBack,
         friend = meetDetailViewModel.getUserData()!!,
-        meetDetailList = meetDetailList
+        meetDetailGroupList = meetDetailList
     )
 }
 
@@ -65,7 +69,7 @@ fun MeetDetailView(
 private fun MeetDetailContent(
     onBack: () -> Unit,
     friend: User,
-    meetDetailList: List<MeetDetail>,
+    meetDetailGroupList: Map<Int, List<MeetDetail>>,
 ) {
     Column {
         Box(
@@ -103,6 +107,7 @@ private fun MeetDetailContent(
             modifier = Modifier
                 .fillMaxSize()
         ) {
+            // 프로필 헤더
             item {
                 Box(
                     modifier = Modifier
@@ -155,6 +160,8 @@ private fun MeetDetailContent(
                     }
                 }
             }
+
+            //구분 Spacer
             item {
                 Spacer(
                     Modifier
@@ -164,117 +171,138 @@ private fun MeetDetailContent(
                 )
             }
 
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            all = 20.dp
-                        ),
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "2024",
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = pretendard,
-                        fontSize = 24.sp
-                    )
+            initGroupItem(meetDetailGroupList)
+        }
 
-                    Text(
-                        text = "3개월 지난 모임은 포함되지않습니다.",
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = pretendard,
-                        fontSize = 12.sp
-                    )
-                }
+    }
+}
+
+fun LazyListScope.initGroupItem(
+    meetDetailGroupList : Map<Int,List<MeetDetail>>
+) {
+    meetDetailGroupList.keys.forEachIndexed { yearIndex, year ->
+        item {
+            MeetDetailHeader(year, yearIndex == 0)
+        }
+        val meetDetailList = meetDetailGroupList[year]!!
+        items(
+            count = meetDetailList.size,
+            key = {
+                meetDetailList[it].id
             }
-            items(
-                count = meetDetailList.size,
-                key = {
-                    meetDetailList[it].id
+        ) { index ->
+            val prevItem = kotlin.runCatching { meetDetailList[index - 1] }.getOrNull()
+            val meetDetail = meetDetailList[index]
+            val nextItem = kotlin.runCatching { meetDetailList[index + 1] }.getOrNull()
+            Row(
+                Modifier.padding(horizontal = 20.dp)
+            ) {
+                val cardHeight = 153.dp
+                val bottomSpace = if (index == meetDetailList.size - 1) {
+                    20.dp
+                } else {
+                    20.dp
                 }
-            ) { index ->
-                val prevItem = kotlin.runCatching { meetDetailList[index - 1] }.getOrNull()
-                val meetDetail = meetDetailList[index]
-                val nextItem = kotlin.runCatching { meetDetailList[index + 1] }.getOrNull()
-                Row(
-                    Modifier.padding(horizontal = 20.dp)
+
+                Box(
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(cardHeight + bottomSpace)
                 ) {
-                    val cardHeight = 153.dp
-                    val bottomSpace = if (index == meetDetailList.size - 1) {
-                        0.dp
-                    } else {
-                        20.dp
-                    }
-                    Box(
+//                            if (meetDetail.month != nextItem?.month) {
+//                                VerticalDivider(
+//                                    modifier = Modifier
+//                                        .height(cardHeight + bottomSpace / 2)
+//                                        .align(Alignment.TopCenter)
+//                                )
+//                            } else {
+                    VerticalDivider(
                         modifier = Modifier
-                            .width(60.dp)
                             .height(cardHeight + bottomSpace)
+                            .align(Alignment.TopCenter)
+                    )
+//                            }
+
+
+                    if (
+                        prevItem == null ||
+                        (prevItem.month != meetDetail.month)
                     ) {
-                        if (meetDetail.month != nextItem?.month) {
-                            VerticalDivider(
-                                modifier = Modifier
-                                    .height(cardHeight + bottomSpace/2)
-                                    .align(Alignment.TopCenter)
-                            )
-                        } else {
-                            VerticalDivider(
-                                modifier = Modifier
-                                    .height(cardHeight + bottomSpace)
-                                    .align(Alignment.TopCenter)
-                            )
-                        }
-
-
-                        if (
-                            prevItem == null ||
-                            (prevItem.month != meetDetail.month)
+                        Column(
+                            modifier = Modifier
+                                .height(40.dp)
+                                .background(Color.White)
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .height(40.dp)
-                                    .background(Color.White)
+                            Spacer(
+                                Modifier.height(5.dp)
+                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Spacer(
-                                    Modifier.height(5.dp)
-                                )
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
+                                Box(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .size(10.dp)
+                                        .background(Color(0xffeef2ff))
                                 ) {
                                     Box(
                                         modifier = Modifier
+                                            .align(Alignment.Center)
                                             .clip(CircleShape)
-                                            .size(10.dp)
-                                            .background(Color(0xffeef2ff))
-                                    ) {
-                                        Box(
-                                            modifier = Modifier
-                                                .align(Alignment.Center)
-                                                .clip(CircleShape)
-                                                .size(6.dp)
-                                                .background(Primary600)
-                                        )
-                                    }
-                                    Spacer(Modifier.width(8.dp))
-                                    Text(
-                                        text = "${meetDetail.month}월",
-                                        fontFamily = pretendard,
-                                        fontWeight = FontWeight.Medium,
-                                        fontSize = 16.sp
+                                            .size(6.dp)
+                                            .background(Primary600)
                                     )
                                 }
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = "${meetDetail.month}월",
+                                    fontFamily = pretendard,
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 16.sp
+                                )
                             }
                         }
-
                     }
-                    MeetDetailCard(
-                        meetDetail = meetDetail,
-                    )
+
                 }
+                MeetDetailCard(
+                    meetDetail = meetDetail,
+                )
             }
         }
+    }
+}
 
+@Composable
+private fun MeetDetailHeader(
+    year: Int,
+    isFirstHeader: Boolean
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                all = 20.dp
+            ),
+        verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = year.toString(),
+            fontWeight = FontWeight.SemiBold,
+            fontFamily = pretendard,
+            fontSize = 24.sp
+        )
+
+
+        if (isFirstHeader) {
+            Text(
+                text = "3개월 지난 모임은 포함되지않습니다.",
+                fontWeight = FontWeight.Normal,
+                fontFamily = pretendard,
+                fontSize = 12.sp
+            )
+        }
     }
 }
 
@@ -322,36 +350,162 @@ private fun MeetDetailProfileImage(
     }
 }
 
+
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(
+    showBackground = true, showSystemUi = false,
+    device = "id:Nexus 5"
+)
 private fun MeetDetailContentPreview() {
-    Column(
-        modifier = Modifier.safeDrawingPadding()
+    Surface(
+        color = Color.White,
     ) {
-        MeetDetailContent(
-            onBack = {},
-            friend = User(0, "우리동네 먹짱방방"),
-            listOf(
-                MeetDetail(
-                    1,
-                    "2024 연말파티\uD83E\uDD42",
-                    "벌써 연말이다 신나게 놀아보장~~",
-                    "",
-                    2024,
-                    11,
-                    26
+        Column(
+            modifier = Modifier.safeDrawingPadding(),
+        ) {
+            MeetDetailContent(
+                onBack = {},
+                friend = User(0, "우리동네 먹짱방방"),
+                emptyMap()
+            )
+        }
+    }
+}
+
+
+internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int,List<MeetDetail>>> {
+    override val values: Sequence<Map<Int, List<MeetDetail>>>
+        get() = sequenceOf(
+            mapOf(
+                2025 to listOf(
+                    MeetDetail(
+                        3,
+                        "행궁동 갈 사람\uD83C\uDF42",
+                        "선선해진 날씨에 같이 사람~!",
+                        "",
+                        2025,
+                        1,
+                        27
+                    ),
+                    MeetDetail(
+                        1,
+                        "2024 연말파티\uD83E\uDD42",
+                        "벌써 연말이다 신나게 놀아보장~~",
+                        "",
+                        2025,
+                        1,
+                        26
+                    ),
+                    MeetDetail(
+                        4,
+                        "2024 연말파티\uD83E\uDD42",
+                        "벌써 연말이다 신나게 놀아보장~~",
+                        "",
+                        2025,
+                        1,
+                        25
+                    )
+                )
+            ),
+            mapOf(
+                2025 to listOf(
+                    MeetDetail(
+                        3,
+                        "행궁동 갈 사람\uD83C\uDF42",
+                        "선선해진 날씨에 같이 사람~!",
+                        "",
+                        2025,
+                        1,
+                        27
+                    ),
+                    MeetDetail(
+                        1,
+                        "2024 연말파티\uD83E\uDD42",
+                        "벌써 연말이다 신나게 놀아보장~~",
+                        "",
+                        2025,
+                        1,
+                        26
+                    ),
+                    MeetDetail(
+                        4,
+                        "2024 연말파티\uD83E\uDD42",
+                        "벌써 연말이다 신나게 놀아보장~~",
+                        "",
+                        2025,
+                        1,
+                        25
+                    )
                 ),
-                MeetDetail(
-                    2,
-                    "행궁동 갈 사람\uD83C\uDF42",
-                    "선선해진 날씨에 같이 사람~!",
-                    "",
-                    2024,
-                    9,
-                    11
+                2024 to listOf(
+                    MeetDetail(
+                        2,
+                        "2024 연말파티\uD83E\uDD42",
+                        "벌써 연말이다 신나게 놀아보장~~",
+                        "",
+                        2024,
+                        12,
+                        25
+                    ),
+                )
+            ),
+            mapOf(
+                2025 to listOf(
+                    MeetDetail(
+                        6,
+                        "행궁동 갈 사람\uD83C\uDF42",
+                        "선선해진 날씨에 같이 사람~!",
+                        "",
+                        2025,
+                        2,
+                        2
+                    ),
+                    MeetDetail(
+                        7,
+                        "행궁동 갈 사람\uD83C\uDF42",
+                        "선선해진 날씨에 같이 사람~!",
+                        "",
+                        2025,
+                        2,
+                        1
+                    ),
+                    MeetDetail(
+                        3,
+                        "행궁동 갈 사람\uD83C\uDF42",
+                        "선선해진 날씨에 같이 사람~!",
+                        "",
+                        2025,
+                        1,
+                        27
+                    )
+                ),
+                2024 to listOf(
+                    MeetDetail(
+                        2,
+                        "2024 연말파티\uD83E\uDD42",
+                        "벌써 연말이다 신나게 놀아보장~~",
+                        "",
+                        2024,
+                        12,
+                        25
+                    ),
                 )
             )
         )
+}
 
+@Composable
+@Preview(showBackground = true, showSystemUi = false)
+fun GroupDataListViewPreview(
+    @PreviewParameter(GroupDataParameterProvider::class) data: Map<Int,List<MeetDetail>>
+) {
+    Surface(
+        color = Color.White,
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            initGroupItem(data)
+        }
     }
 }
