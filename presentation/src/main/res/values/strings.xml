@@ -10,4 +10,11 @@
 
     소셜로그인 엑티비티
     <string name="social_login_logo">약속을 새롭게 정의하다</string>
+
+
+
+
+    //Main - MyMeet
+    <string name="my_meet_no_meet">아직 모임이 없어요</string>
+    <string name="my_meet_no_meet_btn">모임 추가 방법</string>
 </resources>

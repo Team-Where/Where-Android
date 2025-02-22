@@ -116,6 +116,11 @@ fun MainScreenView(
                                             }
                                         }
                                     },
+                                    navigationGuide = {
+                                        navController.navigate(ScreenRoute.MeetGuide) {
+                                            launchSingleTop = true
+                                        }
+                                    },
                                     modifier = Modifier
                                         .padding(
                                             horizontal = 10.dp,
@@ -125,7 +130,9 @@ fun MainScreenView(
                             composable<BottomNavigationType.FriendsList>() {
                                 FriendListView(
                                     navigationMeetDetail = { meetDetail ->
-                                        navController.navigate(meetDetail)
+                                        navController.navigate(meetDetail) {
+                                            launchSingleTop = true
+                                        }
                                     },
                                     modifier = Modifier
                                         .padding(
@@ -133,12 +140,12 @@ fun MainScreenView(
                                         )
                                 )
                             }
-                        }
 
-                        composable<ScreenRoute.MeetDetail>() {
-                            MeetDetailView(
-                                onBack = navController::popBackStack
-                            )
+                            composable<ScreenRoute.MeetDetail>() {
+                                MeetDetailView(
+                                    onBack = navController::popBackStack
+                                )
+                            }
                         }
                     }
                 }

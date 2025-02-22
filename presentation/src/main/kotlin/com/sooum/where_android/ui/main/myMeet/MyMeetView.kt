@@ -19,6 +19,7 @@ import com.sooum.where_android.viewmodel.MyMeetViewModel
 fun MyMeetView(
     myMeetViewModel: MyMeetViewModel = hiltViewModel(),
     openDrawer: () -> Unit,
+    navigationGuide: () -> Unit,
     modifier: Modifier
 ) {
     val meetDetailList by myMeetViewModel.meetDetailList.collectAsState()
@@ -26,6 +27,7 @@ fun MyMeetView(
     MyMeetViewContent(
         openDrawer = openDrawer,
         meetDetailList = meetDetailList,
+        navigationGuide = navigationGuide,
         modifier = modifier
     )
 }
@@ -35,6 +37,7 @@ fun MyMeetView(
 private fun MyMeetViewContent(
     openDrawer: () -> Unit,
     meetDetailList: List<MeetDetail>,
+    navigationGuide: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -43,18 +46,10 @@ private fun MyMeetViewContent(
         MyMeetHeaderView(
             openDrawer = openDrawer
         )
-        if (meetDetailList.isEmpty()) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center
-            ) {
-
-            }
-        } else {
-            Column {
-
-            }
-        }
+        MyMeetListView(
+            meetDetailList,
+            navigationGuide = navigationGuide
+        )
     }
 }
 
@@ -64,6 +59,7 @@ private fun MeetListViewContentPreview() {
     MyMeetViewContent(
         openDrawer = {},
         meetDetailList = emptyList(),
+        navigationGuide = {},
         modifier = Modifier
             .safeDrawingPadding()
             .padding(12.dp)
