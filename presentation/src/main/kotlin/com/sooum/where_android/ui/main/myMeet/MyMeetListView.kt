@@ -48,6 +48,7 @@ import com.sooum.where_android.theme.GrayScale300
 import com.sooum.where_android.theme.GrayScale500
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.ui.widget.CoverImage
 
 @Composable
 internal fun MyMeetListView(
@@ -127,24 +128,10 @@ private fun MyMeetContentCard(
 ) {
     val size = 170.dp
     Column {
-        SubcomposeAsyncImage(
-            model =  meetDetail.image,
-            contentDescription = null,
-            modifier = Modifier.size(size)
-                .clip(RoundedCornerShape(10.dp)),
-            contentScale = ContentScale.Crop
-        ) {
-            val state by painter.state.collectAsState()
-            if (state is AsyncImagePainter.State.Success) {
-                SubcomposeAsyncImageContent()
-            } else {
-                Image(
-                    painter = painterResource(R.drawable.image_meet_default_cover),
-                    contentDescription = null,
-                    modifier = Modifier.size(size)
-                )
-            }
-        }
+        meetDetail.CoverImage(
+            size = size,
+            radius = 10.dp
+        )
         Spacer(
             modifier = Modifier.height(16.dp)
         )

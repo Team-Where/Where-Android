@@ -31,6 +31,7 @@ import com.sooum.where_android.theme.Gray300
 import com.sooum.where_android.theme.Gray500
 import com.sooum.where_android.theme.GrayScale800
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.ui.widget.CoverImage
 
 @Composable
 fun MeetDetailCard(
@@ -53,12 +54,9 @@ fun MeetDetailCard(
                 .fillMaxWidth()
                 .height(65.dp)
         ){
-            SubcomposeAsyncImage(
-                meetDetail.image,
-                contentDescription = null,
-                modifier = Modifier.size(65.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color.Gray)
+            meetDetail.CoverImage(
+                65.dp,
+                12.dp
             )
             Spacer(
                 Modifier.width(16.dp)
