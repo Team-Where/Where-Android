@@ -109,36 +109,30 @@ fun MainScreenView(
                     ) {
                         navigation<ScreenRoute.Main>(startDestination = BottomNavigationType.MeetList) {
                             composable<BottomNavigationType.MeetList>() {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(
-                                            horizontal = 10.dp,
-                                        )
-                                ) {
-                                    MeetListView(
-                                        openDrawer = {
-                                            scope.launch {
-                                                drawerState.apply {
-                                                    if (isClosed) open() else close()
-                                                }
+                                MeetListView(
+                                    openDrawer = {
+                                        scope.launch {
+                                            drawerState.apply {
+                                                if (isClosed) open() else close()
                                             }
                                         }
-                                    )
-                                }
-                            }
-                            composable<BottomNavigationType.FriendsList>() {
-                                Column(
+                                    },
                                     modifier = Modifier
                                         .padding(
                                             horizontal = 10.dp,
                                         )
-                                ) {
-                                    FriendListView(
-                                        navigationMeetDetail = { meetDetail ->
-                                            navController.navigate(meetDetail)
-                                        }
-                                    )
-                                }
+                                )
+                            }
+                            composable<BottomNavigationType.FriendsList>() {
+                                FriendListView(
+                                    navigationMeetDetail = { meetDetail ->
+                                        navController.navigate(meetDetail)
+                                    },
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 10.dp,
+                                        )
+                                )
                             }
                         }
 

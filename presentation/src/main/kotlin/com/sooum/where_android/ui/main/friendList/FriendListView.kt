@@ -84,14 +84,16 @@ sealed class FriendListViewType(
 @Composable
 fun FriendListView(
     userViewModel: UserViewModel = hiltViewModel(),
-    navigationMeetDetail: (ScreenRoute.MeetDetail) -> Unit
+    navigationMeetDetail: (ScreenRoute.MeetDetail) -> Unit,
+    modifier: Modifier
 ) {
     val userList by userViewModel.userList.collectAsState()
     FriedListContent(
         userList = userList,
         navigationMeetDetail = navigationMeetDetail,
         deleteUser = userViewModel::deleteUser,
-        updateFavorite = userViewModel::updateUserFavorite
+        updateFavorite = userViewModel::updateUserFavorite,
+        modifier = modifier
     )
 }
 

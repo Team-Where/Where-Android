@@ -12,22 +12,29 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.sooum.where_android.R
+import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.Primary600
+import com.sooum.where_android.theme.pretendard
 
 @Composable
 fun MeetListView(
-    openDrawer :() -> Unit
+    openDrawer :() -> Unit,
+    modifier: Modifier
 ) {
     MeetListViewContent(
-        openDrawer = openDrawer
+        openDrawer = openDrawer,
+        modifier = modifier
     )
 }
 
@@ -40,30 +47,51 @@ private fun MeetListViewContent(
     Column(
         modifier = modifier
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(54.dp)
-                .padding(
-                    vertical = 5.dp
-                ),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
+        Column {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(54.dp)
+                    .padding(
+                        vertical = 5.dp,
+                        horizontal = 5.dp
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Image(
-                    painter = painterResource(R.drawable.image_where_logo_noncolor),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(Primary600)
-                )
-            }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.image_where_logo_noncolor),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(Primary600)
+                    )
+                }
 
-            IconButton(
-                onClick = openDrawer
+                IconButton(
+                    onClick = openDrawer
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.List, null)
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(54.dp)
+                    .padding(
+                        vertical = 5.dp,
+                        horizontal = 5.dp
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(Icons.AutoMirrored.Filled.List, null)
+                Text(
+                    text = "내 모임",
+                    fontSize = 24.sp,
+                    fontFamily = pretendard,
+                    color = Gray800,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
         }
     }
