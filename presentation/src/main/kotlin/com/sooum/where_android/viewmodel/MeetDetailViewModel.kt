@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.sooum.domain.usecase.GetUserUseCase
 import com.sooum.domain.usecase.meet.GetMeetDetailListGroupByYearUseCase
-import com.sooum.domain.usecase.meet.GetMeetDetailListUseCase
 import com.sooum.where_android.model.ScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,7 +19,7 @@ class MeetDetailViewModel @Inject constructor(
     private val getMeetDetailListGroupByYearUseCase: GetMeetDetailListGroupByYearUseCase
 ) : ViewModel() {
 
-    private val route = savedStateHandle.toRoute<ScreenRoute.Home.MeetDetail>()
+    private val route = savedStateHandle.toRoute<ScreenRoute.Home.FriendMeetDetail>()
 
     private val findUserId = route.detailUserId
 

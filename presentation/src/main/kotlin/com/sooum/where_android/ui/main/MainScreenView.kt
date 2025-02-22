@@ -143,7 +143,7 @@ fun MainScreenView(
                                 )
                             }
 
-                            composable<ScreenRoute.Home.MeetDetail>() {
+                            composable<ScreenRoute.Home.FriendMeetDetail>() {
                                 MeetDetailView(
                                     onBack = navController::popBackStack
                                 )

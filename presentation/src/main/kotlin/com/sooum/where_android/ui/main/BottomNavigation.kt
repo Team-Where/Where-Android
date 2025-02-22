@@ -3,7 +3,6 @@ package com.sooum.where_android.ui.main
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -104,7 +102,7 @@ fun BottomNavigation(
                         navigation(ScreenRoute.BottomNavigation.FriendsList)
                     },
                     isSelected = currentRoute.contains(ScreenRoute.BottomNavigation.FriendsList::class.java.simpleName) || currentRoute.contains(
-                        ScreenRoute.Home.MeetDetail::class.java.simpleName
+                        ScreenRoute.Home.FriendMeetDetail::class.java.simpleName
                     )
                 )
             }
