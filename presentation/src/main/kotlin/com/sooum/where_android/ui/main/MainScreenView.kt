@@ -1,7 +1,6 @@
 package com.sooum.where_android.ui.main
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -31,7 +30,7 @@ import com.sooum.where_android.model.BottomNavigationType
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
-import com.sooum.where_android.ui.main.meetList.MeetListView
+import com.sooum.where_android.ui.main.myMeet.MyMeetView
 import kotlinx.coroutines.launch
 
 @Composable
@@ -109,7 +108,7 @@ fun MainScreenView(
                     ) {
                         navigation<ScreenRoute.Main>(startDestination = BottomNavigationType.MeetList) {
                             composable<BottomNavigationType.MeetList>() {
-                                MeetListView(
+                                MyMeetView(
                                     openDrawer = {
                                         scope.launch {
                                             drawerState.apply {
