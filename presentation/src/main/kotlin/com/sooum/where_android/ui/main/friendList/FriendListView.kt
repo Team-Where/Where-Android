@@ -84,7 +84,7 @@ sealed class FriendListViewType(
 @Composable
 fun FriendListView(
     userViewModel: UserViewModel = hiltViewModel(),
-    navigationMeetDetail: (ScreenRoute.MeetDetail) -> Unit,
+    navigationMeetDetail: (ScreenRoute.Home.MeetDetail) -> Unit,
     modifier: Modifier
 ) {
     val userList by userViewModel.userList.collectAsState()
@@ -100,7 +100,7 @@ fun FriendListView(
 @Composable
 private fun FriedListContent(
     userList: List<User>,
-    navigationMeetDetail: (ScreenRoute.MeetDetail) -> Unit,
+    navigationMeetDetail: (ScreenRoute.Home.MeetDetail) -> Unit,
     deleteUser: (id: Long) -> Unit,
     updateFavorite: (id: Long, favorite: Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -332,7 +332,7 @@ private fun FriedListContent(
                         },
                         navigationMeetDetail = {
                             selectedUserId = null
-                            navigationMeetDetail(ScreenRoute.MeetDetail(detailUserId = user.id))
+                            navigationMeetDetail(ScreenRoute.Home.MeetDetail(detailUserId = user.id))
                         },
                         updateFavorite = updateFavorite
                     )

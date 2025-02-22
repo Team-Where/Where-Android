@@ -5,13 +5,25 @@ import kotlinx.serialization.Serializable
 sealed class ScreenRoute {
 
     @Serializable
-    data object Main : ScreenRoute()
+    data object MainGraph : ScreenRoute()
 
-    @Serializable
-    data class MeetDetail(
-        val detailUserId: Long
-    ) : ScreenRoute()
+    sealed class BottomNavigation : ScreenRoute() {
 
-    @Serializable
-    data object MeetGuide : ScreenRoute()
+        @Serializable
+        data object MeetList : BottomNavigation()
+
+        @Serializable
+        data object FriendsList : BottomNavigation()
+    }
+
+    sealed class Home :ScreenRoute() {
+        @Serializable
+        data class MeetDetail(
+            val detailUserId: Long
+        ) : Home()
+
+        @Serializable
+        data object MeetGuide : Home()
+    }
+
 }

@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import com.sooum.where_android.R
-import com.sooum.where_android.model.BottomNavigationType
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.theme.Gray200
 import com.sooum.where_android.theme.Primary600
@@ -41,16 +40,16 @@ import com.sooum.where_android.theme.pretendard
 @Composable
 fun BottomNavigation(
     navBackStackEntry: NavBackStackEntry?,
-    navigation: (BottomNavigationType) -> Unit = {},
+    navigation: (ScreenRoute.BottomNavigation) -> Unit = {},
 ) {
     val currentRoute = navBackStackEntry?.destination?.route ?: ""
 
     Column {
         Spacer(
             Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Gray200)
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Gray200)
         )
         Spacer(Modifier.height(5.dp))
         Row(
@@ -70,9 +69,9 @@ fun BottomNavigation(
                     icon = R.drawable.icon_bottom_group,
                     title = "내 모임",
                     onClick = {
-                        navigation(BottomNavigationType.MeetList)
+                        navigation(ScreenRoute.BottomNavigation.MeetList)
                     },
-                    isSelected = currentRoute.contains(BottomNavigationType.MeetList.toString())
+                    isSelected = currentRoute.contains(ScreenRoute.BottomNavigation.MeetList.toString())
                 )
             }
             Row(
@@ -102,9 +101,11 @@ fun BottomNavigation(
                     icon = R.drawable.icon_bottom_friend,
                     title = "친구목록",
                     onClick = {
-                        navigation(BottomNavigationType.FriendsList)
+                        navigation(ScreenRoute.BottomNavigation.FriendsList)
                     },
-                    isSelected = currentRoute.contains(BottomNavigationType.FriendsList::class.java.simpleName) || currentRoute.contains(ScreenRoute.MeetDetail::class.java.simpleName)
+                    isSelected = currentRoute.contains(ScreenRoute.BottomNavigation.FriendsList::class.java.simpleName) || currentRoute.contains(
+                        ScreenRoute.Home.MeetDetail::class.java.simpleName
+                    )
                 )
             }
         }

@@ -20,7 +20,7 @@ class MeetDetailViewModel @Inject constructor(
     private val getMeetDetailListGroupByYearUseCase: GetMeetDetailListGroupByYearUseCase
 ) : ViewModel() {
 
-    private val route = savedStateHandle.toRoute<ScreenRoute.MeetDetail>()
+    private val route = savedStateHandle.toRoute<ScreenRoute.Home.MeetDetail>()
 
     private val findUserId = route.detailUserId
 

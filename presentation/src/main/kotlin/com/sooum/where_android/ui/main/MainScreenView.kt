@@ -26,7 +26,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.sooum.where_android.model.BottomNavigationType
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
@@ -103,11 +102,11 @@ fun MainScreenView(
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = ScreenRoute.Main,
+                        startDestination = ScreenRoute.MainGraph,
                         modifier = Modifier
                     ) {
-                        navigation<ScreenRoute.Main>(startDestination = BottomNavigationType.MeetList) {
-                            composable<BottomNavigationType.MeetList>() {
+                        navigation<ScreenRoute.MainGraph>(startDestination = ScreenRoute.BottomNavigation.MeetList) {
+                            composable<ScreenRoute.BottomNavigation.MeetList>() {
                                 MyMeetView(
                                     openDrawer = {
                                         scope.launch {
@@ -117,7 +116,7 @@ fun MainScreenView(
                                         }
                                     },
                                     navigationGuide = {
-                                        navController.navigate(ScreenRoute.MeetGuide) {
+                                        navController.navigate(ScreenRoute.Home.MeetGuide) {
                                             launchSingleTop = true
                                         }
                                     },
@@ -127,7 +126,10 @@ fun MainScreenView(
                                         )
                                 )
                             }
-                            composable<BottomNavigationType.FriendsList>() {
+                            composable<ScreenRoute.Home.MeetGuide>() {
+
+                            }
+                            composable<ScreenRoute.BottomNavigation.FriendsList>() {
                                 FriendListView(
                                     navigationMeetDetail = { meetDetail ->
                                         navController.navigate(meetDetail) {
@@ -141,7 +143,7 @@ fun MainScreenView(
                                 )
                             }
 
-                            composable<ScreenRoute.MeetDetail>() {
+                            composable<ScreenRoute.Home.MeetDetail>() {
                                 MeetDetailView(
                                     onBack = navController::popBackStack
                                 )
