@@ -47,7 +47,7 @@ private fun MyMeetViewContent(
             openDrawer = openDrawer
         )
         MyMeetListView(
-            emptyList(),
+            meetDetailList,
             navigationGuide = navigationGuide,
             modifier = Modifier.fillMaxSize()
         )

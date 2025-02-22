@@ -25,7 +25,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
                     2,
                     "행궁동 갈 사람\uD83C\uDF42",
                     "선선해진 날씨에 같이 사람~!",
-                    "https://s3-alpha-sig.figma.com/img/6ac8/c5c8/9f2f149c0501455fa4855cb04943f9fe?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=NF1~YtelsZsqCtVySJEl5vtnftoz3GCMnU7jy43fvLmj4KDx2wVBuk2XPnDXC2CyBRjjUQdU3p5viJMj2rAh6UIGhqx3NYxotA0ppXzXQGBS3o7DM63Pk1ESZ5GCtNOltrC6XixTtW7XXzzf4P3jdX0i2wKxVYK7bJ0HaYB8vhMkE3mQqUNQMvsVadSi8EAVfjaPGUfnxY9R-1HCQ2yGtBlrWWmogAE-kTNdJkk9shMw9xuinqniS4W8u0u3CO1ljw7DgDWYtrpZn6vxhelX~tWCmZql~BJzqrmytGjeB4Um2ShLRgftTUXemC7R3gZrofogNegNdzwICxb5SdFCmA__",
+                    "https://s3-alpha-sig.figma.com/img/aadb/e842/9b7456a077b223a1fdd7ce6ce4e4c046?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=bdatUU4QM18aBwb8waNdC4gX2mo2eT7J3FQM3Mysof0N624upN~0lo8BDm8p5WizzgOqcEFdjmG0mcUs8XBjGW7nXTo4aGiJOWyketQx8hOQlSoA3fJlnIM9fXyela2EhHrYWAJFZFAst~gc8Ox4xoGqc78iZ09hF9PDlWRMlMIME-WYycm9wBpcdauRS90mmCDX5CBoeawZqixOc~qfCBay5FE4~h~wc4vL89RKzoIAjOqPC14hL-ezdlr5SN~WDlWfN~l1a397hIYYsk-ytIw6BLTm~aOqnHKsPpzpXrHXoSkQR4AD9Rlnhoxpi4qNxtV2NUwQmM0Db3hioP7dkg__",
                     2024,
                     12,
                     11
@@ -34,7 +34,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
                     3,
                     "행궁동 갈 사람\uD83C\uDF42",
                     "선선해진 날씨에 같이 사람~!",
-                    "https://s3-alpha-sig.figma.com/img/6ac8/c5c8/9f2f149c0501455fa4855cb04943f9fe?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=NF1~YtelsZsqCtVySJEl5vtnftoz3GCMnU7jy43fvLmj4KDx2wVBuk2XPnDXC2CyBRjjUQdU3p5viJMj2rAh6UIGhqx3NYxotA0ppXzXQGBS3o7DM63Pk1ESZ5GCtNOltrC6XixTtW7XXzzf4P3jdX0i2wKxVYK7bJ0HaYB8vhMkE3mQqUNQMvsVadSi8EAVfjaPGUfnxY9R-1HCQ2yGtBlrWWmogAE-kTNdJkk9shMw9xuinqniS4W8u0u3CO1ljw7DgDWYtrpZn6vxhelX~tWCmZql~BJzqrmytGjeB4Um2ShLRgftTUXemC7R3gZrofogNegNdzwICxb5SdFCmA__",
+                    "",
                     2025,
                     1,
                     27
