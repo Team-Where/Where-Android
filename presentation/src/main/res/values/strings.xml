@@ -14,7 +14,27 @@
 
 
 
-    //Main - MyMeet
+    //Home - 내 모임
     <string name="my_meet_no_meet">아직 모임이 없어요</string>
     <string name="my_meet_no_meet_btn">모임 추가 방법</string>
+
+    //Home - 친구목록
+    <string name="friend_list_title">친구목록</string>
+    <string name="friend_list_edit_title">목록편집</string>
+
+    <string name="friend_list_edit_btn">편집</string>
+    <string name="friend_list_edit_btn_end">완료</string>
+
+    <string name="friend_list_search_placeholder">친구를 검색하세요.</string>
+    <string name="friend_list_search_no_data">검색 결과가 없습니다.</string>
+
+    <string name="friend_list_item_header_friend">친구(%d)</string>
+    <string name="friend_list_item_header_favorite_friend">즐겨찾기(%d)</string>
+
+    <string name="friend_list_info_no_data">아직 만난 친구가 없어요!</string>
+
+    <string name="friend_list_delete">친구 삭제</string>
+    <string name="friend_list_detail_meet_count">%d번 만남</string>
+    <string name="friend_list_detail_meet_show">나와의 모임활동 보기</string>
+
 </resources>

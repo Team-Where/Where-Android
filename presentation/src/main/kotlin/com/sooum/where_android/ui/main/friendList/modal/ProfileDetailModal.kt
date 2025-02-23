@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -125,7 +126,9 @@ private fun ProfileDetailContent(
                         )
                 ) {
                     Text(
-                        text = "N번 만남",
+                        text = stringResource(
+                            R.string.friend_list_detail_meet_count,3
+                        ),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = pretendard,
@@ -154,7 +157,7 @@ private fun ProfileDetailContent(
             shape = RoundedCornerShape(10.dp)
         ) {
             Text(
-                text = "나와의 모임활동 보기",
+                text = stringResource(R.string.friend_list_detail_meet_show),
                 color = Color.White,
                 fontWeight = FontWeight.Medium,
                 fontFamily = pretendard,

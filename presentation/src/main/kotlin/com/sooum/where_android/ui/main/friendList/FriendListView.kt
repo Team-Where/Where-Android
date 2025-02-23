@@ -1,5 +1,6 @@
 package com.sooum.where_android.ui.main.friendList
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -37,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -64,20 +66,20 @@ import com.sooum.where_android.viewmodel.UserViewModel
 
 
 sealed class FriendListViewType(
-    val title: String,
+    @StringRes val title: Int,
     val fontSize: Int,
-    val buttonTitle: String
+    @StringRes val buttonTitle: Int
 ) {
     data object Default : FriendListViewType(
-        title = "친구목록",
+        title = R.string.friend_list_title,
         fontSize = 24,
-        buttonTitle = "편집"
+        buttonTitle = R.string.friend_list_edit_btn
     )
 
     data object Edit : FriendListViewType(
-        title = "목록편집",
+        title = R.string.friend_list_edit_title,
         fontSize = 16,
-        buttonTitle = "완료"
+        buttonTitle = R.string.friend_list_edit_btn_end
     )
 }
 
@@ -144,7 +146,7 @@ private fun FriedListContent(
                     }
                 }
                 Text(
-                    text = viewType.title,
+                    text = stringResource(viewType.title),
                     color = Gray800,
                     fontSize = viewType.fontSize.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -167,7 +169,7 @@ private fun FriedListContent(
                 enabled = userList.isNotEmpty()
             ) {
                 Text(
-                    text = viewType.buttonTitle,
+                    text = stringResource(viewType.buttonTitle),
                     color = if (userList.isEmpty()) Color.Gray else Primary600,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
@@ -204,7 +206,7 @@ private fun FriedListContent(
             },
             placeholder = {
                 Text(
-                    text = "친구를 검색하세요.",
+                    text = stringResource(R.string.friend_list_search_placeholder),
                     fontFamily = pretendard,
                     fontSize = 16.sp,
                     color = Gray500
@@ -227,7 +229,9 @@ private fun FriedListContent(
         if (userList.isEmpty()) {
             //아에 정보가 없는 경우
             Column {
-                UserListHeader("친구(${userList.size})")
+                UserListHeader(
+                    title = stringResource(R.string.friend_list_item_header_friend, userList.size)
+                )
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -240,7 +244,7 @@ private fun FriedListContent(
                     )
                     Spacer(Modifier.height(5.dp))
                     Text(
-                        text = "아직 만난 친구가 없어요!",
+                        text = stringResource(R.string.friend_list_info_no_data),
                         fontWeight = FontWeight.Medium,
                         fontSize = 16.sp,
                         color = GrayScale700
@@ -273,7 +277,7 @@ private fun FriedListContent(
                             exit = favoriteExit
                         ) {
                             UserListHeader(
-                                title = "즐겨찾기(${favoriteUserList.size})"
+                                title = stringResource(R.string.friend_list_item_header_favorite_friend, favoriteUserList.size)
                             )
                         }
                     }
@@ -295,13 +299,15 @@ private fun FriedListContent(
                                     selectedUserId = user.id
                                 },
                                 iconClickAction = {
-                                    updateFavorite(user.id,!user.isFavorite)
+                                    updateFavorite(user.id, !user.isFavorite)
                                 }
                             )
                         }
                     }
                     item {
-                        UserListHeader("친구(${userList.size})")
+                        UserListHeader(
+                            title = stringResource(R.string.friend_list_item_header_friend, userList.size)
+                        )
                     }
                     items(
                         items = userList,
@@ -347,7 +353,7 @@ private fun FriedListContent(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "검색 결과가 없습니다.",
+                            text = stringResource(R.string.friend_list_search_no_data),
                             fontWeight = FontWeight.Normal,
                             fontSize = 16.sp,
                             color = Gray700

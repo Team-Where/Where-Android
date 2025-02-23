@@ -14,10 +14,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray100
 import com.sooum.where_android.theme.Red500
 import com.sooum.where_android.theme.pretendard
@@ -63,7 +65,7 @@ private fun DeleteUserModalContent(
             shape = RoundedCornerShape(16.dp)
         ) {
             Text(
-                text = "친구 삭제",
+                text = stringResource(R.string.friend_list_delete),
                 color = Red500,
                 fontWeight = FontWeight.Medium,
                 fontFamily = pretendard,
