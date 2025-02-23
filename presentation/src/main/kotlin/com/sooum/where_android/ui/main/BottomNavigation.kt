@@ -19,6 +19,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +37,7 @@ import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.theme.Gray200
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.ui.main.newMeet.NewMeetModal
 
 
 @Composable
@@ -42,6 +47,9 @@ fun BottomNavigation(
 ) {
     val currentRoute = navBackStackEntry?.destination?.route ?: ""
 
+    var addNewMeetModal by remember {
+        mutableStateOf(false)
+    }
     Column {
         Spacer(
             Modifier
@@ -77,7 +85,9 @@ fun BottomNavigation(
                 horizontalArrangement = Arrangement.Center
             ) {
                 IconButton(
-                    onClick = {},
+                    onClick = {
+                        addNewMeetModal = true
+                    },
                     modifier = Modifier.size(40.dp),
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = Primary600
@@ -110,6 +120,13 @@ fun BottomNavigation(
         Spacer(Modifier.height(20.dp))
     }
 
+    if (addNewMeetModal) {
+        NewMeetModal(
+            onDismiss = {
+                addNewMeetModal = false
+            }
+        )
+    }
 }
 
 @Composable
