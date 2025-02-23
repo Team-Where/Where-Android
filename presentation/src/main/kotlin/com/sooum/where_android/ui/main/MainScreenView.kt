@@ -1,7 +1,6 @@
 package com.sooum.where_android.ui.main
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -27,11 +26,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.sooum.where_android.model.BottomNavigationType
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
-import com.sooum.where_android.ui.main.meetList.MeetListView
+import com.sooum.where_android.ui.main.myMeet.MyMeetView
 import kotlinx.coroutines.launch
 
 @Composable
@@ -104,17 +102,22 @@ fun MainScreenView(
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = ScreenRoute.Main,
+                        startDestination = ScreenRoute.MainGraph,
                         modifier = Modifier
                     ) {
-                        navigation<ScreenRoute.Main>(startDestination = BottomNavigationType.MeetList) {
-                            composable<BottomNavigationType.MeetList>() {
-                                MeetListView(
+                        navigation<ScreenRoute.MainGraph>(startDestination = ScreenRoute.BottomNavigation.MeetList) {
+                            composable<ScreenRoute.BottomNavigation.MeetList>() {
+                                MyMeetView(
                                     openDrawer = {
                                         scope.launch {
                                             drawerState.apply {
                                                 if (isClosed) open() else close()
                                             }
+                                        }
+                                    },
+                                    navigationGuide = {
+                                        navController.navigate(ScreenRoute.Home.MeetGuide) {
+                                            launchSingleTop = true
                                         }
                                     },
                                     modifier = Modifier
@@ -123,10 +126,15 @@ fun MainScreenView(
                                         )
                                 )
                             }
-                            composable<BottomNavigationType.FriendsList>() {
+                            composable<ScreenRoute.Home.MeetGuide>() {
+
+                            }
+                            composable<ScreenRoute.BottomNavigation.FriendsList>() {
                                 FriendListView(
                                     navigationMeetDetail = { meetDetail ->
-                                        navController.navigate(meetDetail)
+                                        navController.navigate(meetDetail) {
+                                            launchSingleTop = true
+                                        }
                                     },
                                     modifier = Modifier
                                         .padding(
@@ -134,12 +142,12 @@ fun MainScreenView(
                                         )
                                 )
                             }
-                        }
 
-                        composable<ScreenRoute.MeetDetail>() {
-                            MeetDetailView(
-                                onBack = navController::popBackStack
-                            )
+                            composable<ScreenRoute.Home.FriendMeetDetail>() {
+                                MeetDetailView(
+                                    onBack = navController::popBackStack
+                                )
+                            }
                         }
                     }
                 }
