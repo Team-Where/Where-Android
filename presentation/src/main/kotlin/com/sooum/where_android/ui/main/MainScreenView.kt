@@ -128,6 +128,7 @@ fun MainScreenView(
                             }
                             composable<ScreenRoute.Home.MeetGuide>() {
 
+
                             }
                             composable<ScreenRoute.BottomNavigation.FriendsList>() {
                                 FriendListView(

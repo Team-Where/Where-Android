@@ -20,6 +20,7 @@ val GrayScale500 = Color(0xffADB5BD)
 val GrayScale600 = Color(0xff868E96)
 val GrayScale700 = Color(0xff495057)
 val GrayScale800 = Color(0xff343A40)
+val GrayScale900 = Color(0xff212529)
 
 
 val Red500 = Color(0xffef4444)
