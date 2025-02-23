@@ -21,12 +21,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import com.sooum.domain.model.MeetDetail
+import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray300
 import com.sooum.where_android.theme.Gray500
 import com.sooum.where_android.theme.GrayScale800
@@ -99,7 +101,7 @@ fun MeetDetailCard(
             )
         ) {
             Text(
-                text = "자세히 보기",
+                text = stringResource(R.string.meet_detail_show),
                 color = GrayScale800,
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Medium,

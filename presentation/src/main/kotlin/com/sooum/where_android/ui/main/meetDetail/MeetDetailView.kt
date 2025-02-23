@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -95,7 +96,7 @@ private fun MeetDetailContent(
                 modifier = Modifier.align(Alignment.Center)
             ) {
                 Text(
-                    text = "모임활동",
+                    text = stringResource(R.string.meet_detail_title),
                     color = Gray800,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -151,7 +152,7 @@ private fun MeetDetailContent(
                             .padding(bottom = 20.dp)
                     ) {
                         Text(
-                            text = "${friend.name}님과 함께한 모임을 확인해보세요.",
+                            text = stringResource(R.string.meet_detail_info_with_friend,friend.name),
                             color = Gray600,
                             fontFamily = pretendard,
                             fontWeight = FontWeight.Normal,
@@ -255,7 +256,7 @@ fun LazyListScope.initGroupItem(
                                 }
                                 Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = "${meetDetail.month}월",
+                                    text = stringResource(R.string.meet_detail_month,meetDetail.month),
                                     fontFamily = pretendard,
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 16.sp
@@ -297,7 +298,7 @@ private fun MeetDetailHeader(
 
         if (isFirstHeader) {
             Text(
-                text = "3개월 지난 모임은 포함되지않습니다.",
+                text = stringResource(R.string.meet_detail_info_exp),
                 fontWeight = FontWeight.Normal,
                 fontFamily = pretendard,
                 fontSize = 12.sp

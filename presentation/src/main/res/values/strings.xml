@@ -14,11 +14,11 @@
 
 
 
-    //Home - 내 모임
+    <!--Home - 내 모임-->
     <string name="my_meet_no_meet">아직 모임이 없어요</string>
     <string name="my_meet_no_meet_btn">모임 추가 방법</string>
 
-    //Home - 친구목록
+    <!--Home - 친구목록-->
     <string name="friend_list_title">친구목록</string>
     <string name="friend_list_edit_title">목록편집</string>
 
@@ -37,4 +37,11 @@
     <string name="friend_list_detail_meet_count">%d번 만남</string>
     <string name="friend_list_detail_meet_show">나와의 모임활동 보기</string>
 
+    <!--모임활동-->
+    <string name="meet_detail_title">모임활동</string>
+    <string name="meet_detail_info_with_friend">%s님과 함께한 모임을 확인해보세요.</string>
+    <string name="meet_detail_info_exp">3개월 지난 모임은 포함되지않습니다.</string>
+    <string name="meet_detail_month">%d월</string>
+    <string name="meet_detail_card_month">%d월</string>
+    <string name="meet_detail_show">자세히 보기</string>
 </resources>
