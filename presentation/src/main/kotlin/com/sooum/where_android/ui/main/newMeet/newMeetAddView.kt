@@ -2,17 +2,13 @@ package com.sooum.where_android.ui.main.newMeet
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
@@ -28,9 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -52,7 +45,9 @@ import com.sooum.where_android.theme.pretendard
 
 @Composable
 fun NewMeetAddView(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    title: String,
+    updateTitle: (String) -> Unit,
 ) {
 
     val focusManager = LocalFocusManager.current
@@ -61,9 +56,6 @@ fun NewMeetAddView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val maxLength = 16
-        var tempTitle by remember {
-            mutableStateOf("")
-        }
         Box(
             modifier = Modifier
                 .size(120.dp)
@@ -95,10 +87,10 @@ fun NewMeetAddView(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             TextField(
-                value = tempTitle,
+                value = title,
                 onValueChange = {
                     if (it.length <= maxLength) {
-                        tempTitle = it
+                        updateTitle(it)
                     }
                 },
                 placeholder = {
@@ -131,13 +123,13 @@ fun NewMeetAddView(
                         focusManager.clearFocus()
                     }
                 ),
-                trailingIcon = if (tempTitle.isEmpty()) {
+                trailingIcon = if (title.isEmpty()) {
                     null
                 } else {
                     {
                         IconButton(
                             onClick = {
-                                tempTitle = ""
+                                updateTitle("")
                             }
                         ) {
                             Icon(
@@ -150,7 +142,7 @@ fun NewMeetAddView(
                 }
             )
             Text(
-                text = "(${tempTitle.length}/$maxLength)",
+                text = "(${title.length}/$maxLength)",
                 color = GrayScale700
             )
         }
@@ -161,5 +153,5 @@ fun NewMeetAddView(
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 fun NewMeetAddViewPreview() {
-    NewMeetAddView()
+    NewMeetAddView(Modifier, "123", {})
 }

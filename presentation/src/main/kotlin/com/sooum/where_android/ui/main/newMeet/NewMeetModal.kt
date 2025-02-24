@@ -23,6 +23,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,15 +35,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.viewmodel.NewMeetViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewMeetModal(
     onDismiss: () -> Unit,
+    newMeetViewModel: NewMeetViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(true) {
+        newMeetViewModel.clear()
+    }
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         dragHandle = null,
@@ -58,7 +65,9 @@ fun NewMeetModal(
                 top = 16.dp,
                 start = 20.dp,
                 end = 20.dp
-            )
+            ),
+            title = newMeetViewModel.newMeetData.title,
+            updateTitle = newMeetViewModel::updateTitle
         )
     }
 }
@@ -74,6 +83,8 @@ sealed class NewMeetType(
 @Composable
 private fun NewMeetContent(
     modifier: Modifier,
+    title :String,
+    updateTitle :(String) -> Unit,
     onDismiss: () -> Unit
 ) {
     Column(
@@ -96,14 +107,16 @@ private fun NewMeetContent(
                 }
             }
             NewMeetHeader(
-                type = type
+                type = type,
             )
             when(type) {
                 is NewMeetType.Info -> {
                     NewMeetAddView(
                         modifier = Modifier.padding(
                             top = 20.dp
-                        )
+                        ),
+                        title = title,
+                        updateTitle = updateTitle
                     )
                 }
                 is NewMeetType.Friend -> {
@@ -167,6 +180,8 @@ private fun NewMeetHeader(
 private fun NewMeetContentPreview() {
     NewMeetContent(
         onDismiss = {},
-        modifier = Modifier.padding(horizontal = 20.dp)
+        modifier = Modifier.padding(horizontal = 20.dp),
+        title = "2024 연말파티\uD83E\uDD42",
+        updateTitle = {}
     )
 }
