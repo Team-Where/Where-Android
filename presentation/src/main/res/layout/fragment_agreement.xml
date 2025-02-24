@@ -58,7 +58,6 @@
         android:paddingStart="15dp"
         android:paddingEnd="15dp">
 
-        <!-- [필수] 만 14세 이상입니다. -->
         <CheckBox
             android:id="@+id/checkbox_required_age"
             android:layout_width="0dp"
@@ -76,8 +75,8 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_view_age_terms"
-            android:layout_width="50dp"
-            android:layout_height="30dp"
+            android:layout_width="42dp"
+            android:layout_height="26dp"
             android:text="보기"
             android:textSize="14sp"
             android:background="@drawable/shape_button_gray"
@@ -86,7 +85,6 @@
             app:layout_constraintTop_toTopOf="@id/checkbox_required_age"
             app:layout_constraintBottom_toBottomOf="@id/checkbox_required_age"/>
 
-        <!-- [필수] 어디 서비스 이용약관 동의 -->
         <CheckBox
             android:id="@+id/checkbox_required_service"
             android:layout_width="0dp"
@@ -104,8 +102,8 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_view_service_terms"
-            android:layout_width="50dp"
-            android:layout_height="30dp"
+            android:layout_width="42dp"
+            android:layout_height="26dp"
             android:text="보기"
             android:textSize="14sp"
             android:background="@drawable/shape_button_gray"
@@ -114,7 +112,6 @@
             app:layout_constraintTop_toTopOf="@id/checkbox_required_service"
             app:layout_constraintBottom_toBottomOf="@id/checkbox_required_service"/>
 
-        <!-- [선택] 광고성 정보 수신 동의 -->
         <CheckBox
             android:id="@+id/checkbox_optional_ads"
             android:layout_width="0dp"
@@ -133,8 +130,8 @@
         <!-- [선택] 마케팅 활용 동의 -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_view_ads_terms"
-            android:layout_width="50dp"
-            android:layout_height="30dp"
+            android:layout_width="42dp"
+            android:layout_height="26dp"
             android:background="@drawable/shape_button_gray"
             android:text="보기"
             android:textColor="#6B7280"
@@ -160,8 +157,8 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_view_marketing_terms"
-            android:layout_width="50dp"
-            android:layout_height="30dp"
+            android:layout_width="42dp"
+            android:layout_height="26dp"
             android:text="보기"
             android:textSize="14sp"
             android:background="@drawable/shape_button_gray"
