@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.sooum.where_android.databinding.FragmentSocialLoginBinding
+import com.sooum.where_android.view.auth.signup.AgreementFragment
 
 class SocialLoginFragment : Fragment() {
     private lateinit var binding : FragmentSocialLoginBinding
@@ -18,6 +19,10 @@ class SocialLoginFragment : Fragment() {
 
         binding.textSignIn.setOnClickListener {
             (activity as AuthActivity).navigateToFragment(SignInFragment())
+        }
+
+        binding.btnSignUp.setOnClickListener {
+            (activity as AuthActivity).navigateToFragment(AgreementFragment())
         }
 
         return binding.root

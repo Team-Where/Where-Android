@@ -37,10 +37,8 @@ class OnBoardingActivity : AppCompatActivity(){
         }
 
         binding.skipText.setOnClickListener {
-            val nextItem = binding.container.currentItem + 1
-            if (nextItem < binding.container.adapter!!.itemCount) {
-                binding.container.currentItem = nextItem
-            }
+            val intent = Intent(this, AuthActivity::class.java)
+            startActivity(intent)
         }
 
         binding.imageBack.setOnClickListener {
