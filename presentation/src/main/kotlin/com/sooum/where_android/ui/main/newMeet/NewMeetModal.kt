@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
@@ -20,6 +21,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -27,6 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +45,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.viewmodel.NewMeetViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.delay
+import java.time.Duration
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,101 +60,147 @@ fun NewMeetModal(
     LaunchedEffect(true) {
         newMeetViewModel.clear()
     }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    val scope = rememberCoroutineScope()
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         dragHandle = null,
         containerColor = Color.White,
-        sheetState = rememberModalBottomSheetState(
-            skipPartiallyExpanded = true
-        ),
-        modifier = Modifier.statusBarsPadding()
+        sheetState = sheetState,
+        modifier = Modifier.statusBarsPadding(),
     ) {
         NewMeetContent(
-            onDismiss = onDismiss,
             modifier = Modifier.padding(
                 top = 16.dp,
                 start = 20.dp,
                 end = 20.dp
             ),
             title = newMeetViewModel.newMeetData.title,
-            updateTitle = newMeetViewModel::updateTitle
+            updateTitle = newMeetViewModel::updateTitle,
+            onClose = {
+                scope.launch {
+                    sheetState.hide()
+                    onDismiss()
+                }
+            }
         )
     }
 }
 
 sealed class NewMeetType(
     val order: Int,
-    val title :String
+    val title: String
 ) {
-    data object Info : NewMeetType(1,"어떤 모임인가요?")
-    data object Friend : NewMeetType(2,"파티원을 초대해요!")
+    data object Info : NewMeetType(1, "어떤 모임인가요?")
+    data object Friend : NewMeetType(2, "파티원을 초대해요!")
 }
 
 @Composable
 private fun NewMeetContent(
     modifier: Modifier,
-    title :String,
-    updateTitle :(String) -> Unit,
-    onDismiss: () -> Unit
+    title: String,
+    updateTitle: (String) -> Unit,
+    onClose: () -> Unit
 ) {
-    Column(
-        modifier = modifier.fillMaxSize()
-            .navigationBarsPadding(),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        var type : NewMeetType by remember {
-            mutableStateOf(NewMeetType.Info)
-        }
-        Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                IconButton(
-                    onClick = onDismiss,
-                ) {
-                    Icon(Icons.Filled.Clear, null)
-                }
-            }
-            NewMeetHeader(
-                type = type,
+    var type: NewMeetType by remember {
+        mutableStateOf(NewMeetType.Info)
+    }
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(true) {
+        launch {
+            snackbarHostState.showSnackbar(
+                message = "모임 이름과 사진은 생성 후에도 변경할 수 있어요.",
+                duration = SnackbarDuration.Short
             )
-            when(type) {
-                is NewMeetType.Info -> {
-                    NewMeetAddView(
-                        modifier = Modifier.padding(
-                            top = 20.dp
-                        ),
-                        title = title,
-                        updateTitle = updateTitle
+        }
+        delay(3000L)
+        snackbarHostState.currentSnackbarData?.dismiss()
+    }
+    Scaffold(
+        containerColor = Color.White,
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        },
+        bottomBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        bottom = 10.dp,
+                        start = 10.dp,
+                        end = 10.dp
+                    )
+            ) {
+                Button(
+                    onClick = {
+                        type = NewMeetType.Friend
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Primary600
+                    ),
+                    shape = RoundedCornerShape(8.dp),
+                    enabled = when (type) {
+                        is NewMeetType.Info -> {
+                            title.isNotEmpty()
+                        }
+
+                        is NewMeetType.Friend -> {
+                            true
+                        }
+                    }
+                ) {
+                    Text(
+                        text = "다음",
+                        fontFamily = pretendard,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
-                is NewMeetType.Friend -> {
-                    Text("123")
-                }
             }
         }
-        Row(
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = 10.dp)
+    ) { innerPadding ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .imePadding()
+                .navigationBarsPadding(),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
-                onClick = {
-                    type = NewMeetType.Friend
-                },
-                modifier = Modifier.fillMaxWidth()
-                    .height(48.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Primary600
-                ),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text(
-                    text = "다음",
-                    fontFamily = pretendard,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
+            Column {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    IconButton(
+                        onClick = onClose,
+                    ) {
+                        Icon(Icons.Filled.Clear, null)
+                    }
+                }
+                NewMeetHeader(
+                    type = type,
                 )
+                when (type) {
+                    is NewMeetType.Info -> {
+                        NewMeetAddView(
+                            modifier = Modifier.padding(
+                                top = 20.dp
+                            ),
+                            title = title,
+                            updateTitle = updateTitle
+                        )
+                    }
+
+                    is NewMeetType.Friend -> {
+                        Text("123")
+                    }
+                }
             }
         }
     }
@@ -152,7 +208,7 @@ private fun NewMeetContent(
 
 @Composable
 private fun NewMeetHeader(
-    type : NewMeetType
+    type: NewMeetType
 ) {
     Column {
         Text(
@@ -179,9 +235,9 @@ private fun NewMeetHeader(
 @Preview(showSystemUi = false, showBackground = true, backgroundColor = 0xFFFFFFFF)
 private fun NewMeetContentPreview() {
     NewMeetContent(
-        onDismiss = {},
         modifier = Modifier.padding(horizontal = 20.dp),
         title = "2024 연말파티\uD83E\uDD42",
-        updateTitle = {}
+        updateTitle = {},
+        onClose = {}
     )
 }
