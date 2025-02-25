@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -34,7 +33,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -42,14 +40,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sooum.domain.model.ImageAddType
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.viewmodel.NewMeetViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.time.delay
-import java.time.Duration
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,6 +75,8 @@ fun NewMeetModal(
             ),
             title = newMeetViewModel.newMeetData.title,
             updateTitle = newMeetViewModel::updateTitle,
+            type = newMeetViewModel.newMeetData.image,
+            updateImageType = newMeetViewModel::updateImage,
             onClose = {
                 scope.launch {
                     sheetState.hide()
@@ -102,9 +100,11 @@ private fun NewMeetContent(
     modifier: Modifier,
     title: String,
     updateTitle: (String) -> Unit,
+    type: ImageAddType?,
+    updateImageType: (ImageAddType) -> Unit,
     onClose: () -> Unit
 ) {
-    var type: NewMeetType by remember {
+    var viewType: NewMeetType by remember {
         mutableStateOf(NewMeetType.Info)
     }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -135,7 +135,7 @@ private fun NewMeetContent(
             ) {
                 Button(
                     onClick = {
-                        type = NewMeetType.Friend
+                        viewType = NewMeetType.Friend
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -144,7 +144,7 @@ private fun NewMeetContent(
                         containerColor = Primary600
                     ),
                     shape = RoundedCornerShape(8.dp),
-                    enabled = when (type) {
+                    enabled = when (viewType) {
                         is NewMeetType.Info -> {
                             title.isNotEmpty()
                         }
@@ -184,16 +184,18 @@ private fun NewMeetContent(
                     }
                 }
                 NewMeetHeader(
-                    type = type,
+                    type = viewType,
                 )
-                when (type) {
+                when (viewType) {
                     is NewMeetType.Info -> {
                         NewMeetAddView(
                             modifier = Modifier.padding(
                                 top = 20.dp
                             ),
                             title = title,
-                            updateTitle = updateTitle
+                            updateTitle = updateTitle,
+                            type = type,
+                            updateImageType = updateImageType
                         )
                     }
 
@@ -238,6 +240,8 @@ private fun NewMeetContentPreview() {
         modifier = Modifier.padding(horizontal = 20.dp),
         title = "2024 연말파티\uD83E\uDD42",
         updateTitle = {},
+        type = null,
+        updateImageType = {},
         onClose = {}
     )
 }
