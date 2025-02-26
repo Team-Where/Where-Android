@@ -98,13 +98,14 @@ fun NewMeetResultView(
                     .clip(RoundedCornerShape(10.dp))
                     .height(60.dp)
                     .background(GrayScale100)
-                    .padding(10.dp),
+                    .padding(20.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.icon_new_meet_result),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint= Color.Unspecified
                 )
                 Text(
                     text = "친구들과 자유롭게 장소를 공유해보세요.",

@@ -189,13 +189,15 @@ private fun NewMeetStep2ViewContent(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(15.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Icon(
-                    painterResource(
+                    painter = painterResource(
                         R.drawable.image_kakao_icon,
                     ),
-                    null
+                    contentDescription = null,
+                    tint = Color.Unspecified
+
                 )
                 Text(
                     text = "카톡으로 초대하기",
