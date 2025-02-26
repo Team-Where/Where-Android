@@ -19,6 +19,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,20 +32,39 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
+import com.sooum.domain.model.ImageAddType
+import com.sooum.domain.model.NewMeet
 import com.sooum.where_android.R
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.theme.Gray200
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.ui.main.newMeet.NewMeetModal
+import kotlinx.serialization.Serializable
+
+fun NewMeet.toResult() = NewMeetResult(
+    title = title,
+    image = (image as? ImageAddType.Content)?.uri?.toString()
+)
+
+@Serializable
+data class NewMeetResult(
+    val title: String,
+    val image: String?
+)
 
 
 @Composable
 fun BottomNavigation(
     navBackStackEntry: NavBackStackEntry?,
     navigation: (ScreenRoute.BottomNavigation) -> Unit = {},
+    navigationResult: (NewMeetResult) -> Unit = {}
 ) {
     val currentRoute = navBackStackEntry?.destination?.route ?: ""
 
+    var addNewMeetModal by remember {
+        mutableStateOf(false)
+    }
     Column {
         Spacer(
             Modifier
@@ -77,7 +100,9 @@ fun BottomNavigation(
                 horizontalArrangement = Arrangement.Center
             ) {
                 IconButton(
-                    onClick = {},
+                    onClick = {
+                        addNewMeetModal = true
+                    },
                     modifier = Modifier.size(40.dp),
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = Primary600
@@ -110,6 +135,16 @@ fun BottomNavigation(
         Spacer(Modifier.height(20.dp))
     }
 
+    if (addNewMeetModal) {
+        NewMeetModal(
+            onDismiss = {
+                addNewMeetModal = false
+            },
+            navigationResult = {
+                navigationResult(it.toResult())
+            }
+        )
+    }
 }
 
 @Composable

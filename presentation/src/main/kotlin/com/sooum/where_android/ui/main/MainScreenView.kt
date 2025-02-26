@@ -1,14 +1,18 @@
 package com.sooum.where_android.ui.main
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -21,15 +25,20 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.sooum.domain.model.NewMeet
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
 import com.sooum.where_android.ui.main.myMeet.MyMeetView
+import com.sooum.where_android.ui.main.newMeet.NewMeetResultView
 import kotlinx.coroutines.launch
 
 @Composable
@@ -57,6 +66,11 @@ fun MainScreenView(
                                 drawerState.close()
                             }
                             navController.navigate(type)
+                        }
+                    },
+                    navigationResult = {
+                        navController.navigate(it) {
+                            launchSingleTop = true
                         }
                     }
                 )
@@ -146,6 +160,21 @@ fun MainScreenView(
                             composable<ScreenRoute.Home.FriendMeetDetail>() {
                                 MeetDetailView(
                                     onBack = navController::popBackStack
+                                )
+                            }
+                            dialog<NewMeetResult>(
+                                dialogProperties = DialogProperties(
+                                    usePlatformDefaultWidth = false,
+                                    dismissOnBackPress = false
+                                )
+                            ) {
+                                val result = it.toRoute<NewMeetResult>()
+                                NewMeetResultView(
+                                    result = result,
+                                    close = navController::popBackStack,
+                                    navigationDetail = {
+                                        //TODO
+                                    }
                                 )
                             }
                         }
