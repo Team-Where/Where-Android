@@ -66,6 +66,7 @@ import com.sooum.where_android.theme.GrayScale700
 import com.sooum.where_android.theme.GrayScale800
 import com.sooum.where_android.theme.GrayScale900
 import com.sooum.where_android.theme.Primary600
+import com.sooum.where_android.theme.SnackBarColor
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.viewmodel.NewMeetType
 import kotlinx.coroutines.delay
@@ -95,7 +96,28 @@ fun NewMeetStep1View(
     Scaffold(
         containerColor = Color.White,
         snackbarHost = {
-            SnackbarHost(snackbarHostState)
+            SnackbarHost(snackbarHostState) { data ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 20.dp)
+                        .padding(horizontal = 10.dp)
+                        .height(44.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(SnackBarColor)
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = data.visuals.message,
+                        fontFamily = pretendard,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.sp,
+                        color = Color.White,
+                        modifier = Modifier.padding(horizontal = 2.dp)
+                    )
+                }
+            }
         },
         bottomBar = {
             Row(

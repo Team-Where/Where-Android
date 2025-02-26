@@ -1,66 +1,44 @@
 package com.sooum.where_android.ui.main.newMeet
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sooum.domain.model.ImageAddType
+import com.sooum.domain.model.NewMeet
 import com.sooum.domain.model.User
-import com.sooum.where_android.theme.Primary600
-import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.viewmodel.NewMeetType
 import com.sooum.where_android.viewmodel.NewMeetViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewMeetModal(
     onDismiss: () -> Unit,
+    navigationResult: (NewMeet) -> Unit,
     newMeetViewModel: NewMeetViewModel = hiltViewModel()
 ) {
     LaunchedEffect(true) {
         newMeetViewModel.clear()
     }
     val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
+        skipPartiallyExpanded = true,
+        confirmValueChange = {
+            false
+        }
     )
     val scope = rememberCoroutineScope()
     val viewType by newMeetViewModel.viewType.collectAsState()
@@ -87,7 +65,11 @@ fun NewMeetModal(
             nextViewType = {
                 newMeetViewModel.nextViewType(
                     complete = {
-
+                        scope.launch {
+                            navigationResult(it)
+                            sheetState.hide()
+                            onDismiss()
+                        }
                     }
                 )
             },
@@ -115,7 +97,7 @@ private fun NewMeetContent(
     nextViewType: () -> Unit,
     type: ImageAddType?,
     updateImageType: (ImageAddType) -> Unit,
-    inviteFriend : (User) -> Unit,
+    inviteFriend: (User) -> Unit,
     onClose: () -> Unit
 ) {
 

@@ -37,7 +37,7 @@ class NewMeetViewModel @Inject constructor(
         get() = _viewType
 
     fun nextViewType(
-        complete: () -> Unit
+        complete: (NewMeet) -> Unit
     ) {
         if (_viewType.value == NewMeetType.Info) {
             //다음 스텝으로 넘어갈때 이미지갓 선택되었는지 여부
@@ -46,7 +46,7 @@ class NewMeetViewModel @Inject constructor(
             }
             _viewType.value = NewMeetType.Friend
         } else {
-            complete()
+            complete(newMeetData)
         }
     }
 

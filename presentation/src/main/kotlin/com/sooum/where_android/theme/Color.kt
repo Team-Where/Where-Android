@@ -29,3 +29,6 @@ val Red500 = Color(0xffef4444)
 
 
 val Primary600 = Color(0xff4f46E5)
+
+
+val SnackBarColor = Color(0xCC030712)

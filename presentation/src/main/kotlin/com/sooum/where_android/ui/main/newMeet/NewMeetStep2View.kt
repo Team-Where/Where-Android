@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import com.sooum.domain.model.User
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Primary600
+import com.sooum.where_android.theme.SnackBarColor
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.ui.widget.UserItemView
 import com.sooum.where_android.ui.widget.UserViewType
@@ -74,7 +75,7 @@ fun NewMeetStep2View(
                         .padding(horizontal = 10.dp)
                         .height(44.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xcc030712))
+                        .background(SnackBarColor)
                         .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -191,14 +192,43 @@ private fun NewMeetStep2ViewContent(
             onClick = {},
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp)
+                .height(48.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xffF9E000)
+            ),
+            shape = RoundedCornerShape(8.dp)
         ) {
-            Text("카톡으로 초대하기")
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(15.dp)
+            ) {
+                Icon(
+                    painterResource(
+                        R.drawable.image_kakao_icon,
+                    ),
+                    null
+                )
+                Text(
+                    text = "카톡으로 초대하기",
+                    fontFamily = pretendard,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 16.sp,
+                    color = Color.Black
+                )
+            }
         }
         Spacer(Modifier.height(12.dp))
-        LazyColumn {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
             item {
-                Text("최근 만난 친구")
+                Text(
+                    text = "최근 만난 친구",
+                    modifier = Modifier.height(20.dp),
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = pretendard,
+                    fontSize = 14.sp
+                )
             }
             items(
                 items = recentUserList,
@@ -215,7 +245,13 @@ private fun NewMeetStep2ViewContent(
                 )
             }
             item {
-                Text("친구(${userList.size})")
+                Text(
+                    text = "친구(${userList.size})",
+                    modifier = Modifier.height(20.dp),
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = pretendard,
+                    fontSize = 14.sp
+                )
             }
             items(
                 items = userList,
