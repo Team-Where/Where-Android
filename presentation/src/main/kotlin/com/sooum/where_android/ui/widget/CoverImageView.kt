@@ -24,8 +24,21 @@ fun MeetDetail.CoverImage(
     size: Dp,
     radius: Dp
 ) {
+    CoverImageView(
+        src = image,
+        size = size,
+        radius = radius
+    )
+}
+
+@Composable
+fun CoverImageView(
+    src: String?,
+    size: Dp,
+    radius: Dp
+) {
     SubcomposeAsyncImage(
-        this.image,
+        src,
         contentDescription = null,
         modifier = Modifier
             .size(size)
