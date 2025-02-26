@@ -118,6 +118,7 @@ private fun NewMeetContent(
             NewMeetStep2View(
                 modifier = modifier,
                 userList = userList,
+                recentUserList = userList,
                 nextViewType = nextViewType,
                 inviteFriend = inviteFriend,
                 onClose = onClose

@@ -32,11 +32,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.sooum.domain.model.NewMeet
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
 import com.sooum.where_android.ui.main.myMeet.MyMeetView
+import com.sooum.where_android.ui.main.newMeet.NewMeetResultView
 import kotlinx.coroutines.launch
 
 @Composable
@@ -166,12 +168,14 @@ fun MainScreenView(
                                     dismissOnBackPress = false
                                 )
                             ) {
-                                Column(
-                                    modifier = Modifier.fillMaxSize()
-                                        .background(Color.White)
-                                ) {
-                                    Text("123")
-                                }
+                                val result = it.toRoute<NewMeetResult>()
+                                NewMeetResultView(
+                                    result = result,
+                                    close = navController::popBackStack,
+                                    navigationDetail = {
+                                        //TODO
+                                    }
+                                )
                             }
                         }
                     }
