@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -80,6 +81,14 @@ fun UserItemView(
     iconClickAction: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
+    val height = when(type) {
+        is UserViewType.Favorite, is UserViewType.Delete -> {
+            50.dp
+        }
+        is UserViewType.Option, is UserViewType.Invite -> {
+            40.dp
+        }
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -103,17 +112,35 @@ fun UserItemView(
             //TODO profileImage 값으로 부터 가져오도록 수정필요
             CircleProfileView(
                 profileUrl = user.profileImage,
-                size = 50.dp
+                size = height
             )
 
             Spacer(Modifier.width(16.dp))
-
-            Text(
-                text = user.name,
-                fontWeight = FontWeight.Medium,
-                fontSize = 16.sp,
-                fontFamily = pretendard
-            )
+            Column(
+                modifier = Modifier.height(height),
+                verticalArrangement = if (type is UserViewType.Invite) {
+                    Arrangement.SpaceBetween
+                } else {
+                    Arrangement.Center
+                }
+            ) {
+                Text(
+                    text = user.name,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 16.sp,
+                    fontFamily = pretendard,
+                    textAlign = TextAlign.Center
+                )
+                if (type is UserViewType.Invite) {
+                    Text(
+                        text = "N번 만남",
+                        color = Color(0xff9ca3af),
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 11.sp,
+                        fontFamily = pretendard,
+                    )
+                }
+            }
         }
         val enterAni =
             slideInHorizontally(animationSpec = tween(durationMillis = 200)) { fullWidth ->
