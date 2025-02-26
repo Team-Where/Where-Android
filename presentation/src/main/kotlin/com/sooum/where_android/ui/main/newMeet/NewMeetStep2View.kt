@@ -46,6 +46,7 @@ import com.sooum.where_android.R
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.SnackBarColor
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.ui.widget.PrimaryButton
 import com.sooum.where_android.ui.widget.UserItemView
 import com.sooum.where_android.ui.widget.UserViewType
 import com.sooum.where_android.viewmodel.NewMeetType
@@ -58,6 +59,7 @@ import kotlinx.coroutines.launch
 fun NewMeetStep2View(
     modifier: Modifier = Modifier,
     userList: List<User>,
+    recentUserList: List<User>,
     nextViewType: () -> Unit,
     inviteFriend: (User) -> Unit,
     onClose: () -> Unit
@@ -106,23 +108,10 @@ fun NewMeetStep2View(
                         end = 10.dp
                     )
             ) {
-                Button(
+                PrimaryButton(
                     onClick = nextViewType,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Primary600
-                    ),
-                    shape = RoundedCornerShape(8.dp),
-                ) {
-                    Text(
-                        text = NewMeetType.Friend.buttonTitle,
-                        fontFamily = pretendard,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+                    title = NewMeetType.Friend.buttonTitle
+                )
             }
         }
     ) { innerPadding ->
@@ -150,7 +139,7 @@ fun NewMeetStep2View(
                 }
                 NewMeetHeader(type = NewMeetType.Friend)
                 NewMeetStep2ViewContent(
-                    recentUserList = userList,
+                    recentUserList = recentUserList,
                     userList = userList,
                     inviteFriend = { user ->
                         scope.launch {
@@ -274,9 +263,11 @@ private fun NewMeetStep2ViewContent(
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 private fun NewMeetStep2ViewPreview() {
-    NewMeetStep2ViewContent(
+    NewMeetStep2View(
         recentUserList = emptyList(),
         userList = emptyList(),
-        inviteFriend = {}
+        inviteFriend = {},
+        nextViewType = {},
+        onClose = {}
     )
 }

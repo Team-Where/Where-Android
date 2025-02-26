@@ -68,6 +68,7 @@ import com.sooum.where_android.theme.GrayScale900
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.SnackBarColor
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.ui.widget.PrimaryButton
 import com.sooum.where_android.viewmodel.NewMeetType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -129,24 +130,11 @@ fun NewMeetStep1View(
                         end = 10.dp
                     )
             ) {
-                Button(
+                PrimaryButton(
                     onClick = nextViewType,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Primary600
-                    ),
-                    shape = RoundedCornerShape(8.dp),
-                    enabled = title.isNotEmpty()
-                ) {
-                    Text(
-                        text = NewMeetType.Info.buttonTitle,
-                        fontFamily = pretendard,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+                    enabled = title.isNotEmpty(),
+                    title = NewMeetType.Info.buttonTitle
+                )
             }
         }
     ) { innerPadding ->
