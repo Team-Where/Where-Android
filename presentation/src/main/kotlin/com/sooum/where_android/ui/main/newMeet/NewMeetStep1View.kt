@@ -1,6 +1,5 @@
 package com.sooum.where_android.ui.main.newMeet
 
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,21 +11,32 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,16 +67,109 @@ import com.sooum.where_android.theme.GrayScale800
 import com.sooum.where_android.theme.GrayScale900
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.viewmodel.NewMeetType
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
-fun NewMeetAddView(
+fun NewMeetStep1View(
+    modifier: Modifier = Modifier,
+    title: String,
+    updateTitle: (String) -> Unit,
+    type: ImageAddType?,
+    updateImageType: (ImageAddType) -> Unit,
+    nextViewType: () -> Unit,
+    onClose: () -> Unit
+) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(true) {
+        launch {
+            snackbarHostState.showSnackbar(
+                message = "모임 이름과 사진은 생성 후에도 변경할 수 있어요.",
+                duration = SnackbarDuration.Short
+            )
+        }
+        delay(3000L)
+        snackbarHostState.currentSnackbarData?.dismiss()
+    }
+    Scaffold(
+        containerColor = Color.White,
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        },
+        bottomBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        bottom = 10.dp,
+                        start = 10.dp,
+                        end = 10.dp
+                    )
+            ) {
+                Button(
+                    onClick = nextViewType,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Primary600
+                    ),
+                    shape = RoundedCornerShape(8.dp),
+                    enabled = title.isNotEmpty()
+                ) {
+                    Text(
+                        text = NewMeetType.Info.buttonTitle,
+                        fontFamily = pretendard,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .imePadding()
+                .navigationBarsPadding(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    IconButton(
+                        onClick = onClose,
+                    ) {
+                        Icon(Icons.Filled.Clear, null)
+                    }
+                }
+                NewMeetHeader(type = NewMeetType.Info)
+                NewMeetStep1ViewContent(
+                    modifier = Modifier.padding(
+                        top = 20.dp
+                    ),
+                    title = title,
+                    updateTitle = updateTitle,
+                    type = type,
+                    updateImageType = updateImageType
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun NewMeetStep1ViewContent(
     modifier: Modifier = Modifier,
     title: String,
     updateTitle: (String) -> Unit,
     type: ImageAddType?,
     updateImageType: (ImageAddType) -> Unit
 ) {
-
     val focusManager = LocalFocusManager.current
 
     var showPickerDialog by remember {
@@ -221,10 +324,9 @@ fun NewMeetAddView(
 @Composable
 private fun PickerDialog(
     onDismiss: () -> Unit,
-    requestImagePicker :() -> Unit,
+    requestImagePicker: () -> Unit,
     updateImageType: (ImageAddType) -> Unit
 ) {
-
     Dialog(
         onDismissRequest = onDismiss
     ) {
@@ -292,5 +394,5 @@ private fun PickerDialog(
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 fun NewMeetAddViewPreview() {
-    NewMeetAddView(Modifier, "123", {}, null, {})
+    NewMeetStep1View(Modifier, "123", {}, null, {}, {}, {})
 }

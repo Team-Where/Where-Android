@@ -1,5 +1,6 @@
 package com.sooum.where_android.ui.widget
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -26,6 +27,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -66,11 +71,8 @@ sealed class UserViewType {
 
     /**
      * 초대 관련
-     * @param[alreadyAdd] 이미 초대 됨 여부
      */
-    data class Invite(
-        val alreadyAdd: Boolean
-    ) : UserViewType()
+    data object Invite : UserViewType()
 }
 
 @Composable
@@ -81,10 +83,11 @@ fun UserItemView(
     iconClickAction: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
-    val height = when(type) {
+    val height = when (type) {
         is UserViewType.Favorite, is UserViewType.Delete -> {
             50.dp
         }
+
         is UserViewType.Option, is UserViewType.Invite -> {
             40.dp
         }
@@ -202,24 +205,29 @@ fun UserItemView(
                     val shape = RoundedCornerShape(8.dp)
                     val buttonModifier = Modifier
                         .height(32.dp)
+                    var alreadyAdd by remember {
+                        mutableStateOf(false)
+                    }
 
-                    if (type.alreadyAdd) {
-                        Button(
-                            onClick = {
-                                iconClickAction?.invoke()
-                            },
-                            modifier = buttonModifier,
-                            enabled = false,
-                            colors = ButtonDefaults.buttonColors(
-                                disabledContainerColor = GrayScale100
-                            ),
-                            contentPadding = PaddingValues(
-                                horizontal = 14.dp,
-                                vertical = 6.dp
-                            ),
-                            shape = shape,
-                            border = BorderStroke(1.dp, GrayScale300)
-                        ) {
+                    Button(
+                        onClick = {
+                            alreadyAdd = true
+                            iconClickAction?.invoke()
+                        },
+                        modifier = buttonModifier,
+                        enabled = !alreadyAdd,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                            disabledContainerColor = GrayScale100
+                        ),
+                        contentPadding = PaddingValues(
+                            horizontal = 14.dp,
+                            vertical = 6.dp
+                        ),
+                        shape = shape,
+                        border = BorderStroke(1.dp, GrayScale300),
+                    ) {
+                        AnimatedVisibility(alreadyAdd) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -239,22 +247,7 @@ fun UserItemView(
                                 )
                             }
                         }
-                    } else {
-                        Button(
-                            onClick = {
-                                iconClickAction?.invoke()
-                            },
-                            modifier = buttonModifier,
-                            contentPadding = PaddingValues(
-                                horizontal = 14.dp,
-                                vertical = 6.dp
-                            ),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.White
-                            ),
-                            shape = shape,
-                            border = BorderStroke(1.dp, GrayScale300)
-                        ) {
+                        AnimatedVisibility(!alreadyAdd) {
                             Text(
                                 text = "초대",
                                 color = Primary600,
@@ -303,8 +296,7 @@ fun UserItemPreview() {
             UserViewType.Favorite(isFavorite = false),
             UserViewType.Delete,
             UserViewType.Option,
-            UserViewType.Invite(alreadyAdd = true),
-            UserViewType.Invite(alreadyAdd = false)
+            UserViewType.Invite,
         ).forEach { type ->
             UserItemView(
                 user = user,
