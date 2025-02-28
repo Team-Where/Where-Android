@@ -34,11 +34,13 @@ class OnBoardingActivity : AppCompatActivity(){
         binding.nextBtn.setOnClickListener {
             val intent = Intent(this, AuthActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         binding.skipText.setOnClickListener {
             val intent = Intent(this, AuthActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         binding.imageBack.setOnClickListener {

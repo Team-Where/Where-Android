@@ -21,6 +21,10 @@ class PasswordFragment : Fragment() {
             (activity as AuthActivity).navigateToFragment(ProfileSettingFragment())
         }
 
+        binding.imageBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
         return binding.root
     }
 }
