@@ -21,6 +21,10 @@ class EmailVerificationFragment : Fragment() {
             (activity as AuthActivity).navigateToFragment(PasswordFragment())
         }
 
+        binding.imageBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
         return binding.root
     }
 }

@@ -22,6 +22,10 @@ class ProfileSettingFragment : Fragment() {
             (activity as AuthActivity).navigateToFragment(SignUpCompleteFragment())
         }
 
+        binding.imageBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
         return binding.root
     }
 }

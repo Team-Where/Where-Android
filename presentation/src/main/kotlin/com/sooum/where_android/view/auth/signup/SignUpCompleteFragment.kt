@@ -17,6 +17,10 @@ class SignUpCompleteFragment : Fragment() {
     ): View? {
         binding = FragmentSignUpCompleteBinding.inflate(inflater, container, false)
 
+        binding.imageBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
         return binding.root
     }
 }

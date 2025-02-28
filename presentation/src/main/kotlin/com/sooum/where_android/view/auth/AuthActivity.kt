@@ -14,14 +14,8 @@ class AuthActivity : AppCompatActivity() {
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        loadFragment(SocialLoginFragment())
+        navigateToFragment(SocialLoginFragment())
 
-    }
-
-    fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.flame, fragment)
-            .commit()
     }
 
     fun navigateToFragment(fragment: Fragment, addToBackStack: Boolean = true) {
