@@ -4,9 +4,12 @@ kotlin = "2.1.0"
 coroutine = "1.9.0"
 
 hilt = "2.55"
+kotlinxSerializationJson = "1.8.0"
 ksp = "2.1.0-1.0.29"
 
 coil = "3.0.0"
+
+retrofit = "2.11.0"
 
 compileSdk = "34"
 targetSdk = "34"
@@ -22,6 +25,10 @@ coroutine = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", versi
 hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.2.0" }
+
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-serialization-converter = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
