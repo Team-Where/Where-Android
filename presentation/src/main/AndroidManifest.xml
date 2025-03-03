@@ -4,6 +4,18 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <queries>
+        <!-- Android 11 이상에서 특정 앱의 패키지 상태를 알기 위해서 query 선언이 필요하다-->
+        <package android:name="com.nhn.android.nmap" />
+        <package android:name="net.daum.android.map" />
+
+        <!-- 텍스트 공유 수신을 위한 쿼리 추가-->
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="text/plain" />
+        </intent>
+    </queries>
+
     <application
         android:name=".WhereApp"
         android:allowBackup="true"
@@ -15,21 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Whereandroid"
         tools:targetApi="31">
-        <activity
-            android:name=".view.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".view.auth.AuthActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.onboarding.OnBoardingActivity"
-            android:exported="false" />
         <activity
             android:name=".view.splash.SplashActivity"
             android:exported="true"
@@ -41,15 +39,46 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".view.onboarding.OnBoardingActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".view.auth.AuthActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".view.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
+
         <!-- Trigger Google Play services to install the backported photo picker module. -->
-        <service android:name="com.google.android.gms.metadata.ModuleDependencies"
+        <service
+            android:name="com.google.android.gms.metadata.ModuleDependencies"
             android:enabled="false"
             android:exported="false"
             tools:ignore="MissingClass">
             <intent-filter>
                 <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES" />
             </intent-filter>
-            <meta-data android:name="photopicker_activity:0:required" android:value="" />
+            <meta-data
+                android:name="photopicker_activity:0:required"
+                android:value="" />
         </service>
 
     </application>
