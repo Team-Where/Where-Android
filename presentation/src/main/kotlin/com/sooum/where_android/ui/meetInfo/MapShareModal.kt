@@ -24,7 +24,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.pretendard
+import kotlinx.coroutines.launch
 
 private sealed class MapItem(
     @DrawableRes val imageRes: Int,
@@ -86,16 +89,25 @@ private sealed class MapItem(
 fun MapShareModal(
     onDismiss: () -> Unit,
 ) {
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         dragHandle = null,
         containerColor = Color.White,
+        sheetState = sheetState
     ) {
         MapShareModalContent(
             modifier = Modifier
-                .padding(10.dp)
+                .padding(15.dp)
                 .padding(bottom = 20.dp),
-            onDismiss = onDismiss
+            onDismiss = {
+                scope.launch {
+                    sheetState.hide()
+                    onDismiss()
+                }
+            }
         )
     }
 }
@@ -135,6 +147,7 @@ fun MapShareModalContent(
                 Button(
                     onClick = {
                         item.checkOrStart(context)
+                        onDismiss()
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,
