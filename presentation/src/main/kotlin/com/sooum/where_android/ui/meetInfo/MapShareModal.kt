@@ -19,8 +19,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.pretendard
-
 
 private sealed class MapItem(
     @DrawableRes val imageRes: Int,
@@ -76,6 +77,26 @@ private sealed class MapItem(
         } else {
             context.startActivity(intent)
         }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MapShareModal(
+    onDismiss: () -> Unit,
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        dragHandle = null,
+        containerColor = Color.White,
+    ) {
+        MapShareModalContent(
+            modifier = Modifier
+                .padding(10.dp)
+                .padding(bottom = 20.dp),
+            onDismiss = onDismiss
+        )
     }
 }
 
