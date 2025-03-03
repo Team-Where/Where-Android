@@ -43,7 +43,6 @@ class AgreementFragment : Fragment() {
     }
 
     private fun setupCheckboxListeners() {
-
         binding.checkboxAgreeAll.setOnCheckedChangeListener { _, isChecked ->
             allCheckboxes.forEach { checkbox ->
                 checkbox.isChecked = isChecked
@@ -73,6 +72,4 @@ class AgreementFragment : Fragment() {
         val backgroundRes = if (allChecked) R.drawable.shape_rounded_button_main_color else R.drawable.shape_rounded_button_gray_scale_300
         binding.nextBtn.setBackgroundResource(backgroundRes)
     }
-
-
 }
