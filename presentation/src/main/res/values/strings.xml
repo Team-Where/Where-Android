@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">where-android</string>
+    <string name="app_name">어디</string>
 
     온보딩
     <string name="skip">건너뛰기</string>
@@ -10,8 +10,6 @@
 
     소셜로그인 엑티비티
     <string name="social_login_logo">약속을 새롭게 정의하다</string>
-
-
 
 
     <!--Home - 내 모임-->
@@ -44,4 +42,8 @@
     <string name="meet_detail_month">%d월</string>
     <string name="meet_detail_card_month">%d월</string>
     <string name="meet_detail_show">자세히 보기</string>
+
+    <!-- 장소 공유 -->
+    <string name="map_share_by_naver">네이버 지도에서 공유하기</string>
+    <string name="map_share_by_kakao">카카오맵에서 공유하기</string>
 </resources>
