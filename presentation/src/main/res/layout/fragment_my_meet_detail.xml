@@ -1,0 +1,197 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/groupImage"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/test_profile"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/groupTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2024 연말파티🎊"
+            android:textSize="20sp"
+            android:textColor="#111827"
+            android:fontFamily="@font/pretendard_semibold"
+            app:layout_constraintStart_toEndOf="@id/groupImage"
+            app:layout_constraintTop_toTopOf="@id/groupImage"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="15dp"/>
+
+        <TextView
+            android:id="@+id/groupDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="벌써 연말이다 신나게 놀아보장~"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretend_regular"
+            android:textColor="#111827"
+            app:layout_constraintStart_toStartOf="@id/groupTitle"
+            app:layout_constraintTop_toBottomOf="@id/groupTitle"
+            android:layout_marginTop="6dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/infoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topContainer">
+
+        <!-- 1) 일정 섹션 (아이콘 + 텍스트 + 버튼) -->
+        <ImageView
+            android:id="@+id/icon_calender"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_calender"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvSchedule"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="아직 정해진 일정이 없어요"
+            android:textColor="#111827"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretend_regular"
+            app:layout_constraintStart_toEndOf="@id/icon_calender"
+            app:layout_constraintTop_toTopOf="@id/icon_calender"
+            app:layout_constraintBottom_toBottomOf="@id/icon_calender"
+            app:layout_constraintEnd_toStartOf="@+id/btnSchedule" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSchedule"
+            android:layout_width="80dp"
+            android:layout_height="33dp"
+            android:fontFamily="@font/pretendard_semibold"
+            android:background="@drawable/shape_edittext_rounded_gray"
+            android:text="일정 등록"
+            android:textSize="12sp"
+            app:layout_constraintTop_toTopOf="@id/icon_calender"
+            app:layout_constraintBottom_toBottomOf="@id/icon_calender"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- 구분선 1 -->
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/icon_calender" />
+
+
+        <!-- 2) 장소 섹션 (아이콘 + 텍스트 + 버튼) -->
+        <ImageView
+            android:id="@+id/icLocation"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_spot"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider1" />
+
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="공유된 장소 6"
+            android:textColor="#212529"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretend_regular"
+            app:layout_constraintStart_toEndOf="@id/icLocation"
+            app:layout_constraintTop_toTopOf="@id/icLocation"
+            app:layout_constraintBottom_toBottomOf="@id/icLocation"
+            app:layout_constraintEnd_toStartOf="@+id/btnLocation" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnLocation"
+            android:layout_width="80dp"
+            android:layout_height="33dp"
+            android:fontFamily="@font/pretendard_semibold"
+            android:text="장소 공유"
+            android:background="@drawable/shape_edittext_rounded_gray"
+            android:textSize="12sp"
+            app:layout_constraintTop_toTopOf="@id/icLocation"
+            app:layout_constraintBottom_toBottomOf="@id/icLocation"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- 구분선 2 -->
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/icLocation" />
+
+
+        <!-- 3) 친구 섹션 (아이콘 + 텍스트 + 버튼) -->
+        <ImageView
+            android:id="@+id/icFriend"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_friends"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+        <TextView
+            android:id="@+id/tvFriend"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="초대된 친구 4"
+            android:textColor="#212529"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretend_regular"
+            app:layout_constraintStart_toEndOf="@id/icFriend"
+            app:layout_constraintTop_toTopOf="@id/icFriend"
+            app:layout_constraintBottom_toBottomOf="@id/icFriend"
+            app:layout_constraintEnd_toStartOf="@+id/btnFriend" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnFriend"
+            android:layout_width="80dp"
+            android:layout_height="33dp"
+            android:fontFamily="@font/pretendard_semibold"
+            android:background="@drawable/shape_edittext_rounded_gray"
+            android:text="친구 초대"
+            android:textSize="12sp"
+            app:layout_constraintTop_toTopOf="@id/icFriend"
+            app:layout_constraintBottom_toBottomOf="@id/icFriend"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
