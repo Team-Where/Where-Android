@@ -46,4 +46,7 @@
     <!-- 장소 공유 -->
     <string name="map_share_by_naver">네이버 지도에서 공유하기</string>
     <string name="map_share_by_kakao">카카오맵에서 공유하기</string>
+
+    <!-- 일정 등록 -->
+    <string name="date_calendar_title">%d년 %2d월</string>
 </resources>
