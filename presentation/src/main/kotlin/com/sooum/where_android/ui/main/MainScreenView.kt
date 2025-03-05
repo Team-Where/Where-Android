@@ -50,6 +50,7 @@ import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
 import com.sooum.where_android.ui.main.myMeet.MyMeetView
 import com.sooum.where_android.ui.main.newMeet.NewMeetResultView
+import com.sooum.where_android.ui.meetInfo.CalendarModal
 import com.sooum.where_android.ui.meetInfo.MapShareModal
 import com.sooum.where_android.view.LocalActivity
 import kotlinx.coroutines.launch
@@ -179,18 +180,15 @@ fun MainScreenView(
                                     Text("열기")
                                 }
                                 if (show) {
-                                    MapShareModal(
+                                    CalendarModal(
                                         onDismiss = {
                                             show = false
+                                        },
+                                        nextBy = {
+
                                         }
                                     )
                                 }
-                            }
-                        }
-                        dialog<ShareResult>() { entry ->
-                            val result = entry.toRoute<ShareResult>()
-                            Column {
-                                Text(result.toString() ?: "Error......")
                             }
                         }
                         navigation<ScreenRoute.MainGraph>(startDestination = ScreenRoute.BottomNavigation.MeetList) {

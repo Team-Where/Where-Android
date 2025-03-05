@@ -48,5 +48,7 @@
     <string name="map_share_by_kakao">카카오맵에서 공유하기</string>
 
     <!-- 일정 등록 -->
-    <string name="date_calendar_title">%d년 %2d월</string>
+    <string name="date_calendar_title">%d년 %02d월</string>
+    <string name="date_calendar_btn_disabled">날짜를 선택해주세요</string>
+    <string name="date_calendar_btn_enabled">%02d월 %02d일(%s) | 선택</string>
 </resources>

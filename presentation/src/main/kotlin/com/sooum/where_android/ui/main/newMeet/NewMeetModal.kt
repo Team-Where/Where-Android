@@ -1,5 +1,6 @@
 package com.sooum.where_android.ui.main.newMeet
 
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,7 +56,7 @@ fun NewMeetModal(
                 top = 16.dp,
                 start = 20.dp,
                 end = 20.dp
-            ),
+            ).navigationBarsPadding(),
             title = newMeetViewModel.newMeetData.title,
             updateTitle = newMeetViewModel::updateTitle,
             type = newMeetViewModel.newMeetData.image,

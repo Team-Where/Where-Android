@@ -1,8 +1,15 @@
 package com.sooum.where_android.util
 
+import android.os.Build
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
+import kotlinx.datetime.toJavaLocalDate
+import java.text.SimpleDateFormat
+import java.time.format.TextStyle
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 object DateUtil {
     // 해당 연도와 월의 모든 날짜 리스트 반환 (빈 칸 포함)
@@ -27,5 +34,30 @@ object DateUtil {
         }
 
         return days
+    }
+
+    fun getWeekString(
+        localDate: LocalDate,
+        local :Locale = Locale.KOREA
+    ): String {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return localDate.dayOfWeek.getDisplayName(TextStyle.SHORT, local)
+        } else {
+            val calendar = Calendar.getInstance().apply {
+                set(
+                    /* year = */ localDate.year,
+                    /* month = */ localDate.monthNumber - 1,
+                    /* date = */ localDate.dayOfMonth
+                )
+            }
+
+            // Format the day of the week in a specific locale
+            val sdf = SimpleDateFormat("EEEE", local)
+            val dayName = sdf.format(calendar.time)
+
+            return  dayName
+        }
+
+
     }
 }
