@@ -24,6 +24,7 @@ class SignUpCompleteFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
+        //임시 화면 이동 코드
         binding.nextBtn.setOnClickListener {
             val intent = Intent(requireContext(), MyMeetActivity::class.java)
             startActivity(intent)
