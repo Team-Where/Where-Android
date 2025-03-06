@@ -1,4 +1,4 @@
-package com.sooum.where_android.ui.meetInfo
+package com.sooum.where_android.ui.widget
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

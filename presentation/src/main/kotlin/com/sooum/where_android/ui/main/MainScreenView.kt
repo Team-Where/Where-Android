@@ -41,17 +41,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
-import com.sooum.domain.model.NewMeet
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
 import com.sooum.where_android.ui.main.myMeet.MyMeetView
 import com.sooum.where_android.ui.main.newMeet.NewMeetResultView
-import com.sooum.where_android.ui.meetInfo.CalendarModal
-import com.sooum.where_android.ui.meetInfo.MapShareModal
+import com.sooum.where_android.ui.schedule.ScheduleView
 import com.sooum.where_android.view.LocalActivity
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -168,28 +164,10 @@ fun MainScreenView(
                         composable(
                             route = "test"
                         ) {
-                            Column {
-                                var show by remember {
-                                    mutableStateOf(false)
-                                }
-                                Button(
-                                    onClick = {
-                                        show = true
-                                    }
-                                ) {
-                                    Text("열기")
-                                }
-                                if (show) {
-                                    CalendarModal(
-                                        onDismiss = {
-                                            show = false
-                                        },
-                                        nextBy = {
-
-                                        }
-                                    )
-                                }
-                            }
+                            ScheduleView(
+                                modifier = Modifier.fillMaxSize()
+                                    .padding(10.dp)
+                            )
                         }
                         navigation<ScreenRoute.MainGraph>(startDestination = ScreenRoute.BottomNavigation.MeetList) {
                             composable<ScreenRoute.BottomNavigation.MeetList>() {

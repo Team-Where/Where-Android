@@ -32,9 +32,6 @@ android {
     }
 
     compileOptions {
-        //support kotlinx-datetime for api 26 below
-        isCoreLibraryDesugaringEnabled = true
-
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -56,9 +53,6 @@ kotlin {
 }
 
 dependencies {
-    //https://developer.android.com/studio/write/java8-support?hl=ko#library-desugaring
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
-
     implementation(project(":data"))
     implementation(project(":domain"))
 

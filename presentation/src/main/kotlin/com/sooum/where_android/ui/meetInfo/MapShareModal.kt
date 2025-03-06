@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.ui.widget.ModalHeader
 import kotlinx.coroutines.launch
 
 private sealed class MapItem(

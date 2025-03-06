@@ -1,4 +1,4 @@
-package com.sooum.where_android.ui.meetInfo
+package com.sooum.where_android.ui.schedule
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,6 +52,7 @@ import com.sooum.where_android.theme.Gray200
 import com.sooum.where_android.theme.Gray500
 import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.ui.widget.ModalHeader
 import com.sooum.where_android.ui.widget.PrimaryButton
 import com.sooum.where_android.util.DateUtil
 import kotlinx.coroutines.async
