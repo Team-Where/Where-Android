@@ -1,14 +1,16 @@
 package com.sooum.where_android.ui.schedule
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -42,6 +44,13 @@ fun ScheduleView(
     var selectedDate: LocalDate? by remember {
         mutableStateOf(null)
     }
+
+    var showTime by remember {
+        mutableStateOf(false)
+    }
+    var selectedTime: Int? by remember {
+        mutableStateOf(null)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -73,9 +82,15 @@ fun ScheduleView(
                 ScheduleRow(
                     title = "만나는 시간",
                     placeHolder = "시간을 선택해주세요",
-                    onValue = null,
+                    onValue = selectedTime?.let { hour ->
+                        if (hour > 12) {
+                            "오후 ${hour - 12}시"
+                        } else {
+                            "오전 ${hour}시"
+                        }
+                    },
                     onClick = {
-
+                        showTime = true
                     }
                 )
             }
@@ -83,7 +98,9 @@ fun ScheduleView(
 
         PrimaryButton(
             onClick = {},
-            title = "확인"
+            title = "확인",
+            enabled = selectedDate != null && selectedTime != null,
+            radius = 16.dp
         )
     }
     if (showCalendar) {
@@ -91,8 +108,18 @@ fun ScheduleView(
             onDismiss = {
                 showCalendar = false
             },
-            nextBy = {
+            onClick = {
                 selectedDate = it
+            }
+        )
+    }
+    if (showTime) {
+        TimeModal(
+            onDismiss = {
+                showTime = false
+            },
+            onClick = {
+                selectedTime = it
             }
         )
     }
@@ -105,50 +132,56 @@ private fun ScheduleRow(
     onValue: String?,
     onClick: () -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                onClick()
-            }
-            .height(71.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent
+        ),
+        contentPadding = PaddingValues(0.dp),
+        modifier = Modifier.height(71.dp)
     ) {
-        Text(
-            text = title,
-            fontFamily = pretendard,
-            fontWeight = FontWeight.Medium,
-            fontSize = 16.sp,
-            color = Color.Black
-        )
-
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(7.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(71.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            if (onValue == null) {
-                Text(
-                    text = placeHolder,
-                    fontFamily = pretendard,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 14.sp,
-                    color = Gray500
-                )
-            } else {
-                Text(
-                    text = onValue,
-                    fontFamily = pretendard,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 16.sp,
-                    color = Color(0xff1f2937)
+            Text(
+                text = title,
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Medium,
+                fontSize = 16.sp,
+                color = Color.Black
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                if (onValue == null) {
+                    Text(
+                        text = placeHolder,
+                        fontFamily = pretendard,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                        color = Gray500
+                    )
+                } else {
+                    Text(
+                        text = onValue,
+                        fontFamily = pretendard,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp,
+                        color = Color(0xff1f2937)
+                    )
+                }
+                Icon(
+                    painter = painterResource(R.drawable.icon_schedule_open),
+                    contentDescription = null,
+                    tint = Gray500
                 )
             }
-            Icon(
-                painter = painterResource(R.drawable.icon_schedule_open),
-                contentDescription = null,
-                tint = Gray500
-            )
         }
     }
 }

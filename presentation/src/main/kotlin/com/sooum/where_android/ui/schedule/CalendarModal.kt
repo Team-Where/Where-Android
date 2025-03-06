@@ -66,7 +66,7 @@ import kotlinx.datetime.toLocalDateTime
 @Composable
 fun CalendarModal(
     onDismiss: () -> Unit,
-    nextBy: (LocalDate) -> Unit
+    onClick: (LocalDate) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -91,20 +91,23 @@ fun CalendarModal(
             ModalHeader(
                 Modifier
                     .fillMaxWidth()
-                    .height(41.dp)
-                    .padding(horizontal = 20.dp),
+                    .height(25.dp)
+                    .padding(start = 20.dp, end = 8.dp),
                 header = "날짜 선택",
                 onDismiss = {
                     scope.launch {
                         sheetState.hide()
                         onDismiss()
                     }
-                }
+                },
+            )
+            Spacer(
+                modifier = Modifier.height(16.dp)
             )
             HorizontalDivider()
             CalendarView(
                 modifier = Modifier
-                    .padding(vertical = 15.dp, horizontal = 20.dp)
+                    .padding(horizontal = 20.dp, vertical = 24.dp)
                     .navigationBarsPadding(),
                 selected = selected,
                 onClick = {
@@ -117,7 +120,7 @@ fun CalendarModal(
                             onDismiss()
                         }
                         async {
-                            nextBy(date)
+                            onClick(date)
                         }
                     }
                 }
@@ -195,6 +198,7 @@ private fun CalendarView(
                 }
             }
         }
+        Spacer(Modifier.height(16.dp))
 
         // 요일 헤더 추가
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
@@ -267,7 +271,7 @@ private fun CalendarView(
             }
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(16.dp))
 
         PrimaryButton(
             onClick = {
@@ -342,7 +346,7 @@ private fun CalendarModalPreview() {
                 onDismiss = {
                     show = false
                 },
-                nextBy = {
+                onClick = {
                     selected = it
                 }
             )
