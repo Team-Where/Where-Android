@@ -82,6 +82,9 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
+    //circleImageView
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
     // serialization
     implementation(libs.kotlinx.serialization.json)
 

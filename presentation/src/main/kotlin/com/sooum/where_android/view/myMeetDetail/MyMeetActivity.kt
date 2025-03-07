@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.myMeetDetail
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -17,6 +18,8 @@ class MyMeetActivity : AppCompatActivity() {
 
         loadFragment(MyMeetDetailFragment())
         setupTabLayoutListener()
+
+
     }
 
     private fun setupTabLayoutListener() {
@@ -35,6 +38,7 @@ class MyMeetActivity : AppCompatActivity() {
         })
     }
 
+    @SuppressLint("CommitTransaction")
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.flame, fragment)

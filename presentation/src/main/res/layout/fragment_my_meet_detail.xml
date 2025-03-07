@@ -51,6 +51,7 @@
 
     <!-- CardView로 감싸기 -->
     <androidx.cardview.widget.CardView
+        android:id="@+id/infoCardViewContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -203,6 +204,54 @@
                 app:layout_constraintTop_toTopOf="@id/icFriend"
                 app:layout_constraintBottom_toBottomOf="@id/icFriend"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="30dp"
+        android:background="#F9FAFB"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/infoCardViewContainer">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/invitedFriendContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/invited_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="초대된 친구"
+                android:textSize="16sp"
+                android:textColor="#1F2937"
+                android:fontFamily="@font/pretend_semibold"
+                tools:ignore="MissingConstraints" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#F3F4F6"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/invited_text"
+                android:layout_marginTop="15dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/divider3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
