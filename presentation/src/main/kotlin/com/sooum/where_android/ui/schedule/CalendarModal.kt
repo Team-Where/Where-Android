@@ -65,6 +65,7 @@ import kotlinx.datetime.toLocalDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarModal(
+    startData: LocalDate? = null,
     onDismiss: () -> Unit,
     onClick: (LocalDate) -> Unit
 ) {
@@ -75,7 +76,7 @@ fun CalendarModal(
 
     var selected: LocalDate? by remember {
         mutableStateOf(
-            null
+            startData
         )
     }
     ModalBottomSheet(
@@ -113,6 +114,9 @@ fun CalendarModal(
                 onClick = {
                     selected = it
                 },
+                start = selected ?: Clock.System.now()
+                    .toLocalDateTime(TimeZone.currentSystemDefault())
+                    .date,
                 onNext = { date ->
                     scope.launch {
                         async {
@@ -132,13 +136,13 @@ fun CalendarModal(
 
 @Composable
 private fun CalendarView(
+    modifier: Modifier = Modifier,
     start: LocalDate = Clock.System.now()
         .toLocalDateTime(TimeZone.currentSystemDefault())
         .date,
     selected: LocalDate?,
     onClick: (LocalDate) -> Unit,
     onNext: (LocalDate) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     var year by remember {
         mutableIntStateOf(start.year)

@@ -1,5 +1,7 @@
 package com.sooum.domain.model
 
+import androidx.annotation.IntRange
+
 /**
  * 모임 화면 상세 데이터
  */
@@ -28,9 +30,9 @@ data class MeetDetail(
         description: String,
         image: String,
         year: Int,
-        month: Int,
-        day: Int,
-        time: Int
+        @IntRange(from = 1, to = 12) month: Int,
+        @IntRange(from = 1, to = 31) day: Int,
+        @IntRange(from = 1, to = 24) time: Int
     ) : this(id, title, description, image, Schedule(year, month, day, time))
 
     constructor(
@@ -39,8 +41,8 @@ data class MeetDetail(
         description: String,
         image: String,
         year: Int,
-        month: Int,
-        day: Int,
+        @IntRange(from = 1, to = 12) month: Int,
+        @IntRange(from = 1, to = 31) day: Int,
     ) : this(id, title, description, image, Schedule(year, month, day, 0))
 }
 
@@ -49,9 +51,9 @@ data class MeetDetail(
  */
 data class Schedule(
     val year: Int,
-    val month: Int,
-    val day: Int,
-    val time: Int
+    @IntRange(from = 1, to = 12) val month: Int,
+    @IntRange(from = 1, to = 31) val day: Int,
+    @IntRange(from = 1, to = 24) val time: Int
 ) {
     val date: String
         get() {

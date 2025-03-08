@@ -51,6 +51,7 @@ fun Schedule.toLocalDate(): LocalDate {
 @Composable
 fun ScheduleView(
     modifier: Modifier,
+    onBack :() -> Unit,
     prevSchedule: Schedule? = null
 ) {
     var showCalendar by remember {
@@ -88,7 +89,7 @@ fun ScheduleView(
                     fontWeight = FontWeight.SemiBold
                 )
                 IconButton(
-                    onClick = {},
+                    onClick = onBack,
                     modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
                     Icon(Icons.Filled.Clear, null)
@@ -139,6 +140,7 @@ fun ScheduleView(
     }
     if (showCalendar) {
         CalendarModal(
+            startData = selectedDate,
             onDismiss = {
                 showCalendar = false
             },
@@ -149,6 +151,7 @@ fun ScheduleView(
     }
     if (showTime) {
         TimeModal(
+            startData = selectedTime,
             onDismiss = {
                 showTime = false
             },
@@ -237,6 +240,7 @@ private fun ScheduleViewPreview(
         modifier = Modifier
             .safeDrawingPadding()
             .padding(horizontal = 10.dp),
-        prevSchedule = data
+        prevSchedule = data,
+        onBack = {}
     )
 }

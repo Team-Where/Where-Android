@@ -47,6 +47,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeModal(
+    startData: Int? = null,
     onDismiss: () -> Unit,
     onClick: (Int) -> Unit
 ) {
@@ -83,6 +84,7 @@ fun TimeModal(
             )
             HorizontalDivider()
             TimeView(
+                startData = startData,
                 modifier = Modifier
                     .padding(horizontal = 20.dp, vertical = 24.dp)
                     .navigationBarsPadding(),
@@ -107,14 +109,15 @@ fun TimeModal(
 @Composable
 private fun TimeView(
     modifier: Modifier = Modifier,
+    startData: Int? = null,
     onDismiss: () -> Unit,
     onClick: (Int) -> Unit
 ) {
     var selectedValue1: Boolean? by remember {
-        mutableStateOf(null)
+        mutableStateOf(startData?.let { it > 12 } ?: false)
     }
     var selectedValue2: Int? by remember {
-        mutableStateOf(null)
+        mutableStateOf(startData?.let { if (it > 12) it - 12 else it })
     }
     Column(
         modifier = modifier

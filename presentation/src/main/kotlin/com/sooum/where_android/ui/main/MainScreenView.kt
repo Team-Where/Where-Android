@@ -8,14 +8,17 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -41,6 +44,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.sooum.domain.model.Schedule
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
@@ -60,7 +64,7 @@ fun NavBackStackEntry?.notShowBottom(): Boolean {
     val currentDestination = this?.destination
     return (currentDestination?.hierarchy?.any {
         it.hasRoute(ScreenRoute.Home.MeetGuide::class)
-    } == true) || (currentDestination?.route == "test")
+    } == true) || (currentDestination?.route?.startsWith("scheduleTest") == true)
 }
 
 @Composable
@@ -185,10 +189,42 @@ fun MainScreenView(
                         composable(
                             route = "test"
                         ) {
+                            Column(Modifier.fillMaxSize()){
+                                Button(
+                                    onClick = {
+                                        navController.navigate("scheduleTest1")
+                                    }
+                                ) {
+                                    Text("일정 등록")
+                                }
+                                Button(
+                                    onClick = {
+                                        navController.navigate("scheduleTest2")
+                                    }
+                                ) {
+                                    Text("일정 수정")
+                                }
+                            }
+                        }
+                        composable(
+                            route = "scheduleTest1"
+                        ) {
                             ScheduleView(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(10.dp)
+                                    .padding(10.dp),
+                                onBack = navController::popBackStack
+                            )
+                        }
+                        composable(
+                            route = "scheduleTest2"
+                        ) {
+                            ScheduleView(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(10.dp),
+                                onBack = navController::popBackStack,
+                                prevSchedule = Schedule(2025,3,8,20)
                             )
                         }
                         navigation<ScreenRoute.MainGraph>(startDestination = ScreenRoute.BottomNavigation.MeetList) {
