@@ -114,7 +114,7 @@ private fun TimeView(
     onClick: (Int) -> Unit
 ) {
     var selectedValue1: Boolean? by remember {
-        mutableStateOf(startData?.let { it > 12 } ?: false)
+        mutableStateOf(startData?.let { it > 12 })
     }
     var selectedValue2: Int? by remember {
         mutableStateOf(startData?.let { if (it > 12) it - 12 else it })
