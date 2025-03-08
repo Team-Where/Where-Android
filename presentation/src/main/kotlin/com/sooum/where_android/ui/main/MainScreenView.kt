@@ -213,7 +213,10 @@ fun MainScreenView(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(10.dp),
-                                onBack = navController::popBackStack
+                                onBack = navController::popBackStack,
+                                onNewSchedule = {
+                                    navController.popBackStack()
+                                }
                             )
                         }
                         composable(
@@ -224,7 +227,10 @@ fun MainScreenView(
                                     .fillMaxSize()
                                     .padding(10.dp),
                                 onBack = navController::popBackStack,
-                                prevSchedule = Schedule(2025,3,8,20)
+                                prevSchedule = Schedule(2025,3,8,20),
+                                onNewSchedule = {
+                                    navController.popBackStack()
+                                }
                             )
                         }
                         navigation<ScreenRoute.MainGraph>(startDestination = ScreenRoute.BottomNavigation.MeetList) {

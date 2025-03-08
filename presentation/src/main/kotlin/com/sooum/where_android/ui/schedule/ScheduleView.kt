@@ -51,7 +51,8 @@ fun Schedule.toLocalDate(): LocalDate {
 @Composable
 fun ScheduleView(
     modifier: Modifier,
-    onBack :() -> Unit,
+    onBack: () -> Unit,
+    onNewSchedule: (Schedule) -> Unit,
     prevSchedule: Schedule? = null
 ) {
     var showCalendar by remember {
@@ -132,7 +133,16 @@ fun ScheduleView(
         }
 
         PrimaryButton(
-            onClick = {},
+            onClick = {
+                onNewSchedule(
+                    Schedule(
+                        selectedDate!!.year,
+                        selectedDate!!.monthNumber,
+                        selectedDate!!.dayOfMonth,
+                        selectedTime!!
+                    )
+                )
+            },
             title = "확인",
             enabled = selectedDate != null && selectedTime != null,
             radius = 16.dp
@@ -241,6 +251,7 @@ private fun ScheduleViewPreview(
             .safeDrawingPadding()
             .padding(horizontal = 10.dp),
         prevSchedule = data,
-        onBack = {}
+        onBack = {},
+        onNewSchedule = {}
     )
 }
