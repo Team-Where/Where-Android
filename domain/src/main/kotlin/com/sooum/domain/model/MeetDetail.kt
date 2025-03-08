@@ -1,13 +1,57 @@
 package com.sooum.domain.model
 
+/**
+ * 모임 화면 상세 데이터
+ */
 data class MeetDetail(
     val id: Long,
     val title: String,
     val description: String,
     val image: String,
+    val schedule: Schedule
+) {
+    val date
+        get() = schedule.date
+
+    val year
+        get() = schedule.year
+
+    val month
+        get() = schedule.month
+
+    val day
+        get() = schedule.day
+
+    constructor(
+        id: Long,
+        title: String,
+        description: String,
+        image: String,
+        year: Int,
+        month: Int,
+        day: Int,
+        time: Int
+    ) : this(id, title, description, image, Schedule(year, month, day, time))
+
+    constructor(
+        id: Long,
+        title: String,
+        description: String,
+        image: String,
+        year: Int,
+        month: Int,
+        day: Int,
+    ) : this(id, title, description, image, Schedule(year, month, day, 0))
+}
+
+/**
+ * 일정관리를 위한 Schedule Class
+ */
+data class Schedule(
     val year: Int,
     val month: Int,
     val day: Int,
+    val time: Int
 ) {
     val date: String
         get() {

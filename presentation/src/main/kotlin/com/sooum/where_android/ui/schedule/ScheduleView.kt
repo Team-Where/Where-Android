@@ -1,18 +1,23 @@
 package com.sooum.where_android.ui.schedule
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,30 +31,40 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sooum.domain.model.Schedule
+import com.sooum.domain.model.User
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray500
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.ui.main.friendList.UserPreviewParameterProvider
 import com.sooum.where_android.ui.widget.PrimaryButton
 import kotlinx.datetime.LocalDate
 
+fun Schedule.toLocalDate(): LocalDate {
+    return LocalDate(year, month, day)
+}
+
 @Composable
 fun ScheduleView(
-    modifier: Modifier
+    modifier: Modifier,
+    prevSchedule: Schedule? = null
 ) {
     var showCalendar by remember {
         mutableStateOf(false)
     }
     var selectedDate: LocalDate? by remember {
-        mutableStateOf(null)
+        mutableStateOf(prevSchedule?.toLocalDate())
     }
 
     var showTime by remember {
         mutableStateOf(false)
     }
     var selectedTime: Int? by remember {
-        mutableStateOf(null)
+        mutableStateOf(prevSchedule?.time)
     }
     Column(
         modifier = Modifier
@@ -58,7 +73,26 @@ fun ScheduleView(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
-            Row {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(53.dp)
+            ) {
+                Text(
+                    text = prevSchedule?.let {
+                        "일정 수정"
+                    } ?: "일정 등록",
+                    modifier = Modifier.align(Alignment.Center),
+                    fontFamily = pretendard,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                IconButton(
+                    onClick = {},
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                ) {
+                    Icon(Icons.Filled.Clear, null)
+                }
 
             }
             HorizontalDivider()
@@ -186,12 +220,23 @@ private fun ScheduleRow(
     }
 }
 
+private class ScheduleParameterProvider() : PreviewParameterProvider<Schedule?> {
+    override val values: Sequence<Schedule?>
+        get() = sequenceOf(
+            null,
+            Schedule(2025, 3, 8, 23)
+        )
+}
+
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-private fun ScheduleViewPreview() {
+private fun ScheduleViewPreview(
+    @PreviewParameter(ScheduleParameterProvider::class) data: Schedule?
+) {
     ScheduleView(
         modifier = Modifier
             .safeDrawingPadding()
-            .padding(10.dp)
+            .padding(horizontal = 10.dp),
+        prevSchedule = data
     )
 }
