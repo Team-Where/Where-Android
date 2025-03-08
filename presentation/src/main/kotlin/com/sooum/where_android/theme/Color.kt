@@ -15,7 +15,9 @@ val Gray900 = Color(0xff111827)
 
 
 val GrayScale100 = Color(0xffF1F3F5)
+val GrayScale200 = Color(0xffE9ECEF)
 val GrayScale300 = Color(0xffDEE2E6)
+val GrayScale400 = Color(0xffCED4DA)
 val GrayScale500 = Color(0xffADB5BD)
 val GrayScale600 = Color(0xff868E96)
 val GrayScale700 = Color(0xff495057)
@@ -27,3 +29,6 @@ val Red500 = Color(0xffef4444)
 
 
 val Primary600 = Color(0xff4f46E5)
+
+
+val SnackBarColor = Color(0xCC030712)

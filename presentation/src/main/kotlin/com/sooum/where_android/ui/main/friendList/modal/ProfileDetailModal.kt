@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +37,7 @@ import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.ui.widget.CircleProfileView
 import com.sooum.where_android.ui.widget.FavoriteIconButton
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,17 +47,24 @@ fun ProfileDetailModal(
     navigationMeetDetail: () -> Unit,
     updateFavorite: (id: Long, favorite: Boolean) -> Unit
 ) {
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    val scope = rememberCoroutineScope()
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         dragHandle = null,
         containerColor = Color.White,
-        sheetState = rememberModalBottomSheetState(
-            skipPartiallyExpanded = true
-        )
+        sheetState = sheetState
     ) {
         ProfileDetailContent(
             user = user,
-            onDismiss = onDismiss,
+            onClose = {
+                scope.launch {
+                    sheetState.hide()
+                    onDismiss()
+                }
+            },
             navigationMeetDetail = navigationMeetDetail,
             updateFavorite = updateFavorite
         )
@@ -64,7 +74,7 @@ fun ProfileDetailModal(
 @Composable
 private fun ProfileDetailContent(
     user: User,
-    onDismiss: () -> Unit,
+    onClose: () -> Unit,
     navigationMeetDetail: () -> Unit,
     updateFavorite: (id: Long, favorite: Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -76,7 +86,9 @@ private fun ProfileDetailContent(
             .padding(
                 vertical = 8.dp,
                 horizontal = 10.dp
-            ),
+            )
+            .navigationBarsPadding()
+        ,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -85,13 +97,12 @@ private fun ProfileDetailContent(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
-                onClick = onDismiss
+                onClick = onClose
             ) {
                 Icon(
                     painter = painterResource(R.drawable.icon_close),
-                    contentDescription = "profile detail close",
-
-                    )
+                    contentDescription = "profile detail close"
+                )
             }
             FavoriteIconButton(
                 isFavorite = user.isFavorite,
@@ -127,7 +138,7 @@ private fun ProfileDetailContent(
                 ) {
                     Text(
                         text = stringResource(
-                            R.string.friend_list_detail_meet_count,3
+                            R.string.friend_list_detail_meet_count, 3
                         ),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,

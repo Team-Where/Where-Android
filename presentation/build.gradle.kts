@@ -82,12 +82,8 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
-
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
-
-    //Coil
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp) // Only available on Android/JVM.
-//    implementation("io.coil-kt.coil3:coil-network-ktor2:3.1.0")
-//    implementation("io.coil-kt.coil3:coil-network-ktor3:3.1.0")
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.kotlinx.datetime)
 }

@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/image_back"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginTop="20dp"
         android:layout_marginStart="15dp"
         android:src="@drawable/icon_arrow_back"
@@ -44,7 +44,7 @@
     <EditText
         android:id="@+id/edit_text_email"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:hint="이메일 주소를 입력해주세요"
         android:textSize="18sp"
         android:background="@drawable/shape_edittext_rounded_gray"
@@ -70,7 +70,7 @@
     <EditText
         android:id="@+id/edit_text_password"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:hint="비밀번호를 입력해주세요"
         android:textSize="18sp"
         android:background="@drawable/shape_edittext_rounded_gray"
