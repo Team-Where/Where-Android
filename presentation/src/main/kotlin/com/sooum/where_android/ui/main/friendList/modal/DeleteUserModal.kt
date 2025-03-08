@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -39,7 +40,8 @@ fun DeleteUserModal(
             onDelete = {
                 onDelete()
                 onDismiss()
-            }
+            },
+            modifier = Modifier.navigationBarsPadding()
         )
     }
 }
@@ -47,10 +49,11 @@ fun DeleteUserModal(
 
 @Composable
 private fun DeleteUserModalContent(
+    modifier: Modifier = Modifier,
     onDelete :() -> Unit = {}
 ) {
     Column(
-        modifier = Modifier.height(150.dp),
+        modifier = modifier.height(150.dp),
         verticalArrangement = Arrangement.Center
     ) {
         TextButton(

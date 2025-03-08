@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -40,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.ui.widget.ModalHeader
 import kotlinx.coroutines.launch
 
 private sealed class MapItem(
@@ -101,7 +103,7 @@ fun MapShareModal(
         MapShareModalContent(
             modifier = Modifier
                 .padding(15.dp)
-                .padding(bottom = 20.dp),
+                .navigationBarsPadding(),
             onDismiss = {
                 scope.launch {
                     sheetState.hide()
@@ -121,24 +123,11 @@ fun MapShareModalContent(
     Column(
         modifier = modifier.background(Color.White)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "장소 공유",
-                fontFamily = pretendard,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 18.sp,
-                color = Gray800
-            )
-            IconButton(
-                onClick = onDismiss
-            ) {
-                Icon(Icons.Filled.Clear, null)
-            }
-        }
+        ModalHeader(
+            Modifier.fillMaxWidth(),
+            header = "장소 공유",
+            onDismiss = onDismiss
+        )
         Column {
             listOf(
                 MapItem.Naver,

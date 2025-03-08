@@ -3,11 +3,14 @@ package com.sooum.where_android.ui.main
 import android.content.Intent
 import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -21,10 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -34,31 +34,38 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.util.Consumer
-import androidx.navigation.NavType
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
-import com.sooum.domain.model.NewMeet
+import com.sooum.domain.model.Schedule
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
 import com.sooum.where_android.ui.main.myMeet.MyMeetView
 import com.sooum.where_android.ui.main.newMeet.NewMeetResultView
-import com.sooum.where_android.ui.meetInfo.MapShareModal
+import com.sooum.where_android.ui.schedule.ScheduleView
 import com.sooum.where_android.view.LocalActivity
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ShareResult(
-    val text:String
+    val text: String
 )
+
+fun NavBackStackEntry?.notShowBottom(): Boolean {
+    val currentDestination = this?.destination
+    return (currentDestination?.hierarchy?.any {
+        it.hasRoute(ScreenRoute.Home.MeetGuide::class)
+    } == true) || (currentDestination?.route?.startsWith("scheduleTest") == true)
+}
 
 @Composable
 fun MainScreenView(
@@ -76,11 +83,11 @@ fun MainScreenView(
             if (intent.action == Intent.ACTION_SEND && intent.type == "text/plain") {
                 val sharedText: String = intent.getStringExtra(Intent.EXTRA_TEXT) ?: ""
                 Log.d("JWH", "find Text : $sharedText")
-                Log.d("JWH","----")
+                Log.d("JWH", "----")
                 sharedText.split("\n").forEach {
-                    Log.d("JWH","$it")
+                    Log.d("JWH", "$it")
                 }
-                Log.d("JWH","----")
+                Log.d("JWH", "----")
                 navController.navigate(
                     ShareResult(sharedText)
                 ) {
@@ -97,27 +104,42 @@ fun MainScreenView(
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            BottomAppBar(
-                contentColor = Color.White,
-                containerColor = Color.White,
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                BottomNavigation(
-                    navBackStackEntry = navBackStackEntry,
-                    navigation = { type ->
-                        scope.launch {
-                            if (drawerState.isOpen) {
-                                drawerState.close()
-                            }
-                            navController.navigate(type)
-                        }
-                    },
-                    navigationResult = {
-                        navController.navigate(it) {
-                            launchSingleTop = true
-                        }
+            val notShow = navBackStackEntry?.notShowBottom() ?: false
+            AnimatedVisibility(
+                visible = !notShow,
+                enter = slideInVertically(
+                    initialOffsetY = {
+                        it / 2
                     }
-                )
+                ) + fadeIn(),
+                exit = slideOutVertically(
+                    targetOffsetY = {
+                        it / 2
+                    }
+                ) + fadeOut()
+            ) {
+                BottomAppBar(
+                    contentColor = Color.White,
+                    containerColor = Color.White,
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    BottomNavigation(
+                        navBackStackEntry = navBackStackEntry,
+                        navigation = { type ->
+                            scope.launch {
+                                if (drawerState.isOpen) {
+                                    drawerState.close()
+                                }
+                                navController.navigate(type)
+                            }
+                        },
+                        navigationResult = {
+                            navController.navigate(it) {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                }
             }
         },
         containerColor = Color.White,
@@ -167,31 +189,49 @@ fun MainScreenView(
                         composable(
                             route = "test"
                         ) {
-                            Column {
-                                var show by remember {
-                                    mutableStateOf(false)
+                            Column(Modifier.fillMaxSize()){
+                                Button(
+                                    onClick = {
+                                        navController.navigate("scheduleTest1")
+                                    }
+                                ) {
+                                    Text("일정 등록")
                                 }
                                 Button(
                                     onClick = {
-                                        show = true
+                                        navController.navigate("scheduleTest2")
                                     }
                                 ) {
-                                    Text("열기")
-                                }
-                                if (show) {
-                                    MapShareModal(
-                                        onDismiss = {
-                                            show = false
-                                        }
-                                    )
+                                    Text("일정 수정")
                                 }
                             }
                         }
-                        dialog<ShareResult>() { entry ->
-                            val result = entry.toRoute<ShareResult>()
-                            Column {
-                                Text(result.toString() ?: "Error......")
-                            }
+                        composable(
+                            route = "scheduleTest1"
+                        ) {
+                            ScheduleView(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(10.dp),
+                                onBack = navController::popBackStack,
+                                onNewSchedule = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                        composable(
+                            route = "scheduleTest2"
+                        ) {
+                            ScheduleView(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(10.dp),
+                                onBack = navController::popBackStack,
+                                prevSchedule = Schedule(2025,3,8,20),
+                                onNewSchedule = {
+                                    navController.popBackStack()
+                                }
+                            )
                         }
                         navigation<ScreenRoute.MainGraph>(startDestination = ScreenRoute.BottomNavigation.MeetList) {
                             composable<ScreenRoute.BottomNavigation.MeetList>() {
