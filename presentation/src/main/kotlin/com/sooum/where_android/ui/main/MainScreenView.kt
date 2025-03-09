@@ -48,6 +48,7 @@ import com.sooum.domain.model.Schedule
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.ui.main.friendList.FriendListView
 import com.sooum.where_android.ui.main.meetDetail.MeetDetailView
+import com.sooum.where_android.ui.main.myMeet.MyMeetGuideView
 import com.sooum.where_android.ui.main.myMeet.MyMeetView
 import com.sooum.where_android.ui.main.newMeet.NewMeetResultView
 import com.sooum.where_android.ui.schedule.ScheduleView
@@ -60,11 +61,14 @@ data class ShareResult(
     val text: String
 )
 
+/**
+ * 네비게이션 숨겨야하는 경우
+ */
 fun NavBackStackEntry?.notShowBottom(): Boolean {
     val currentDestination = this?.destination
     return (currentDestination?.hierarchy?.any {
-        it.hasRoute(ScreenRoute.Home.MeetGuide::class)
-    } == true) || (currentDestination?.route?.startsWith("scheduleTest") == true)
+        it.hasRoute<ScreenRoute.Home.MeetGuide>()
+    } == true)
 }
 
 @Composable
@@ -182,56 +186,15 @@ fun MainScreenView(
                 ) {
                     NavHost(
                         navController = navController,
-//                        startDestination = ScreenRoute.MainGraph,
-                        startDestination = "test",
+                        startDestination = ScreenRoute.MainGraph,
                         modifier = Modifier
                     ) {
                         composable(
                             route = "test"
                         ) {
                             Column(Modifier.fillMaxSize()){
-                                Button(
-                                    onClick = {
-                                        navController.navigate("scheduleTest1")
-                                    }
-                                ) {
-                                    Text("일정 등록")
-                                }
-                                Button(
-                                    onClick = {
-                                        navController.navigate("scheduleTest2")
-                                    }
-                                ) {
-                                    Text("일정 수정")
-                                }
+
                             }
-                        }
-                        composable(
-                            route = "scheduleTest1"
-                        ) {
-                            ScheduleView(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(10.dp),
-                                onBack = navController::popBackStack,
-                                onNewSchedule = {
-                                    navController.popBackStack()
-                                }
-                            )
-                        }
-                        composable(
-                            route = "scheduleTest2"
-                        ) {
-                            ScheduleView(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(10.dp),
-                                onBack = navController::popBackStack,
-                                prevSchedule = Schedule(2025,3,8,20),
-                                onNewSchedule = {
-                                    navController.popBackStack()
-                                }
-                            )
                         }
                         navigation<ScreenRoute.MainGraph>(startDestination = ScreenRoute.BottomNavigation.MeetList) {
                             composable<ScreenRoute.BottomNavigation.MeetList>() {
@@ -255,8 +218,9 @@ fun MainScreenView(
                                 )
                             }
                             composable<ScreenRoute.Home.MeetGuide>() {
-
-
+                                MyMeetGuideView(
+                                    onBack = navController::popBackStack
+                                )
                             }
                             composable<ScreenRoute.BottomNavigation.FriendsList>() {
                                 FriendListView(

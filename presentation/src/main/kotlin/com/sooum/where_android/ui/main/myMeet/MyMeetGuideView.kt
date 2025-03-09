@@ -1,19 +1,26 @@
 package com.sooum.where_android.ui.main.myMeet
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,21 +36,56 @@ import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 
 @Composable
-fun MyMeetGuideView() {
-    Column {
-        listOf(
-            "추가하고 싶은 모임을 등록해보세요." to 0,
-            "모임 관련된 일정을 등록해보세요." to 0,
-            "모임 참석할 친구를 초대해보세요." to 0,
-            "모임 장소를 참석하는 친구들과 함께 공유해보세요." to 0,
-        ).forEachIndexed { index, (title, res) ->
-            GuideCardItem(
-                index + 1,
-                title,
-                res
+fun MyMeetGuideView(
+    onBack: () -> Unit = {}
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(53.dp)
+        ) {
+            Text(
+                text = "모임 추가 방법",
+                modifier = Modifier.align(Alignment.Center),
+                fontFamily = pretendard,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
             )
-            Spacer(Modifier.height(30.dp))
+            IconButton(
+                onClick = onBack,
+                modifier = Modifier.align(Alignment.CenterStart)
+            ) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+            }
         }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            listOf(
+                "추가하고 싶은 모임을 등록해보세요." to 0,
+                "모임 관련된 일정을 등록해보세요." to 0,
+                "모임 참석할 친구를 초대해보세요." to 0,
+                "모임 장소를 참석하는 친구들과 함께 공유해보세요." to 0,
+            ).forEachIndexed { index, (title, res) ->
+                GuideCardItem(
+                    index + 1,
+                    title,
+                    res
+                )
+                if (index != 3) {
+                    Spacer(Modifier.height(48.dp))
+                }
+            }
+        }
+
     }
 }
 
