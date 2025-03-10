@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sooum.domain.model.User
 import com.sooum.where_android.R
+import com.sooum.where_android.theme.Gray100
 import com.sooum.where_android.theme.Gray500
 import com.sooum.where_android.theme.Gray600
 import com.sooum.where_android.theme.GrayScale100
@@ -73,6 +76,11 @@ sealed class UserViewType {
      * 초대 관련
      */
     data object Invite : UserViewType()
+
+    /**
+     * 초대 대기중
+     */
+    data object Waiting : UserViewType()
 }
 
 @Composable
@@ -88,7 +96,7 @@ fun UserItemView(
             50.dp
         }
 
-        is UserViewType.Option, is UserViewType.Invite -> {
+        is UserViewType.Option, is UserViewType.Invite, is UserViewType.Waiting -> {
             40.dp
         }
     }
@@ -279,6 +287,34 @@ fun UserItemView(
                     }
                 }
             }
+
+            androidx.compose.animation.AnimatedVisibility(
+                visible = type is UserViewType.Waiting,
+                enter = enterAni,
+                exit = exitAni
+            ) {
+                if (type is UserViewType.Waiting) {
+                    Row(
+                        modifier = Modifier
+                            .height(25.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Gray100)
+                            .padding(
+                                vertical = 4.dp,
+                                horizontal = 8.dp
+                            ),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = "대기중",
+                            color = Gray500,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 12.sp,
+                            fontFamily = pretendard,
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -297,6 +333,7 @@ fun UserItemPreview() {
             UserViewType.Delete,
             UserViewType.Option,
             UserViewType.Invite,
+            UserViewType.Waiting
         ).forEach { type ->
             UserItemView(
                 user = user,
