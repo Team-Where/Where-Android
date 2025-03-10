@@ -48,7 +48,7 @@ internal fun MyMeetHeaderView(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = painterResource(R.drawable.image_where_logo_noncolor),
+                    painter = painterResource(R.drawable.image_social_where_logo_noncolor),
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(Primary600)
                 )

@@ -33,7 +33,6 @@ class MyMeetDetailFragment : Fragment() {
 
         setupRecyclerView()
 
-
     }
 
     private fun setupRecyclerView() {
