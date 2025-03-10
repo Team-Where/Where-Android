@@ -52,4 +52,8 @@
     <string name="date_calendar_btn_disabled">날짜를 선택해주세요</string>
     <string name="date_calendar_btn_enabled">%02d월 %02d일(%s) | 선택</string>
     <string name="date_calendar_selected">%d년 %d월 %d일</string>
+
+    <!-- 친구 초대 -->
+    <string name="invite_friend_header">초대된 친구 %d</string>
+    <string name="invite_friend_header_waiting">대기중 %d</string>
 </resources>
