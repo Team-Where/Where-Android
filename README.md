@@ -2,6 +2,52 @@
 
 ## Compose 혼용 사용법
 
+## View에서 Compose 사용
+https://developer.android.com/develop/ui/compose/migrate/interoperability-apis/compose-in-views?hl=ko
+~~~xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
+~~~
+
+~~~kotlin
+class ExampleFragmentXml : Fragment() {
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val view = inflater.inflate(R.layout.fragment_example, container, false)
+        val composeView = view.findViewById<ComposeView>(R.id.compose_view)
+        composeView.apply {
+            // Dispose of the Composition when the view's LifecycleOwner
+            // is destroyed
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                // In Compose world
+                MaterialTheme {
+                    Text("Hello Compose!")
+                }
+            }
+        }
+        return view
+    }
+}
+~~~
+
 ### Compose에서 Fragment 사용하기
 ~~~kotlin
 @Composable
