@@ -33,16 +33,7 @@ class MyMeetDetailFragment : Fragment() {
 
         setupRecyclerView()
 
-        //더미 데이터 적용
-        val dummyData = listOf(
-            InvitedFriend(R.drawable.test_profile,"김현수"),
-            InvitedFriend(R.drawable.test_profile,"박환"),
-            InvitedFriend(R.drawable.test_profile,"박한비")
 
-        )
-
-        invitedFriendAdapter.setList(dummyData)
-        waitingFriendListAdapter.setList(dummyData)
     }
 
     private fun setupRecyclerView() {
