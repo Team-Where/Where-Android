@@ -15,7 +15,7 @@
             android:id="@+id/topContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="15dp"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -256,6 +256,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/waiting_friend_cardview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -275,7 +276,7 @@
                     android:id="@+id/joined_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="참여한 친구"
+                    android:text="수락을 기다리는 친구"
                     android:textSize="16sp"
                     android:textColor="#1F2937"
                     android:fontFamily="@font/pretend_semibold"
@@ -298,6 +299,24 @@
                     app:layout_constraintTop_toBottomOf="@id/divider4"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="30dp"
+            android:stateListAnimator="@null"
+            app:layout_constraintTop_toBottomOf="@id/waiting_friend_cardview"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="모임 끝내기"
+            android:background="@drawable/shape_rounded_blue_radius_16"
+            android:textSize="16sp"
+            android:fontFamily="@font/pretend_medium"
+            android:textColor="#4F46E5"/>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
