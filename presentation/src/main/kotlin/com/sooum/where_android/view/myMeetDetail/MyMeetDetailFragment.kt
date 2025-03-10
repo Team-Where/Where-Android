@@ -27,16 +27,19 @@ class MyMeetDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 어댑터 초기화
         adapter = InvitedFriendListAdapter()
 
-        // RecyclerView 설정
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@MyMeetDetailFragment.adapter
         }
 
-        // 더미 데이터 추가
+        binding.recyclerViewJoined.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = this@MyMeetDetailFragment.adapter
+        }
+
+        //더미 데이터 적용
         val dummyData = listOf(
             InvitedFriend(R.drawable.test_profile,"김현수"),
             InvitedFriend(R.drawable.test_profile,"박환"),

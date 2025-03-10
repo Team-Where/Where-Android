@@ -1,259 +1,303 @@
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/topContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        android:padding="16dp">
-
-        <ImageView
-            android:id="@+id/groupImage"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:src="@drawable/test_profile"
-            android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:id="@+id/groupTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2024 연말파티🎊"
-            android:textSize="20sp"
-            android:textColor="#111827"
-            android:fontFamily="@font/pretendard_semibold"
-            app:layout_constraintStart_toEndOf="@id/groupImage"
-            app:layout_constraintTop_toTopOf="@id/groupImage"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="15dp"/>
-
-        <TextView
-            android:id="@+id/groupDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="벌써 연말이다 신나게 놀아보장~"
-            android:textSize="14sp"
-            android:fontFamily="@font/pretend_regular"
-            android:textColor="#111827"
-            app:layout_constraintStart_toStartOf="@id/groupTitle"
-            app:layout_constraintTop_toBottomOf="@id/groupTitle"
-            android:layout_marginTop="6dp"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- CardView로 감싸기 -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/infoCardViewContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="#F9FAFB"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topContainer">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/infoContainer"
+            android:id="@+id/topContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:padding="16dp"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/icon_calender"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/icon_calender"
+                android:id="@+id/groupImage"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/test_profile"
+                android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
-                android:id="@+id/tvSchedule"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="2024.12.23 오후 5시"
-                android:textColor="#111827"
-                android:textSize="14sp"
-                android:fontFamily="@font/pretend_regular"
-                app:layout_constraintStart_toEndOf="@id/icon_calender"
-                app:layout_constraintTop_toTopOf="@id/icon_calender"
-                app:layout_constraintBottom_toBottomOf="@id/icon_calender"
-                app:layout_constraintEnd_toStartOf="@+id/btnSchedule" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnSchedule"
-                android:layout_width="80dp"
-                android:layout_height="33dp"
-                android:fontFamily="@font/pretendard_semibold"
-                android:background="@drawable/shape_rounded_gray_radius_6"
-                android:stateListAnimator="@null"
-                android:text="일정 등록"
-                android:textColor="#212529"
-                android:textSize="12sp"
-                android:drawableLeft="@drawable/icon_calender_black"
-                android:paddingStart="7dp"
-                app:layout_constraintTop_toTopOf="@id/icon_calender"
-                app:layout_constraintBottom_toBottomOf="@id/icon_calender"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <View
-                android:id="@+id/divider1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="12dp"
-                android:background="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/icon_calender" />
-
-            <ImageView
-                android:id="@+id/icLocation"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/icon_spot"
-                android:layout_marginTop="12dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider1" />
-
-            <TextView
-                android:id="@+id/tvLocation"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="공유된 장소 6"
-                android:textColor="#212529"
-                android:textSize="14sp"
-                android:fontFamily="@font/pretend_regular"
-                app:layout_constraintStart_toEndOf="@id/icLocation"
-                app:layout_constraintTop_toTopOf="@id/icLocation"
-                app:layout_constraintBottom_toBottomOf="@id/icLocation"
-                app:layout_constraintEnd_toStartOf="@+id/btnLocation" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnLocation"
-                android:layout_width="80dp"
-                android:layout_height="33dp"
-                android:fontFamily="@font/pretendard_semibold"
-                android:text="장소 공유"
-                android:textColor="#212529"
-                android:stateListAnimator="@null"
-                android:drawableLeft="@drawable/icon_circle_plus"
-                android:paddingStart="7dp"
-                android:background="@drawable/shape_rounded_gray_radius_6"
-                android:textSize="12sp"
-                app:layout_constraintTop_toTopOf="@id/icLocation"
-                app:layout_constraintBottom_toBottomOf="@id/icLocation"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="12dp"
-                android:background="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/icLocation" />
-
-            <ImageView
-                android:id="@+id/icFriend"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/icon_friends"
-                android:layout_marginTop="12dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider2" />
-
-            <TextView
-                android:id="@+id/tvFriend"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="초대된 친구 4"
-                android:textColor="#212529"
-                android:textSize="14sp"
-                android:fontFamily="@font/pretend_regular"
-                app:layout_constraintStart_toEndOf="@id/icFriend"
-                app:layout_constraintTop_toTopOf="@id/icFriend"
-                app:layout_constraintBottom_toBottomOf="@id/icFriend"
-                app:layout_constraintEnd_toStartOf="@+id/btnFriend" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnFriend"
-                android:layout_width="80dp"
-                android:layout_height="33dp"
-                android:fontFamily="@font/pretendard_semibold"
-                android:background="@drawable/shape_rounded_gray_radius_6"
-                android:stateListAnimator="@null"
-                android:text="친구 초대"
-                android:textColor="#212529"
-                android:textSize="12sp"
-                android:drawableLeft="@drawable/icon_invite_person"
-                android:paddingStart="7dp"
-                app:layout_constraintTop_toTopOf="@id/icFriend"
-                app:layout_constraintBottom_toBottomOf="@id/icFriend"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="30dp"
-        android:background="#F9FAFB"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/infoCardViewContainer">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/invitedFriendContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/invited_text"
+                android:id="@+id/groupTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="초대된 친구"
-                android:textSize="16sp"
-                android:textColor="#1F2937"
-                android:fontFamily="@font/pretend_semibold"
-                tools:ignore="MissingConstraints" />
+                android:text="2024 연말파티🎊"
+                android:textSize="20sp"
+                android:textColor="#111827"
+                android:fontFamily="@font/pretendard_semibold"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="15dp"
+                app:layout_constraintStart_toEndOf="@id/groupImage"
+                app:layout_constraintTop_toTopOf="@id/groupImage"/>
 
-            <View
-                android:id="@+id/divider3"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#F3F4F6"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/invited_text"
-                android:layout_marginTop="15dp"/>
+            <TextView
+                android:id="@+id/groupDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="벌써 연말이다 신나게 놀아보장~"
+                android:textSize="14sp"
+                android:fontFamily="@font/pretend_regular"
+                android:textColor="#111827"
+                android:layout_marginTop="6dp"
+                app:layout_constraintStart_toStartOf="@id/groupTitle"
+                app:layout_constraintTop_toBottomOf="@id/groupTitle"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/infoCardViewContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="#F9FAFB"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:layout_constraintTop_toBottomOf="@id/topContainer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/infoContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/divider3" />
+                android:padding="16dp">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+                <ImageView
+                    android:id="@+id/icon_calender"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/icon_calender"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tvSchedule"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="2024.12.23 오후 5시"
+                    android:textColor="#111827"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/pretend_regular"
+                    app:layout_constraintStart_toEndOf="@id/icon_calender"
+                    app:layout_constraintTop_toTopOf="@id/icon_calender"
+                    app:layout_constraintBottom_toBottomOf="@id/icon_calender"
+                    app:layout_constraintEnd_toStartOf="@+id/btnSchedule" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnSchedule"
+                    android:layout_width="80dp"
+                    android:layout_height="33dp"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:background="@drawable/shape_rounded_gray_radius_6"
+                    android:stateListAnimator="@null"
+                    android:text="일정 등록"
+                    android:textColor="#212529"
+                    android:textSize="12sp"
+                    android:drawableLeft="@drawable/icon_calender_black"
+                    android:paddingStart="7dp"
+                    app:layout_constraintTop_toTopOf="@id/icon_calender"
+                    app:layout_constraintBottom_toBottomOf="@id/icon_calender"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <View
+                    android:id="@+id/divider1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/icon_calender" />
+
+                <ImageView
+                    android:id="@+id/icLocation"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/icon_spot"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider1" />
+
+                <TextView
+                    android:id="@+id/tvLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="공유된 장소 6"
+                    android:textColor="#212529"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/pretend_regular"
+                    app:layout_constraintStart_toEndOf="@id/icLocation"
+                    app:layout_constraintTop_toTopOf="@id/icLocation"
+                    app:layout_constraintBottom_toBottomOf="@id/icLocation"
+                    app:layout_constraintEnd_toStartOf="@+id/btnLocation" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnLocation"
+                    android:layout_width="80dp"
+                    android:layout_height="33dp"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:text="장소 공유"
+                    android:textColor="#212529"
+                    android:stateListAnimator="@null"
+                    android:drawableLeft="@drawable/icon_circle_plus"
+                    android:paddingStart="7dp"
+                    android:background="@drawable/shape_rounded_gray_radius_6"
+                    android:textSize="12sp"
+                    app:layout_constraintTop_toTopOf="@id/icLocation"
+                    app:layout_constraintBottom_toBottomOf="@id/icLocation"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/icLocation" />
+
+                <ImageView
+                    android:id="@+id/icFriend"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/icon_friends"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+                <TextView
+                    android:id="@+id/tvFriend"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="초대된 친구 4"
+                    android:textColor="#212529"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/pretend_regular"
+                    app:layout_constraintStart_toEndOf="@id/icFriend"
+                    app:layout_constraintTop_toTopOf="@id/icFriend"
+                    app:layout_constraintBottom_toBottomOf="@id/icFriend"
+                    app:layout_constraintEnd_toStartOf="@+id/btnFriend" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnFriend"
+                    android:layout_width="80dp"
+                    android:layout_height="33dp"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:background="@drawable/shape_rounded_gray_radius_6"
+                    android:stateListAnimator="@null"
+                    android:text="친구 초대"
+                    android:textColor="#212529"
+                    android:textSize="12sp"
+                    android:drawableLeft="@drawable/icon_invite_person"
+                    android:paddingStart="7dp"
+                    app:layout_constraintTop_toTopOf="@id/icFriend"
+                    app:layout_constraintBottom_toBottomOf="@id/icFriend"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/invited_friend_cardview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="#F9FAFB"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:layout_constraintTop_toBottomOf="@id/infoCardViewContainer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/invited_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="초대된 친구"
+                    android:textSize="16sp"
+                    android:textColor="#1F2937"
+                    android:fontFamily="@font/pretend_semibold"
+                    tools:ignore="MissingConstraints" />
+
+                <View
+                    android:id="@+id/divider3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#F3F4F6"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/invited_text"
+                    android:layout_marginTop="15dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/divider3" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="#F9FAFB"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:layout_constraintTop_toBottomOf="@id/invited_friend_cardview"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/joined_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="참여한 친구"
+                    android:textSize="16sp"
+                    android:textColor="#1F2937"
+                    android:fontFamily="@font/pretend_semibold"
+                    tools:ignore="MissingConstraints" />
+
+                <View
+                    android:id="@+id/divider4"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#F3F4F6"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/joined_text"
+                    android:layout_marginTop="15dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_joined"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/divider4"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
