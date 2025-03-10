@@ -9,7 +9,7 @@ import com.sooum.where_android.databinding.FragmentSignInBinding
 import com.sooum.where_android.databinding.FragmentSocialLoginBinding
 
 class SignInFragment : Fragment() {
-    private lateinit var binding : FragmentSignInBinding
+    lateinit var binding : FragmentSignInBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -13,18 +13,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sooum.where_android.theme.Gray100
 import com.sooum.where_android.theme.Gray300
+import com.sooum.where_android.theme.Gray600
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 
 @Composable
-fun PrimaryButton(
+fun GrayButton(
     onClick: () -> Unit,
     enabled: Boolean = true,
     title: String,
     modifier: Modifier = Modifier,
-    radius : Dp = 8.dp,
-    fontWeight: FontWeight = FontWeight.SemiBold
+    radius: Dp = 8.dp,
+    contentColor: Color = Gray600,
+    fontWeight: FontWeight = FontWeight.Medium
 ) {
     Button(
         onClick = onClick,
@@ -32,10 +35,8 @@ fun PrimaryButton(
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Primary600,
-            disabledContainerColor = Gray300,
-            contentColor = Color.White,
-            disabledContentColor = Color.White
+            containerColor = Gray100,
+            contentColor = contentColor,
         ),
         shape = RoundedCornerShape(radius),
         enabled = enabled

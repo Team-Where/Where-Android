@@ -66,6 +66,10 @@ dependencies {
     implementation(platform(composeBom))
     androidTestImplementation(platform(composeBom))
 
+    implementation("androidx.fragment:fragment-compose:1.8.5")
+    implementation("androidx.compose.ui:ui-viewbinding:1.7.8")
+
+
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.navigation:navigation-compose:2.8.7")
     implementation("androidx.compose.material3:material3")
@@ -73,7 +77,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation("androidx.compose.ui:ui-viewbinding:1.7.8")
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
@@ -82,15 +85,10 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
-    //circleImageView
     implementation("de.hdodenhof:circleimageview:3.1.0")
 
-    // serialization
     implementation(libs.kotlinx.serialization.json)
-
-    //Coil
     implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp) // Only available on Android/JVM.
-//    implementation("io.coil-kt.coil3:coil-network-ktor2:3.1.0")
-//    implementation("io.coil-kt.coil3:coil-network-ktor3:3.1.0")
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.kotlinx.datetime)
 }
