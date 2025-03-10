@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_marginTop="15dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/image_profile"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/test_profile" />
+
+    <TextView
+        android:id="@+id/text_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="죠니월드"
+        android:textSize="16sp"
+        android:fontFamily="@font/pretend_medium"
+        android:textColor="#374151"
+        android:layout_gravity="center"
+        android:layout_marginStart="10dp"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="55dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:stateListAnimator="@null"
+        android:text="대기중"
+        android:textColor="#6B7280"
+        android:textSize="12sp"
+        android:fontFamily="@font/pretend_regular"
+        android:background="@drawable/shape_rounded_background_gray"/>
+
+</LinearLayout>

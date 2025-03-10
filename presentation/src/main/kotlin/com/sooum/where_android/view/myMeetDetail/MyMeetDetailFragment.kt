@@ -13,7 +13,8 @@ import com.sooum.where_android.databinding.FragmentOnBoardingFirstBinding
 
 class MyMeetDetailFragment : Fragment() {
     private lateinit var binding : FragmentMyMeetDetailBinding
-    private lateinit var adapter: InvitedFriendListAdapter
+    private lateinit var invitedFriendAdapter: InvitedFriendListAdapter
+    private lateinit var waitingFriendListAdapter: WaitingFriendListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,17 +28,10 @@ class MyMeetDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = InvitedFriendListAdapter()
+        invitedFriendAdapter = InvitedFriendListAdapter()
+        waitingFriendListAdapter = WaitingFriendListAdapter()
 
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@MyMeetDetailFragment.adapter
-        }
-
-        binding.recyclerViewJoined.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@MyMeetDetailFragment.adapter
-        }
+        setupRecyclerView()
 
         //더미 데이터 적용
         val dummyData = listOf(
@@ -47,6 +41,19 @@ class MyMeetDetailFragment : Fragment() {
 
         )
 
-        adapter.setList(dummyData)
+        invitedFriendAdapter.setList(dummyData)
+        waitingFriendListAdapter.setList(dummyData)
+    }
+
+    private fun setupRecyclerView() {
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = invitedFriendAdapter
+        }
+
+        binding.recyclerViewJoined.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = waitingFriendListAdapter
+        }
     }
 }
