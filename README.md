@@ -51,6 +51,23 @@ class ExampleFragmentXml : Fragment() {
 ### Compose에서 Fragment 사용하기
 ~~~kotlin
 @Composable
+fun DrawerContent(
+    closeDrawer: () -> Unit,
+    modifier: Modifier,
+) {
+    //TODO With AndroidFragment
+    AndroidFragment<SignInFragment>(modifier = modifier) {
+        it.binding.nextBtn.setOnClickListener {
+            closeDrawer()
+        }
+    }
+}
+~~~~
+
+
+### Compose에서 ViewBinding 사용하기
+~~~kotlin
+@Composable
 fun DrawerContent() {
     //TODO Add FragmentBinding
     AndroidViewBinding(FragmentSignInBinding::inflate) {
