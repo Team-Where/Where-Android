@@ -7,4 +7,14 @@
     </style>
 
     <style name="Theme.Whereandroid" parent="Base.Theme.Whereandroid" />
+
+    <style name="MyTabTextStyle" parent="@style/TextAppearance.Design.Tab">
+        <!-- 폰트 설정 (Custom Font) -->
+        <item name="android:fontFamily">@font/pretend_semibold</item>
+        <!-- 텍스트 크기 -->
+        <item name="android:textSize">16sp</item>
+        <!-- 기본 텍스트 색상 (선택) -->
+        <item name="android:textColor">#9CA3AF</item>
+    </style>
+
 </resources>
