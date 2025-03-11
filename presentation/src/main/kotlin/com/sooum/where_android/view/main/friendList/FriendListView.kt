@@ -60,6 +60,7 @@ import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.main.friendList.modal.DeleteUserModal
 import com.sooum.where_android.view.main.friendList.modal.ProfileDetailModal
+import com.sooum.where_android.view.widget.SearchField
 import com.sooum.where_android.view.widget.UserItemView
 import com.sooum.where_android.view.widget.UserViewType
 import com.sooum.where_android.viewmodel.UserViewModel
@@ -177,49 +178,13 @@ private fun FriedListContent(
                 )
             }
         }
-
-        TextField(
-            value = searchValue,
+        SearchField(
+            searchValue,
             onValueChange = {
                 searchValue = it
             },
-            modifier = Modifier.fillMaxWidth(),
-            leadingIcon = {
-                Icon(Icons.Filled.Search, null)
-            },
-            trailingIcon = if (searchValue.isEmpty()) {
-                null
-            } else {
-                {
-                    IconButton(
-                        onClick = {
-                            searchValue = ""
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.icon_clear),
-                            contentDescription = "search item clear",
-                            tint = Gray400
-                        )
-                    }
-                }
-            },
-            placeholder = {
-                Text(
-                    text = stringResource(R.string.friend_list_search_placeholder),
-                    fontFamily = pretendard,
-                    fontSize = 16.sp,
-                    color = Gray500
-                )
-            },
-            singleLine = true,
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Gray100,
-                unfocusedContainerColor = Gray100,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            ),
-            shape = RoundedCornerShape(8.dp)
+            modifier =  Modifier.fillMaxWidth(),
+            placeHolder = stringResource(R.string.friend_list_search_placeholder)
         )
         Spacer(
             Modifier.height(

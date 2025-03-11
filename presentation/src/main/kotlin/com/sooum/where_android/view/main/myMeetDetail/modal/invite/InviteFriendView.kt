@@ -1,5 +1,11 @@
 package com.sooum.where_android.view.main.myMeetDetail.modal.invite
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -7,30 +13,38 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -46,6 +60,9 @@ import com.sooum.where_android.theme.Gray700
 import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.widget.CircleProfileView
+import com.sooum.where_android.view.widget.SearchField
+import com.sooum.where_android.view.widget.UserItemView
+import com.sooum.where_android.view.widget.UserViewType
 
 @Composable
 fun InviteFriendView(
@@ -58,52 +75,158 @@ fun InviteFriendView(
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(53.dp)
-            ) {
-                IconButton(
-                    onClick = onBack,
-                    modifier = Modifier.align(Alignment.CenterStart)
+            var searchingMode by remember {
+                mutableStateOf(false)
+            }
+            var searchValue by remember {
+                mutableStateOf("")
+            }
+            BackHandler(searchingMode) {
+                searchValue = ""
+                searchingMode = false
+            }
+            val searchFocusRequester = remember { FocusRequester() }
+            Box {
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = !searchingMode,
+                    enter =
+                    slideInHorizontally(animationSpec = tween(durationMillis = 500)) { fullWidth ->
+                        -fullWidth / 3
+                    } + fadeIn(animationSpec = tween(durationMillis = 500)),
+                    exit = slideOutHorizontally(animationSpec = tween(300)) + fadeOut(),
+                    modifier = Modifier.align(Alignment.Center)
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(53.dp)
+                    ) {
+                        IconButton(
+                            onClick = onBack,
+                            modifier = Modifier.align(Alignment.CenterStart)
+                        ) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                        }
+                        Text(
+                            text = "친구 초대",
+                            modifier = Modifier.align(Alignment.Center),
+                            fontFamily = pretendard,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        IconButton(
+                            onClick = {
+                                searchingMode = true
+                            },
+                            modifier = Modifier.align(Alignment.CenterEnd)
+                        ) {
+                            Icon(Icons.Filled.Search, null)
+                        }
+                    }
                 }
-                Text(
-                    text = "친구 초대",
-                    modifier = Modifier.align(Alignment.Center),
-                    fontFamily = pretendard,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                IconButton(
-                    onClick = onBack,
-                    modifier = Modifier.align(Alignment.CenterEnd)
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = searchingMode,
+                    enter =
+                    slideInHorizontally(animationSpec = tween(durationMillis = 500)) { fullWidth ->
+                        fullWidth / 3
+                    } + fadeIn(animationSpec = tween(durationMillis = 500)),
+                    exit = slideOutHorizontally(animationSpec = tween(300)) + fadeOut(),
+                    modifier = Modifier.align(Alignment.Center)
                 ) {
-                    Icon(Icons.Filled.Search, null)
+                    LaunchedEffect(true) {
+                        searchFocusRequester.requestFocus()
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp)
+                    ) {
+                        SearchField(
+                            searchValue,
+                            onValueChange = {
+                                searchValue = it
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 50.dp)
+                                .focusRequester(searchFocusRequester)
+                                .align(Alignment.CenterStart),
+                            placeHolder = "검색"
+                        )
+                        TextButton(
+                            onClick = {
+                                searchFocusRequester.freeFocus()
+                                searchValue = ""
+                                searchingMode = false
+                            },
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .width(50.dp)
+                        ) {
+                            Text("취소")
+                        }
+                    }
                 }
             }
-            Column(
-                modifier = Modifier.padding(10.dp)
-            ) {
-                InviteFriendHeader(
-                    invitedUser = listOf(
-                        User(0, "hi"),
-                        User(1, "hi2"),
-                        User(2, "hi3")
+            if (searchingMode) {
+                if (searchValue.isEmpty()) {
+                    Spacer(Modifier.fillMaxSize())
+                } else {
+                    val filterNameList = userList.filter { it.name.contains(searchValue) }
+                    if (filterNameList.isEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .imePadding()
+                                .fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(R.string.friend_list_search_no_data),
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 16.sp,
+                                color = Gray700
+                            )
+                        }
+                    } else {
+                        LazyColumn() {
+                            items(
+                                items = filterNameList,
+                                key = {
+                                    "df_f" + it.id
+                                }
+                            ) { user ->
+                                UserItemView(
+                                    user = user,
+                                    type = UserViewType.Invite,
+                                )
+                            }
+                        }
+                    }
+                }
+            } else {
+                Column(
+                    modifier = Modifier.padding(10.dp)
+                ) {
+                    InviteFriendHeader(
+                        invitedUser = listOf(
+                            User(0, "hi"),
+                            User(1, "hi2"),
+                            User(2, "hi3")
                         ),
-                    notInvitedUser = listOf(
-                        User(3, "sad"),
-                        User(4, "sad2"),
-                        User(5, "sad3"),
-                    ),
-                )
-                InviteFriendContentView(
-                    recentUserList = recentUserList,
-                    userList = userList,
-                    inviteFriend = inviteFriend,
-                    headerColor = Gray600
-                )
+                        notInvitedUser = listOf(
+                            User(3, "sad"),
+                            User(4, "sad2"),
+                            User(5, "sad3"),
+                        ),
+                    )
+                    InviteFriendContentView(
+                        recentUserList = recentUserList,
+                        userList = userList,
+                        inviteFriend = inviteFriend,
+                        headerColor = Gray600
+                    )
+                }
             }
         }
     }
