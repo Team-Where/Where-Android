@@ -1,11 +1,10 @@
-package com.sooum.where_android.view.myMeetDetail
+package com.sooum.where_android.view.myMeetDetail.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sooum.domain.model.InvitedFriend
-import com.sooum.where_android.databinding.ItemInvitedFriendListBinding
 import com.sooum.where_android.databinding.ItemWaitingFriendListBinding
 
 class WaitingFriendListAdapter() : RecyclerView.Adapter<WaitingFriendListAdapter.MyView>() {
@@ -22,12 +21,12 @@ class WaitingFriendListAdapter() : RecyclerView.Adapter<WaitingFriendListAdapter
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): WaitingFriendListAdapter.MyView {
+    ): MyView {
         val view = ItemWaitingFriendListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyView(view)
     }
 
-    override fun onBindViewHolder(holder: WaitingFriendListAdapter.MyView, position: Int) {
+    override fun onBindViewHolder(holder: MyView, position: Int) {
         holder.bind(waitingFriendList[position])
     }
 
