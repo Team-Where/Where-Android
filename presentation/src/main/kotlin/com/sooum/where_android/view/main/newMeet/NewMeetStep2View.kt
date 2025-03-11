@@ -42,7 +42,7 @@ import com.sooum.where_android.R
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.SnackBarColor
 import com.sooum.where_android.theme.pretendard
-import com.sooum.where_android.ui.invite.InviteFriendContentView
+import com.sooum.where_android.view.main.myMeetDetail.modal.invite.InviteFriendContentView
 import com.sooum.where_android.view.main.newMeet.NewMeetHeader
 import com.sooum.where_android.view.widget.PrimaryButton
 import com.sooum.where_android.viewmodel.NewMeetType

@@ -1,4 +1,4 @@
-package com.sooum.where_android.ui.invite
+package com.sooum.where_android.view.main.myMeetDetail.modal.invite
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
