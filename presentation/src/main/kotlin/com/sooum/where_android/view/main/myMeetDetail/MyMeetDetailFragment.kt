@@ -28,8 +28,6 @@ class MyMeetDetailFragment : Fragment() {
     private lateinit var invitedFriendAdapter: InvitedFriendListAdapter
     private lateinit var waitingFriendListAdapter: WaitingFriendListAdapter
 
-    private val myMeetDetailViewModel: MyMeetDetailViewModel by activityViewModels()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,13 +42,6 @@ class MyMeetDetailFragment : Fragment() {
         invitedFriendAdapter = InvitedFriendListAdapter()
         waitingFriendListAdapter = WaitingFriendListAdapter()
         setupRecyclerView()
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            //Data init
-            myMeetDetailViewModel.meetDetail.collect {
-                setData(meetDetail = it)
-            }
-        }
     }
 
     private fun setupRecyclerView() {
@@ -65,7 +56,7 @@ class MyMeetDetailFragment : Fragment() {
         }
     }
 
-    private fun setData(meetDetail: MeetDetail?) {
+    fun setData(meetDetail: MeetDetail?) {
         meetDetail ?: return
         binding.groupImage.load(meetDetail.image) {
             this.placeholder(R.drawable.image_meet_default_cover)
@@ -75,6 +66,21 @@ class MyMeetDetailFragment : Fragment() {
         binding.groupDescription.text = meetDetail.description
 
         binding.tvSchedule.text = meetDetail.makeScheduleText()
+    }
+
+    fun showMap(
+        onClick : ()->Unit
+    ) {
+        binding.btnLocation.setOnClickListener {
+            onClick()
+        }
+    }
+    fun navigationSchedule(
+        onClick : ()->Unit
+    ) {
+        binding.btnSchedule.setOnClickListener {
+            onClick()
+        }
     }
 }
 

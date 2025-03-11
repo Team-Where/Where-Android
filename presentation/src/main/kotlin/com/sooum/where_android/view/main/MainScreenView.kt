@@ -53,6 +53,7 @@ import com.sooum.where_android.view.main.myMeet.MyMeetGuideView
 import com.sooum.where_android.view.main.myMeet.MyMeetView
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetDetailScreenView
+import com.sooum.where_android.view.main.myMeetDetail.modal.schedule.ScheduleView
 import com.sooum.where_android.view.main.newMeet.NewMeetResultView
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -248,10 +249,15 @@ fun MainScreenView(
                                 val route = it.toRoute<ScreenRoute.MeetDetail>()
                                 MyMeetDetailScreenView(
                                     id = route.meetDetailId,
-                                    onBack = navController::popBackStack
+                                    onBack = navController::popBackStack,
+                                    navigationSchedule = {
+
+                                    },
+                                    navigationInvite = {
+
+                                    }
                                 )
                             }
-
                             dialog<NewMeetResult>(
                                 dialogProperties = DialogProperties(
                                     usePlatformDefaultWidth = false,
@@ -279,18 +285,18 @@ fun MainScreenView(
 private fun NavHostController.navigateMeetDetail(meetDetail: MeetDetail) {
     //TODO : 환님 여기서 연결하면 됩니다.
     //
-    context.startActivity(
-        Intent(context, MyMeetActivity::class.java).apply {
-            putExtras(Bundle().apply {
-                putLong("meeId", meetDetail.id)
-            })
-        }
-    )
+//    context.startActivity(
+//        Intent(context, MyMeetActivity::class.java).apply {
+//            putExtras(Bundle().apply {
+//                putLong("meeId", meetDetail.id)
+//            })
+//        }
+//    )
     //Tab Layout 수정 전까지는 MyMeetActivity로 이동
 
-//    this.navigate(ScreenRoute.MeetDetail(meetDetail.id)) {
-//        launchSingleTop = true
-//    }
+    this.navigate(ScreenRoute.MeetDetail(meetDetail.id)) {
+        launchSingleTop = true
+    }
 }
 
 @Composable
