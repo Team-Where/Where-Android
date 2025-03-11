@@ -6,10 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sooum.domain.model.InvitedFriend
-import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentMyMeetDetailBinding
-import com.sooum.where_android.databinding.FragmentOnBoardingFirstBinding
+import com.sooum.where_android.view.myMeetDetail.adapter.InvitedFriendListAdapter
+import com.sooum.where_android.view.myMeetDetail.adapter.WaitingFriendListAdapter
 
 class MyMeetDetailFragment : Fragment() {
     private lateinit var binding : FragmentMyMeetDetailBinding

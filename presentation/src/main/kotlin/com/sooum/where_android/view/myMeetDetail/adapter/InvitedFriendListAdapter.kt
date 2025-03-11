@@ -1,4 +1,4 @@
-package com.sooum.where_android.view.myMeetDetail
+package com.sooum.where_android.view.myMeetDetail.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -21,12 +21,12 @@ class InvitedFriendListAdapter() : RecyclerView.Adapter<InvitedFriendListAdapter
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): InvitedFriendListAdapter.MyView {
+    ): MyView {
         val view = ItemInvitedFriendListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyView(view)
     }
 
-    override fun onBindViewHolder(holder: InvitedFriendListAdapter.MyView, position: Int) {
+    override fun onBindViewHolder(holder: MyView, position: Int) {
         holder.bind(invitedFriendList[position])
     }
 
