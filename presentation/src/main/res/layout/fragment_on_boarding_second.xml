@@ -21,12 +21,12 @@
         android:layout_height="181dp"
         android:layout_gravity="center"
         android:layout_marginTop="146dp"
-        android:src="@drawable/image_onboarding2"/>
+        android:src="@drawable/image_onboarding_ch2"/>
 
     <ImageView
         android:layout_width="62dp"
         android:layout_height="10dp"
-        android:src="@drawable/image_page_count2"
+        android:src="@drawable/image_onboarding_page_count2"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"/>
 

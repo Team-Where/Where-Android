@@ -23,7 +23,7 @@
         android:id="@+id/img_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/image_where_logo_color"
+        android:src="@drawable/image_social_where_logo_color"
         app:layout_constraintTop_toBottomOf="@+id/text_slogan"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,14 +32,14 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/image_social_login"
+        android:src="@drawable/image_social_login_ch1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_logo"/>
 
     <ImageView
         android:layout_width="150dp"
         android:layout_height="35dp"
-        android:src="@drawable/image_start_in_5seconds"
+        android:src="@drawable/image_social_start_in_5seconds"
         app:layout_constraintBottom_toTopOf="@id/image_naver"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -48,7 +48,7 @@
         android:id="@+id/image_naver"
         android:layout_width="350dp"
         android:layout_height="48dp"
-        android:src="@drawable/image_naver_login"
+        android:src="@drawable/image_social_naver_login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/img_kakao"
@@ -58,7 +58,7 @@
         android:id="@+id/img_kakao"
         android:layout_width="350dp"
         android:layout_height="48dp"
-        android:src="@drawable/image_kakao_login"
+        android:src="@drawable/image_social_kakao_login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/btn_sign_up"
