@@ -7,9 +7,10 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
+import com.sooum.where_android.view.common.BaseViewBindingFragment
 
 class MyMeetActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityMyMeetBinding
+    private lateinit var binding: ActivityMyMeetBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

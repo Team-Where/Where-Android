@@ -38,7 +38,8 @@ import com.sooum.where_android.view.widget.CoverImage
 @Composable
 fun MeetDetailCard(
     meetDetail: MeetDetail,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -55,7 +56,7 @@ fun MeetDetailCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(65.dp)
-        ){
+        ) {
             meetDetail.CoverImage(
                 65.dp,
                 12.dp
@@ -92,7 +93,7 @@ fun MeetDetailCard(
         }
 
         TextButton(
-            onClick = {},
+            onClick = onClick,
             modifier = Modifier.fillMaxWidth(),
             border = BorderStroke(1.dp, Gray300),
             shape = RoundedCornerShape(8.dp),
@@ -124,6 +125,7 @@ fun MeetDetailCardPreview() {
             11,
             26
         ),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        onClick = {}
     )
 }

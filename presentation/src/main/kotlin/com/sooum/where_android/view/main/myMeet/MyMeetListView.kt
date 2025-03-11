@@ -2,6 +2,7 @@ package com.sooum.where_android.view.main.myMeet
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,6 +44,7 @@ import com.sooum.where_android.view.widget.CoverImage
 internal fun MyMeetListView(
     meetDetailList: List<MeetDetail>,
     navigationGuide: () -> Unit,
+    navigationMeetDetail: (MeetDetail) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (meetDetailList.isEmpty()) {
@@ -104,8 +106,13 @@ internal fun MyMeetListView(
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(28.dp)
         ) {
-            items(meetDetailList) {
-                MyMeetContentCard(it)
+            items(meetDetailList) { meetDetail ->
+                MyMeetContentCard(
+                    meetDetail = meetDetail,
+                    onClick = {
+                        navigationMeetDetail(meetDetail)
+                    }
+                )
             }
         }
     }
@@ -114,10 +121,15 @@ internal fun MyMeetListView(
 
 @Composable
 private fun MyMeetContentCard(
-    meetDetail: MeetDetail
+    meetDetail: MeetDetail,
+    onClick: () -> Unit
 ) {
     val size = 170.dp
-    Column {
+    Column(
+        modifier = Modifier.clickable {
+            onClick()
+        }
+    ) {
         meetDetail.CoverImage(
             size = size,
             radius = 10.dp
@@ -194,6 +206,7 @@ private fun MyMeetListViewPreView(
         MyMeetListView(
             meetDetailList = data,
             navigationGuide = {},
+            navigationMeetDetail = {},
             modifier = Modifier
                 .fillMaxSize()
                 .safeDrawingPadding()
@@ -209,7 +222,7 @@ private fun MyMeetContentCardPreView() {
         color = Color.White
     ) {
         MyMeetContentCard(
-            MeetDetail(
+            meetDetail = MeetDetail(
                 3,
                 "행궁동 갈 사람\uD83C\uDF42",
                 "선선해진 날씨에 같이 사람~!",
@@ -217,7 +230,8 @@ private fun MyMeetContentCardPreView() {
                 2025,
                 1,
                 27
-            )
+            ),
+            onClick = {}
         )
     }
 }

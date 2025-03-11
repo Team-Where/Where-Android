@@ -6,4 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface MeetDetailRepository {
 
     fun getMeetDetailList() : Flow<List<MeetDetail>>
+
+    fun getMeetDetailById(id:Long?) : Flow<MeetDetail?>
 }

@@ -19,6 +19,7 @@ fun MyMeetView(
     myMeetViewModel: MyMeetViewModel = hiltViewModel(),
     openDrawer: () -> Unit,
     navigationGuide: () -> Unit,
+    navigationMeetDetail: (MeetDetail) -> Unit,
     modifier: Modifier
 ) {
     val meetDetailList by myMeetViewModel.meetDetailList.collectAsState()
@@ -27,6 +28,7 @@ fun MyMeetView(
         openDrawer = openDrawer,
         meetDetailList = meetDetailList,
         navigationGuide = navigationGuide,
+        navigationMeetDetail = navigationMeetDetail,
         modifier = modifier
     )
 }
@@ -37,6 +39,7 @@ private fun MyMeetViewContent(
     openDrawer: () -> Unit,
     meetDetailList: List<MeetDetail>,
     navigationGuide: () -> Unit,
+    navigationMeetDetail: (MeetDetail) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -46,8 +49,9 @@ private fun MyMeetViewContent(
             openDrawer = openDrawer
         )
         MyMeetListView(
-            meetDetailList,
+            meetDetailList = meetDetailList,
             navigationGuide = navigationGuide,
+            navigationMeetDetail = navigationMeetDetail,
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -60,6 +64,7 @@ private fun MeetListViewContentPreview() {
         openDrawer = {},
         meetDetailList = emptyList(),
         navigationGuide = {},
+        navigationMeetDetail = {},
         modifier = Modifier
             .safeDrawingPadding()
             .padding(12.dp)

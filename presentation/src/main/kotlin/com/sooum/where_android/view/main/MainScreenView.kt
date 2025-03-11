@@ -35,6 +35,7 @@ import androidx.core.util.Consumer
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -42,11 +43,13 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.sooum.domain.model.MeetDetail
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.main.friendList.FriendListView
 import com.sooum.where_android.view.main.meetDetail.MeetDetailView
 import com.sooum.where_android.view.main.myMeet.MyMeetGuideView
 import com.sooum.where_android.view.main.myMeet.MyMeetView
+import com.sooum.where_android.view.main.myMeetDetail.MyMeetDetailScreenView
 import com.sooum.where_android.view.main.newMeet.NewMeetResultView
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -62,7 +65,7 @@ data class ShareResult(
 fun NavBackStackEntry?.notShowBottom(): Boolean {
     val currentDestination = this?.destination
     return (currentDestination?.hierarchy?.any {
-        it.hasRoute<ScreenRoute.Home.MeetGuide>()
+        it.hasRoute<ScreenRoute.Home.MeetGuide>() || it.hasRoute<ScreenRoute.MeetDetail>()
     } == true)
 }
 
@@ -206,6 +209,7 @@ fun MainScreenView(
                                             launchSingleTop = true
                                         }
                                     },
+                                    navigationMeetDetail = navController::navigateMeetDetail,
                                     modifier = Modifier
                                         .padding(
                                             horizontal = 10.dp,
@@ -233,9 +237,18 @@ fun MainScreenView(
 
                             composable<ScreenRoute.Home.FriendMeetDetail>() {
                                 MeetDetailView(
+                                    onBack = navController::popBackStack,
+                                    navigationMeetDetail = navController::navigateMeetDetail
+                                )
+                            }
+                            composable<ScreenRoute.MeetDetail> {
+                                val route = it.toRoute<ScreenRoute.MeetDetail>()
+                                MyMeetDetailScreenView(
+                                    id = route.meetDetailId,
                                     onBack = navController::popBackStack
                                 )
                             }
+
                             dialog<NewMeetResult>(
                                 dialogProperties = DialogProperties(
                                     usePlatformDefaultWidth = false,
@@ -256,6 +269,13 @@ fun MainScreenView(
                 }
             }
         }
+    }
+}
+
+
+private fun NavHostController.navigateMeetDetail(meetDetail: MeetDetail) {
+    this.navigate(ScreenRoute.MeetDetail(meetDetail.id)) {
+        launchSingleTop = true
     }
 }
 

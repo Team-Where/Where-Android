@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.sooum.where_android.databinding.FragmentSignInBinding
-import com.sooum.where_android.databinding.FragmentSocialLoginBinding
 
 class SignInFragment : Fragment() {
     lateinit var binding : FragmentSignInBinding

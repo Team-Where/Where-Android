@@ -56,11 +56,13 @@ import com.sooum.where_android.viewmodel.MeetDetailViewModel
 @Composable
 fun MeetDetailView(
     meetDetailViewModel: MeetDetailViewModel = hiltViewModel(),
+    navigationMeetDetail: (MeetDetail) -> Unit,
     onBack: () -> Unit
 ) {
     val meetDetailList by meetDetailViewModel.meetDetailGroupList.collectAsState()
     MeetDetailContent(
         onBack = onBack,
+        navigationMeetDetail = navigationMeetDetail,
         friend = meetDetailViewModel.getUserData()!!,
         meetDetailGroupList = meetDetailList
     )
@@ -69,6 +71,7 @@ fun MeetDetailView(
 @Composable
 private fun MeetDetailContent(
     onBack: () -> Unit,
+    navigationMeetDetail: (MeetDetail) -> Unit,
     friend: User,
     meetDetailGroupList: Map<Int, List<MeetDetail>>,
 ) {
@@ -152,7 +155,10 @@ private fun MeetDetailContent(
                             .padding(bottom = 20.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.meet_detail_info_with_friend,friend.name),
+                            text = stringResource(
+                                R.string.meet_detail_info_with_friend,
+                                friend.name
+                            ),
                             color = Gray600,
                             fontFamily = pretendard,
                             fontWeight = FontWeight.Normal,
@@ -172,14 +178,18 @@ private fun MeetDetailContent(
                 )
             }
 
-            initGroupItem(meetDetailGroupList)
+            this.initGroupItem(
+                meetDetailGroupList = meetDetailGroupList,
+                navigationMeetDetail = navigationMeetDetail
+            )
         }
 
     }
 }
 
-fun LazyListScope.initGroupItem(
-    meetDetailGroupList : Map<Int,List<MeetDetail>>
+private fun LazyListScope.initGroupItem(
+    meetDetailGroupList: Map<Int, List<MeetDetail>>,
+    navigationMeetDetail: (MeetDetail) -> Unit,
 ) {
     meetDetailGroupList.keys.forEachIndexed { yearIndex, year ->
         item {
@@ -256,7 +266,10 @@ fun LazyListScope.initGroupItem(
                                 }
                                 Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = stringResource(R.string.meet_detail_month,meetDetail.month),
+                                    text = stringResource(
+                                        R.string.meet_detail_month,
+                                        meetDetail.month
+                                    ),
                                     fontFamily = pretendard,
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 16.sp
@@ -268,6 +281,9 @@ fun LazyListScope.initGroupItem(
                 }
                 MeetDetailCard(
                     meetDetail = meetDetail,
+                    onClick = {
+                        navigationMeetDetail(meetDetail)
+                    }
                 )
             }
         }
@@ -366,15 +382,16 @@ private fun MeetDetailContentPreview() {
         ) {
             MeetDetailContent(
                 onBack = {},
+                navigationMeetDetail = {},
                 friend = User(0, "우리동네 먹짱방방"),
-                emptyMap()
+                meetDetailGroupList = emptyMap()
             )
         }
     }
 }
 
 
-internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int,List<MeetDetail>>> {
+internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int, List<MeetDetail>>> {
     override val values: Sequence<Map<Int, List<MeetDetail>>>
         get() = sequenceOf(
             mapOf(
@@ -498,7 +515,7 @@ internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int,L
 @Composable
 @Preview(showBackground = true, showSystemUi = false)
 fun GroupDataListViewPreview(
-    @PreviewParameter(GroupDataParameterProvider::class) data: Map<Int,List<MeetDetail>>
+    @PreviewParameter(GroupDataParameterProvider::class) data: Map<Int, List<MeetDetail>>
 ) {
     Surface(
         color = Color.White,
@@ -506,7 +523,7 @@ fun GroupDataListViewPreview(
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            initGroupItem(data)
+            initGroupItem(data, {})
         }
     }
 }
