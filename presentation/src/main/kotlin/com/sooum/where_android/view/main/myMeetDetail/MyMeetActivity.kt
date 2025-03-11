@@ -8,7 +8,9 @@ import com.google.android.material.tabs.TabLayout
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
 import com.sooum.where_android.view.common.BaseViewBindingFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MyMeetActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyMeetBinding
 
