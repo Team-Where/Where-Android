@@ -15,7 +15,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -25,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -59,6 +63,12 @@ fun InviteFriendView(
                     .fillMaxWidth()
                     .height(53.dp)
             ) {
+                IconButton(
+                    onClick = onBack,
+                    modifier = Modifier.align(Alignment.CenterStart)
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                }
                 Text(
                     text = "친구 초대",
                     modifier = Modifier.align(Alignment.Center),
@@ -70,9 +80,8 @@ fun InviteFriendView(
                     onClick = onBack,
                     modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
-                    Icon(Icons.Filled.Clear, null)
+                    Icon(Icons.Filled.Search, null)
                 }
-
             }
             Column(
                 modifier = Modifier.padding(10.dp)
@@ -81,8 +90,7 @@ fun InviteFriendView(
                     invitedUser = listOf(
                         User(0, "hi"),
                         User(1, "hi2"),
-                        User(2, "hi3"),
-
+                        User(2, "hi3")
                         ),
                     notInvitedUser = listOf(
                         User(3, "sad"),
@@ -161,10 +169,32 @@ private fun InviteFriendHeader(
                 horizontalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 items(
-                    items = invitedUser + notInvitedUser
+                    items = notInvitedUser
                 ) { user ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CircleProfileView(
+                            profileUrl = user.profileImage,
+                            size = 40.dp,
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text = user.name,
+                            fontFamily = pretendard,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Gray700
+                        )
+                    }
+                }
+                items(
+                    items = notInvitedUser
+                ) { user ->
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .alpha(0.5f)
                     ) {
                         CircleProfileView(
                             profileUrl = user.profileImage,
@@ -186,7 +216,8 @@ private fun InviteFriendHeader(
 }
 
 @Composable
-@Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFFFFFFFF,
+@Preview(
+    showBackground = true, showSystemUi = true, backgroundColor = 0xFFFFFFFF,
     device = "spec:width=411dp,height=891dp"
 )
 private fun InviteFriendViewPreview() {
