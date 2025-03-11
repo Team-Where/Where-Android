@@ -32,18 +32,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import com.sooum.domain.model.User
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray100
-import com.sooum.where_android.theme.Gray300
 import com.sooum.where_android.theme.Gray500
 import com.sooum.where_android.theme.Gray600
 import com.sooum.where_android.theme.Gray700
 import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.pretendard
-import com.sooum.where_android.ui.widget.CircleProfileView
+import com.sooum.where_android.view.widget.CircleProfileView
 
 @Composable
 fun InviteFriendView(
@@ -189,7 +187,7 @@ private fun InviteFriendHeader(
 
 @Composable
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFFFFFFFF,
-    device = "spec:width=1080px,height=2340px,dpi=440,isRound=true"
+    device = "spec:width=411dp,height=891dp"
 )
 private fun InviteFriendViewPreview() {
     InviteFriendView(

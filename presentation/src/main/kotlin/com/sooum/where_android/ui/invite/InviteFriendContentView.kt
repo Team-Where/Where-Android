@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.sp
 import com.sooum.domain.model.User
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.pretendard
-import com.sooum.where_android.ui.widget.UserItemView
-import com.sooum.where_android.ui.widget.UserViewType
+import com.sooum.where_android.view.widget.UserItemView
+import com.sooum.where_android.view.widget.UserViewType
 
 @Composable
 fun InviteFriendContentView(

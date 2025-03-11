@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.NewMeet
 import com.sooum.domain.model.User
+import com.sooum.where_android.ui.main.newMeet.NewMeetStep2View
 import com.sooum.where_android.viewmodel.NewMeetType
 import com.sooum.where_android.viewmodel.NewMeetViewModel
 import kotlinx.coroutines.launch
