@@ -282,7 +282,7 @@ private fun NavHostController.navigateMeetDetail(meetDetail: MeetDetail) {
     context.startActivity(
         Intent(context, MyMeetActivity::class.java).apply {
             putExtras(Bundle().apply {
-                putLong("meeId", meetDetail.id)
+                putLong(MyMeetActivity.MEET_ID, meetDetail.id)
             })
         }
     )
