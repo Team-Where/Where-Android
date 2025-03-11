@@ -26,4 +26,9 @@ sealed class ScreenRoute {
         data object MeetGuide : Home()
     }
 
+    @Serializable
+    data class MeetDetail(
+        val meetDetailId: Long
+    ) : ScreenRoute()
+
 }

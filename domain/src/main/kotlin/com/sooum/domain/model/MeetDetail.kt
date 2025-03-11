@@ -24,6 +24,9 @@ data class MeetDetail(
     val day
         get() = schedule.day
 
+    val time
+        get() = schedule.time
+
     constructor(
         id: Long,
         title: String,
