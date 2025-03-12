@@ -5,6 +5,8 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,6 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
 import com.sooum.domain.model.ImageAddType
 import com.sooum.where_android.R
@@ -191,6 +194,17 @@ private fun NewMeetStep1ViewContent(
                 updateImageType(ImageAddType.Content(uri))
             }
         }
+    if (showPickerDialog) {
+        PickerDialog(
+            onDismiss = {
+                showPickerDialog = false
+            },
+            updateImageType = updateImageType,
+            requestImagePicker = {
+                pickSingleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
+        )
+    }
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -329,60 +343,71 @@ private fun PickerDialog(
     Dialog(
         onDismissRequest = onDismiss
     ) {
-        Column(
-            modifier = Modifier
-                .width(310.dp)
-                .height(150.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(Color.White),
-            verticalArrangement = Arrangement.Center
+        Box(
+            Modifier
+                .fillMaxSize()
+                .clickable(
+                    onClick = onDismiss,
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                )
         ) {
-            val textList = listOf(
-                "기본 커버 선택",
-                "앨범에서 사진 선택"
-            )
-            val imageRes = listOf(
-                R.drawable.icon_pick_default,
-                R.drawable.icon_pick_image
-            )
-            val actionList = listOf(
-                {
-                    updateImageType(ImageAddType.Default)
-                    onDismiss()
-                },
-                {
-                    requestImagePicker()
-                    onDismiss()
-                }
-            )
+            Column(
+                modifier = Modifier
+                    .width(310.dp)
+                    .height(150.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .align(Alignment.Center)
+                    .background(Color.White),
+                verticalArrangement = Arrangement.Center
+            ) {
+                val textList = listOf(
+                    "기본 커버 선택",
+                    "앨범에서 사진 선택"
+                )
+                val imageRes = listOf(
+                    R.drawable.icon_pick_default,
+                    R.drawable.icon_pick_image
+                )
+                val actionList = listOf(
+                    {
+                        updateImageType(ImageAddType.Default)
+                        onDismiss()
+                    },
+                    {
+                        requestImagePicker()
+                        onDismiss()
+                    }
+                )
 
-            repeat(2) {
-                val text = textList[it]
-                val res = imageRes[it]
-                val action = actionList[it]
-                Button(
-                    onClick = action,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White,
-                        contentColor = GrayScale800
-                    )
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+                repeat(2) {
+                    val text = textList[it]
+                    val res = imageRes[it]
+                    val action = actionList[it]
+                    Button(
+                        onClick = action,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                            contentColor = GrayScale800
+                        )
                     ) {
-                        Image(
-                            painter = painterResource(res),
-                            contentDescription = null
-                        )
-                        Spacer(Modifier.width(4.dp))
-                        Text(
-                            text = text,
-                            fontFamily = pretendard,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 14.sp
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(res),
+                                contentDescription = null
+                            )
+                            Spacer(Modifier.width(4.dp))
+                            Text(
+                                text = text,
+                                fontFamily = pretendard,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 14.sp
+                            )
+                        }
                     }
                 }
             }

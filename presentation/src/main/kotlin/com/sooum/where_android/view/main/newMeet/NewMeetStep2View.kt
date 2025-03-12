@@ -1,4 +1,4 @@
-package com.sooum.where_android.view.main.newMeet
+package com.sooum.where_android.ui.main.newMeet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,13 +13,9 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -46,9 +42,9 @@ import com.sooum.where_android.R
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.SnackBarColor
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.view.main.myMeetDetail.modal.invite.InviteFriendContentView
+import com.sooum.where_android.view.main.newMeet.NewMeetHeader
 import com.sooum.where_android.view.widget.PrimaryButton
-import com.sooum.where_android.view.widget.UserItemView
-import com.sooum.where_android.view.widget.UserViewType
 import com.sooum.where_android.viewmodel.NewMeetType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -138,7 +134,7 @@ fun NewMeetStep2View(
                     mutableStateOf(null)
                 }
                 NewMeetHeader(type = NewMeetType.Friend)
-                NewMeetStep2ViewContent(
+                InviteFriendContentView(
                     recentUserList = recentUserList,
                     userList = userList,
                     inviteFriend = { user ->
@@ -156,105 +152,6 @@ fun NewMeetStep2View(
                             }
                             inviteFriend(user)
                         }
-                    }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun NewMeetStep2ViewContent(
-    recentUserList: List<User>,
-    userList: List<User>,
-    inviteFriend: (User) -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                top = 20.dp,
-                bottom = 20.dp
-            )
-    ) {
-        Button(
-            onClick = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xffF9E000)
-            ),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                Icon(
-                    painter = painterResource(
-                        R.drawable.image_kakao_icon,
-                    ),
-                    contentDescription = null,
-                    tint = Color.Unspecified
-
-                )
-                Text(
-                    text = "카톡으로 초대하기",
-                    fontFamily = pretendard,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 16.sp,
-                    color = Color.Black
-                )
-            }
-        }
-        Spacer(Modifier.height(12.dp))
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(5.dp)
-        ) {
-            item {
-                Text(
-                    text = "최근 만난 친구",
-                    modifier = Modifier.height(20.dp),
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = pretendard,
-                    fontSize = 14.sp
-                )
-            }
-            items(
-                items = recentUserList,
-                key = {
-                    "rc" + it.id
-                }
-            ) { user ->
-                UserItemView(
-                    user = user,
-                    type = UserViewType.Invite,
-                    iconClickAction = {
-                        inviteFriend(user)
-                    }
-                )
-            }
-            item {
-                Text(
-                    text = "친구(${userList.size})",
-                    modifier = Modifier.height(20.dp),
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = pretendard,
-                    fontSize = 14.sp
-                )
-            }
-            items(
-                items = userList,
-                key = {
-                    "d" + it.id
-                }
-            ) { user ->
-                UserItemView(
-                    user = user,
-                    type = UserViewType.Invite,
-                    iconClickAction = {
-                        inviteFriend(user)
                     }
                 )
             }

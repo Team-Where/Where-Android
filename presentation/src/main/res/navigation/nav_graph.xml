@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/meetTabFragment">
+
+    <fragment
+        android:id="@+id/meetTabFragment"
+        android:name="com.sooum.where_android.view.main.myMeetDetail.MyMeetTabFragment"
+        android:label="MeetTabFragment">
+        <action
+            android:id="@+id/action_tabFragment_to_ScheduleFragment"
+            app:destination="@id/scheduleFragment"></action>
+
+        <action
+            android:id="@+id/action_tabFragment_to_InviteFriendFragment"
+            app:destination="@id/inviteFriendFragment"></action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/scheduleFragment"
+        android:name="com.sooum.where_android.view.main.myMeetDetail.modal.schedule.ScheduleFragment"
+        android:label="ScheduleFragment" />
+
+    <fragment
+        android:id="@+id/inviteFriendFragment"
+        android:name="com.sooum.where_android.view.main.myMeetDetail.modal.invite.InviteFriendFragment"
+        android:label="InviteFriendFragment" />
+
+</navigation>

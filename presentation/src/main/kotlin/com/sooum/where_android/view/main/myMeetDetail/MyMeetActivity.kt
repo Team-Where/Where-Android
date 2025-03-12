@@ -2,14 +2,23 @@ package com.sooum.where_android.view.main.myMeetDetail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
+import com.sooum.domain.model.SelectedPlace
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
+import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
+import com.sooum.where_android.databinding.FragmentMyMeetTabBinding
 import com.sooum.where_android.view.common.BaseViewBindingFragment
+import com.sooum.where_android.view.main.myMeetDetail.adapter.SelectedPlaceListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -21,27 +30,47 @@ class MyMeetActivity : AppCompatActivity() {
     companion object {
         const val MEET_ID = "meetId"
     }
+
     private lateinit var binding: ActivityMyMeetBinding
 
-    private val myMeetDetailViewModel : MyMeetDetailViewModel by viewModels()
+    private val myMeetDetailViewModel: MyMeetDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMyMeetBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        intent.getLongExtra(MEET_ID, 0L).let { id ->
+            myMeetDetailViewModel.loadData(id)
+        }
+    }
+}
+
+/**
+ * 네비게이션 사용을 위해 Tab 화면을 분리
+ * @see[R.navigation.nav_graph]
+ */
+class MyMeetTabFragment : MyMeetBaseFragment() {
+    private lateinit var binding: FragmentMyMeetTabBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentMyMeetTabBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         loadFragment(MyMeetDetailFragment())
         setupTabLayoutListener()
 
         with(binding) {
             btnBack.setOnClickListener {
-                finish()
+                activity?.finish()
             }
         }
-        intent.getLongExtra(MEET_ID,0L).let { id ->
-            myMeetDetailViewModel.loadData(id)
-        }
-
         lifecycleScope.launch {
             myMeetDetailViewModel.meetDetail.collect { meetDetail ->
                 binding.tvTitle.text = meetDetail?.title
@@ -67,8 +96,8 @@ class MyMeetActivity : AppCompatActivity() {
 
     @SuppressLint("CommitTransaction")
     private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.flame, fragment)
+        parentFragmentManager.beginTransaction()
+            .replace(binding.flame.id, fragment)
             .commit()
     }
 

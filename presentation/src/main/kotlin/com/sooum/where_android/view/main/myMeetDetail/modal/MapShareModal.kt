@@ -5,9 +5,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.net.Uri
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,13 +31,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sooum.where_android.R
 import com.sooum.where_android.view.widget.ModalHeader
 import kotlinx.coroutines.launch
@@ -46,17 +52,17 @@ private sealed class MapItem(
     val scheme: Uri
 ) {
     data object Naver : MapItem(
-        R.drawable.icon_map_naver,
-        R.string.map_share_by_naver,
-        "com.nhn.android.nmap",
-        Uri.parse("nmap://search?")
+        imageRes = R.drawable.icon_map_naver,
+        stringRes = R.string.map_share_by_naver,
+        marketPackage = "com.nhn.android.nmap",
+        scheme = Uri.parse("nmap://search?")
     )
 
     data object Kakao : MapItem(
-        R.drawable.icon_map_kakao,
-        R.string.map_share_by_kakao,
-        "net.daum.android.map",
-        Uri.parse("kakaomap://open?page=placeSearch")
+        imageRes = R.drawable.icon_map_kakao,
+        stringRes = R.string.map_share_by_kakao,
+        marketPackage = "net.daum.android.map",
+        scheme = Uri.parse("kakaomap://open?page=placeSearch")
     )
 
     fun checkOrStart(
@@ -109,14 +115,50 @@ fun MapShareModal(
     }
 }
 
+class MapShareModalFragment : BottomSheetDialogFragment() {
+
+    override fun getTheme(): Int {
+        return R.style.BottomSheetDialogRoundStyle
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+            )
+            setContent {
+                MapShareModalContent(
+                    modifier = Modifier.padding(15.dp)
+                        .navigationBarsPadding(),
+                    onDismiss = {
+                        this@MapShareModalFragment.dismiss()
+                    }
+                )
+            }
+        }
+    }
+
+    companion object {
+        const val TAG = "MapShareModal"
+
+        fun getInstance(): MapShareModalFragment {
+            return MapShareModalFragment()
+        }
+    }
+}
+
 @Composable
-fun MapShareModalContent(
+private fun MapShareModalContent(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
     Column(
-        modifier = modifier.background(Color.White)
+        modifier = modifier
     ) {
         ModalHeader(
             Modifier.fillMaxWidth(),

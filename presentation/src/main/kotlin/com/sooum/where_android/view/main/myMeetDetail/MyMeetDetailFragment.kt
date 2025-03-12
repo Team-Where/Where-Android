@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil3.Image
 import coil3.load
@@ -18,17 +19,17 @@ import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentMyMeetDetailBinding
 import com.sooum.where_android.view.main.myMeetDetail.adapter.InvitedFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.WaitingFriendListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
+import com.sooum.where_android.view.main.myMeetDetail.modal.MapShareModalFragment
 import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MyMeetDetailFragment : Fragment() {
+class MyMeetDetailFragment : MyMeetBaseFragment() {
     private lateinit var binding: FragmentMyMeetDetailBinding
     private lateinit var invitedFriendAdapter: InvitedFriendListAdapter
     private lateinit var waitingFriendListAdapter: WaitingFriendListAdapter
-
-    private val myMeetDetailViewModel: MyMeetDetailViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +50,22 @@ class MyMeetDetailFragment : Fragment() {
             //Data init
             myMeetDetailViewModel.meetDetail.collect {
                 setData(meetDetail = it)
+            }
+        }
+
+        with(binding) {
+            btnLocation.setOnClickListener {
+                openMapShareSheet()
+            }
+            btnSchedule.setOnClickListener {
+                findNavController().navigate(
+                    R.id.action_tabFragment_to_ScheduleFragment
+                )
+            }
+            btnFriend.setOnClickListener {
+                findNavController().navigate(
+                    R.id.action_tabFragment_to_InviteFriendFragment
+                )
             }
         }
     }
@@ -74,7 +91,13 @@ class MyMeetDetailFragment : Fragment() {
         binding.groupTitle.text = meetDetail.title
         binding.groupDescription.text = meetDetail.description
 
-        binding.tvSchedule.text = meetDetail.makeScheduleText()
+        if (meetDetail.schedule.isDataOn() != null) {
+            binding.tvSchedule.text = meetDetail.makeScheduleText()
+            binding.btnSchedule.text = "일정 수정"
+        } else {
+            binding.tvSchedule.text = "아직 정해진 일정이 없어요"
+            binding.btnSchedule.text = "일정 등록"
+        }
     }
 }
 

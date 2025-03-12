@@ -54,9 +54,9 @@ data class MeetDetail(
  */
 data class Schedule(
     val year: Int,
-    @IntRange(from = 1, to = 12) val month: Int,
-    @IntRange(from = 1, to = 31) val day: Int,
-    @IntRange(from = 1, to = 24) val time: Int
+    @IntRange(from = 0, to = 12) val month: Int,
+    @IntRange(from = 0, to = 31) val day: Int,
+    @IntRange(from = 0, to = 24) val time: Int
 ) {
     val date: String
         get() {
@@ -81,4 +81,13 @@ data class Schedule(
 
             return st.toString()
         }
+
+    //데이터가 유효한지 확인
+    fun isDataOn() : Schedule? {
+        return if(year > 0 && month > 0 && day > 0 && time > 0) {
+            this
+        } else {
+            null
+        }
+    }
 }
