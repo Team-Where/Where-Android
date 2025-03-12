@@ -21,6 +21,15 @@
         tools:ignore="MissingConstraints" />
 
     <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/icon_pencil"
+        app:layout_constraintStart_toEndOf="@+id/textTitle"
+        app:layout_constraintBottom_toBottomOf="@id/textTitle"
+        android:layout_marginStart="8dp"/>
+
+    <ImageView
+        android:id="@+id/imageClose"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:src="@drawable/icon_close"
@@ -43,6 +52,14 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/icon_pencil"
+        app:layout_constraintStart_toEndOf="@+id/textMemo"
+        app:layout_constraintBottom_toBottomOf="@id/textMemo"
+        android:layout_marginStart="8dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
