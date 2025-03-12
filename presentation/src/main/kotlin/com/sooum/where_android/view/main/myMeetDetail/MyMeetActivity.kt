@@ -2,15 +2,28 @@ package com.sooum.where_android.view.main.myMeetDetail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
 import com.sooum.where_android.view.common.BaseViewBindingFragment
+import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MyMeetActivity : AppCompatActivity() {
+
+    companion object {
+        const val MEET_ID = "meetId"
+    }
     private lateinit var binding: ActivityMyMeetBinding
+
+    private val myMeetDetailViewModel : MyMeetDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +33,20 @@ class MyMeetActivity : AppCompatActivity() {
         loadFragment(MyMeetDetailFragment())
         setupTabLayoutListener()
 
+        with(binding) {
+            btnBack.setOnClickListener {
+                finish()
+            }
+        }
+        intent.getLongExtra(MEET_ID,0L).let { id ->
+            myMeetDetailViewModel.loadData(id)
+        }
 
+        lifecycleScope.launch {
+            myMeetDetailViewModel.meetDetail.collect { meetDetail ->
+                binding.tvTitle.text = meetDetail?.title
+            }
+        }
     }
 
     private fun setupTabLayoutListener() {

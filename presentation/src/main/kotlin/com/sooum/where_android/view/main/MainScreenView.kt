@@ -1,6 +1,7 @@
 package com.sooum.where_android.view.main
 
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -31,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.os.bundleOf
 import androidx.core.util.Consumer
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -49,6 +51,7 @@ import com.sooum.where_android.view.main.friendList.FriendListView
 import com.sooum.where_android.view.main.meetDetail.MeetDetailView
 import com.sooum.where_android.view.main.myMeet.MyMeetGuideView
 import com.sooum.where_android.view.main.myMeet.MyMeetView
+import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetDetailScreenView
 import com.sooum.where_android.view.main.newMeet.NewMeetResultView
 import kotlinx.coroutines.launch
@@ -274,9 +277,20 @@ fun MainScreenView(
 
 
 private fun NavHostController.navigateMeetDetail(meetDetail: MeetDetail) {
-    this.navigate(ScreenRoute.MeetDetail(meetDetail.id)) {
-        launchSingleTop = true
-    }
+    //TODO : 환님 여기서 연결하면 됩니다.
+    //
+    context.startActivity(
+        Intent(context, MyMeetActivity::class.java).apply {
+            putExtras(Bundle().apply {
+                putLong(MyMeetActivity.MEET_ID, meetDetail.id)
+            })
+        }
+    )
+    //Tab Layout 수정 전까지는 MyMeetActivity로 이동
+
+//    this.navigate(ScreenRoute.MeetDetail(meetDetail.id)) {
+//        launchSingleTop = true
+//    }
 }
 
 @Composable
