@@ -4,12 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import coil3.Image
 import coil3.load
 import coil3.request.ImageRequest
 import coil3.request.error
@@ -58,12 +55,12 @@ class MyMeetDetailFragment : MyMeetBaseFragment() {
                 openMapShareSheet()
             }
             btnSchedule.setOnClickListener {
-                findNavController().navigate(
+                findNavController(view).navigate(
                     R.id.action_tabFragment_to_ScheduleFragment
                 )
             }
             btnFriend.setOnClickListener {
-                findNavController().navigate(
+                findNavController(view).navigate(
                     R.id.action_tabFragment_to_InviteFriendFragment
                 )
             }

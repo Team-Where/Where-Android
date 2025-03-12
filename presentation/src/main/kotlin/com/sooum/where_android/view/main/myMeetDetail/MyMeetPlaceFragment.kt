@@ -25,9 +25,11 @@ class MyMeetPlaceFragment: MyMeetBaseFragment() {
     ): View? {
         binding = FragmentMyMeetPlaceBinding.inflate(inflater, container, false)
 
-        binding.icWarning.setOnClickListener { view ->
-            TooltipCompat.setTooltipText(view, "친구들과 가기로 결정한 장소 목록입니다")
-            view.performLongClick() // 클릭 시 툴팁 표시
+        with(binding){
+            icWarning.setOnClickListener { view ->
+                TooltipCompat.setTooltipText(view, "친구들과 가기로 결정한 장소 목록입니다")
+                view.performLongClick() // 클릭 시 툴팁 표시
+            }
         }
 
         return binding.root
