@@ -3,6 +3,7 @@ package com.sooum.where_android.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.MeetDetail
+import com.sooum.domain.model.Schedule
 import com.sooum.domain.usecase.meet.GetMeetDetailByIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,5 +30,14 @@ class MyMeetDetailViewModel @Inject constructor(
                 _meetDetail.value = it
             }
         }
+    }
+
+    /**
+     * 새로운 스케줄로 변경
+     */
+    fun newSchedule(
+        schedule: Schedule
+    ) {
+
     }
 }

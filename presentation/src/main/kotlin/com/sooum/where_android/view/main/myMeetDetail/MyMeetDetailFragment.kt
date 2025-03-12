@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil3.Image
 import coil3.load
@@ -56,6 +57,16 @@ class MyMeetDetailFragment : MyMeetBaseFragment() {
             btnLocation.setOnClickListener {
                 openMapShareSheet()
             }
+            btnSchedule.setOnClickListener {
+                findNavController().navigate(
+                    R.id.action_tabFragment_to_ScheduleFragment
+                )
+            }
+            btnFriend.setOnClickListener {
+                findNavController().navigate(
+                    R.id.action_tabFragment_to_InviteFriendFragment
+                )
+            }
         }
     }
 
@@ -80,7 +91,13 @@ class MyMeetDetailFragment : MyMeetBaseFragment() {
         binding.groupTitle.text = meetDetail.title
         binding.groupDescription.text = meetDetail.description
 
-        binding.tvSchedule.text = meetDetail.makeScheduleText()
+        if (meetDetail.schedule.isDataOn() != null) {
+            binding.tvSchedule.text = meetDetail.makeScheduleText()
+            binding.btnSchedule.text = "일정 수정"
+        } else {
+            binding.tvSchedule.text = "아직 정해진 일정이 없어요"
+            binding.btnSchedule.text = "일정 등록"
+        }
     }
 }
 

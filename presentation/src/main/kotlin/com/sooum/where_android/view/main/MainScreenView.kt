@@ -52,7 +52,6 @@ import com.sooum.where_android.view.main.meetDetail.MeetDetailView
 import com.sooum.where_android.view.main.myMeet.MyMeetGuideView
 import com.sooum.where_android.view.main.myMeet.MyMeetView
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
-import com.sooum.where_android.view.main.myMeetDetail.MyMeetDetailScreenView
 import com.sooum.where_android.view.main.newMeet.NewMeetResultView
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -246,10 +245,10 @@ fun MainScreenView(
                             }
                             composable<ScreenRoute.MeetDetail> {
                                 val route = it.toRoute<ScreenRoute.MeetDetail>()
-                                MyMeetDetailScreenView(
-                                    id = route.meetDetailId,
-                                    onBack = navController::popBackStack
-                                )
+//                                MyMeetDetailScreenView(
+//                                    id = route.meetDetailId,
+//                                    onBack = navController::popBackStack
+//                                )
                             }
 
                             dialog<NewMeetResult>(
