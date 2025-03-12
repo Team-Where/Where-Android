@@ -18,17 +18,17 @@ import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentMyMeetDetailBinding
 import com.sooum.where_android.view.main.myMeetDetail.adapter.InvitedFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.WaitingFriendListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
+import com.sooum.where_android.view.main.myMeetDetail.modal.MapShareModalFragment
 import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MyMeetDetailFragment : Fragment() {
+class MyMeetDetailFragment : MyMeetBaseFragment() {
     private lateinit var binding: FragmentMyMeetDetailBinding
     private lateinit var invitedFriendAdapter: InvitedFriendListAdapter
     private lateinit var waitingFriendListAdapter: WaitingFriendListAdapter
-
-    private val myMeetDetailViewModel: MyMeetDetailViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +49,12 @@ class MyMeetDetailFragment : Fragment() {
             //Data init
             myMeetDetailViewModel.meetDetail.collect {
                 setData(meetDetail = it)
+            }
+        }
+
+        with(binding) {
+            btnLocation.setOnClickListener {
+                openMapShareSheet()
             }
         }
     }

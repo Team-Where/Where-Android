@@ -13,8 +13,9 @@ import com.sooum.where_android.databinding.FragmentOnBoardingFirstBinding
 import com.sooum.where_android.view.main.myMeetDetail.adapter.InvitedFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.SelectedPlaceListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.WaitingFriendListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 
-class MyMeetPlaceFragment: Fragment() {
+class MyMeetPlaceFragment: MyMeetBaseFragment() {
     private lateinit var binding : FragmentMyMeetPlaceBinding
     private lateinit var selectedPlaceListAdapter: SelectedPlaceListAdapter
 
