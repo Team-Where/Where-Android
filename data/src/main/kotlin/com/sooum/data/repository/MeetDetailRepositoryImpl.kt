@@ -1,6 +1,7 @@
 package com.sooum.data.repository
 
 import com.sooum.domain.model.MeetDetail
+import com.sooum.domain.model.Schedule
 import com.sooum.domain.repository.MeetDetailRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,6 +64,18 @@ class MeetDetailRepositoryImpl @Inject constructor(
             emit(
                 dataList.find { it.id == id }
             )
+        }
+    }
+
+    override suspend fun updateMeetDetailSchedule(id: Long, schedule: Schedule) {
+        val temp = _meetDetailList.value.toMutableList()
+        temp.find {
+            it.id == id
+        }?.let { findItem ->
+            val index = temp.indexOf(findItem)
+            val newItem = findItem.copy(schedule=  schedule)
+            temp[index] = newItem
+            _meetDetailList.value = temp
         }
     }
 }

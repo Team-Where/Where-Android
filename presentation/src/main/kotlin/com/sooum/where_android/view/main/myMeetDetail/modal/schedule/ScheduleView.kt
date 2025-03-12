@@ -290,7 +290,11 @@ class ScheduleFragment : Fragment() {
                     onBack = {
                         findNavController().popBackStack()
                     },
-                    onNewSchedule = myMeetDetailViewModel::newSchedule
+                    onNewSchedule = {schedule ->
+                        myMeetDetailViewModel.newSchedule(schedule) {
+                            findNavController().popBackStack()
+                        }
+                    }
                 )
             }
         }
