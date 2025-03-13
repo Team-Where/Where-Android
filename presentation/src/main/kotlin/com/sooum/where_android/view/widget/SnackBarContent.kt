@@ -1,8 +1,7 @@
 package com.sooum.where_android.view.widget
 
-import android.graphics.drawable.Icon
-import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -21,11 +20,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.SnackBarColor
@@ -73,7 +76,7 @@ fun SnackBarContent(
                 modifier = Modifier.size(20.dp),
                 tint = Primary600
             )
-            Spacer(Modifier.width(5.dp))
+            Spacer(Modifier.width(8.dp))
         }
         Text(
             text = message,
@@ -91,5 +94,63 @@ private fun CheckSnackBarPreview() {
     Column {
         SnackBarContent("test", IconType.None)
         SnackBarContent("test", IconType.Check)
+    }
+}
+
+/**
+ * XML 호환을 위한 CustomSnackBar
+ * ```
+ * CustomSnackBar.make(binding.root, "test", IconType.Check).show()
+ *```
+ */
+class CustomSnackBar(
+    view: View,
+    private val message: String,
+    private val iconType: IconType,
+    duration: Int = 2000
+) {
+
+    companion object {
+
+        fun make(
+            view: View,
+            message: String,
+            iconType: IconType,
+            duration: Int = 2000
+        ) = CustomSnackBar(view, message, iconType, duration)
+    }
+
+    private val context = view.context
+    private val snackBar = Snackbar.make(view, "", duration)
+    private val snackBarLayout = snackBar.view as ViewGroup
+
+    init {
+        addComposeView()
+    }
+
+    private fun addComposeView() {
+        with(snackBarLayout) {
+            //기본 배경 제거
+            setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    android.R.color.transparent
+                )
+            )
+            //기본 패딩 삭제
+            setPadding(0, 0, 0, 0)
+            val composeView = ComposeView(snackBarLayout.context).apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    SnackBarContent(message, iconType = iconType)
+                }
+            }
+            // 기본 View와 ComposeView를 함께 사용
+            addView(composeView)
+        }
+    }
+
+    fun show() {
+        snackBar.show()
     }
 }

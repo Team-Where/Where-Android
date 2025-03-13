@@ -4,14 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import coil3.Image
 import coil3.load
-import coil3.request.ImageRequest
 import coil3.request.error
 import coil3.request.placeholder
 import com.sooum.domain.model.MeetDetail
@@ -20,8 +16,6 @@ import com.sooum.where_android.databinding.FragmentMyMeetDetailBinding
 import com.sooum.where_android.view.main.myMeetDetail.adapter.InvitedFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.WaitingFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
-import com.sooum.where_android.view.main.myMeetDetail.modal.MapShareModalFragment
-import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
