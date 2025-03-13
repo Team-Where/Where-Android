@@ -1,4 +1,4 @@
-package com.sooum.where_android.ui.main.newMeet
+package com.sooum.where_android.view.main.newMeet
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sooum.domain.model.User
 import com.sooum.where_android.view.main.myMeetDetail.modal.invite.InviteFriendContentView
-import com.sooum.where_android.view.main.newMeet.NewMeetHeader
 import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.view.widget.PrimaryButton
 import com.sooum.where_android.view.widget.SnackBarContent

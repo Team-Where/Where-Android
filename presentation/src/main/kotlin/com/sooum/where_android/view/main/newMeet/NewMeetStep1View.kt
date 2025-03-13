@@ -71,6 +71,7 @@ import com.sooum.where_android.theme.GrayScale900
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.SnackBarColor
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.view.common.modal.ImagePickerDialog
 import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.view.widget.PrimaryButton
 import com.sooum.where_android.view.widget.SnackBarContent
@@ -174,21 +175,13 @@ private fun NewMeetStep1ViewContent(
     var showPickerDialog by remember {
         mutableStateOf(false)
     }
-    val pickSingleMedia =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            if (uri != null) {
-                updateImageType(ImageAddType.Content(uri))
-            }
-        }
+
     if (showPickerDialog) {
-        PickerDialog(
+        ImagePickerDialog(
             onDismiss = {
                 showPickerDialog = false
             },
-            updateImageType = updateImageType,
-            requestImagePicker = {
-                pickSingleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            }
+            updateImageType = updateImageType
         )
     }
     Column(
@@ -316,87 +309,6 @@ private fun NewMeetStep1ViewContent(
                 text = "(${title.length}/$maxLength)",
                 color = GrayScale700
             )
-        }
-    }
-}
-
-@Composable
-private fun PickerDialog(
-    onDismiss: () -> Unit,
-    requestImagePicker: () -> Unit,
-    updateImageType: (ImageAddType) -> Unit
-) {
-    Dialog(
-        onDismissRequest = onDismiss
-    ) {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .clickable(
-                    onClick = onDismiss,
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                )
-        ) {
-            Column(
-                modifier = Modifier
-                    .width(310.dp)
-                    .height(150.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .align(Alignment.Center)
-                    .background(Color.White),
-                verticalArrangement = Arrangement.Center
-            ) {
-                val textList = listOf(
-                    "기본 커버 선택",
-                    "앨범에서 사진 선택"
-                )
-                val imageRes = listOf(
-                    R.drawable.icon_pick_default,
-                    R.drawable.icon_pick_image
-                )
-                val actionList = listOf(
-                    {
-                        updateImageType(ImageAddType.Default)
-                        onDismiss()
-                    },
-                    {
-                        requestImagePicker()
-                        onDismiss()
-                    }
-                )
-
-                repeat(2) {
-                    val text = textList[it]
-                    val res = imageRes[it]
-                    val action = actionList[it]
-                    Button(
-                        onClick = action,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.White,
-                            contentColor = GrayScale800
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Image(
-                                painter = painterResource(res),
-                                contentDescription = null
-                            )
-                            Spacer(Modifier.width(4.dp))
-                            Text(
-                                text = text,
-                                fontFamily = pretendard,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 14.sp
-                            )
-                        }
-                    }
-                }
-            }
         }
     }
 }
