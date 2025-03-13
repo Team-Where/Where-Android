@@ -19,15 +19,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -49,9 +44,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sooum.domain.model.User
 import com.sooum.where_android.R
 import com.sooum.where_android.model.ScreenRoute
-import com.sooum.where_android.theme.Gray100
-import com.sooum.where_android.theme.Gray400
-import com.sooum.where_android.theme.Gray500
 import com.sooum.where_android.theme.Gray700
 import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.GrayScale600

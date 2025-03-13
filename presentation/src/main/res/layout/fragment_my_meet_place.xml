@@ -29,7 +29,7 @@
         android:id="@+id/icWarning"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/icon_warning"
+        android:src="@drawable/icon_info"
         android:layout_marginEnd="15dp"
         android:layout_marginTop="2dp"
         android:tooltipText="친구들과 가기로 결정한 장소 목록입니다"

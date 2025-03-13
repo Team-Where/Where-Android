@@ -31,26 +31,34 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Primary600
+import com.sooum.where_android.theme.Red500
 import com.sooum.where_android.theme.SnackBarColor
 import com.sooum.where_android.theme.pretendard
 
 sealed class IconType(
-    @DrawableRes val iconRes: Int
+    @DrawableRes val iconRes: Int = 0,
+    val color: Color = Color.Transparent
 ) {
     /**
      * 아이콘 없는 버전
      */
-    data object None : IconType(0)
+    data object None : IconType()
 
     /**
      * 체크 버전
      */
-    data object Check : IconType(R.drawable.icon_new_meet_check)
+    data object Check : IconType(
+        R.drawable.icon_new_meet_check,
+        Primary600
+    )
 
     /**
      * 에러 버전
      */
-    data object Error : IconType(0)
+    data object Error : IconType(
+        R.drawable.icon_warning,
+        Red500
+    )
 }
 
 @Composable
@@ -74,7 +82,7 @@ fun SnackBarContent(
                 painter = painterResource(iconType.iconRes),
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
-                tint = Primary600
+                tint = iconType.color
             )
             Spacer(Modifier.width(8.dp))
         }
@@ -92,8 +100,9 @@ fun SnackBarContent(
 @Composable
 private fun CheckSnackBarPreview() {
     Column {
-        SnackBarContent("test", IconType.None)
-        SnackBarContent("test", IconType.Check)
+        SnackBarContent("일반", IconType.None)
+        SnackBarContent("체크 있는놈", IconType.Check)
+        SnackBarContent("에러 표시", IconType.Error)
     }
 }
 
