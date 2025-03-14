@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.IntRange
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -52,7 +53,8 @@ import com.sooum.where_android.theme.pretendard
 @Composable
 fun ImagePickerDialog(
     onDismiss: () -> Unit,
-    updateImageType: (ImageAddType) -> Unit
+    updateImageType: (ImageAddType) -> Unit,
+    maxImage: Int = 1
 ) {
     Dialog(
         onDismissRequest = onDismiss
@@ -67,9 +69,10 @@ fun ImagePickerDialog(
                 )
         ) {
             ImagePickerDialogContent(
-                Modifier.align(Alignment.Center),
-                onDismiss,
-                updateImageType
+                modifier = Modifier.align(Alignment.Center),
+                onDismiss = onDismiss,
+                maxImage = maxImage,
+                updateImageType = updateImageType
             )
         }
     }
@@ -88,7 +91,8 @@ class ImagePickerDialogFragment : DialogFragment() {
     interface ImageTypeHandler {
         fun receiveImageType(imageType: ImageAddType)
     }
-    private var imageTypeHandler : ImageTypeHandler? = null
+
+    private var imageTypeHandler: ImageTypeHandler? = null
 
     fun setHandler(imageTypeHandler: ImageTypeHandler) {
         this.imageTypeHandler = imageTypeHandler
@@ -99,6 +103,7 @@ class ImagePickerDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val maxImage = arguments?.getInt(MAX_IMAGE) ?: 1
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -107,24 +112,33 @@ class ImagePickerDialogFragment : DialogFragment() {
                     onDismiss = {
                         this@ImagePickerDialogFragment.dismiss()
                     },
-                    updateImageType = {imageType ->
-                        Log.d("JWH2",imageType.toString())
-                        Log.d("JWH2",imageTypeHandler.toString())
+                    updateImageType = { imageType ->
+                        Log.d("JWH2", imageType.toString())
+                        Log.d("JWH2", imageTypeHandler.toString())
                         imageTypeHandler?.receiveImageType(imageType)
-                    }
+                    },
+                    maxImage = maxImage
                 )
             }
         }
     }
 
     companion object {
-        fun getInstance(handler: ImageTypeHandler): ImagePickerDialogFragment {
+        fun getInstance(
+            handler: ImageTypeHandler,
+            @IntRange(from = 1) maxImage: Int
+        ): ImagePickerDialogFragment {
             return ImagePickerDialogFragment()
                 .apply {
+                    arguments = Bundle().apply {
+                        putInt(MAX_IMAGE, maxImage)
+                    }
                     setHandler(handler)
                 }
         }
+
         const val TAG = "ImagePickerDialogFragment"
+        const val MAX_IMAGE = "maxImage"
     }
 
 }
@@ -133,12 +147,22 @@ class ImagePickerDialogFragment : DialogFragment() {
 private fun ImagePickerDialogContent(
     modifier: Modifier,
     onDismiss: () -> Unit,
+    @IntRange(from = 1) maxImage: Int = 1,
     updateImageType: (ImageAddType) -> Unit
 ) {
     val pickSingleMedia =
         rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 updateImageType(ImageAddType.Content(uri))
+                onDismiss()
+            }
+        }
+
+
+    val pickMultipleMedia =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxImage)) { uris ->
+            if (uris.isNotEmpty()) {
+                updateImageType(ImageAddType.Contents(uris))
                 onDismiss()
             }
         }
@@ -165,7 +189,11 @@ private fun ImagePickerDialogContent(
                 onDismiss()
             },
             {
-                pickSingleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                if (maxImage == 1) {
+                    pickSingleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                } else {
+                    pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                }
             }
         )
 
@@ -206,6 +234,6 @@ private fun ImagePickerDialogContent(
 @Preview
 private fun ImagePickerDialogContentPreview() {
     ImagePickerDialogContent(
-        Modifier,{},{}
+        modifier = Modifier, onDismiss = {}, maxImage = 1, updateImageType = {}
     )
 }

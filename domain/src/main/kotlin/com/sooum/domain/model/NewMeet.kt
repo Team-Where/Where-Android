@@ -11,4 +11,5 @@ data class NewMeet(
 sealed class ImageAddType {
     data object Default : ImageAddType()
     data class Content(val uri: Uri) : ImageAddType()
+    data class Contents(val uris: List<Uri>) : ImageAddType()
 }
