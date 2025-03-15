@@ -17,10 +17,18 @@ class EditMyMeetDetailFragment : BottomSheetDialogFragment() {
     ): View? {
         binding = FragmentEditMyMeetDetailBinding.inflate(inflater, container, false)
 
-        binding.imageClose.setOnClickListener {
-            dismiss()
-        }
+        setupClickListeners()
 
         return binding.root
+    }
+
+    private fun setupClickListeners() = with(binding) {
+        imageClose.setOnClickListener { dismiss() }
+        iconEditMeetName.setOnClickListener { showBottomSheet(EditMyMeetNameFragment()) }
+        iconEditMeetMemo.setOnClickListener { showBottomSheet(EditMyMeetMemoFragment()) }
+    }
+
+    private fun showBottomSheet(fragment: BottomSheetDialogFragment) {
+        fragment.show(parentFragmentManager, fragment::class.java.simpleName)
     }
 }
