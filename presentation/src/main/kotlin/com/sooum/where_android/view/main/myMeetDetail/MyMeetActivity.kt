@@ -19,6 +19,7 @@ import com.sooum.where_android.databinding.FragmentMyMeetTabBinding
 import com.sooum.where_android.view.common.BaseViewBindingFragment
 import com.sooum.where_android.view.main.myMeetDetail.adapter.SelectedPlaceListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
+import com.sooum.where_android.view.main.myMeetDetail.modal.EditMyMeetDetailFragment
 import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -57,6 +58,12 @@ class MyMeetTabFragment : MyMeetBaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMyMeetTabBinding.inflate(inflater, container, false)
+
+        binding.imageEdit.setOnClickListener {
+            val bottomSheet = EditMyMeetDetailFragment()
+            bottomSheet.show(parentFragmentManager, bottomSheet.tag)
+        }
+
         return binding.root
     }
 

@@ -37,10 +37,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/imageEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="20dp"
             android:src="@drawable/icon_3dot_vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -53,9 +54,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabTextAppearance="@style/MyTabTextStyle"
+        android:background="@color/white"
         app:tabIndicatorColor="@color/black"
         app:tabIndicatorHeight="3dp"
         app:tabIndicatorFullWidth="true"
+        app:tabTextColor="#9CA3AF"
         app:tabSelectedTextColor="@color/black"
         app:layout_constraintTop_toBottomOf="@id/topBar">
 
