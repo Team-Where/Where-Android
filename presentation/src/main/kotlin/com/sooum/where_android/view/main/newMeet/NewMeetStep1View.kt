@@ -223,6 +223,10 @@ private fun NewMeetStep1ViewContent(
                     )
                 }
 
+                is ImageAddType.Contents -> {
+
+                }
+
                 null -> {
                     Column(
                         modifier = Modifier,
