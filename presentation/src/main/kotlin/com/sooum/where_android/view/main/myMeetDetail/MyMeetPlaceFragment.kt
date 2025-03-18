@@ -41,6 +41,8 @@ class MyMeetPlaceFragment: MyMeetBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setUpBtn()
+
         val dummyList = listOf(
             SelectedPlace("맛있는 식당", "서울 강남구 테헤란로 123", 5, 12),
             SelectedPlace("한식 전문점", "서울 마포구 홍대입구 456", 3, 8),
@@ -74,5 +76,22 @@ class MyMeetPlaceFragment: MyMeetBaseFragment() {
             adapter = allPlaceListAdapter
         }
     }
+
+    private fun setUpBtn() {
+        with(binding) {
+            btnAll.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    btnBest.isChecked = false
+                }
+            }
+
+            btnBest.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    btnAll.isChecked = false
+                }
+            }
+        }
+    }
+
 
 }
