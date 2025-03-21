@@ -38,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.DialogFragment
@@ -150,22 +151,21 @@ private fun ImagePickerDialogContent(
     @IntRange(from = 1) maxImage: Int = 1,
     updateImageType: (ImageAddType) -> Unit
 ) {
-    val pickSingleMedia =
+    val pickLauncher = if (maxImage == 1) {
         rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 updateImageType(ImageAddType.Content(uri))
                 onDismiss()
             }
         }
-
-
-    val pickMultipleMedia =
+    } else {
         rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxImage)) { uris ->
             if (uris.isNotEmpty()) {
                 updateImageType(ImageAddType.Contents(uris))
                 onDismiss()
             }
         }
+    }
     Column(
         modifier = Modifier
             .width(310.dp)
@@ -189,11 +189,7 @@ private fun ImagePickerDialogContent(
                 onDismiss()
             },
             {
-                if (maxImage == 1) {
-                    pickSingleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                } else {
-                    pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                }
+                pickLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }
         )
 
