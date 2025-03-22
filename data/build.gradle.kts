@@ -50,5 +50,7 @@ dependencies {
     //Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.serialization.converter)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.interceptor)
     implementation(libs.kotlinx.serialization.json)
 }
