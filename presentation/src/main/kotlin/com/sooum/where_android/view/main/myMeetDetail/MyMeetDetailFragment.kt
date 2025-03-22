@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil3.load
 import coil3.request.error
@@ -52,12 +52,12 @@ class MyMeetDetailFragment : MyMeetBaseFragment() {
                 openMapShareSheet()
             }
             btnSchedule.setOnClickListener {
-                findNavController().navigate(
+                findNavController(view).navigate(
                     R.id.action_tabFragment_to_ScheduleFragment
                 )
             }
             btnFriend.setOnClickListener {
-                findNavController().navigate(
+                findNavController(view).navigate(
                     R.id.action_tabFragment_to_InviteFriendFragment
                 )
             }

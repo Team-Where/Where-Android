@@ -2,7 +2,6 @@ package com.sooum.where_android.view.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -21,7 +20,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -32,8 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.os.bundleOf
-import androidx.core.util.Consumer
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -54,12 +50,6 @@ import com.sooum.where_android.view.main.myMeet.MyMeetView
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
 import com.sooum.where_android.view.main.newMeet.NewMeetResultView
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class ShareResult(
-    val text: String
-)
 
 /**
  * 네비게이션 숨겨야하는 경우
@@ -75,36 +65,10 @@ fun NavBackStackEntry?.notShowBottom(): Boolean {
 fun MainScreenView(
     modifier: Modifier = Modifier
 ) {
-    val activity = LocalActivity.current
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
-    DisposableEffect(activity, navController) {
-        val onNewIntentConsumer = Consumer<Intent> { intent ->
-            Log.d("JWH", intent.toString())
-            if (intent.action == Intent.ACTION_SEND && intent.type == "text/plain") {
-                val sharedText: String = intent.getStringExtra(Intent.EXTRA_TEXT) ?: ""
-                Log.d("JWH", "find Text : $sharedText")
-                Log.d("JWH", "----")
-                sharedText.split("\n").forEach {
-                    Log.d("JWH", "$it")
-                }
-                Log.d("JWH", "----")
-                navController.navigate(
-                    ShareResult(sharedText)
-                ) {
-                    launchSingleTop = true
-                }
-            }
-        }
-
-        activity.addOnNewIntentListener(onNewIntentConsumer)
-
-        onDispose { activity.removeOnNewIntentListener(onNewIntentConsumer) }
-    }
-
     Scaffold(
         modifier = modifier,
         bottomBar = {

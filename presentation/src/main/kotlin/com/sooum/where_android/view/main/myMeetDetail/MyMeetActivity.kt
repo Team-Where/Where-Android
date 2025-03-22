@@ -1,28 +1,30 @@
 package com.sooum.where_android.view.main.myMeetDetail
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
-import com.sooum.domain.model.SelectedPlace
+import com.sooum.domain.model.ShareResult
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
-import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
 import com.sooum.where_android.databinding.FragmentMyMeetTabBinding
-import com.sooum.where_android.view.common.BaseViewBindingFragment
-import com.sooum.where_android.view.main.myMeetDetail.adapter.SelectedPlaceListAdapter
+import com.sooum.where_android.view.MapShareResultActivity
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
+import com.sooum.where_android.view.main.myMeetDetail.modal.EditMyMeetDetailFragment
+import com.sooum.where_android.view.widget.CustomSnackBar
+import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 @AndroidEntryPoint
 class MyMeetActivity : AppCompatActivity() {
@@ -43,6 +45,18 @@ class MyMeetActivity : AppCompatActivity() {
             myMeetDetailViewModel.loadData(id)
         }
     }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Log.d("JWH", intent.toString())
+        intent?.extras?.getString(MapShareResultActivity.SHARE_RESULT)?.let { data ->
+            val shareResult = Json.decodeFromString<ShareResult>(data)
+            Log.d("JWH", shareResult.toString())
+            myMeetDetailViewModel.addPlace(shareResult) {
+                CustomSnackBar.make(binding.root, "ㅇㅇ", IconType.Check).show()
+            }
+        }
+    }
 }
 
 /**
@@ -57,6 +71,12 @@ class MyMeetTabFragment : MyMeetBaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMyMeetTabBinding.inflate(inflater, container, false)
+
+        binding.imageEdit.setOnClickListener {
+            val bottomSheet = EditMyMeetDetailFragment()
+            bottomSheet.show(parentFragmentManager, bottomSheet.tag)
+        }
+
         return binding.root
     }
 
