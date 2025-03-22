@@ -1,17 +1,27 @@
 package com.sooum.data.repository
 
+import com.sooum.data.network.meet.MeetApi
+import com.sooum.data.network.meet.request.AddMeetRequest
+import com.sooum.data.network.safeFlow
+import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.repository.MeetDetailRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.transform
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 import javax.inject.Inject
 
 class MeetDetailRepositoryImpl @Inject constructor(
-
+    private val meetApi: MeetApi
 ) : MeetDetailRepository {
 
     private val _meetDetailList = MutableStateFlow(
@@ -73,9 +83,38 @@ class MeetDetailRepositoryImpl @Inject constructor(
             it.id == id
         }?.let { findItem ->
             val index = temp.indexOf(findItem)
-            val newItem = findItem.copy(schedule=  schedule)
+            val newItem = findItem.copy(schedule = schedule)
             temp[index] = newItem
             _meetDetailList.value = temp
         }
+    }
+
+    private val json = Json {
+        encodeDefaults = true
+    }
+
+    override suspend fun addMeet(
+        title: String,
+        fromId: Int,
+        description: String,
+        participants: List<Int>,
+        imageFile: File?
+    ): Flow<ApiResult<Meet>> {
+
+        val request = AddMeetRequest(
+            title,
+            fromId,
+            description,
+            participants
+        )
+
+        val dataPart =
+            json.encodeToString(request).toRequestBody("application/json".toMediaTypeOrNull())
+
+        val imagePart = imageFile?.let { file ->
+            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+            MultipartBody.Part.createFormData("image", file.name, requestFile)
+        }
+        return safeFlow { meetApi.addMeet(dataPart, imagePart) }
     }
 }

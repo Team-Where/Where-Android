@@ -54,5 +54,4 @@ object NetworkModule {
     ): MeetApi {
         return retrofit.create(MeetApi::class.java)
     }
-
 }

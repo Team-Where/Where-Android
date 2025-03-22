@@ -5,15 +5,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.ImageAddType
+import com.sooum.domain.model.Meet
+import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.NewMeet
 import com.sooum.domain.model.User
 import com.sooum.domain.usecase.GetUserListUseCase
+import com.sooum.domain.usecase.meet.AddMeetUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class NewMeetType(
@@ -26,9 +31,14 @@ sealed class NewMeetType(
 }
 
 
+/**
+ * [com.sooum.where_android.view.main.newMeet.NewMeetModal]에서 사용되는 viewmodel
+ * 새로운 모임 추가를 위한 데아터 처리를 담당한다.
+ */
 @HiltViewModel
 class NewMeetViewModel @Inject constructor(
-    getUserListUseCase: GetUserListUseCase
+    getUserListUseCase: GetUserListUseCase,
+    private val addMeetUseCase: AddMeetUseCase
 ) : ViewModel() {
 
     private var _viewType: MutableStateFlow<NewMeetType> = MutableStateFlow(NewMeetType.Info)
@@ -36,17 +46,24 @@ class NewMeetViewModel @Inject constructor(
     val viewType
         get() = _viewType
 
-    fun nextViewType(
-        complete: (NewMeet) -> Unit
+    fun goStep2() {
+        if (newMeetData.image == null) {
+            updateImage(ImageAddType.Default)
+        }
+        _viewType.value = NewMeetType.Friend
+    }
+
+
+    fun goStepResult(
+        complete: (ApiResult<Meet>) -> Unit
     ) {
-        if (_viewType.value == NewMeetType.Info) {
-            //다음 스텝으로 넘어갈때 이미지갓 선택되었는지 여부
-            if (newMeetData.image == null) {
-                updateImage(ImageAddType.Default)
+        viewModelScope.launch {
+            addMeetUseCase(
+                fromId = 1,
+                newMeet = newMeetData
+            ).collect {
+                complete(it)
             }
-            _viewType.value = NewMeetType.Friend
-        } else {
-            complete(newMeetData)
         }
     }
 
@@ -60,7 +77,11 @@ class NewMeetViewModel @Inject constructor(
 
 
     var newMeetData by mutableStateOf(
-        NewMeet("", null)
+        NewMeet(
+            title = "",
+            image = null,
+            participants = emptyList()
+        )
     )
 
     fun clear() {
@@ -74,5 +95,11 @@ class NewMeetViewModel @Inject constructor(
 
     fun updateImage(imageAddType: ImageAddType) {
         newMeetData = newMeetData.copy(image = imageAddType)
+    }
+
+    fun inviteFriend(user: User) {
+        val temp = newMeetData.participants.toMutableList()
+        temp.add(user.id.toInt())
+        newMeetData = newMeetData.copy(participants = temp)
     }
 }

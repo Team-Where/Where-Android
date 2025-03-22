@@ -261,8 +261,9 @@ fun MainScreenView(
                                 NewMeetResultView(
                                     result = result,
                                     close = navController::popBackStack,
-                                    navigationDetail = {
-                                        //TODO
+                                    navigationDetail = { id ->
+                                        navController.popBackStack()
+                                        navController.navigateMeetDetailById(id)
                                     }
                                 )
                             }
@@ -276,12 +277,16 @@ fun MainScreenView(
 
 
 private fun NavHostController.navigateMeetDetail(meetDetail: MeetDetail) {
+    navigateMeetDetailById(meetDetail.id)
+}
+
+private fun NavHostController.navigateMeetDetailById(id:Long) {
     //TODO : 환님 여기서 연결하면 됩니다.
     //
     context.startActivity(
         Intent(context, MyMeetActivity::class.java).apply {
             putExtras(Bundle().apply {
-                putLong(MyMeetActivity.MEET_ID, meetDetail.id)
+                putLong(MyMeetActivity.MEET_ID, id)
             })
         }
     )
