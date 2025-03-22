@@ -9,7 +9,7 @@ class PlaceRepositoryImpl@Inject constructor(
 
 ) : PlaceRepository {
 
-    override suspend fun addPlace(meetId: Long, shareResult: ShareResult) {
+    override suspend fun addPlace(meetId: Int, shareResult: ShareResult) {
 
     }
 }

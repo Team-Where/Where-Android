@@ -10,7 +10,7 @@ import javax.inject.Inject
 class AddPlaceUseCase @Inject constructor(
     private val repository: PlaceRepository
 ) {
-    suspend operator fun invoke(id: Long, shareResult: ShareResult) {
+    suspend operator fun invoke(id: Int, shareResult: ShareResult) {
         repository.addPlace(id, shareResult)
     }
 }

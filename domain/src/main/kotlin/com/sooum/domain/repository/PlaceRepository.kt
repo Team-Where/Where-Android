@@ -4,5 +4,5 @@ import com.sooum.domain.model.ShareResult
 
 interface PlaceRepository {
 
-    suspend fun addPlace(meetId: Long, shareResult: ShareResult)
+    suspend fun addPlace(meetId: Int, shareResult: ShareResult)
 }
