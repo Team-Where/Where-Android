@@ -13,7 +13,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "where-android"
+rootProject.name = "Where-Android"
 
 include(":data")
 include(":domain")
