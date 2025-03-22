@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class MeetDetail(
-    val id: Long,
+    val id: Int,
     val title: String,
     val description: String,
     val image: String,
@@ -30,7 +30,7 @@ data class MeetDetail(
         get() = schedule.time
 
     constructor(
-        id: Long,
+        id: Int,
         title: String,
         description: String,
         image: String,
@@ -41,7 +41,7 @@ data class MeetDetail(
     ) : this(id, title, description, image, Schedule(year, month, day, time))
 
     constructor(
-        id: Long,
+        id: Int,
         title: String,
         description: String,
         image: String,
@@ -56,7 +56,7 @@ data class MeetDetail(
  */
 @Serializable
 data class Meet(
-    val id: Long,
+    val id: Int,
     val title: String,
     val description: String,
     val link :String,

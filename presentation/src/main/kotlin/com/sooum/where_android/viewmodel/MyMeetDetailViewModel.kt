@@ -25,7 +25,7 @@ class MyMeetDetailViewModel @Inject constructor(
         get() = _meetDetail.asStateFlow()
 
     fun loadData(
-        meetDetailId: Long
+        meetDetailId: Int
     ) {
         viewModelScope.launch {
             getMeetDetailByIdUseCase(meetDetailId).collect {

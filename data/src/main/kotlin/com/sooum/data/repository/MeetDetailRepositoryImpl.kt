@@ -69,7 +69,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getMeetDetailById(id: Long?): Flow<MeetDetail?> {
+    override fun getMeetDetailById(id: Int?): Flow<MeetDetail?> {
         return meetDetailList.transform { dataList ->
             emit(
                 dataList.find { it.id == id }
@@ -77,7 +77,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateMeetDetailSchedule(id: Long, schedule: Schedule) {
+    override suspend fun updateMeetDetailSchedule(id: Int, schedule: Schedule) {
         val temp = _meetDetailList.value.toMutableList()
         temp.find {
             it.id == id

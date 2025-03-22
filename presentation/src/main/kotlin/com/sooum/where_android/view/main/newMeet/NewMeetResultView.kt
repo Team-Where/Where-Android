@@ -38,7 +38,7 @@ import com.sooum.where_android.view.widget.PrimaryButton
 fun NewMeetResultView(
     result: NewMeetResult,
     close: () -> Unit = {},
-    navigationDetail: (id:Long) -> Unit = {}
+    navigationDetail: (id: Int) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -102,7 +102,7 @@ fun NewMeetResultView(
                 Icon(
                     painter = painterResource(R.drawable.icon_new_meet_result),
                     contentDescription = null,
-                    tint= Color.Unspecified
+                    tint = Color.Unspecified
                 )
                 Text(
                     text = "친구들과 자유롭게 장소를 공유해보세요.",

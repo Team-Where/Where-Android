@@ -11,9 +11,9 @@ interface MeetDetailRepository {
 
     fun getMeetDetailList(): Flow<List<MeetDetail>>
 
-    fun getMeetDetailById(id: Long?): Flow<MeetDetail?>
+    fun getMeetDetailById(id: Int?): Flow<MeetDetail?>
 
-    suspend fun updateMeetDetailSchedule(id: Long, schedule: Schedule)
+    suspend fun updateMeetDetailSchedule(id: Int, schedule: Schedule)
 
     /**
      * 새로운 모임을 추가한다.
@@ -24,5 +24,5 @@ interface MeetDetailRepository {
         description: String,
         participants: List<Int>,
         imageFile: File?
-    ) : Flow<ApiResult<Meet>>
+    ): Flow<ApiResult<Meet>>
 }

@@ -51,7 +51,7 @@ fun Meet.toResult() = NewMeetResult(
 
 @Serializable
 data class NewMeetResult(
-    val id : Long,
+    val id : Int,
     val title: String,
     val image: String?
 )
