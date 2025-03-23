@@ -3,6 +3,7 @@ package com.sooum.where_android.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.Meet
+import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.ShareResult
 import com.sooum.domain.usecase.meet.GetMeetDetailByIdUseCase
@@ -22,7 +23,7 @@ class MyMeetDetailViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private var _meetDetail: MutableStateFlow<Meet?> = MutableStateFlow(null)
+    private var _meetDetail: MutableStateFlow<MeetDetail?> = MutableStateFlow(null)
 
     val meetDetail
         get() = _meetDetail.asStateFlow()
