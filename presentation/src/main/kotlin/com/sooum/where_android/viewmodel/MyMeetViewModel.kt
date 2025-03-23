@@ -17,7 +17,7 @@ class MyMeetViewModel @Inject constructor(
     private val getMeetDetailListUseCase: GetMeetDetailListUseCase
 ) : ViewModel() {
 
-    val meetDetailList = getMeetDetailListUseCase()
+    val meetDetailList = getMeetDetailListUseCase(1)
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),

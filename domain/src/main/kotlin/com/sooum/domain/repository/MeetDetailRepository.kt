@@ -1,20 +1,17 @@
 package com.sooum.domain.repository
 
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.Comment
+import com.sooum.domain.model.CommentListItem
+import com.sooum.domain.model.CommentSimple
 import com.sooum.domain.model.Meet
-import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Place
+import com.sooum.domain.model.PlacePickStatus
 import com.sooum.domain.model.Schedule
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface MeetDetailRepository {
-
-    fun getMeetDetailList(): Flow<List<MeetDetail>>
-
-    fun getMeetDetailById(id: Int?): Flow<MeetDetail?>
-
-    suspend fun updateMeetDetailSchedule(id: Int, schedule: Schedule)
 
     /**
      * 새로운 모임을 추가한다.
@@ -75,4 +72,93 @@ interface MeetDetailRepository {
         address: String,
         naverLink: String?
     ): Flow<ApiResult<Place>>
+
+
+    /**
+     * 장소를 삭제한다.
+     */
+    suspend fun deleteMeetPlace(
+        placeId: Int,
+    ): Flow<ApiResult<Any>>
+
+    /**
+     * 장소를 선택한다.
+     */
+    suspend fun pickPlace(
+        placeId: Int
+    ): Flow<ApiResult<PlacePickStatus>>
+
+    /**
+     * 장소 좋아요 여부
+     */
+    suspend fun likePlace(
+        placeId: Int,
+        like: Boolean
+    ): Flow<ApiResult<PlacePickStatus>>
+
+    /**
+     * 코멘트 추가
+     */
+    suspend fun addComment(
+        placeId: Int,
+        userId: Int,
+        description: String
+    ): Flow<ApiResult<Comment>>
+
+    /**
+     * 코멘트 수정
+     */
+    suspend fun editComment(
+        commentId: Int,
+        userId: Int,
+        description: String
+    ): Flow<ApiResult<CommentSimple>>
+
+    /**
+     * 코멘트 삭제
+     */
+    suspend fun deleteComment(
+        commentId: Int,
+        userId: Int
+    ): Flow<ApiResult<Any>>
+
+    /**
+     * 코멘트 목록 가져오기
+     */
+    suspend fun getPlaceCommentList(
+        placeId: Int
+    ): Flow<ApiResult<List<CommentListItem>>>
+
+
+    /**
+     * 일정 추가
+     */
+    suspend fun addSchedule(
+        meetId: Int,
+        date: String,
+        time: String
+    ): Flow<ApiResult<Schedule>>
+
+    /**
+     * 일정 추가
+     */
+    suspend fun getSchedule(
+        scheduleId: Int,
+    ): Flow<ApiResult<Schedule>>
+
+    /**
+     * 일정 추가
+     */
+    suspend fun editSchedule(
+        meetId: Int,
+        date: String,
+        time: String
+    ): Flow<ApiResult<Schedule>>
+
+    /**
+     * 일정 추가
+     */
+    suspend fun deleteSchedule(
+        meetId: Int,
+    ): Flow<ApiResult<Any>>
 }

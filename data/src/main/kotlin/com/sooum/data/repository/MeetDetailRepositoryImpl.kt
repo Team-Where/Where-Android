@@ -6,18 +6,28 @@ import com.sooum.data.network.meet.request.DeleteMeetRequest
 import com.sooum.data.network.meet.request.EditMeetRequest
 import com.sooum.data.network.meet.request.InviteMeetRequest
 import com.sooum.data.network.place.PlaceApi
+import com.sooum.data.network.place.request.AddCommentRequest
 import com.sooum.data.network.place.request.AddPlaceRequest
+import com.sooum.data.network.place.request.DeleteCommentRequest
+import com.sooum.data.network.place.request.DeletePlaceRequest
+import com.sooum.data.network.place.request.EditCommentRequest
+import com.sooum.data.network.place.request.LikePlaceRequest
+import com.sooum.data.network.place.request.PickPlaceRequest
 import com.sooum.data.network.safeFlow
+import com.sooum.data.network.schedule.ScheduleApi
+import com.sooum.data.network.schedule.request.AddScheduleRequest
+import com.sooum.data.network.schedule.request.DeleteScheduleRequest
+import com.sooum.data.network.schedule.request.EditScheduleRequest
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.Comment
+import com.sooum.domain.model.CommentListItem
+import com.sooum.domain.model.CommentSimple
 import com.sooum.domain.model.Meet
-import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Place
+import com.sooum.domain.model.PlacePickStatus
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.repository.MeetDetailRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.transform
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -28,73 +38,9 @@ import javax.inject.Inject
 
 class MeetDetailRepositoryImpl @Inject constructor(
     private val meetApi: MeetApi,
-    private val placeApi: PlaceApi
+    private val placeApi: PlaceApi,
+    private val scheduleApi: ScheduleApi
 ) : MeetDetailRepository {
-
-    private val _meetDetailList = MutableStateFlow(
-        listOf(
-            MeetDetail(
-                1,
-                "2024 연말파티\uD83E\uDD42",
-                "벌써 연말이다 신나게 놀아보장~~",
-                "https://s3-alpha-sig.figma.com/img/c8d6/dcd3/d0cf1a8b848a3b713165544ecf9c6479?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=krYvjufSoqEAyn8acYCSG~-QUOROkCxVJUZM0JjokvSbO2Tcp9ukcsdTS0jCIhgFtpnODglNx-S-djkLy7DLJTwmX7gYCwEixyFT71peeBIssSulRl0~dMmtr8LPjmfPHAw2uADh7e~8WZJELBuE6gultPGoNSBFhEYdIXXoLgRscwHeJgwBTBjOYFf8N9pIQSwmSP-OsBdz9~LZQUKX1CisOb8yJtTx8SrPapdSMXYNickk~zQ7PaqfAeAXxyieTIGxSlNjp8QYzQhQrWcXkAFM9Y2xfNiArxvrJIKX-XykeplJAAIcwZ6U25H3UxA6F37LN7dBh1TjXr3VEwxEmA__",
-                2025,
-                1,
-                26
-            ),
-            MeetDetail(
-                2,
-                "행궁동 갈 사람\uD83C\uDF42",
-                "선선해진 날씨에 같이 사람~!",
-                "https://s3-alpha-sig.figma.com/img/aadb/e842/9b7456a077b223a1fdd7ce6ce4e4c046?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=bdatUU4QM18aBwb8waNdC4gX2mo2eT7J3FQM3Mysof0N624upN~0lo8BDm8p5WizzgOqcEFdjmG0mcUs8XBjGW7nXTo4aGiJOWyketQx8hOQlSoA3fJlnIM9fXyela2EhHrYWAJFZFAst~gc8Ox4xoGqc78iZ09hF9PDlWRMlMIME-WYycm9wBpcdauRS90mmCDX5CBoeawZqixOc~qfCBay5FE4~h~wc4vL89RKzoIAjOqPC14hL-ezdlr5SN~WDlWfN~l1a397hIYYsk-ytIw6BLTm~aOqnHKsPpzpXrHXoSkQR4AD9Rlnhoxpi4qNxtV2NUwQmM0Db3hioP7dkg__",
-                2024,
-                12,
-                11
-            ),
-            MeetDetail(
-                3,
-                "행궁동 갈 사람\uD83C\uDF42",
-                "선선해진 날씨에 같이 사람~!",
-                "",
-                2025,
-                1,
-                27
-            )
-        )
-    )
-
-    val meetDetailList
-        get() = _meetDetailList.asStateFlow()
-
-    override fun getMeetDetailList(): Flow<List<MeetDetail>> {
-        return meetDetailList.transform { dataList ->
-            emit(
-                dataList.sortedWith(
-                    comparator = compareBy({ -it.year }, { -it.month }, { -it.day })
-                )
-            )
-        }
-    }
-
-    override fun getMeetDetailById(id: Int?): Flow<MeetDetail?> {
-        return meetDetailList.transform { dataList ->
-            emit(
-                dataList.find { it.id == id }
-            )
-        }
-    }
-
-    override suspend fun updateMeetDetailSchedule(id: Int, schedule: Schedule) {
-        val temp = _meetDetailList.value.toMutableList()
-        temp.find {
-            it.id == id
-        }?.let { findItem ->
-            val index = temp.indexOf(findItem)
-            val newItem = findItem.copy(schedule = schedule)
-            temp[index] = newItem
-            _meetDetailList.value = temp
-        }
-    }
 
     private val json = Json {
         encodeDefaults = true
@@ -191,5 +137,103 @@ class MeetDetailRepositoryImpl @Inject constructor(
             naverLink
         )
         return safeFlow { placeApi.addPlace(request) }
+    }
+
+    override suspend fun deleteMeetPlace(placeId: Int): Flow<ApiResult<Any>> {
+        val request = DeletePlaceRequest(
+            placeId = placeId
+        )
+        return safeFlow { placeApi.deletePlace(request) }
+    }
+
+    override suspend fun pickPlace(placeId: Int): Flow<ApiResult<PlacePickStatus>> {
+        val request = PickPlaceRequest(
+            placeId
+        )
+        return safeFlow { placeApi.pickPlace(request) }
+    }
+
+    override suspend fun likePlace(placeId: Int, like: Boolean): Flow<ApiResult<PlacePickStatus>> {
+        val request = LikePlaceRequest(
+            placeId,
+            like
+        )
+        return safeFlow { placeApi.likePlace(request) }
+    }
+
+    override suspend fun addComment(
+        placeId: Int,
+        userId: Int,
+        description: String
+    ): Flow<ApiResult<Comment>> {
+        val request = AddCommentRequest(
+            placeId = placeId,
+            userId = userId,
+            description = description
+        )
+        return safeFlow { placeApi.addPlaceComment(request) }
+    }
+
+    override suspend fun editComment(
+        commentId: Int,
+        userId: Int,
+        description: String
+    ): Flow<ApiResult<CommentSimple>> {
+        val request = EditCommentRequest(
+            commentId = commentId,
+            userId = userId,
+            description = description
+        )
+        return safeFlow { placeApi.editPlaceComment(request) }
+    }
+
+    override suspend fun deleteComment(commentId: Int, userId: Int): Flow<ApiResult<Any>> {
+        val request = DeleteCommentRequest(
+            commentId = commentId,
+            userId = userId,
+        )
+        return safeFlow { placeApi.deletePlaceComment(request) }
+    }
+
+    override suspend fun getPlaceCommentList(placeId: Int): Flow<ApiResult<List<CommentListItem>>> {
+        return safeFlow { placeApi.getPlaceCommentList(placeId) }
+    }
+
+
+    override suspend fun addSchedule(
+        meetId: Int,
+        date: String,
+        time: String
+    ): Flow<ApiResult<Schedule>> {
+        val request = AddScheduleRequest(
+            meetId = meetId,
+            date = date,
+            time = time
+        )
+        return safeFlow { scheduleApi.addSchedule(request) }
+    }
+
+    override suspend fun getSchedule(scheduleId: Int): Flow<ApiResult<Schedule>> {
+        return safeFlow { scheduleApi.getSchedule(scheduleId) }
+    }
+
+    override suspend fun editSchedule(
+        meetId: Int,
+        date: String,
+        time: String
+    ): Flow<ApiResult<Schedule>> {
+        val request = EditScheduleRequest(
+            meetId = meetId,
+            date = date,
+            time = time
+        )
+        return safeFlow { scheduleApi.editSchedule(request) }
+    }
+
+    override suspend fun deleteSchedule(meetId: Int): Flow<ApiResult<Any>> {
+        val request = DeleteScheduleRequest(
+            meetId = meetId
+        )
+        return safeFlow { scheduleApi.deleteSchedule(request) }
     }
 }

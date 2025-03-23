@@ -1,23 +1,7 @@
 package com.sooum.domain.model
 
-import androidx.annotation.IntRange
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
-/**
- * 모임 화면 상세 데이터
- */
-@Serializable
-data class MeetDetail(
-    val id: Int,
-    val title: String,
-    val description: String,
-    val image: String,
-    val schedule: Schedule
-) {
-    val time
-        get() = schedule.time
-}
 
 
 /**

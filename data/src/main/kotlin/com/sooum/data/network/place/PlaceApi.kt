@@ -2,6 +2,7 @@ package com.sooum.data.network.place
 
 import com.sooum.data.network.place.request.AddCommentRequest
 import com.sooum.data.network.place.request.AddPlaceRequest
+import com.sooum.data.network.place.request.DeleteCommentRequest
 import com.sooum.data.network.place.request.DeletePlaceRequest
 import com.sooum.data.network.place.request.EditCommentRequest
 import com.sooum.data.network.place.request.LikePlaceRequest
@@ -54,8 +55,8 @@ interface PlaceApi {
 
     @DELETE("api/place/comment")
     suspend fun deletePlaceComment(
-        @Body data: DeletePlaceRequest
-    ): Response<CommentSimple>
+        @Body data: DeleteCommentRequest
+    ): Response<Any>
 
     @GET("api/place/comment/{id}")
     suspend fun getPlaceCommentList(
