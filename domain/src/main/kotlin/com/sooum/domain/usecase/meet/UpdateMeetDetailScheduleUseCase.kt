@@ -8,6 +8,6 @@ class UpdateMeetDetailScheduleUseCase @Inject constructor(
     private val repository: MeetDetailRepository
 ) {
     suspend operator fun invoke(id: Int, schedule: Schedule) {
-        repository.updateMeetDetailSchedule(id, schedule)
+
     }
 }

@@ -1,8 +1,32 @@
 package com.sooum.domain.model
 
+import androidx.annotation.IntRange
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * 모임 화면 상세 데이터
+ */
+@Serializable
+data class MeetDetail(
+    val id: Int,
+    val title: String,
+    val description: String,
+    val image: String,
+    val schedule: Schedule
+) {
+    val year
+        get() = schedule.year
+
+    val month
+        get() = schedule.month
+
+    val day
+        get() = schedule.day
+
+    val date
+        get() = schedule.date
+}
 
 /**
  * 모임 정보 수신시 활용되는 기본형 데이터
@@ -29,4 +53,25 @@ data class Schedule(
     val meetId: Int,
     val date: String,
     val time: String
-)
+) {
+    constructor(
+        meetId: Int,
+        year: Int,
+        month: Int,
+        day: Int,
+        hour: Int
+    ) : this(meetId, "$year-$month-$day", "$hour:00")
+
+    constructor(
+        meetId: Int,
+        date: String,
+        hour: Int
+    ) : this(meetId, date, "$hour:00")
+
+    val year = date.split("-")[0].toInt()
+    val month = date.split("-")[1].toInt()
+    val day = date.split("-")[2].toInt()
+
+    val hour = time.split(":")[0].toInt()
+    val minute = time.split(":")[1].toInt()
+}

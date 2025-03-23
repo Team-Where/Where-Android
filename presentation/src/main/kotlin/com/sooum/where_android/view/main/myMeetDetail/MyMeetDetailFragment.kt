@@ -42,9 +42,9 @@ class MyMeetDetailFragment : MyMeetBaseFragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             //Data init
-            myMeetDetailViewModel.meetDetail.collect {
-                setData(meetDetail = it)
-            }
+//            myMeetDetailViewModel.meetDetail.collect {
+//                setData(meetDetail = it)
+//            }
         }
 
         with(binding) {
@@ -76,26 +76,27 @@ class MyMeetDetailFragment : MyMeetBaseFragment() {
         }
     }
 
-    private fun setData(meetDetail: MeetDetail?) {
-        meetDetail ?: return
-        binding.groupImage.load(meetDetail.image) {
-            this.placeholder(R.drawable.image_meet_default_cover)
-            this.error(R.drawable.image_meet_default_cover)
-        }
-        binding.groupTitle.text = meetDetail.title
-        binding.groupDescription.text = meetDetail.description
-
-        if (meetDetail.schedule.isDataOn() != null) {
-            binding.tvSchedule.text = meetDetail.makeScheduleText()
-            binding.btnSchedule.text = "일정 수정"
-        } else {
-            binding.tvSchedule.text = "아직 정해진 일정이 없어요"
-            binding.btnSchedule.text = "일정 등록"
-        }
-    }
+//    private fun setData(meetDetail: MeetDetail?) {
+//        meetDetail ?: return
+//        binding.groupImage.load(meetDetail.image) {
+//            this.placeholder(R.drawable.image_meet_default_cover)
+//            this.error(R.drawable.image_meet_default_cover)
+//        }
+//        binding.groupTitle.text = meetDetail.title
+//        binding.groupDescription.text = meetDetail.description
+//
+//        if (meetDetail.schedule.isDataOn() != null) {
+//            binding.tvSchedule.text = meetDetail.makeScheduleText()
+//            binding.btnSchedule.text = "일정 수정"
+//        } else {
+//            binding.tvSchedule.text = "아직 정해진 일정이 없어요"
+//            binding.btnSchedule.text = "일정 등록"
+//        }
+//    }
 }
 
 private fun MeetDetail.makeScheduleText(): String {
+    val time = this.schedule.hour
     return String.format(
         "%d.%d.%d %s %d시",
         year,
