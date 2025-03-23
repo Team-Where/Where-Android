@@ -94,6 +94,10 @@ class NewMeetViewModel @Inject constructor(
         newMeetData = newMeetData.copy(title = title)
     }
 
+    fun updateDescription(description: String) {
+        newMeetData = newMeetData.copy(description = description)
+    }
+
     fun updateImage(imageAddType: ImageAddType) {
         newMeetData = newMeetData.copy(image = imageAddType)
     }

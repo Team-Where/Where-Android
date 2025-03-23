@@ -76,13 +76,17 @@ fun NewMeetModal(
     ) {
         Box {
             NewMeetContent(
-                modifier = Modifier.padding(
-                    top = 16.dp,
-                    start = 20.dp,
-                    end = 20.dp
-                ).navigationBarsPadding(),
+                modifier = Modifier
+                    .padding(
+                        top = 16.dp,
+                        start = 20.dp,
+                        end = 20.dp
+                    )
+                    .navigationBarsPadding(),
                 title = newMeetViewModel.newMeetData.title,
                 updateTitle = newMeetViewModel::updateTitle,
+                description = newMeetViewModel.newMeetData.description,
+                updateDescription = newMeetViewModel::updateTitle,
                 type = newMeetViewModel.newMeetData.image,
                 userList = userList,
                 updateImageType = newMeetViewModel::updateImage,
@@ -96,11 +100,11 @@ fun NewMeetModal(
                             }
                             result.onException {
                                 showLoading = false
-                                Log.e("JWH","",it)
+                                Log.e("JWH", "", it)
                             }
                             result.onError { code, message ->
                                 showLoading = false
-                                Log.e("JWH","[$code && $message]")
+                                Log.e("JWH", "[$code && $message]")
                             }
                             result.onSuccess {
                                 scope.launch {
@@ -124,7 +128,8 @@ fun NewMeetModal(
             )
             if (showLoading) {
                 Column(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                         .background(Color.Gray),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -142,10 +147,12 @@ private fun NewMeetContent(
     modifier: Modifier,
     title: String,
     updateTitle: (String) -> Unit,
+    description: String,
+    updateDescription: (String) -> Unit,
     userList: List<User>,
     viewType: NewMeetType,
-    goStep2 :() -> Unit,
-    goStepResult :() -> Unit,
+    goStep2: () -> Unit,
+    goStepResult: () -> Unit,
     type: ImageAddType?,
     updateImageType: (ImageAddType) -> Unit,
     inviteFriend: (User) -> Unit,
@@ -156,10 +163,12 @@ private fun NewMeetContent(
         is NewMeetType.Info -> {
             NewMeetStep1View(
                 modifier = modifier,
-                title = title,
-                updateTitle = updateTitle,
                 type = type,
                 updateImageType = updateImageType,
+                title = title,
+                updateTitle = updateTitle,
+                description = description,
+                updateDescription = updateDescription,
                 nextViewType = goStep2,
                 onClose = onClose
             )
@@ -202,6 +211,8 @@ private fun NewMeetContentPreview(
         goStepResult = {},
         userList = emptyList(),
         inviteFriend = {},
-        onClose = {}
+        onClose = {},
+        description = "",
+        updateDescription = {}
     )
 }
