@@ -1,6 +1,7 @@
 package com.sooum.data.di
 
 import com.sooum.data.network.meet.MeetApi
+import com.sooum.data.network.place.PlaceApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,5 +54,13 @@ object NetworkModule {
         @WhereRetrofit retrofit: Retrofit
     ): MeetApi {
         return retrofit.create(MeetApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePlaceApi(
+        @WhereRetrofit retrofit: Retrofit
+    ): PlaceApi {
+        return retrofit.create(PlaceApi::class.java)
     }
 }

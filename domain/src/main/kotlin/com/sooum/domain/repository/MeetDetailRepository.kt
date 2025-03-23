@@ -3,6 +3,7 @@ package com.sooum.domain.repository
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetDetail
+import com.sooum.domain.model.Place
 import com.sooum.domain.model.Schedule
 import kotlinx.coroutines.flow.Flow
 import java.io.File
@@ -42,16 +43,16 @@ interface MeetDetailRepository {
      * meetId에서 userId를 삭제한다.
      */
     suspend fun deleteMeet(
-        meetId : Int,
-        userId : Int
-    ) : Flow<ApiResult<Any>>
+        meetId: Int,
+        userId: Int
+    ): Flow<ApiResult<Any>>
 
     /**
      * userId에 해당하는 모든 meet목록을 가져온다.
      */
     suspend fun getMeetList(
         userId: Int
-    ) : Flow<ApiResult<List<Meet>>>
+    ): Flow<ApiResult<List<Meet>>>
 
 
     /**
@@ -59,7 +60,19 @@ interface MeetDetailRepository {
      */
     suspend fun inviteMeet(
         meetId: Int,
-        fromUserId :Int,
-        toUserId :Int
-    ) : Flow<ApiResult<Any>>
+        fromUserId: Int,
+        toUserId: Int
+    ): Flow<ApiResult<Any>>
+
+
+    /**
+     * 장소를 추가한다.
+     */
+    suspend fun addMeetPlace(
+        meetId: Int,
+        userId: Int,
+        name: String,
+        address: String,
+        naverLink: String?
+    ): Flow<ApiResult<Place>>
 }

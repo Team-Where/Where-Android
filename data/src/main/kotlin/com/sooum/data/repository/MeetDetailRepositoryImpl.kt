@@ -5,10 +5,13 @@ import com.sooum.data.network.meet.request.AddMeetRequest
 import com.sooum.data.network.meet.request.DeleteMeetRequest
 import com.sooum.data.network.meet.request.EditMeetRequest
 import com.sooum.data.network.meet.request.InviteMeetRequest
+import com.sooum.data.network.place.PlaceApi
+import com.sooum.data.network.place.request.AddPlaceRequest
 import com.sooum.data.network.safeFlow
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetDetail
+import com.sooum.domain.model.Place
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.repository.MeetDetailRepository
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +27,8 @@ import java.io.File
 import javax.inject.Inject
 
 class MeetDetailRepositoryImpl @Inject constructor(
-    private val meetApi: MeetApi
+    private val meetApi: MeetApi,
+    private val placeApi: PlaceApi
 ) : MeetDetailRepository {
 
     private val _meetDetailList = MutableStateFlow(
@@ -169,5 +173,23 @@ class MeetDetailRepositoryImpl @Inject constructor(
             toUserId
         )
         return safeFlow { meetApi.inviteMeet(request) }
+    }
+
+
+    override suspend fun addMeetPlace(
+        meetId: Int,
+        userId: Int,
+        name: String,
+        address: String,
+        naverLink: String?
+    ): Flow<ApiResult<Place>> {
+        val request = AddPlaceRequest(
+            meetId,
+            userId,
+            name,
+            address,
+            naverLink
+        )
+        return safeFlow { placeApi.addPlace(request) }
     }
 }
