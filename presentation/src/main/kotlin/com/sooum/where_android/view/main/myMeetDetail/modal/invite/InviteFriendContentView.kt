@@ -35,7 +35,8 @@ fun InviteFriendContentView(
     recentUserList: List<User>,
     userList: List<User>,
     inviteFriend: (User) -> Unit,
-    headerColor: Color = Color(0xff374151)
+    headerColor: Color = Color(0xff374151),
+    useKaKao :Boolean = true
 ) {
     Column(
         modifier = Modifier
@@ -45,35 +46,37 @@ fun InviteFriendContentView(
                 bottom = 20.dp
             )
     ) {
-        Button(
-            onClick = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xffF9E000)
-            ),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
+        if (useKaKao) {
+            Button(
+                onClick = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xffF9E000)
+                ),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                Icon(
-                    painter = painterResource(
-                        R.drawable.image_kakao_icon,
-                    ),
-                    contentDescription = null,
-                    tint = Color.Unspecified
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            R.drawable.image_kakao_icon,
+                        ),
+                        contentDescription = null,
+                        tint = Color.Unspecified
 
-                )
-                Text(
-                    text = "카톡으로 초대하기",
-                    fontFamily = pretendard,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 16.sp,
-                    color = Color.Black
-                )
+                    )
+                    Text(
+                        text = "카톡으로 초대하기",
+                        fontFamily = pretendard,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
+                }
             }
         }
         Spacer(Modifier.height(12.dp))
