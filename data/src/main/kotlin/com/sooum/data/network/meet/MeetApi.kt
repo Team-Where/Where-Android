@@ -1,15 +1,22 @@
 package com.sooum.data.network.meet
 
+import com.sooum.data.network.meet.request.DeleteMeetRequest
+import com.sooum.data.network.meet.request.InviteMeetRequest
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetDetail
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.Field
+import retrofit2.http.GET
 import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
+import retrofit2.http.Path
 import javax.inject.Inject
 
 interface MeetApi {
@@ -29,10 +36,24 @@ interface MeetApi {
         @Part imageFile: MultipartBody.Part?
     ): Response<Meet>
 
-    @Multipart
     @DELETE("api/meeting")
     suspend fun deleteMeet(
-        @Part("data") data: RequestBody,
-        @Part imageFile: MultipartBody.Part?
-    ): Response<Meet>
+        @Body data: DeleteMeetRequest,
+    ): Response<Any>
+
+    @GET("api/meeting/{id}")
+    suspend fun getMeetList(
+        @Path("id") userId: Int
+    ): Response<List<Meet>>
+
+
+    @POST("api/meeting/invite")
+    suspend fun inviteMeet(
+        @Body data : InviteMeetRequest
+    ) : Response<Any>
+
+    @POST("api/meeting/invite/ok")
+    suspend fun inviteMeetOk(
+        @Body data : InviteMeetRequest
+    ) : Response<Meet>
 }

@@ -7,7 +7,6 @@ import com.sooum.domain.model.NewMeet
 import com.sooum.domain.repository.MeetDetailRepository
 import com.sooum.domain.util.UriConverter
 import kotlinx.coroutines.flow.Flow
-import java.io.File
 import javax.inject.Inject
 
 /**
@@ -29,7 +28,7 @@ class AddMeetUseCase @Inject constructor(
         return repository.addMeet(
             title = newMeet.title,
             fromId = fromId,
-            description = "",
+            description = newMeet.description,
             participants = newMeet.participants,
             imageFile = file
         )

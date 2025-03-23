@@ -2,6 +2,9 @@ package com.sooum.data.repository
 
 import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.meet.request.AddMeetRequest
+import com.sooum.data.network.meet.request.DeleteMeetRequest
+import com.sooum.data.network.meet.request.EditMeetRequest
+import com.sooum.data.network.meet.request.InviteMeetRequest
 import com.sooum.data.network.safeFlow
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.Meet
@@ -116,5 +119,55 @@ class MeetDetailRepositoryImpl @Inject constructor(
             MultipartBody.Part.createFormData("image", file.name, requestFile)
         }
         return safeFlow { meetApi.addMeet(dataPart, imagePart) }
+    }
+
+    override suspend fun editMeet(
+        id: Int,
+        title: String?,
+        description: String?,
+        finished: Boolean?,
+        imageFile: File?
+    ): Flow<ApiResult<Meet>> {
+        val request = EditMeetRequest(
+            id,
+            title,
+            description,
+            finished
+        )
+        val dataPart =
+            json.encodeToString(request).toRequestBody("application/json".toMediaTypeOrNull())
+        val imagePart = imageFile?.let { file ->
+            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+            MultipartBody.Part.createFormData("image", file.name, requestFile)
+        }
+        return safeFlow { meetApi.editMeet(dataPart, imagePart) }
+    }
+
+    override suspend fun deleteMeet(
+        meetId: Int,
+        userId: Int
+    ): Flow<ApiResult<Any>> {
+        val request = DeleteMeetRequest(
+            meetId,
+            userId
+        )
+        return safeFlow { meetApi.deleteMeet(request) }
+    }
+
+    override suspend fun getMeetList(userId: Int): Flow<ApiResult<List<Meet>>> {
+        return safeFlow { meetApi.getMeetList(userId) }
+    }
+
+    override suspend fun inviteMeet(
+        meetId: Int,
+        fromUserId: Int,
+        toUserId: Int
+    ): Flow<ApiResult<Any>> {
+        val request = InviteMeetRequest(
+            meetId,
+            fromUserId,
+            toUserId
+        )
+        return safeFlow { meetApi.inviteMeet(request) }
     }
 }

@@ -25,4 +25,41 @@ interface MeetDetailRepository {
         participants: List<Int>,
         imageFile: File?
     ): Flow<ApiResult<Meet>>
+
+    /**
+     * 새로운 모임을 추가한다.
+     */
+    suspend fun editMeet(
+        id: Int,
+        title: String?,
+        description: String?,
+        finished: Boolean?,
+        imageFile: File?
+    ): Flow<ApiResult<Meet>>
+
+
+    /**
+     * meetId에서 userId를 삭제한다.
+     */
+    suspend fun deleteMeet(
+        meetId : Int,
+        userId : Int
+    ) : Flow<ApiResult<Any>>
+
+    /**
+     * userId에 해당하는 모든 meet목록을 가져온다.
+     */
+    suspend fun getMeetList(
+        userId: Int
+    ) : Flow<ApiResult<List<Meet>>>
+
+
+    /**
+     * [toUserId]에 해당하는 유저를 초대한다.
+     */
+    suspend fun inviteMeet(
+        meetId: Int,
+        fromUserId :Int,
+        toUserId :Int
+    ) : Flow<ApiResult<Any>>
 }

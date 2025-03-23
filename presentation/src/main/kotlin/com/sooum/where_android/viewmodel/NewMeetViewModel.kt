@@ -80,13 +80,14 @@ class NewMeetViewModel @Inject constructor(
         NewMeet(
             title = "",
             image = null,
+            description = "",
             participants = emptyList()
         )
     )
 
     fun clear() {
         _viewType.value = NewMeetType.Info
-        newMeetData = NewMeet("", null)
+        newMeetData = NewMeet("", "",null)
     }
 
     fun updateTitle(title: String) {
