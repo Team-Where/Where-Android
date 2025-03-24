@@ -8,9 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.sooum.where_android.databinding.FragmentProfileSettingBinding
 import com.sooum.where_android.databinding.FragmentSignUpCompleteBinding
+import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetDetailFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SignUpCompleteFragment : Fragment() {
     private lateinit var binding : FragmentSignUpCompleteBinding
 
@@ -26,7 +29,7 @@ class SignUpCompleteFragment : Fragment() {
 
         //예시 화면 보기용 임시 코드
         binding.nextBtn.setOnClickListener {
-            val intent = Intent(requireContext(), MyMeetActivity::class.java)
+            val intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
         }
 
