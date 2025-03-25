@@ -22,6 +22,12 @@ class AuthViewModel @Inject constructor(
     private val _email = MutableStateFlow("")
     val email: StateFlow<String> = _email.asStateFlow()
 
+    private val _name = MutableStateFlow("")
+    val name: StateFlow<String> = _name.asStateFlow()
+
+    private var _isValidName = MutableStateFlow<Boolean?>(null)
+    val isValidName: StateFlow<Boolean?> = _isValidName.asStateFlow()
+
     private val _isValidPassword = MutableStateFlow<Boolean?>(null)
     val isValidPassword: StateFlow<Boolean?> = _isValidPassword.asStateFlow()
 
@@ -46,6 +52,11 @@ class AuthViewModel @Inject constructor(
         validateInputs()
     }
 
+    fun onNameChanged(name: String){
+        _name.value = name
+        validateName()
+    }
+
     private fun validateInputs() {
         val passwordValue = _password.value
         val rePasswordValue = _rePassword.value
@@ -58,6 +69,13 @@ class AuthViewModel @Inject constructor(
         _isValidPassword.value = isPasswordValid
         _isPasswordMatch.value = isMatch
         _isNextButtonEnabled.value = isMatch == true && isPasswordValid == true && isEmailNotEmpty
+    }
+
+    private fun validateName() {
+        val nameValue = _name.value
+
+        val isName = nameValue.isNotEmpty()
+        _isNextButtonEnabled.value = isName == true
     }
 
 
