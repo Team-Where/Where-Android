@@ -23,6 +23,7 @@ import com.sooum.domain.model.Comment
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
 import com.sooum.domain.model.Meet
+import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlacePickStatus
 import com.sooum.domain.model.Schedule
@@ -102,6 +103,10 @@ class MeetDetailRepositoryImpl @Inject constructor(
             userId
         )
         return safeFlow { meetApi.deleteMeet(request) }
+    }
+
+    override suspend fun getMeetInviteStatus(meetId: Int): Flow<ApiResult<List<MeetInviteStatus>>> {
+        return safeFlow { meetApi.getMeetInviteStatus(meetId) }
     }
 
     override suspend fun getMeetList(userId: Int): Flow<ApiResult<List<Meet>>> {
