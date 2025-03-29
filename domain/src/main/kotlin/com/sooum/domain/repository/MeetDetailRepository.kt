@@ -5,6 +5,7 @@ import com.sooum.domain.model.Comment
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
 import com.sooum.domain.model.Meet
+import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlacePickStatus
 import com.sooum.domain.model.Schedule
@@ -43,6 +44,13 @@ interface MeetDetailRepository {
         meetId: Int,
         userId: Int
     ): Flow<ApiResult<Any>>
+
+    /**
+     * [meetId]에 해당하는 초대 현황을 가져온다.
+     */
+    suspend fun getMeetInviteStatus(
+       meetId: Int
+    ): Flow<ApiResult<List<MeetInviteStatus>>>
 
     /**
      * userId에 해당하는 모든 meet목록을 가져온다.

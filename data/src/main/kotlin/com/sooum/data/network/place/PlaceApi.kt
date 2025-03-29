@@ -28,6 +28,11 @@ interface PlaceApi {
         @Body data: AddPlaceRequest
     ): Response<Place>
 
+    @GET("api/place/{id}")
+    suspend fun getPlace(
+        @Path("id") placeId: Int,
+    ): Response<Place>
+
     @DELETE("api/place")
     suspend fun deletePlace(
         @Body data: DeletePlaceRequest

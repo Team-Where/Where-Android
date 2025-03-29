@@ -3,6 +3,7 @@ package com.sooum.data.network.meet
 import com.sooum.data.network.meet.request.DeleteMeetRequest
 import com.sooum.data.network.meet.request.InviteMeetRequest
 import com.sooum.domain.model.Meet
+import com.sooum.domain.model.MeetInviteStatus
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -24,7 +25,6 @@ interface MeetApi {
         @Part imageFile: MultipartBody.Part?
     ): Response<Meet>
 
-
     @Multipart
     @PUT("api/meeting")
     suspend fun editMeet(
@@ -37,6 +37,11 @@ interface MeetApi {
         @Body data: DeleteMeetRequest,
     ): Response<Any>
 
+    @GET("api/meeting/participants/{id}")
+    suspend fun getMeetInviteStatus(
+        @Path("id") meetId: Int
+    ): Response<List<MeetInviteStatus>>
+
     @GET("api/meeting/{id}")
     suspend fun getMeetList(
         @Path("id") userId: Int
@@ -45,11 +50,11 @@ interface MeetApi {
 
     @POST("api/meeting/invite")
     suspend fun inviteMeet(
-        @Body data : InviteMeetRequest
-    ) : Response<Any>
+        @Body data: InviteMeetRequest
+    ): Response<Any>
 
     @POST("api/meeting/invite/ok")
     suspend fun inviteMeetOk(
-        @Body data : InviteMeetRequest
-    ) : Response<Meet>
+        @Body data: InviteMeetRequest
+    ): Response<Meet>
 }
