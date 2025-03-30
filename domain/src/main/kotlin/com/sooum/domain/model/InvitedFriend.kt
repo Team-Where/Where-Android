@@ -12,8 +12,9 @@ data class InvitedFriend (
  * @param[fromId] 초대한 사람 식별 id
  * @param[fromName] 초대한 사람 이름
  * @param[toId] 초대받은 사람 식별 id
- * @param[toName] 초대받은 사람 이;름
+ * @param[toName] 초대받은 사람 이름
  * @param[status] 초대 여부
+ * @param[toImage] 초대받은 사람 이미지
  */
 @Serializable
 data class MeetInviteStatus(
@@ -21,5 +22,6 @@ data class MeetInviteStatus(
     val fromName :String,
     val toId :Int,
     val toName :String,
-    val status :Boolean
+    val status :Boolean,
+    val toImage :String,
 )
