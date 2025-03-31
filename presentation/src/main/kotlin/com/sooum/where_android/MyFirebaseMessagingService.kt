@@ -17,28 +17,30 @@ import com.sooum.where_android.view.main.MainActivity
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     // 메시지를 수신할 때 호출 된다.
-    // 수신된 RemoteMessage 객체를 기준으로 작업을 수행하고 메시지 데이터를 가져올 수 있다.
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        // 메시지에 데이터 페이로드가 포함 되어 있는지 확인한다.
-        // 페이로드란 전송된 데이터를 의미한다.
         if (remoteMessage.data.isNotEmpty()) {
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
-            sendNotification(
-                remoteMessage.data["title"].toString(),
-                remoteMessage.data["body"].toString()
-            )
+
+            val title = remoteMessage.data["title"].orEmpty()
+            val body = remoteMessage.data["body"].orEmpty()
+
+            if (title.isNotBlank() || body.isNotBlank()) {
+                sendNotification(title, body)
+            }
         } else {
-            // 메시지에 알림 페이로드가 포함되어 있는지 확인한다.
             remoteMessage.notification?.let {
-                sendNotification(
-                    remoteMessage.notification!!.title.toString(),
-                    remoteMessage.notification!!.body.toString()
-                )
+                val title = it.title.orEmpty()
+                val body = it.body.orEmpty()
+
+                if (title.isNotBlank() || body.isNotBlank()) {
+                    sendNotification(title, body)
+                }
             }
         }
     }
+
 
     // 새 토큰이 생성될 때마다 onNewToken 콜백이 호출된다.
     // 등록 토큰이 처음 생성되므로 여기서 토큰을 검색할 수 있다.
