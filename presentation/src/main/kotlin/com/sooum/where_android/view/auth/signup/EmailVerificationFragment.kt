@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.sooum.where_android.databinding.FragmentEmailVerificationBinding
 import com.sooum.where_android.view.auth.AuthActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EmailVerificationFragment : Fragment() {
     private lateinit var binding : FragmentEmailVerificationBinding
 
@@ -27,4 +29,6 @@ class EmailVerificationFragment : Fragment() {
 
         return binding.root
     }
+
+
 }
