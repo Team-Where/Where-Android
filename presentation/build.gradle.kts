@@ -46,7 +46,7 @@ android {
         compose = true
     }
 
-    namespace = "com.sooum.where_android"
+    namespace = "com.where.android"
 }
 
 kotlin {
