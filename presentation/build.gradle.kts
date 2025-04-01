@@ -13,7 +13,7 @@ android {
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.sooum.where_android"
+        applicationId = "com.where.android"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
@@ -46,7 +46,7 @@ android {
         compose = true
     }
 
-    namespace = "com.where.android"
+    namespace = "com.sooum.where_android"
 }
 
 kotlin {
