@@ -1,6 +1,5 @@
 package com.sooum.where_android.view.main.newMeet
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -22,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,7 +38,7 @@ import com.sooum.where_android.view.widget.PrimaryButton
 fun NewMeetResultView(
     result: NewMeetResult,
     close: () -> Unit = {},
-    navigationDetail: () -> Unit = {}
+    navigationDetail: (id: Int) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -105,7 +102,7 @@ fun NewMeetResultView(
                 Icon(
                     painter = painterResource(R.drawable.icon_new_meet_result),
                     contentDescription = null,
-                    tint= Color.Unspecified
+                    tint = Color.Unspecified
                 )
                 Text(
                     text = "친구들과 자유롭게 장소를 공유해보세요.",
@@ -116,7 +113,9 @@ fun NewMeetResultView(
                 )
             }
             PrimaryButton(
-                onClick = navigationDetail,
+                onClick = {
+                    navigationDetail(result.id)
+                },
                 title = "모임방으로 이동"
             )
         }
@@ -128,8 +127,9 @@ fun NewMeetResultView(
 fun NewMeetResultPreview() {
     NewMeetResultView(
         NewMeetResult(
-            "2024 연말파티\uD83E\uDD42",
-            null
+            id = 0,
+            title = "2024 연말파티\uD83E\uDD42",
+            image = null
         )
     )
 }

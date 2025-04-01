@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sooum.domain.model.MeetDetail
+import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.User
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray100
@@ -401,27 +402,21 @@ internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int, 
                         "행궁동 갈 사람\uD83C\uDF42",
                         "선선해진 날씨에 같이 사람~!",
                         "",
-                        2025,
-                        1,
-                        27
+                        Schedule(3,"2025-1-27","14:00")
                     ),
                     MeetDetail(
                         1,
                         "2024 연말파티\uD83E\uDD42",
                         "벌써 연말이다 신나게 놀아보장~~",
                         "",
-                        2025,
-                        1,
-                        26
+                        Schedule(1,"2025-1-26","14:00")
                     ),
                     MeetDetail(
                         4,
                         "2024 연말파티\uD83E\uDD42",
                         "벌써 연말이다 신나게 놀아보장~~",
                         "",
-                        2025,
-                        1,
-                        25
+                        Schedule(4,"2025-1-25","14:00")
                     )
                 )
             ),
@@ -432,27 +427,23 @@ internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int, 
                         "행궁동 갈 사람\uD83C\uDF42",
                         "선선해진 날씨에 같이 사람~!",
                         "",
-                        2025,
-                        1,
-                        27
+                        Schedule(3,"2025-1-27","14:00")
+
                     ),
                     MeetDetail(
                         1,
                         "2024 연말파티\uD83E\uDD42",
                         "벌써 연말이다 신나게 놀아보장~~",
                         "",
-                        2025,
-                        1,
-                        26
+                        Schedule(1,"2025-1-26","14:00")
                     ),
                     MeetDetail(
                         4,
                         "2024 연말파티\uD83E\uDD42",
                         "벌써 연말이다 신나게 놀아보장~~",
                         "",
-                        2025,
-                        1,
-                        25
+                        Schedule(4,"2025-1-25","14:00")
+
                     )
                 ),
                 2024 to listOf(
@@ -461,9 +452,7 @@ internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int, 
                         "2024 연말파티\uD83E\uDD42",
                         "벌써 연말이다 신나게 놀아보장~~",
                         "",
-                        2024,
-                        12,
-                        25
+                        Schedule(2,"2024-12-25","14:00")
                     ),
                 )
             ),
@@ -474,27 +463,21 @@ internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int, 
                         "행궁동 갈 사람\uD83C\uDF42",
                         "선선해진 날씨에 같이 사람~!",
                         "",
-                        2025,
-                        2,
-                        2
+                        Schedule(6,"2025-2-2","14:00")
                     ),
                     MeetDetail(
                         7,
                         "행궁동 갈 사람\uD83C\uDF42",
                         "선선해진 날씨에 같이 사람~!",
                         "",
-                        2025,
-                        2,
-                        1
+                        Schedule(7,"2025-2-1","14:00")
                     ),
                     MeetDetail(
                         3,
                         "행궁동 갈 사람\uD83C\uDF42",
                         "선선해진 날씨에 같이 사람~!",
                         "",
-                        2025,
-                        1,
-                        27
+                        Schedule(3,"2025-1-27","14:00")
                     )
                 ),
                 2024 to listOf(
@@ -503,9 +486,7 @@ internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int, 
                         "2024 연말파티\uD83E\uDD42",
                         "벌써 연말이다 신나게 놀아보장~~",
                         "",
-                        2024,
-                        12,
-                        25
+                        Schedule(2,"2024-12-25","14:00")
                     ),
                 )
             )

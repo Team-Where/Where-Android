@@ -7,7 +7,7 @@ import javax.inject.Inject
 class UpdateMeetDetailScheduleUseCase @Inject constructor(
     private val repository: MeetDetailRepository
 ) {
-    suspend operator fun invoke(id: Long, schedule: Schedule) {
-        repository.updateMeetDetailSchedule(id, schedule)
+    suspend operator fun invoke(id: Int, schedule: Schedule) {
+
     }
 }
