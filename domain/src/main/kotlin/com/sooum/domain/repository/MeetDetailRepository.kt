@@ -30,9 +30,9 @@ interface MeetDetailRepository {
      */
     suspend fun editMeet(
         id: Int,
+        userId: Int,
         title: String?,
         description: String?,
-        finished: Boolean?,
         imageFile: File?
     ): Flow<ApiResult<Meet>>
 

@@ -1,6 +1,7 @@
 package com.sooum.data.network.meet
 
 import com.sooum.data.network.meet.request.DeleteMeetRequest
+import com.sooum.data.network.meet.request.FinishMeetRequest
 import com.sooum.data.network.meet.request.InviteMeetRequest
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetInviteStatus
@@ -35,6 +36,11 @@ interface MeetApi {
     @DELETE("api/meeting")
     suspend fun deleteMeet(
         @Body data: DeleteMeetRequest,
+    ): Response<Any>
+
+    @PUT("api/meeting/finish")
+    suspend fun finishMeet(
+        @Body data: FinishMeetRequest,
     ): Response<Any>
 
     @GET("api/meeting/participants/{id}")

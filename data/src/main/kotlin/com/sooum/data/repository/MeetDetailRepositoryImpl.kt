@@ -74,16 +74,16 @@ class MeetDetailRepositoryImpl @Inject constructor(
 
     override suspend fun editMeet(
         id: Int,
+        userId: Int,
         title: String?,
         description: String?,
-        finished: Boolean?,
         imageFile: File?
     ): Flow<ApiResult<Meet>> {
         val request = EditMeetRequest(
             id,
+            userId,
             title,
             description,
-            finished
         )
         val dataPart =
             json.encodeToString(request).toRequestBody("application/json".toMediaTypeOrNull())
