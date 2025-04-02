@@ -115,7 +115,8 @@ fun NewMeetStep2View(
                             }
                             inviteFriend(user)
                         }
-                    }
+                    },
+                    useKaKao = false
                 )
             }
         }

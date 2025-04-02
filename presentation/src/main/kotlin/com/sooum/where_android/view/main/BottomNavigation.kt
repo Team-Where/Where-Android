@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import com.sooum.domain.model.ImageAddType
+import com.sooum.domain.model.Meet
 import com.sooum.domain.model.NewMeet
 import com.sooum.where_android.R
 import com.sooum.where_android.model.ScreenRoute
@@ -42,13 +43,15 @@ import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.main.newMeet.NewMeetModal
 import kotlinx.serialization.Serializable
 
-fun NewMeet.toResult() = NewMeetResult(
+fun Meet.toResult() = NewMeetResult(
+    id = id,
     title = title,
-    image = (image as? ImageAddType.Content)?.uri?.toString()
+    image = image
 )
 
 @Serializable
 data class NewMeetResult(
+    val id : Int,
     val title: String,
     val image: String?
 )

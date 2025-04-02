@@ -1,20 +1,20 @@
 package com.sooum.domain.model
 
 import androidx.annotation.IntRange
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * 모임 화면 상세 데이터
  */
+@Serializable
 data class MeetDetail(
-    val id: Long,
+    val id: Int,
     val title: String,
     val description: String,
     val image: String,
     val schedule: Schedule
 ) {
-    val date
-        get() = schedule.date
-
     val year
         get() = schedule.year
 
@@ -24,70 +24,54 @@ data class MeetDetail(
     val day
         get() = schedule.day
 
-    val time
-        get() = schedule.time
-
-    constructor(
-        id: Long,
-        title: String,
-        description: String,
-        image: String,
-        year: Int,
-        @IntRange(from = 1, to = 12) month: Int,
-        @IntRange(from = 1, to = 31) day: Int,
-        @IntRange(from = 1, to = 24) time: Int
-    ) : this(id, title, description, image, Schedule(year, month, day, time))
-
-    constructor(
-        id: Long,
-        title: String,
-        description: String,
-        image: String,
-        year: Int,
-        @IntRange(from = 1, to = 12) month: Int,
-        @IntRange(from = 1, to = 31) day: Int,
-    ) : this(id, title, description, image, Schedule(year, month, day, 0))
+    val date
+        get() = schedule.date
 }
 
 /**
- * 일정관리를 위한 Schedule Class
+ * 모임 정보 수신시 활용되는 기본형 데이터
  */
+@Serializable
+data class Meet(
+    val id: Int,
+    val title: String,
+    val description: String,
+    val link: String,
+    val image: String,
+    val finished: Boolean
+)
+
+/**
+ * 일정 수신시 사용되는 기본형 데이터
+ * @param[meetId] 연결된 모임 id
+ * @param[date] 날짜 형식 yyyy-MM-dd
+ * @param[time] 시간 형식 hh:mm
+ */
+@Serializable
 data class Schedule(
-    val year: Int,
-    @IntRange(from = 0, to = 12) val month: Int,
-    @IntRange(from = 0, to = 31) val day: Int,
-    @IntRange(from = 0, to = 24) val time: Int
+    @SerialName("meetingId")
+    val meetId: Int,
+    val date: String,
+    val time: String
 ) {
-    val date: String
-        get() {
-            val st = StringBuilder()
-            st.append(year)
-            st.append(".")
+    constructor(
+        meetId: Int,
+        year: Int,
+        month: Int,
+        day: Int,
+        hour: Int
+    ) : this(meetId, "$year-$month-$day", "$hour:00")
 
-            if (month < 10) {
-                st.append(0)
-                st.append(month)
-            } else {
-                st.append(month)
-            }
-            st.append(".")
+    constructor(
+        meetId: Int,
+        date: String,
+        hour: Int
+    ) : this(meetId, date, "$hour:00")
 
-            if (day < 10) {
-                st.append(0)
-                st.append(day)
-            } else {
-                st.append(day)
-            }
+    val year = date.split("-")[0].toInt()
+    val month = date.split("-")[1].toInt()
+    val day = date.split("-")[2].toInt()
 
-            return st.toString()
-        }
-
-    //데이터가 유효한지 확인
-    fun isDataOn() : Schedule? {
-        return if(year > 0 && month > 0 && day > 0 && time > 0) {
-            this
-        } else {
-            null
-        }
-    }
+    val hour = time.split(":")[0].toInt()
+    val minute = time.split(":")[1].toInt()
 }

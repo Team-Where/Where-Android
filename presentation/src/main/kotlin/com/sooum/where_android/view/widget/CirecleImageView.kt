@@ -38,7 +38,7 @@ fun CircleProfileView(
             SubcomposeAsyncImageContent()
         } else {
             Image(
-                painterResource(R.drawable.test_profile),
+                painterResource(R.drawable.image_profile_default_cover),
                 contentDescription = null,
                 modifier = profileModifier
             )

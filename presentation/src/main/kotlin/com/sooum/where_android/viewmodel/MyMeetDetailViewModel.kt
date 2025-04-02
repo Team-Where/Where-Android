@@ -2,6 +2,7 @@ package com.sooum.where_android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.ShareResult
@@ -28,7 +29,7 @@ class MyMeetDetailViewModel @Inject constructor(
         get() = _meetDetail.asStateFlow()
 
     fun loadData(
-        meetDetailId: Long
+        meetDetailId: Int
     ) {
         viewModelScope.launch {
             getMeetDetailByIdUseCase(meetDetailId).collect {

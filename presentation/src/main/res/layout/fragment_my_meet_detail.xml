@@ -22,7 +22,7 @@
                 android:id="@+id/groupImage"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@drawable/test_profile"
+                android:src="@drawable/image_profile_default_cover"
                 android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>

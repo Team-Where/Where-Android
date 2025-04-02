@@ -52,7 +52,7 @@ class ProfileSettingFragment : Fragment() {
                         when (imageType) {
                             is ImageAddType.Default -> {
                                 // 기본 이미지 적용
-                                binding.imageProfile.setImageResource(R.drawable.image_meet_default_cover)
+                                binding.imageProfile.setImageResource(R.drawable.image_profile_default_cover)
                             }
                             is ImageAddType.Content -> {
                                 // 앨범에서 선택한 이미지 적용

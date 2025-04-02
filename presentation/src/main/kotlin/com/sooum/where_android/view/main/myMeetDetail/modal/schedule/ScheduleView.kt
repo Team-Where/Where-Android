@@ -75,7 +75,7 @@ fun ScheduleView(
         mutableStateOf(false)
     }
     var selectedTime: Int? by remember {
-        mutableStateOf(prevSchedule?.time)
+        mutableStateOf(prevSchedule?.hour)
     }
     Column(
         modifier = Modifier
@@ -145,6 +145,7 @@ fun ScheduleView(
             onClick = {
                 onNewSchedule(
                     Schedule(
+                        prevSchedule?.meetId ?: -1,
                         selectedDate!!.year,
                         selectedDate!!.monthNumber,
                         selectedDate!!.dayOfMonth,
@@ -246,7 +247,7 @@ private class ScheduleParameterProvider() : PreviewParameterProvider<Schedule?> 
     override val values: Sequence<Schedule?>
         get() = sequenceOf(
             null,
-            Schedule(2025, 3, 8, 23)
+            Schedule(1, "2025-3-8", 23)
         )
 }
 
@@ -286,11 +287,11 @@ class ScheduleFragment : Fragment() {
                         .safeDrawingPadding()
                         .navigationBarsPadding()
                         .padding(10.dp),
-                    prevSchedule = myMeet?.schedule?.isDataOn(),
+                    prevSchedule = myMeet?.schedule,
                     onBack = {
                         findNavController().popBackStack()
                     },
-                    onNewSchedule = {schedule ->
+                    onNewSchedule = { schedule ->
                         myMeetDetailViewModel.newSchedule(schedule) {
                             findNavController().popBackStack()
                         }

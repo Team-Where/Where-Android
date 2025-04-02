@@ -41,7 +41,7 @@ class MyMeetActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMyMeetBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        intent.getLongExtra(MEET_ID, 0L).let { id ->
+        intent.getIntExtra(MEET_ID, 0).let { id ->
             myMeetDetailViewModel.loadData(id)
         }
     }
