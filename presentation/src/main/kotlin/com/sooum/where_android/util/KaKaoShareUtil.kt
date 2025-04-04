@@ -30,7 +30,7 @@ object KaKaoShareUtil {
                 templateArgs = mapOf(
                     "USER" to userName,
                     "NAME" to meetName,
-                    "ID" to "1234"
+                    "MEET_ID" to "1234"
                 )
             ) { sharingResult, error ->
                 if (error != null) {
