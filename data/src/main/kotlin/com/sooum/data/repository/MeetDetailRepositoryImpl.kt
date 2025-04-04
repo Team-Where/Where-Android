@@ -27,22 +27,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
         get() = _meetDetailList.asStateFlow()
 
     override suspend fun loadMeetDetailList(userId: Int) {
-        val result = meetRemoteDataSource.getMeetList(userId).first()
-        Log.d("JWH",result.toString())
-        val meetDetails = if (result is ApiResult.Success) {
-            result.data.map { meet ->
-                val scheduleResult =
-                    meetRemoteDataSource.getSchedule(meet.id).first()
-                val schedule = if (scheduleResult is ApiResult.Success) {
-                    scheduleResult.data
-                } else {
-                    null
-                }
-                MeetDetail(meet, schedule)
-            }
-        } else {
-            emptyList()
-        }
+        val meetDetails = meetRemoteDataSource.getMeetList(userId).first()
         _meetDetailList.value = meetDetails
     }
 

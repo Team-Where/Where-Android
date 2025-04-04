@@ -3,6 +3,7 @@ package com.sooum.data.network.meet
 import com.sooum.data.network.meet.request.DeleteMeetRequest
 import com.sooum.data.network.meet.request.FinishMeetRequest
 import com.sooum.data.network.meet.request.InviteMeetRequest
+import com.sooum.data.network.meet.response.MeetListItemResponse
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetInviteStatus
 import okhttp3.MultipartBody
@@ -51,7 +52,7 @@ interface MeetApi {
     @GET("api/meeting/{id}")
     suspend fun getMeetList(
         @Path("id") userId: Int
-    ): Response<List<Meet>>
+    ): Response<List<MeetListItemResponse>>
 
 
     @POST("api/meeting/invite")

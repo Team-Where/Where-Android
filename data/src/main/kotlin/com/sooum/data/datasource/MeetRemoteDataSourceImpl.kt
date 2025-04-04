@@ -25,11 +25,15 @@ import com.sooum.domain.model.Comment
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
 import com.sooum.domain.model.Meet
+import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlacePickStatus
 import com.sooum.domain.model.Schedule
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.transform
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -106,8 +110,13 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         return safeFlow { meetApi.getMeetInviteStatus(meetId) }
     }
 
-    override suspend fun getMeetList(userId: Int): Flow<ApiResult<List<Meet>>> {
-        return safeFlow { meetApi.getMeetList(userId) }
+    override suspend fun getMeetList(userId: Int): Flow<List<MeetDetail>> = flow{
+        val apiResult = safeFlow { meetApi.getMeetList(userId) }.first()
+        if (apiResult is ApiResult.Success) {
+            emit(apiResult.data.map { it.toMeetDetail() })
+        } else {
+            emit(emptyList())
+        }
     }
 
     override suspend fun inviteMeet(

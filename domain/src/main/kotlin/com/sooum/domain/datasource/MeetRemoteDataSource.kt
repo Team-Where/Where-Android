@@ -5,6 +5,7 @@ import com.sooum.domain.model.Comment
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
 import com.sooum.domain.model.Meet
+import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlacePickStatus
@@ -57,7 +58,7 @@ interface MeetRemoteDataSource {
      */
     suspend fun getMeetList(
         userId: Int
-    ): Flow<ApiResult<List<Meet>>>
+    ): Flow<List<MeetDetail>>
 
 
     /**

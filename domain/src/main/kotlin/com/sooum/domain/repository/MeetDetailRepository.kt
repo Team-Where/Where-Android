@@ -18,6 +18,7 @@ import java.io.File
 interface MeetDetailRepository {
 
     suspend fun loadMeetDetailList(userId: Int)
+
     fun getMeetDetailList() : Flow<List<MeetDetail>>
 
     fun getMeetDetailById(meetId: Int) : Flow<MeetDetail?>
