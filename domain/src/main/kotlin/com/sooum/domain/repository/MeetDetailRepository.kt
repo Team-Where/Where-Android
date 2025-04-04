@@ -19,9 +19,9 @@ interface MeetDetailRepository {
 
     suspend fun loadMeetDetailList(userId: Int)
 
-    fun getMeetDetailList() : Flow<List<MeetDetail>>
+    fun getMeetDetailList(): Flow<List<MeetDetail>>
 
-    fun getMeetDetailById(meetId: Int) : Flow<MeetDetail?>
+    fun getMeetDetailById(meetId: Int): Flow<MeetDetail?>
 
     suspend fun addMeet(
         title: String,
@@ -29,7 +29,7 @@ interface MeetDetailRepository {
         description: String,
         participants: List<Int>,
         imageFile: File?
-    ) : ActionResult<NewMeetResult>
+    ): ActionResult<NewMeetResult>
 
     suspend fun addMeetPlace(
         meetId: Int,
@@ -38,5 +38,25 @@ interface MeetDetailRepository {
         address: String,
         naverLink: String?
     )
+
+    suspend fun addSchedule(
+        meetId: Int,
+        userId: Int,
+        date: String,
+        time: String
+    ) :ActionResult<Schedule>
+
+
+    suspend fun editSchedule(
+        meetId: Int,
+        userId: Int,
+        date: String?,
+        time: String?
+    ) :ActionResult<Schedule>
+
+    suspend fun exitMeet(
+        meetId: Int,
+        userId: Int
+    ): ActionResult<Unit>
 
 }

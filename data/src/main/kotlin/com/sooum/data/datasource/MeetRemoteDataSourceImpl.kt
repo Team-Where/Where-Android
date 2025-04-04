@@ -1,5 +1,6 @@
 package com.sooum.data.datasource
 
+import android.util.Log
 import com.sooum.data.network.createPart
 import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.meet.request.AddMeetRequest
@@ -33,7 +34,6 @@ import com.sooum.domain.model.Schedule
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.transform
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -98,11 +98,12 @@ class MeetRemoteDataSourceImpl @Inject constructor(
     override suspend fun deleteMeet(
         meetId: Int,
         userId: Int
-    ): Flow<ApiResult<Any>> {
+    ): Flow<ApiResult<String>> {
         val request = DeleteMeetRequest(
             meetId,
             userId
         )
+        Log.d("JWH", "delete = $request")
         return safeFlow { meetApi.deleteMeet(request) }
     }
 
@@ -110,7 +111,7 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         return safeFlow { meetApi.getMeetInviteStatus(meetId) }
     }
 
-    override suspend fun getMeetList(userId: Int): Flow<List<MeetDetail>> = flow{
+    override suspend fun getMeetList(userId: Int): Flow<List<MeetDetail>> = flow {
         val apiResult = safeFlow { meetApi.getMeetList(userId) }.first()
         if (apiResult is ApiResult.Success) {
             emit(apiResult.data.map { it.toMeetDetail() })
@@ -213,28 +214,35 @@ class MeetRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun addSchedule(
         meetId: Int,
+        userId: Int,
         date: String,
         time: String
     ): Flow<ApiResult<Schedule>> {
+        getSchedule(meetId).first().also {
+            Log.d("JWH",it.toString())
+        }
         val request = AddScheduleRequest(
             meetId = meetId,
+            userId = userId,
             date = date,
             time = time
         )
         return safeFlow { scheduleApi.addSchedule(request) }
     }
 
-    override suspend fun getSchedule(scheduleId: Int): Flow<ApiResult<Schedule>> {
-        return safeFlow { scheduleApi.getSchedule(scheduleId) }
+    override suspend fun getSchedule(meetingId: Int): Flow<ApiResult<Schedule>> {
+        return safeFlow { scheduleApi.getSchedule(meetingId) }
     }
 
     override suspend fun editSchedule(
         meetId: Int,
-        date: String,
-        time: String
+        userId: Int,
+        date: String?,
+        time: String?
     ): Flow<ApiResult<Schedule>> {
         val request = EditScheduleRequest(
             meetId = meetId,
+            userId = userId,
             date = date,
             time = time
         )

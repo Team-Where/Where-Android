@@ -58,7 +58,7 @@ class NewMeetViewModel @Inject constructor(
 
 
     fun goStepResult(
-        complete: suspend (ActionResult<NewMeetResult>) -> Unit
+        complete: (ActionResult<NewMeetResult>) -> Unit
     ) {
         viewModelScope.launch() {
             //새로운 모임을 추가하는 시점에서 id값은 null이 아니다
@@ -67,9 +67,7 @@ class NewMeetViewModel @Inject constructor(
                 fromId = id,
                 newMeet = newMeetData
             )
-            withContext(Dispatchers.Main) {
-                complete(addResult)
-            }
+            complete(addResult)
         }
     }
 
@@ -93,7 +91,7 @@ class NewMeetViewModel @Inject constructor(
 
     fun clear() {
         _viewType.value = NewMeetType.Info
-        newMeetData = NewMeet("", "",null)
+        newMeetData = NewMeet("", "", null)
     }
 
     fun updateTitle(title: String) {

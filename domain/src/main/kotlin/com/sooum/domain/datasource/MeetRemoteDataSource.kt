@@ -44,7 +44,7 @@ interface MeetRemoteDataSource {
     suspend fun deleteMeet(
         meetId: Int,
         userId: Int
-    ): Flow<ApiResult<Any>>
+    ): Flow<ApiResult<String>>
 
     /**
      * [meetId]에 해당하는 초대 현황을 가져온다.
@@ -144,6 +144,7 @@ interface MeetRemoteDataSource {
      */
     suspend fun addSchedule(
         meetId: Int,
+        userId: Int,
         date: String,
         time: String
     ): Flow<ApiResult<Schedule>>
@@ -160,8 +161,9 @@ interface MeetRemoteDataSource {
      */
     suspend fun editSchedule(
         meetId: Int,
-        date: String,
-        time: String
+        userId: Int,
+        date: String?,
+        time: String?
     ): Flow<ApiResult<Schedule>>
 
     /**

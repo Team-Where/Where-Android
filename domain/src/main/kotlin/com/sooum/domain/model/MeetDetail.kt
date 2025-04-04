@@ -90,6 +90,7 @@ data class Meet(
         image: String
     ) : this(id, title, description, "", image, false, "")
 }
+
 /**
  * 일정 수신시 사용되는 기본형 데이터
  * @param[meetId] 연결된 모임 id
@@ -121,6 +122,10 @@ data class Schedule(
     val month = date.split("-")[1].toInt()
     val day = date.split("-")[2].toInt()
 
+    val formatDate = String.format("%04d-%02d-%02d", year, month, day)
+
     val hour = time.split(":")[0].toInt()
     val minute = time.split(":")[1].toInt()
+
+    val formatTime = String.format("%02d:%02d", hour, minute)
 }

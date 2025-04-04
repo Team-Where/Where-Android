@@ -6,6 +6,7 @@ import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.NewMeetResult
+import com.sooum.domain.model.Schedule
 import com.sooum.domain.repository.MeetDetailRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,6 @@ import javax.inject.Inject
 class MeetDetailRepositoryImpl @Inject constructor(
     private val meetRemoteDataSource: MeetRemoteDataSource
 ) : MeetDetailRepository {
-
 
     private val _meetDetailList = MutableStateFlow(emptyList<MeetDetail>())
 
@@ -51,6 +51,10 @@ class MeetDetailRepositoryImpl @Inject constructor(
             imageFile
         ).transform { result ->
             when (result) {
+                is ApiResult.SuccessEmpty -> {
+
+                }
+
                 is ApiResult.Success -> {
                     val newMeetData = result.data
                     val temp = _meetDetailList.value.toMutableList()
@@ -78,5 +82,76 @@ class MeetDetailRepositoryImpl @Inject constructor(
         naverLink: String?
     ) {
 
+    }
+
+    override suspend fun addSchedule(
+        meetId: Int,
+        userId: Int,
+        date: String,
+        time: String
+    ): ActionResult<Schedule> {
+        return meetRemoteDataSource.addSchedule(
+            meetId,
+            userId,
+            date,
+            time,
+        ).transform { result ->
+            if (result is ApiResult.Success) {
+                val schedule = result.data
+                val tempList = _meetDetailList.value.toMutableList()
+                val index = tempList.indexOfFirst { it.id == meetId }
+                val item = tempList[index].copy(
+                    schedule = schedule
+                )
+                tempList[index] = item
+                _meetDetailList.value = tempList
+                emit(ActionResult.Success(result.data))
+            } else {
+                emit(ActionResult.Fail(""))
+            }
+        }.first()
+    }
+
+    override suspend fun editSchedule(
+        meetId: Int,
+        userId: Int,
+        date: String?,
+        time: String?
+    ): ActionResult<Schedule> {
+        return meetRemoteDataSource.editSchedule(
+            meetId,
+            userId,
+            date,
+            time,
+        ).transform { result ->
+            if (result is ApiResult.Success) {
+                val schedule = result.data
+                val tempList = _meetDetailList.value.toMutableList()
+                val index = tempList.indexOfFirst { it.id == meetId }
+                val item = tempList[index].copy(
+                    schedule = schedule
+                )
+                tempList[index] = item
+                _meetDetailList.value = tempList
+                emit(ActionResult.Success(result.data))
+            } else {
+                emit(ActionResult.Fail(""))
+            }
+        }.first()
+    }
+
+    override suspend fun exitMeet(meetId: Int, userId: Int): ActionResult<Unit> {
+        return meetRemoteDataSource.deleteMeet(meetId, userId).transform { result ->
+            if (result is ApiResult.SuccessEmpty) {
+                val temp = _meetDetailList.value.toMutableList()
+                temp.removeIf {
+                    it.id == meetId
+                }
+                _meetDetailList.value = temp
+                emit(ActionResult.Success(Unit))
+            } else {
+                emit(ActionResult.Fail(""))
+            }
+        }.first()
     }
 }

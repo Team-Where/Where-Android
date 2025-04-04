@@ -93,13 +93,15 @@ fun NewMeetModal(
                     newMeetViewModel.goStepResult(
                         complete = { result ->
                             showLoading = false
-                            Log.d("JWH","$result")
-                            if (result is ActionResult.Success) {
-                                navigationResult(result.data)
-                                sheetState.hide()
-                                onDismiss()
-                            } else {
-
+                            scope.launch {
+                                Log.d("JWH", "$result")
+                                if (result is ActionResult.Success) {
+                                    navigationResult(result.data)
+                                    sheetState.hide()
+                                    onDismiss()
+                                } else {
+                                    //TODO 에러 발생시 핸들링
+                                }
                             }
                         }
                     )
