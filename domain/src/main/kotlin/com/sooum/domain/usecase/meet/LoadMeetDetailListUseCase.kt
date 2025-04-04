@@ -3,8 +3,10 @@ package com.sooum.domain.usecase.meet
 import com.sooum.domain.repository.MeetDetailRepository
 import javax.inject.Inject
 
-class GetMeetDetailListUseCase @Inject constructor(
+class LoadMeetDetailListUseCase @Inject constructor(
     private val repository: MeetDetailRepository
 ) {
-    operator fun invoke() = repository.getMeetDetailList()
+    suspend operator fun invoke(userId: Int) {
+        repository.loadMeetDetailList(userId)
+    }
 }

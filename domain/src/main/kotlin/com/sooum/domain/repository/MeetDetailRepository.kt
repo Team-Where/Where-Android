@@ -5,6 +5,7 @@ import com.sooum.domain.model.Comment
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
 import com.sooum.domain.model.Meet
+import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlacePickStatus
@@ -13,6 +14,12 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface MeetDetailRepository {
+
+
+    suspend fun loadMeetDetailList(userId: Int)
+    fun getMeetDetailList() : Flow<List<MeetDetail>>
+
+    fun getMeetDetailById(meetId: Int) : Flow<MeetDetail?>
 
     /**
      * 새로운 모임을 추가한다.

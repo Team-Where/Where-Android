@@ -23,12 +23,18 @@ import com.sooum.domain.model.Comment
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
 import com.sooum.domain.model.Meet
+import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlacePickStatus
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.repository.MeetDetailRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -45,6 +51,40 @@ class MeetDetailRepositoryImpl @Inject constructor(
 
     private val json = Json {
         encodeDefaults = true
+    }
+
+    private val _meetDetailList = MutableStateFlow(emptyList<MeetDetail>())
+
+    private val meetDetailList
+        get() = _meetDetailList.asStateFlow()
+
+
+    override suspend fun loadMeetDetailList(userId: Int) {
+        val result = getMeetList(userId).first { it !is ApiResult.Loading }
+        val meetDetails = if (result is ApiResult.Success) {
+            result.data.map { meet ->
+                val scheduleResult =
+                    getSchedule(meet.id).first { it !is ApiResult.Loading }
+                val schedule = if (scheduleResult is ApiResult.Success) {
+                    scheduleResult.data
+                } else {
+                    null
+                }
+                MeetDetail(meet, schedule)
+            }
+        } else {
+            emptyList()
+        }
+        _meetDetailList.value = meetDetails
+    }
+
+    override fun getMeetDetailList(): Flow<List<MeetDetail>> {
+        return meetDetailList
+    }
+
+    override fun getMeetDetailById(id: Int): Flow<MeetDetail?> {
+        return meetDetailList
+            .map { list -> list.find { it.id == id } }
     }
 
     override suspend fun addMeet(
