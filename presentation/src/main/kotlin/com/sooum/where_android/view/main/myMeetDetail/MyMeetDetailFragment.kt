@@ -96,7 +96,7 @@ class MyMeetDetailFragment : MyMeetBaseFragment() {
 }
 
 private fun MeetDetail.makeScheduleText(): String {
-    val time = this.schedule.hour
+    val time = this.schedule?.hour ?: return ""
     return String.format(
         "%d.%d.%d %s %d시",
         year,

@@ -151,11 +151,11 @@ interface MeetDetailRepository {
      * 일정 추가
      */
     suspend fun getSchedule(
-        scheduleId: Int,
+        meetingId: Int,
     ): Flow<ApiResult<Schedule>>
 
     /**
-     * 일정 추가
+     * 일정 수정
      */
     suspend fun editSchedule(
         meetId: Int,
@@ -164,7 +164,7 @@ interface MeetDetailRepository {
     ): Flow<ApiResult<Schedule>>
 
     /**
-     * 일정 추가
+     * 일정 삭제
      */
     suspend fun deleteSchedule(
         meetId: Int,

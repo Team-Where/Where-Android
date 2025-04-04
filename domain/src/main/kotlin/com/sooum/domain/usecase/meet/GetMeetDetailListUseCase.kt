@@ -1,27 +1,31 @@
 package com.sooum.domain.usecase.meet
 
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.model.Meet
-import com.sooum.domain.model.onSuccess
+import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.repository.MeetDetailRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetMeetDetailListUseCase @Inject constructor(
     private val repository: MeetDetailRepository
 ) {
-    suspend operator fun invoke(userId: Int): Flow<List<Meet>> {
-        return repository.getMeetList(userId).map { result ->
-            when (result) {
-                is ApiResult.Success -> {
-                    result.data
+    operator fun invoke(userId: Int): Flow<List<MeetDetail>> = flow {
+        val result = repository.getMeetList(userId).first { it !is ApiResult.Loading }
+        val meetDetails = if (result is ApiResult.Success) {
+            result.data.map { meet ->
+                val scheduleResult = repository.getSchedule(meet.id).first { it !is ApiResult.Loading }
+                val schedule = if (scheduleResult is ApiResult.Success) {
+                    scheduleResult.data
+                } else {
+                    null
                 }
-
-                else -> {
-                    emptyList<Meet>()
-                }
+                MeetDetail(meet, schedule)
             }
+        } else {
+            emptyList()
         }
+        emit(meetDetails)
     }
 }

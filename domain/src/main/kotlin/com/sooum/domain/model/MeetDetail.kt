@@ -13,19 +13,31 @@ data class MeetDetail(
     val title: String,
     val description: String,
     val image: String,
-    val schedule: Schedule
+    val finished: Boolean,
+    val createdAt: String,
+    val schedule: Schedule?
 ) {
+    constructor(
+        meet :Meet
+    ) :this(meet.id,meet.title,meet.description,meet.image,meet.finished,meet.createdAt,null)
+
+    constructor(
+        meet :Meet,
+        schedule: Schedule?
+    ) :this(meet.id,meet.title,meet.description,meet.image,meet.finished,meet.createdAt,schedule)
+
     val year
-        get() = schedule.year
+        get() = schedule?.year
 
     val month
-        get() = schedule.month
+        get() = schedule?.month
 
     val day
-        get() = schedule.day
+        get() = schedule?.day
 
     val date
-        get() = schedule.date
+        get() = schedule?.date
+
 }
 
 /**
@@ -38,7 +50,8 @@ data class Meet(
     val description: String,
     val link: String,
     val image: String,
-    val finished: Boolean
+    val finished: Boolean,
+    val createdAt :String,
 )
 
 /**
