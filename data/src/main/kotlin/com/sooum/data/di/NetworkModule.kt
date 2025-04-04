@@ -43,7 +43,7 @@ object NetworkModule {
     ): Retrofit =
         Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://www.xxxx.com")
+            .baseUrl("https://audiwhere.codns.com")
             .addConverterFactory(
                 Json.asConverterFactory("application/json; charset=UTF8".toMediaType())
             )
