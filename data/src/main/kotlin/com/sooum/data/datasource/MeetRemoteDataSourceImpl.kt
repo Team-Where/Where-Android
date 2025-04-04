@@ -1,6 +1,5 @@
 package com.sooum.data.datasource
 
-import android.util.Log
 import com.sooum.data.network.createPart
 import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.meet.request.AddMeetRequest

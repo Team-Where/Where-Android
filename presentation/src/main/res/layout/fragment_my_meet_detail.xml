@@ -82,7 +82,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="2024.12.23 오후 5시"
+                    android:text="아직 등록된 일정이 없어요"
                     android:textColor="#111827"
                     android:textSize="14sp"
                     android:fontFamily="@font/pretend_regular"
@@ -146,7 +146,7 @@
                     android:id="@+id/tvLocationNumber"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="6"
+                    android:text="0"
                     android:textColor="#4F46E5"
                     android:textSize="14sp"
                     android:fontFamily="@font/pretend_regular"
@@ -212,7 +212,7 @@
                     android:id="@+id/tvFriendNumber"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="3"
+                    android:text="0"
                     android:textColor="#4F46E5"
                     android:textSize="14sp"
                     android:fontFamily="@font/pretend_regular"
@@ -282,6 +282,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
+                    tools:listitem="@layout/item_invited_friend_list"
+                    tools:itemCount="3"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never"
@@ -332,6 +334,8 @@
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never"
+                    tools:listitem="@layout/item_waiting_friend_list"
+                    tools:itemCount="3"
                     app:layout_constraintTop_toBottomOf="@id/divider4"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

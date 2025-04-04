@@ -80,7 +80,7 @@ data class Meet(
     val description: String,
     val link: String,
     val image: String? = null,
-    val finished: Boolean,
+    val finished: Boolean = false,
     val createdAt: String,
 ) {
     constructor(
@@ -90,7 +90,6 @@ data class Meet(
         image: String
     ) : this(id, title, description, "", image, false, "")
 }
-
 /**
  * 일정 수신시 사용되는 기본형 데이터
  * @param[meetId] 연결된 모임 id
