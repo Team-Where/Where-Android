@@ -35,6 +35,7 @@ import androidx.navigation.NavBackStackEntry
 import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.NewMeet
+import com.sooum.domain.model.NewMeetResult
 import com.sooum.where_android.R
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.theme.Gray200
@@ -42,20 +43,6 @@ import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.main.newMeet.NewMeetModal
 import kotlinx.serialization.Serializable
-
-fun Meet.toResult() = NewMeetResult(
-    id = id,
-    title = title,
-    image = image
-)
-
-@Serializable
-data class NewMeetResult(
-    val id : Int,
-    val title: String,
-    val image: String?
-)
-
 
 @Composable
 fun BottomNavigation(
@@ -144,7 +131,7 @@ fun BottomNavigation(
                 addNewMeetModal = false
             },
             navigationResult = {
-                navigationResult(it.toResult())
+                navigationResult(it)
             }
         )
     }

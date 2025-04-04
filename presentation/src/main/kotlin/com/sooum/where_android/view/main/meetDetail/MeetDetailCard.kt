@@ -121,9 +121,6 @@ fun MeetDetailCardPreview() {
             1,
             "2024 연말파티\uD83E\uDD42",
             "벌써 연말이다 신나게 놀아보장~~",
-            "",
-            false,
-            "",
             Schedule(1,"2025-01-29","14:00")
         ),
         modifier = Modifier.fillMaxWidth(),

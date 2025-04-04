@@ -24,13 +24,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sooum.domain.model.NewMeetResult
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.GrayScale100
 import com.sooum.where_android.theme.GrayScale700
 import com.sooum.where_android.theme.GrayScale900
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
-import com.sooum.where_android.view.main.NewMeetResult
 import com.sooum.where_android.view.widget.CoverImageView
 import com.sooum.where_android.view.widget.PrimaryButton
 

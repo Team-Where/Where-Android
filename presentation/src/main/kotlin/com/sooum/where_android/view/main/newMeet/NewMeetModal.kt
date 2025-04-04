@@ -29,15 +29,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ImageAddType
-import com.sooum.domain.model.Meet
-import com.sooum.domain.model.MeetDetail
-import com.sooum.domain.model.NewMeet
+import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.model.User
-import com.sooum.domain.model.onError
-import com.sooum.domain.model.onException
-import com.sooum.domain.model.onLoading
-import com.sooum.domain.model.onSuccess
 import com.sooum.where_android.viewmodel.NewMeetType
 import com.sooum.where_android.viewmodel.NewMeetViewModel
 import kotlinx.coroutines.launch
@@ -49,7 +44,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun NewMeetModal(
     onDismiss: () -> Unit,
-    navigationResult: (Meet) -> Unit,
+    navigationResult: (NewMeetResult) -> Unit,
     newMeetViewModel: NewMeetViewModel = hiltViewModel()
 ) {
     LaunchedEffect(true) {
@@ -86,35 +81,25 @@ fun NewMeetModal(
                 title = newMeetViewModel.newMeetData.title,
                 updateTitle = newMeetViewModel::updateTitle,
                 description = newMeetViewModel.newMeetData.description,
-                updateDescription = newMeetViewModel::updateTitle,
+                updateDescription = newMeetViewModel::updateDescription,
                 type = newMeetViewModel.newMeetData.image,
                 userList = userList,
                 updateImageType = newMeetViewModel::updateImage,
                 viewType = viewType,
                 goStep2 = newMeetViewModel::goStep2,
                 goStepResult = {
+                    showLoading = true
                     newMeetViewModel.goStepResult(
                         complete = { result ->
-                            result.onLoading {
-                                showLoading = true
-                            }
-                            result.onException {
-                                showLoading = false
-                                Log.e("JWH", "", it)
-                            }
-                            result.onError { code, message ->
-                                showLoading = false
-                                Log.e("JWH", "[$code && $message]")
-                            }
-                            result.onSuccess {
-                                scope.launch {
-                                    showLoading = false
-                                    navigationResult(it)
-                                    sheetState.hide()
-                                    onDismiss()
-                                }
-                            }
+                            showLoading = false
+                            Log.d("JWH","$result")
+                            if (result is ActionResult.Success) {
+                                navigationResult(result.data)
+                                sheetState.hide()
+                                onDismiss()
+                            } else {
 
+                            }
                         }
                     )
                 },

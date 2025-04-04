@@ -11,10 +11,7 @@ import retrofit2.Response
 fun <T> safeFlow(
     apiFunc: suspend () -> Response<T>
 ): Flow<ApiResult<T>> = flow {
-    emit(ApiResult.Loading)
-
     val result = runCatching { apiFunc.invoke() }
-
     result.onSuccess { response ->
         if (!currentCoroutineContext().isActive) return@flow
         if (response.isSuccessful) {
@@ -24,6 +21,7 @@ fun <T> safeFlow(
             emit(ApiResult.Fail.Error(response.code(), response.message()))
         }
     }.onFailure { e ->
+        e.printStackTrace()
         if (!currentCoroutineContext().isActive) return@flow
         when (e) {
             is HttpException -> emit(ApiResult.Fail.Error(e.code(), e.message()))

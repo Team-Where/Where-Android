@@ -1,6 +1,5 @@
 package com.sooum.domain.model
 
-import androidx.annotation.IntRange
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -12,19 +11,50 @@ data class MeetDetail(
     val id: Int,
     val title: String,
     val description: String,
-    val image: String,
+    val image: String?,
     val finished: Boolean,
     val createdAt: String,
     val schedule: Schedule?
 ) {
     constructor(
-        meet :Meet
-    ) :this(meet.id,meet.title,meet.description,meet.image,meet.finished,meet.createdAt,null)
+        id: Int,
+        title: String,
+        description: String,
+        schedule: Schedule?
+    ) : this(
+        id,
+        title,
+        description,
+        "",
+        false,
+        "",
+        schedule
+    )
 
     constructor(
-        meet :Meet,
+        meet: Meet
+    ) : this(
+        meet.id,
+        meet.title,
+        meet.description,
+        meet.image,
+        meet.finished,
+        meet.createdAt,
+        null
+    )
+
+    constructor(
+        meet: Meet,
         schedule: Schedule?
-    ) :this(meet.id,meet.title,meet.description,meet.image,meet.finished,meet.createdAt,schedule)
+    ) : this(
+        meet.id,
+        meet.title,
+        meet.description,
+        meet.image,
+        meet.finished,
+        meet.createdAt,
+        schedule
+    )
 
     val year
         get() = schedule?.year
@@ -49,10 +79,17 @@ data class Meet(
     val title: String,
     val description: String,
     val link: String,
-    val image: String,
+    val image: String? = null,
     val finished: Boolean,
-    val createdAt :String,
-)
+    val createdAt: String,
+) {
+    constructor(
+        id: Int,
+        title: String,
+        description: String,
+        image: String
+    ) : this(id, title, description, "", image, false, "")
+}
 
 /**
  * 일정 수신시 사용되는 기본형 데이터

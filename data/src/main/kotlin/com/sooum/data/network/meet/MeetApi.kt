@@ -23,7 +23,7 @@ interface MeetApi {
     @POST("api/meeting")
     suspend fun addMeet(
         @Part("data") data: RequestBody,
-        @Part imageFile: MultipartBody.Part?
+        @Part imageFile: MultipartBody.Part
     ): Response<Meet>
 
     @Multipart
