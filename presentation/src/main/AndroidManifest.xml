@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <queries>
         <!-- Android 11 이상에서 특정 앱의 패키지 상태를 알기 위해서 query 선언이 필요하다-->
@@ -30,7 +30,7 @@
 
         <activity
             android:name=".view.main.MainActivity"
-            android:exported="true"/>
+            android:exported="true" />
 
         <activity
             android:name=".view.auth.AuthActivity"
@@ -38,7 +38,8 @@
 
         <activity
             android:name=".view.main.myMeetDetail.MyMeetActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTop" />
 
         <activity
             android:name=".view.onboarding.OnBoardingActivity"
@@ -57,6 +58,7 @@
 
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 

@@ -11,17 +11,11 @@ class AddPlaceUseCase @Inject constructor(
     private val repository: MeetDetailRepository
 ) {
     suspend operator fun invoke(meetId: Int, shareResult: ShareResult) {
-        val link = if (shareResult.source == "네이버") {
-            shareResult.link
-        } else {
-            null
-        }
         repository.addMeetPlace(
             meetId = meetId,
             userId = 1,
             name = shareResult.placeName,
             address =  shareResult.address,
-            naverLink = link
         )
     }
 }
