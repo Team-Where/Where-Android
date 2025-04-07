@@ -19,7 +19,7 @@ sealed class ScreenRoute {
     sealed class Home :ScreenRoute() {
         @Serializable
         data class FriendMeetDetail(
-            val detailUserId: Long
+            val detailUserId: Int
         ) : Home()
 
         @Serializable
@@ -28,7 +28,7 @@ sealed class ScreenRoute {
 
     @Serializable
     data class MeetDetail(
-        val meetDetailId: Long
+        val meetDetailId: Int
     ) : ScreenRoute()
 
 }

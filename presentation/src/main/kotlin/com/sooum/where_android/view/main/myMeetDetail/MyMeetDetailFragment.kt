@@ -1,6 +1,7 @@
 package com.sooum.where_android.view.main.myMeetDetail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import coil3.load
 import coil3.request.error
 import coil3.request.placeholder
 import coil3.size.Scale
+import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Schedule
 import com.sooum.where_android.R
@@ -55,6 +57,32 @@ class MyMeetDetailFragment : MyMeetBaseFragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myMeetDetailViewModel.inviteStatus.collect { list ->
+                    val grouped = list.groupBy { it.status }
+                    grouped[true]?.map {
+                        InvitedFriend(
+                            it.toId,
+                            it.toName,
+                            it.toImage
+                        )
+                    }?.let { items ->
+                        invitedFriendAdapter.setList(items)
+                    }
+                    grouped[false]?.map {
+                        InvitedFriend(
+                            it.toId,
+                            it.toName,
+                            it.toImage
+                        )
+                    }?.let { items ->
+                        waitingFriendListAdapter.setList(items)
+                    }
+                }
+            }
+        }
+
         with(binding) {
             btnLocation.setOnClickListener {
                 openMapShareSheet()
@@ -73,14 +101,15 @@ class MyMeetDetailFragment : MyMeetBaseFragment() {
     }
 
     private fun setupRecyclerView() {
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = invitedFriendAdapter
-        }
-
-        binding.recyclerViewJoined.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = waitingFriendListAdapter
+        with(binding) {
+            invitedFriendList.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter = invitedFriendAdapter
+            }
+            waitingFriendList.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter = waitingFriendListAdapter
+            }
         }
     }
 

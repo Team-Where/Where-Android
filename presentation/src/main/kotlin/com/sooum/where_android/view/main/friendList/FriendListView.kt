@@ -96,8 +96,8 @@ fun FriendListView(
 private fun FriedListContent(
     userList: List<User>,
     navigationMeetDetail: (ScreenRoute.Home.FriendMeetDetail) -> Unit,
-    deleteUser: (id: Long) -> Unit,
-    updateFavorite: (id: Long, favorite: Boolean) -> Unit,
+    deleteUser: (id: Int) -> Unit,
+    updateFavorite: (id: Int, favorite: Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var viewType: FriendListViewType by remember {
@@ -217,7 +217,7 @@ private fun FriedListContent(
                 //검색값이 없는 경우
 
                 val favoriteUserList = userList.filter { it.isFavorite }
-                var selectedUserId: Long? by remember {
+                var selectedUserId: Int? by remember {
                     mutableStateOf(null)
                 }
                 val favoriteEnter =
@@ -360,8 +360,8 @@ private fun UserListHeader(
 private fun UserItemViewByListView(
     user: User,
     viewType: FriendListViewType,
-    deleteUser: (id: Long) -> Unit,
-    updateFavorite: (id: Long, favorite: Boolean) -> Unit,
+    deleteUser: (id: Int) -> Unit,
+    updateFavorite: (id: Int, favorite: Boolean) -> Unit,
     userClickAction: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {

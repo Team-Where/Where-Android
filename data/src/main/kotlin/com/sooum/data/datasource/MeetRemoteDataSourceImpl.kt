@@ -139,14 +139,12 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         userId: Int,
         name: String,
         address: String,
-        naverLink: String?
     ): Flow<ApiResult<Place>> {
         val request = AddPlaceRequest(
             meetId,
             userId,
             name,
             address,
-            naverLink
         )
         return safeFlow { placeApi.addPlace(request) }
     }

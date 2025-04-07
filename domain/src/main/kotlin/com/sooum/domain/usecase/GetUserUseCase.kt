@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetUserUseCase @Inject constructor(
     private val repository: UserRepository
 ) {
-    operator fun invoke(id: Long): User? {
+    operator fun invoke(id: Int): User? {
         return repository.getUserById(id)
     }
 }

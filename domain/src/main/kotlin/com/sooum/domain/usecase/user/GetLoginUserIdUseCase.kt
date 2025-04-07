@@ -8,6 +8,6 @@ import javax.inject.Inject
 class GetLoginUserIdUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): Int? {
-        return 2
+        return 1
     }
 }

@@ -18,8 +18,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Place(
     val id: Int,
-    @SerialName("meetingId")
-    val meetId: Int,
     val naverLink: String,
     val kakaoLink: String?,
     val name: String,

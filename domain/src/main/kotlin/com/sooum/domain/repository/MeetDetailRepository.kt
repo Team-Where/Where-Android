@@ -21,8 +21,13 @@ interface MeetDetailRepository {
 
     fun getMeetDetailList(): Flow<List<MeetDetail>>
 
+    fun getMeetInviteList(): Flow<List<MeetInviteStatus>>
+
     fun getMeetDetailById(meetId: Int): Flow<MeetDetail?>
 
+    /**
+     * 모임을 추가합니다.
+     */
     suspend fun addMeet(
         title: String,
         fromId: Int,
@@ -31,32 +36,47 @@ interface MeetDetailRepository {
         imageFile: File?
     ): ActionResult<NewMeetResult>
 
+    //region 사용자
+
+    suspend fun loadInviteStatus(
+        meetId: Int
+    )
+
+    //endregion
+
+
+    //region 장소
     suspend fun addMeetPlace(
         meetId: Int,
         userId: Int,
         name: String,
         address: String,
-        naverLink: String?
-    )
+    ): ActionResult<String>
 
+    //endregion
+
+
+    //region 일정
     suspend fun addSchedule(
         meetId: Int,
         userId: Int,
         date: String,
         time: String
-    ) :ActionResult<Schedule>
-
+    ): ActionResult<Schedule>
 
     suspend fun editSchedule(
         meetId: Int,
         userId: Int,
         date: String?,
         time: String?
-    ) :ActionResult<Schedule>
+    ): ActionResult<Schedule>
+    //endregion
 
     suspend fun exitMeet(
         meetId: Int,
         userId: Int
     ): ActionResult<Unit>
+
+    suspend fun clearMeetDetail()
 
 }

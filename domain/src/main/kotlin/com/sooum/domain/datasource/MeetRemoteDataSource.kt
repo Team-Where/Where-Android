@@ -79,7 +79,6 @@ interface MeetRemoteDataSource {
         userId: Int,
         name: String,
         address: String,
-        naverLink: String?
     ): Flow<ApiResult<Place>>
 
 

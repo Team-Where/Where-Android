@@ -5,16 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sooum.domain.model.PlaceList
 import com.sooum.domain.model.SelectedPlace
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
-import com.sooum.where_android.databinding.FragmentOnBoardingFirstBinding
 import com.sooum.where_android.view.main.myMeetDetail.adapter.AllPlaceListAdapter
-import com.sooum.where_android.view.main.myMeetDetail.adapter.InvitedFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.SelectedPlaceListAdapter
-import com.sooum.where_android.view.main.myMeetDetail.adapter.WaitingFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 
 class MyMeetPlaceFragment: MyMeetBaseFragment() {

@@ -53,7 +53,7 @@ class MyMeetActivity : AppCompatActivity() {
             val shareResult = Json.decodeFromString<ShareResult>(data)
             Log.d("JWH", shareResult.toString())
             myMeetDetailViewModel.addPlace(shareResult) {
-                CustomSnackBar.make(binding.root, "ㅇㅇ", IconType.Check).show()
+                CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
             }
         }
     }
