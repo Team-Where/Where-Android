@@ -1,11 +1,10 @@
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,32 +22,32 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/groupTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2024 연말파티🎊"
-                android:textSize="20sp"
-                android:textColor="#111827"
-                android:fontFamily="@font/pretendard_semibold"
-                android:layout_marginTop="4dp"
                 android:layout_marginStart="15dp"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/pretendard_semibold"
+                android:textColor="#111827"
+                android:textSize="20sp"
                 app:layout_constraintStart_toEndOf="@id/groupImage"
-                app:layout_constraintTop_toTopOf="@id/groupImage"/>
+                app:layout_constraintTop_toTopOf="@id/groupImage"
+                tools:text="2024 연말파티🎊" />
 
             <TextView
                 android:id="@+id/groupDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="벌써 연말이다 신나게 놀아보장~"
-                android:textSize="14sp"
+                android:layout_marginTop="6dp"
                 android:fontFamily="@font/pretend_regular"
                 android:textColor="#111827"
-                android:layout_marginTop="6dp"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@id/groupTitle"
-                app:layout_constraintTop_toBottomOf="@id/groupTitle"/>
+                app:layout_constraintTop_toBottomOf="@id/groupTitle"
+                tools:text="벌써 연말이다 신나게 놀아보장~" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.cardview.widget.CardView
@@ -59,9 +58,10 @@
             android:background="#F9FAFB"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
-            app:layout_constraintTop_toBottomOf="@id/topContainer"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/topContainer">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/infoContainer"
                 android:layout_width="match_parent"
@@ -71,8 +71,8 @@
                     android:id="@+id/icon_calender"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:layout_marginTop="20dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginTop="20dp"
                     android:src="@drawable/icon_calender"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -82,31 +82,31 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:fontFamily="@font/pretend_regular"
                     android:text="아직 등록된 일정이 없어요"
                     android:textColor="#111827"
                     android:textSize="14sp"
-                    android:fontFamily="@font/pretend_regular"
-                    app:layout_constraintStart_toEndOf="@id/icon_calender"
-                    app:layout_constraintTop_toTopOf="@id/icon_calender"
                     app:layout_constraintBottom_toBottomOf="@id/icon_calender"
-                    app:layout_constraintEnd_toStartOf="@+id/btnSchedule" />
+                    app:layout_constraintEnd_toStartOf="@+id/btnSchedule"
+                    app:layout_constraintStart_toEndOf="@id/icon_calender"
+                    app:layout_constraintTop_toTopOf="@id/icon_calender" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnSchedule"
                     android:layout_width="80dp"
                     android:layout_height="33dp"
-                    android:fontFamily="@font/pretendard_semibold"
+                    android:layout_marginEnd="15dp"
                     android:background="@drawable/shape_rounded_gray_radius_6"
+                    android:drawableLeft="@drawable/icon_calender_black"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:paddingStart="7dp"
                     android:stateListAnimator="@null"
                     android:text="일정 등록"
                     android:textColor="#212529"
                     android:textSize="12sp"
-                    android:drawableLeft="@drawable/icon_calender_black"
-                    android:paddingStart="7dp"
-                    android:layout_marginEnd="15dp"
-                    app:layout_constraintTop_toTopOf="@id/icon_calender"
                     app:layout_constraintBottom_toBottomOf="@id/icon_calender"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/icon_calender" />
 
                 <View
                     android:id="@+id/divider1"
@@ -114,17 +114,17 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="12dp"
                     android:background="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/icon_calender" />
 
                 <ImageView
                     android:id="@+id/icLocation"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@drawable/icon_spot"
-                    android:layout_marginTop="12dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginTop="12dp"
+                    android:src="@drawable/icon_spot"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider1" />
 
@@ -133,44 +133,44 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:fontFamily="@font/pretend_regular"
                     android:text="공유된 장소 "
                     android:textColor="#212529"
                     android:textSize="14sp"
-                    android:fontFamily="@font/pretend_regular"
-                    app:layout_constraintStart_toEndOf="@id/icLocation"
-                    app:layout_constraintTop_toTopOf="@id/icLocation"
                     app:layout_constraintBottom_toBottomOf="@id/icLocation"
-                    app:layout_constraintEnd_toStartOf="@+id/tvLocationNumber" />
+                    app:layout_constraintEnd_toStartOf="@+id/tvLocationNumber"
+                    app:layout_constraintStart_toEndOf="@id/icLocation"
+                    app:layout_constraintTop_toTopOf="@id/icLocation" />
 
                 <TextView
                     android:id="@+id/tvLocationNumber"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/pretend_regular"
                     android:text="0"
                     android:textColor="#4F46E5"
                     android:textSize="14sp"
-                    android:fontFamily="@font/pretend_regular"
-                    app:layout_constraintStart_toEndOf="@id/tvLocation"
-                    app:layout_constraintTop_toTopOf="@id/icLocation"
                     app:layout_constraintBottom_toBottomOf="@id/icLocation"
-                    app:layout_constraintEnd_toStartOf="@+id/btnLocation" />
+                    app:layout_constraintEnd_toStartOf="@+id/btnLocation"
+                    app:layout_constraintStart_toEndOf="@id/tvLocation"
+                    app:layout_constraintTop_toTopOf="@id/icLocation" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnLocation"
                     android:layout_width="80dp"
                     android:layout_height="33dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@drawable/shape_rounded_gray_radius_6"
+                    android:drawableLeft="@drawable/icon_circle_plus"
                     android:fontFamily="@font/pretendard_semibold"
+                    android:paddingStart="7dp"
+                    android:stateListAnimator="@null"
                     android:text="장소 공유"
                     android:textColor="#212529"
-                    android:stateListAnimator="@null"
-                    android:drawableLeft="@drawable/icon_circle_plus"
-                    android:paddingStart="7dp"
-                    android:background="@drawable/shape_rounded_gray_radius_6"
                     android:textSize="12sp"
-                    android:layout_marginEnd="15dp"
-                    app:layout_constraintTop_toTopOf="@id/icLocation"
                     app:layout_constraintBottom_toBottomOf="@id/icLocation"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/icLocation" />
 
                 <View
                     android:id="@+id/divider2"
@@ -178,20 +178,20 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="12dp"
                     android:background="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/icLocation" />
 
                 <ImageView
                     android:id="@+id/icFriend"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@drawable/icon_friends"
-                    android:layout_marginTop="12dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginTop="12dp"
                     android:layout_marginBottom="20dp"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:src="@drawable/icon_friends"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider2" />
 
                 <TextView
@@ -199,44 +199,44 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:fontFamily="@font/pretend_regular"
                     android:text="초대된 친구 "
                     android:textColor="#212529"
                     android:textSize="14sp"
-                    android:fontFamily="@font/pretend_regular"
-                    app:layout_constraintStart_toEndOf="@id/icFriend"
-                    app:layout_constraintTop_toTopOf="@id/icFriend"
                     app:layout_constraintBottom_toBottomOf="@id/icFriend"
-                    app:layout_constraintEnd_toStartOf="@+id/tvFriendNumber" />
+                    app:layout_constraintEnd_toStartOf="@+id/tvFriendNumber"
+                    app:layout_constraintStart_toEndOf="@id/icFriend"
+                    app:layout_constraintTop_toTopOf="@id/icFriend" />
 
                 <TextView
                     android:id="@+id/tvFriendNumber"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/pretend_regular"
                     android:text="0"
                     android:textColor="#4F46E5"
                     android:textSize="14sp"
-                    android:fontFamily="@font/pretend_regular"
-                    app:layout_constraintStart_toEndOf="@id/tvFriend"
-                    app:layout_constraintTop_toTopOf="@id/icFriend"
                     app:layout_constraintBottom_toBottomOf="@id/icFriend"
-                    app:layout_constraintEnd_toStartOf="@+id/btnFriend" />
+                    app:layout_constraintEnd_toStartOf="@+id/btnFriend"
+                    app:layout_constraintStart_toEndOf="@id/tvFriend"
+                    app:layout_constraintTop_toTopOf="@id/icFriend" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnFriend"
                     android:layout_width="80dp"
                     android:layout_height="33dp"
-                    android:fontFamily="@font/pretendard_semibold"
+                    android:layout_marginEnd="15dp"
                     android:background="@drawable/shape_rounded_gray_radius_6"
+                    android:drawableLeft="@drawable/icon_invite_person"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:paddingStart="7dp"
                     android:stateListAnimator="@null"
                     android:text="친구 초대"
                     android:textColor="#212529"
                     android:textSize="12sp"
-                    android:drawableLeft="@drawable/icon_invite_person"
-                    android:paddingStart="7dp"
-                    android:layout_marginEnd="15dp"
-                    app:layout_constraintTop_toTopOf="@id/icFriend"
                     app:layout_constraintBottom_toBottomOf="@id/icFriend"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/icFriend" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -250,9 +250,9 @@
             android:background="#F9FAFB"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
-            app:layout_constraintTop_toBottomOf="@id/infoCardViewContainer"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/infoCardViewContainer">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -263,31 +263,31 @@
                     android:id="@+id/invited_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="초대된 친구"
-                    android:textSize="16sp"
-                    android:textColor="#1F2937"
                     android:fontFamily="@font/pretend_semibold"
+                    android:text="초대된 친구"
+                    android:textColor="#1F2937"
+                    android:textSize="16sp"
                     tools:ignore="MissingConstraints" />
 
                 <View
                     android:id="@+id/divider3"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
                     android:background="#F3F4F6"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/invited_text"
-                    android:layout_marginTop="15dp"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/invited_text" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view"
+                    android:id="@+id/invited_friend_list"
                     android:layout_width="match_parent"
-                    tools:listitem="@layout/item_invited_friend_list"
-                    tools:itemCount="3"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never"
-                    app:layout_constraintTop_toBottomOf="@id/divider3" />
+                    app:layout_constraintTop_toBottomOf="@id/divider3"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_invited_friend_list" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
@@ -299,9 +299,9 @@
             android:background="#F9FAFB"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
-            app:layout_constraintTop_toBottomOf="@id/invited_friend_cardview"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/invited_friend_cardview">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -312,31 +312,31 @@
                     android:id="@+id/joined_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="수락을 기다리는 친구"
-                    android:textSize="16sp"
-                    android:textColor="#1F2937"
                     android:fontFamily="@font/pretend_semibold"
+                    android:text="수락을 기다리는 친구"
+                    android:textColor="#1F2937"
+                    android:textSize="16sp"
                     tools:ignore="MissingConstraints" />
 
                 <View
                     android:id="@+id/divider4"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
                     android:background="#F3F4F6"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/joined_text"
-                    android:layout_marginTop="15dp"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/joined_text" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view_joined"
+                    android:id="@+id/waiting_friend_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never"
-                    tools:listitem="@layout/item_waiting_friend_list"
+                    app:layout_constraintTop_toBottomOf="@id/divider4"
                     tools:itemCount="3"
-                    app:layout_constraintTop_toBottomOf="@id/divider4"/>
+                    tools:listitem="@layout/item_waiting_friend_list" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
@@ -344,17 +344,16 @@
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="15dp"
             android:layout_marginBottom="30dp"
-            android:stateListAnimator="@null"
-            app:layout_constraintTop_toBottomOf="@id/waiting_friend_cardview"
-            android:text="모임 끝내기"
             android:background="@drawable/shape_rounded_blue_radius_16"
-            android:textSize="16sp"
             android:fontFamily="@font/pretend_medium"
-            android:textColor="#4F46E5"/>
-
+            android:stateListAnimator="@null"
+            android:text="모임 끝내기"
+            android:textColor="#4F46E5"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/waiting_friend_cardview" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
