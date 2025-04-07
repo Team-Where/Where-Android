@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentAgreementBinding
 import com.sooum.where_android.databinding.FragmentSignInBinding
 import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.auth.SignInFragment
+import com.sooum.where_android.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

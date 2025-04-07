@@ -1,18 +1,35 @@
 package com.sooum.where_android.viewmodel
 
+import android.media.Image
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.SignUpResult
+import com.sooum.domain.usecase.meet.LoginUseCase
+import com.sooum.domain.usecase.meet.SignUpUseCase
 import com.sooum.domain.usecase.meet.ValidatePasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val validatePasswordUseCase: ValidatePasswordUseCase
+    private val validatePasswordUseCase: ValidatePasswordUseCase,
+    private val loginUseCase: LoginUseCase,
+    private val signUpUseCase: SignUpUseCase
 ) : ViewModel(){
+
+    private val _loginState = MutableStateFlow<ApiResult<Any>>(ApiResult.Wait)
+    val loginState: StateFlow<ApiResult<Any>> = _loginState.asStateFlow()
+
+    private val _signUpState = MutableStateFlow<ApiResult<SignUpResult>>(ApiResult.Wait)
+    val signUpState: StateFlow<ApiResult<SignUpResult>> = _signUpState
+
     private val _password = MutableStateFlow("")
     val password: StateFlow<String> = _password.asStateFlow()
 
@@ -25,6 +42,9 @@ class AuthViewModel @Inject constructor(
     private val _name = MutableStateFlow("")
     val name: StateFlow<String> = _name.asStateFlow()
 
+    private val _profileImage = MutableStateFlow("")
+    val profileImage: StateFlow<String> = _profileImage.asStateFlow()
+
     private var _isValidName = MutableStateFlow<Boolean?>(null)
     val isValidName: StateFlow<Boolean?> = _isValidName.asStateFlow()
 
@@ -36,6 +56,49 @@ class AuthViewModel @Inject constructor(
 
     private val _isNextButtonEnabled = MutableStateFlow(false)
     val isNextButtonEnabled: StateFlow<Boolean> = _isNextButtonEnabled.asStateFlow()
+
+    /**
+     * 로그인 기능
+     */
+    fun login(email: String, password: String) {
+        viewModelScope.launch {
+            loginUseCase(email, password).collect { result ->
+                _loginState.value = result
+            }
+        }
+    }
+
+    /**
+     * 회원가입 기능
+     */
+    fun signUp() {
+        viewModelScope.launch {
+            signUpUseCase(
+                email = _email.value,
+                password = _password.value,
+                name = _name.value,
+                profileImage = _profileImage.value
+            ).collect { result ->
+                _signUpState.value = result
+            }
+        }
+    }
+
+    fun setEmail(value: String) {
+        _email.value = value
+    }
+
+    fun setPassword(value: String) {
+        _password.value = value
+    }
+
+    fun setName(value: String) {
+        _name.value = value
+    }
+
+    fun setProfileImage(value: String) {
+        _profileImage.value = value
+    }
 
     fun onPasswordChanged(password: String) {
         _password.value = password

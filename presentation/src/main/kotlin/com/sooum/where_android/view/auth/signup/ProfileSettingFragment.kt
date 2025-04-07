@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ImageAddType
@@ -23,18 +24,13 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ProfileSettingFragment : Fragment() {
     private lateinit var binding : FragmentProfileSettingBinding
-    private val viewModel: AuthViewModel by viewModels()
+    private val viewModel: AuthViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProfileSettingBinding.inflate(inflater, container, false)
-
-        with(binding){
-            nextBtn.setOnClickListener{ (activity as AuthActivity).navigateToFragment(SignUpCompleteFragment())}
-            imageBack.setOnClickListener { parentFragmentManager.popBackStack()}
-        }
 
         setupListeners()
         setUpObservers()
@@ -44,6 +40,14 @@ class ProfileSettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        with(binding){
+            nextBtn.setOnClickListener{
+                viewModel.setName(binding.editNickname.text.toString())
+                (activity as AuthActivity).navigateToFragment(SignUpCompleteFragment())
+            }
+            imageBack.setOnClickListener { parentFragmentManager.popBackStack()}
+        }
 
         binding.imageCamera.setOnClickListener {
             val dialog = ImagePickerDialogFragment.getInstance(
@@ -82,6 +86,6 @@ class ProfileSettingFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        binding.editTextPasswordRecheck.addTextChangedListener { viewModel.onNameChanged(it.toString()) }
+        binding.editNickname.addTextChangedListener { viewModel.onNameChanged(it.toString()) }
     }
 }

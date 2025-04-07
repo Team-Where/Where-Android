@@ -14,6 +14,6 @@ import kotlinx.serialization.Serializable
 data class SignUpRequest (
     val email: String,
     val password: String,
-    val name: String,
+    val nickName: String,
     val profileImage: String
 )

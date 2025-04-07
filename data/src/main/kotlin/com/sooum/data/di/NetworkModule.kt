@@ -1,5 +1,6 @@
 package com.sooum.data.di
 
+import com.sooum.data.network.auth.AuthApi
 import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.place.PlaceApi
 import com.sooum.data.network.schedule.ScheduleApi
@@ -71,5 +72,13 @@ object NetworkModule {
         @WhereRetrofit retrofit: Retrofit
     ): ScheduleApi {
         return retrofit.create(ScheduleApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthApi(
+        @WhereRetrofit retrofit: Retrofit
+    ): AuthApi {
+        return retrofit.create(AuthApi::class.java)
     }
 }

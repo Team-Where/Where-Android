@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class MyMeetViewModel @Inject constructor(
+class  MyMeetViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getMeetDetailListUseCase: GetMeetDetailListUseCase
 ) : ViewModel() {

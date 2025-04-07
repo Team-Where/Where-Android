@@ -11,7 +11,9 @@ import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentPasswordBinding
 import com.sooum.where_android.view.auth.AuthActivity
 import android.graphics.Color
+import android.util.Log
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.sooum.where_android.viewmodel.AuthViewModel
@@ -22,7 +24,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class PasswordFragment : Fragment() {
     private lateinit var binding : FragmentPasswordBinding
-    private val viewModel: AuthViewModel by viewModels()
+    private val viewModel: AuthViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,19 +32,24 @@ class PasswordFragment : Fragment() {
     ): View? {
         binding = FragmentPasswordBinding.inflate(inflater, container, false)
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         binding.nextBtn.setOnClickListener {
+            viewModel.setPassword(binding.textPassword.text.toString())
+            viewModel.setEmail(binding.editTextEmail.text.toString())
+            Log.e("PasswordFragment", "password: ${viewModel.password.value}")
+            Log.e("PasswordFragment", "email: ${viewModel.email.value}")
+
             (activity as AuthActivity).navigateToFragment(ProfileSettingFragment())
         }
 
         binding.imageBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         setupListeners()
         setupObservers()

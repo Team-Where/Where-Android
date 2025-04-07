@@ -3,8 +3,10 @@ package com.sooum.where_android.view.auth
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.sooum.where_android.databinding.ActivityAuthBinding
 import com.sooum.where_android.R
+import com.sooum.where_android.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
