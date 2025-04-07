@@ -9,6 +9,15 @@ import com.sooum.where_android.view.widget.UserViewType
 
 class InvitedFriendListAdapter() : ComposeItemAdapter<InvitedFriend>() {
 
+    interface OnItemClickEventListener {
+        fun clicked(item: InvitedFriend)
+    }
+
+    private var itemClickListener: OnItemClickEventListener? = null
+    fun setItemClickListener(listener: OnItemClickEventListener) {
+        itemClickListener = listener
+    }
+
     @Composable
     override fun Bind(item: InvitedFriend) {
         UserItemView(
@@ -17,7 +26,10 @@ class InvitedFriendListAdapter() : ComposeItemAdapter<InvitedFriend>() {
                 name = item.name,
                 profileImage = item.image ?: ""
             ),
-            type = UserViewType.Option
+            type = UserViewType.Option,
+            iconClickAction = {
+                itemClickListener?.clicked(item)
+            }
         )
     }
 

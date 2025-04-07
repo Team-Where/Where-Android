@@ -29,7 +29,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MyMeetDetailFragment : MyMeetBaseFragment() {
+class MyMeetDetailFragment : MyMeetBaseFragment(),
+    InvitedFriendListAdapter.OnItemClickEventListener {
     private lateinit var binding: FragmentMyMeetDetailBinding
     private lateinit var invitedFriendAdapter: InvitedFriendListAdapter
     private lateinit var waitingFriendListAdapter: WaitingFriendListAdapter
@@ -45,8 +46,6 @@ class MyMeetDetailFragment : MyMeetBaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        invitedFriendAdapter = InvitedFriendListAdapter()
-        waitingFriendListAdapter = WaitingFriendListAdapter()
         setupRecyclerView()
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -101,6 +100,10 @@ class MyMeetDetailFragment : MyMeetBaseFragment() {
     }
 
     private fun setupRecyclerView() {
+        invitedFriendAdapter = InvitedFriendListAdapter().apply {
+            setItemClickListener(this@MyMeetDetailFragment)
+        }
+        waitingFriendListAdapter = WaitingFriendListAdapter()
         with(binding) {
             invitedFriendList.apply {
                 layoutManager = LinearLayoutManager(requireContext())
@@ -131,6 +134,10 @@ class MyMeetDetailFragment : MyMeetBaseFragment() {
                 btnSchedule.text = "일정 등록"
             }
         }
+    }
+
+    override fun clicked(item: InvitedFriend) {
+        openMapShareSheet()
     }
 }
 
