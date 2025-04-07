@@ -14,7 +14,7 @@ import com.sooum.where_android.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EmailVerificationFragment : Fragment() {
+class EmailVerificationFragment : AuthBaseFragment() {
     private lateinit var binding : FragmentEmailVerificationBinding
     private val viewModel: AuthViewModel by activityViewModels()
 
@@ -26,11 +26,11 @@ class EmailVerificationFragment : Fragment() {
         binding = FragmentEmailVerificationBinding.inflate(inflater, container, false)
 
         binding.nextBtn.setOnClickListener {
-            (activity as AuthActivity).navigateToFragment(PasswordFragment())
+           navigateTo(PasswordFragment())
         }
 
         binding.imageBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+           popBackStack()
         }
 
         return binding.root

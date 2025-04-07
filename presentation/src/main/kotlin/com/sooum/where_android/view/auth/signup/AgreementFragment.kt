@@ -17,7 +17,7 @@ import com.sooum.where_android.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AgreementFragment : Fragment() {
+class AgreementFragment : AuthBaseFragment() {
     private lateinit var binding : FragmentAgreementBinding
     private lateinit var allCheckboxes: List<CheckBox>
 
@@ -36,14 +36,14 @@ class AgreementFragment : Fragment() {
 
         binding.nextBtn.setOnClickListener {
             if (!isRequiredChecked()) {
-                Toast.makeText(requireContext(), "체크박스를 확인해주세요.",Toast.LENGTH_SHORT).show()
+             showToast("체크박스를 확인해주세요.")
                 return@setOnClickListener
             }
-            (activity as AuthActivity).navigateToFragment(EmailVerificationFragment())
+            navigateTo(EmailVerificationFragment())
         }
 
         binding.imageBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+           popBackStack()
         }
 
         setupCheckboxListeners()

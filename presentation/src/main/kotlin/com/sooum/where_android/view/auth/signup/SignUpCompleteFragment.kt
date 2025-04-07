@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentProfileSettingBinding
 import com.sooum.where_android.databinding.FragmentSignUpCompleteBinding
+import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetDetailFragment
@@ -38,11 +39,37 @@ class SignUpCompleteFragment : Fragment() {
         }
 
         binding.nextBtn.setOnClickListener {
-            Log.d("SignUpCompleteFragment", "email: ${viewModel.email}, password: ${viewModel.password}, name: ${viewModel.name}")
            viewModel.signUp()
         }
 
+        observeSignUpResult()
+
 
         return binding.root
+    }
+
+    private fun observeSignUpResult() {
+        lifecycleScope.launch {
+            viewModel.signUpState.collect { result ->
+                when (result) {
+                    is ApiResult.Loading -> {
+                    }
+                    is ApiResult.Success -> {
+                        Toast.makeText(requireContext(), "회원가입 완료!", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(requireContext(), AuthActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                    }
+                    is ApiResult.Fail -> {
+                        Toast.makeText(requireContext(), "회원가입 실패: ${result}", Toast.LENGTH_SHORT).show()
+                        Log.d("SignUpCompleteFragment",result.toString())
+                        binding.nextBtn.isEnabled = true
+                    }
+                    ApiResult.Wait -> {
+
+                    }
+                }
+            }
+        }
     }
 }

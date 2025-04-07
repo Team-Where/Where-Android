@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ProfileSettingFragment : Fragment() {
+class ProfileSettingFragment : AuthBaseFragment() {
     private lateinit var binding : FragmentProfileSettingBinding
     private val viewModel: AuthViewModel by activityViewModels()
 
@@ -44,9 +44,10 @@ class ProfileSettingFragment : Fragment() {
         with(binding){
             nextBtn.setOnClickListener{
                 viewModel.setName(binding.editNickname.text.toString())
-                (activity as AuthActivity).navigateToFragment(SignUpCompleteFragment())
+               navigateTo(SignUpCompleteFragment())
             }
-            imageBack.setOnClickListener { parentFragmentManager.popBackStack()}
+
+            imageBack.setOnClickListener { popBackStack()}
         }
 
         binding.imageCamera.setOnClickListener {

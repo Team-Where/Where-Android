@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class PasswordFragment : Fragment() {
+class PasswordFragment : AuthBaseFragment() {
     private lateinit var binding : FragmentPasswordBinding
     private val viewModel: AuthViewModel by activityViewModels()
 
@@ -39,16 +39,14 @@ class PasswordFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.nextBtn.setOnClickListener {
-            viewModel.setPassword(binding.textPassword.text.toString())
+            viewModel.setPassword(binding.editTextPassword.text.toString())
             viewModel.setEmail(binding.editTextEmail.text.toString())
-            Log.e("PasswordFragment", "password: ${viewModel.password.value}")
-            Log.e("PasswordFragment", "email: ${viewModel.email.value}")
 
-            (activity as AuthActivity).navigateToFragment(ProfileSettingFragment())
+           navigateTo(ProfileSettingFragment())
         }
 
         binding.imageBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            popBackStack()
         }
 
         setupListeners()
