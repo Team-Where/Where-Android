@@ -7,7 +7,6 @@ import com.sooum.data.network.place.request.DeletePlaceRequest
 import com.sooum.data.network.place.request.EditCommentRequest
 import com.sooum.data.network.place.request.LikePlaceRequest
 import com.sooum.data.network.place.request.PickPlaceRequest
-import com.sooum.domain.model.Comment
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
 import com.sooum.domain.model.Meet
@@ -20,6 +19,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface PlaceApi {
 
@@ -28,10 +28,11 @@ interface PlaceApi {
         @Body data: AddPlaceRequest
     ): Response<Place>
 
-    @GET("api/place/{id}")
-    suspend fun getPlace(
-        @Path("id") placeId: Int,
-    ): Response<Place>
+    @GET("api/place")
+    suspend fun getPlaceList(
+        @Query("meetingId") meetingId: Int,
+        @Query("userId") userId : Int
+    ): Response<List<Place>>
 
     @DELETE("api/place")
     suspend fun deletePlace(
@@ -51,7 +52,7 @@ interface PlaceApi {
     @POST("api/place/comment")
     suspend fun addPlaceComment(
         @Body data: AddCommentRequest
-    ): Response<Comment>
+    ): Response<CommentSimple>
 
     @PUT("api/place/comment")
     suspend fun editPlaceComment(

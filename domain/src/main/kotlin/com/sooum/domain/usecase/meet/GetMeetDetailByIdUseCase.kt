@@ -8,8 +8,8 @@ import javax.inject.Inject
 class GetMeetDetailByIdUseCase @Inject constructor(
     private val repository: MeetDetailRepository
 ) {
-    suspend operator fun invoke(meetId: Int): Flow<MeetDetail?> {
-        repository.loadInviteStatus(meetId)
+    operator fun invoke(meetId: Int): Flow<MeetDetail?> {
+        repository.loadMeetDetailSubData(meetId)
         return repository.getMeetDetailById(meetId)
     }
 }

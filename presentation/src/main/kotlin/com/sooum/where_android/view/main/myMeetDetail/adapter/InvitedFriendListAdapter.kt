@@ -26,7 +26,7 @@ class InvitedFriendListAdapter() : ComposeItemAdapter<InvitedFriend>() {
                 name = item.name,
                 profileImage = item.image ?: ""
             ),
-            type = UserViewType.Option,
+            type = if (item.isMe) UserViewType.Nothing else UserViewType.Option,
             iconClickAction = {
                 itemClickListener?.clicked(item)
             }

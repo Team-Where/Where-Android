@@ -4,32 +4,48 @@ import android.util.Log
 import com.sooum.domain.datasource.MeetRemoteDataSource
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.NewMeetResult
+import com.sooum.domain.model.Place
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.repository.MeetDetailRepository
+import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
 class MeetDetailRepositoryImpl @Inject constructor(
-    private val meetRemoteDataSource: MeetRemoteDataSource
+    private val meetRemoteDataSource: MeetRemoteDataSource,
+    private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
 ) : MeetDetailRepository {
 
     private val _meetDetailList = MutableStateFlow(emptyList<MeetDetail>())
     private val _meetInviteStatus = MutableStateFlow(emptyList<MeetInviteStatus>())
+    private val _meetPlaceList = MutableStateFlow(emptyMap<Int, List<Place>>())
+    private val _commentList = MutableStateFlow(emptyMap<Int, List<CommentListItem>>())
 
     private val meetDetailList
         get() = _meetDetailList.asStateFlow()
 
     private val meetInviteStatus
         get() = _meetInviteStatus.asStateFlow()
+
+    private val meetPlaceList
+        get() = _meetPlaceList.asStateFlow()
+
+    private val commentList
+        get() = _commentList.asStateFlow()
+
 
     override suspend fun loadMeetDetailList(userId: Int) {
         val meetDetails = meetRemoteDataSource.getMeetList(userId).first()
@@ -39,6 +55,8 @@ class MeetDetailRepositoryImpl @Inject constructor(
     override fun getMeetDetailList(): Flow<List<MeetDetail>> = meetDetailList
 
     override fun getMeetInviteList(): Flow<List<MeetInviteStatus>> = meetInviteStatus
+
+    override fun getMeetPlaceList(): Flow<Map<Int, List<Place>>> = meetPlaceList
 
     override fun getMeetDetailById(id: Int): Flow<MeetDetail?> = meetDetailList
         .map { list -> list.find { it.id == id } }
@@ -81,13 +99,49 @@ class MeetDetailRepositoryImpl @Inject constructor(
         }.first()
     }
 
-    override suspend fun loadInviteStatus(meetId: Int) {
-        val result = meetRemoteDataSource.getMeetInviteStatus(
-            meetId
-        ).first()
+    private val asyncScope = CoroutineScope(Dispatchers.IO)
 
-        if (result is ApiResult.Success) {
-            _meetInviteStatus.value = result.data
+    override fun loadMeetDetailSubData(meetId: Int) {
+        asyncScope.launch {
+            val myId = getLoginUserIdUseCase()
+
+            meetRemoteDataSource.getMeetInviteStatus(
+                meetId
+            ).first().let { result ->
+                if (result is ApiResult.Success) {
+                    _meetInviteStatus.value = result.data
+                }
+
+                val temp = mutableMapOf<Int, List<Place>>()
+
+                myId?.let { id ->
+                    meetRemoteDataSource.getMeetPlaceList(meetId, id).first().let { result ->
+                        if (result is ApiResult.Success) {
+                            temp[id] = result.data
+                        }
+                    }
+                }
+
+                _meetInviteStatus.value.filter { it.status }.forEach {
+                    val userId = it.toId
+                    meetRemoteDataSource.getMeetPlaceList(meetId, userId).first().let { result ->
+                        if (result is ApiResult.Success) {
+                            temp[userId] = result.data
+                        }
+                    }
+                }
+                val commentTemp = mutableMapOf<Int, List<CommentListItem>>()
+                temp.values.flatten().forEach { place ->
+                    val placeId = place.id
+                    meetRemoteDataSource.getPlaceCommentList(placeId).first().let { result ->
+                        if (result is ApiResult.Success) {
+                            commentTemp[placeId] = result.data
+                        }
+                    }
+                }
+                _meetPlaceList.value = temp
+                _commentList.value = commentTemp
+            }
         }
     }
 
@@ -104,14 +158,16 @@ class MeetDetailRepositoryImpl @Inject constructor(
             address,
         ).transform { result ->
             if (result is ApiResult.Success) {
-                val schedule = result.data
-//                val tempList = _meetDetailList.value.toMutableList()
-//                val index = tempList.indexOfFirst { it.id == meetId }
-//                val item = tempList[index].copy(
-//                    schedule = schedule
-//                )
-//                tempList[index] = item
-//                _meetDetailList.value = tempList
+                val place = result.data
+                val temp = _meetPlaceList.value.toMutableMap()
+                if (temp.contains(userId)) {
+                    val tempList = temp[userId]!!.toMutableList()
+                    tempList.add(place)
+                    temp[userId] = tempList
+                } else {
+                    temp[userId] = listOf(place)
+                }
+                _meetPlaceList.value = temp
                 emit(ActionResult.Success(result.data.toString()))
             } else {
                 emit(ActionResult.Fail(""))
@@ -192,5 +248,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
 
     override suspend fun clearMeetDetail() {
         _meetInviteStatus.value = emptyList()
+        _meetPlaceList.value = emptyMap()
+        _commentList.value = emptyMap()
     }
 }

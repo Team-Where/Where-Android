@@ -22,7 +22,6 @@ import com.sooum.data.network.schedule.request.DeleteScheduleRequest
 import com.sooum.data.network.schedule.request.EditScheduleRequest
 import com.sooum.domain.datasource.MeetRemoteDataSource
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.model.Comment
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
 import com.sooum.domain.model.Meet
@@ -149,6 +148,10 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         return safeFlow { placeApi.addPlace(request) }
     }
 
+    override suspend fun getMeetPlaceList(meetId: Int, userId: Int): Flow<ApiResult<List<Place>>> {
+        return safeFlow { placeApi.getPlaceList(meetId, userId) }
+    }
+
     override suspend fun deleteMeetPlace(placeId: Int): Flow<ApiResult<Any>> {
         val request = DeletePlaceRequest(
             placeId = placeId
@@ -175,7 +178,7 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         placeId: Int,
         userId: Int,
         description: String
-    ): Flow<ApiResult<Comment>> {
+    ): Flow<ApiResult<CommentSimple>> {
         val request = AddCommentRequest(
             placeId = placeId,
             userId = userId,
@@ -217,7 +220,7 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         time: String
     ): Flow<ApiResult<Schedule>> {
         getSchedule(meetId).first().also {
-            Log.d("JWH",it.toString())
+            Log.d("JWH", it.toString())
         }
         val request = AddScheduleRequest(
             meetId = meetId,

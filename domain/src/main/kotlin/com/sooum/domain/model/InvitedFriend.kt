@@ -6,6 +6,7 @@ data class InvitedFriend(
     val id : Int,
     val name: String,
     val image: String?,
+    val isMe :Boolean = false
 )
 
 /**

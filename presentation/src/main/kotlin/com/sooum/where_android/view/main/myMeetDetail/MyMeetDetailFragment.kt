@@ -55,29 +55,27 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
                 }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myMeetDetailViewModel.invitedFriendList.collect { list ->
+                    binding.tvFriendNumber.text = list.size.toString()
+                    invitedFriendAdapter.setList(list)
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myMeetDetailViewModel.inviteStatus.collect { list ->
-                    val grouped = list.groupBy { it.status }
-                    grouped[true]?.map {
-                        InvitedFriend(
-                            it.toId,
-                            it.toName,
-                            it.toImage
-                        )
-                    }?.let { items ->
-                        invitedFriendAdapter.setList(items)
-                    }
-                    grouped[false]?.map {
-                        InvitedFriend(
-                            it.toId,
-                            it.toName,
-                            it.toImage
-                        )
-                    }?.let { items ->
-                        waitingFriendListAdapter.setList(items)
-                    }
+                myMeetDetailViewModel.waitingFriendList.collect { list ->
+                    waitingFriendListAdapter.setList(list)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myMeetDetailViewModel.placeCount.collect { placeCount ->
+                    binding.tvLocationNumber.text = placeCount.toString()
                 }
             }
         }

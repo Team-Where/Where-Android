@@ -1,7 +1,6 @@
 package com.sooum.domain.datasource
 
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.model.Comment
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
 import com.sooum.domain.model.Meet
@@ -81,6 +80,11 @@ interface MeetRemoteDataSource {
         address: String,
     ): Flow<ApiResult<Place>>
 
+    suspend fun getMeetPlaceList(
+        meetId: Int,
+        userId: Int,
+    ): Flow<ApiResult<List<Place>>>
+
 
     /**
      * 장소를 삭제한다.
@@ -111,7 +115,7 @@ interface MeetRemoteDataSource {
         placeId: Int,
         userId: Int,
         description: String
-    ): Flow<ApiResult<Comment>>
+    ): Flow<ApiResult<CommentSimple>>
 
     /**
      * 코멘트 수정

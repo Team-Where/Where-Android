@@ -101,19 +101,14 @@
                 android:layout_marginStart="10dp"/>
         </LinearLayout>
 
-
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
             app:layout_constraintTop_toBottomOf="@id/filterLayout"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
             android:overScrollMode="never"/>
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

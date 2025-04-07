@@ -19,7 +19,7 @@ import kotlinx.serialization.Serializable
 data class Place(
     val id: Int,
     val naverLink: String,
-    val kakaoLink: String?,
+    val kakaoLink: String,
     val name: String,
     val address: String,
     val likeCount: Int,
