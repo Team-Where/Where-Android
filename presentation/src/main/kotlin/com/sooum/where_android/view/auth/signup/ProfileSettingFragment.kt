@@ -63,6 +63,7 @@ class ProfileSettingFragment : AuthBaseFragment() {
                                 // 앨범에서 선택한 이미지 적용
                                 binding.imageProfile.setImageURI(imageType.uri)
                                 binding.imageProfile.scaleType = ImageView.ScaleType.CENTER_CROP
+                                viewModel.setProfileImage(imageType.uri.toString())
                             }
                             else -> {}
                         }

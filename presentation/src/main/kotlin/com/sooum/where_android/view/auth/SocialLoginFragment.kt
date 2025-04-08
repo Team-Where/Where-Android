@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -33,44 +34,39 @@ class SocialLoginFragment : Fragment() {
             (activity as AuthActivity).navigateToFragment(AgreementFragment())
         }
 
-        permissionCheck()
+        checkNotificationPermission()
 
 
         return binding.root
     }
 
-    private fun permissionCheck() {
+    private fun checkNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val permissionCheck = ContextCompat.checkSelfPermission(
-                requireContext(),
-                android.Manifest.permission.POST_NOTIFICATIONS
-            )
-            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
-                    PERMISSION_REQUEST_CODE
-                )
+            val permission = android.Manifest.permission.POST_NOTIFICATIONS
+
+            when {
+                ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED -> {
+                }
+
+                shouldShowRequestPermissionRationale(permission) -> {
+                    Toast.makeText(requireContext(), "알림을 위해 권한이 필요해요.", Toast.LENGTH_SHORT).show()
+                    notificationPermissionLauncher.launch(permission)
+                }
+
+                else -> {
+                    notificationPermissionLauncher.launch(permission)
+                }
             }
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(requireContext(), "Permission is denied", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    Toast.makeText(requireContext(), "Permission is granted", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Toast.makeText(requireContext(), "알림 권한이 허용되었습니다.", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), "알림 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 }

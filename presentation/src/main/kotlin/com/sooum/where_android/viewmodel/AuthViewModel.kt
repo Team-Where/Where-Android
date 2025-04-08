@@ -96,8 +96,8 @@ class AuthViewModel @Inject constructor(
         _name.value = value
     }
 
-    fun setProfileImage(value: String) {
-        _profileImage.value = value
+    fun setProfileImage(uri: String) {
+        _profileImage.value = uri
     }
 
     fun onPasswordChanged(password: String) {

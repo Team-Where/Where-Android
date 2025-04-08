@@ -61,7 +61,7 @@ class SignUpCompleteFragment : Fragment() {
                         startActivity(intent)
                     }
                     is ApiResult.Fail -> {
-                        Toast.makeText(requireContext(), "회원가입 실패: ${result}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "회원가입 실패했습니다: ${result}", Toast.LENGTH_SHORT).show()
                         Log.d("SignUpCompleteFragment",result.toString())
                         binding.nextBtn.isEnabled = true
                     }

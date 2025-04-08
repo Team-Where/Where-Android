@@ -32,15 +32,17 @@ class OnBoardingActivity : AppCompatActivity(){
         })
 
         binding.nextBtn.setOnClickListener {
-            val intent = Intent(this, AuthActivity::class.java)
+            val intent = Intent(this, AuthActivity::class.java).apply {
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
             startActivity(intent)
-            finish()
         }
 
         binding.skipText.setOnClickListener {
-            val intent = Intent(this, AuthActivity::class.java)
+            val intent = Intent(this, AuthActivity::class.java).apply {
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
             startActivity(intent)
-            finish()
         }
 
         binding.imageBack.setOnClickListener {
