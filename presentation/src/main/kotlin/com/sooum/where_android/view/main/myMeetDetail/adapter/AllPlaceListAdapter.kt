@@ -24,7 +24,7 @@ class AllPlaceListAdapter(
 
     interface PlaceClickCallBack {
         fun likeChange(placeId: Int)
-        fun startMapUri(uriString: String)
+        fun startMapUri(uriString: String,marketPackage: String)
     }
 
     fun setCallBack(callBack: PlaceClickCallBack) {
@@ -92,6 +92,8 @@ class AllPlaceListAdapter(
                 textAddress.text = place.address
                 if (place.likeCount > 0) {
                     textLikeNumber.text = place.likeCount.toString()
+                } else {
+                    textLikeNumber.text = ""
                 }
                 val context = binding.root.context
                 if (isLiked) {
@@ -114,11 +116,11 @@ class AllPlaceListAdapter(
 
 
                 btnNaverMap.setOnClickListener {
-                    placeClickCallBack?.startMapUri(place.naverLink)
+                    placeClickCallBack?.startMapUri(place.naverLink,"com.nhn.android.nmap")
                 }
 
                 btnKakaoMap.setOnClickListener {
-                    placeClickCallBack?.startMapUri(place.kakaoLink)
+                    placeClickCallBack?.startMapUri(place.kakaoLink,"net.daum.android.map")
                 }
                 if (place.together) {
                     textTogether.visibility = View.VISIBLE

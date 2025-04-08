@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sooum.domain.model.SelectedPlace
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
+import com.sooum.where_android.startMapUriOrMarket
 import com.sooum.where_android.view.main.myMeetDetail.adapter.AllPlaceListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.SelectedPlaceListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
@@ -104,12 +105,13 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), AllPlaceListAdapter.PlaceClick
     }
 
     override fun likeChange(placeId: Int) {
-        myMeetDetailViewModel.likeToggle(placeId)
+        myMeetDetailViewModel.likeToggle(placeId) {
+
+        }
     }
 
 
-    override fun startMapUri(uriString: String) {
-        val intent = Intent(Intent.ACTION_VIEW, uriString.toUri())
-        startActivity(intent)
+    override fun startMapUri(uriString: String, marketPackage: String) {
+        context?.startMapUriOrMarket(uriString, marketPackage)
     }
 }

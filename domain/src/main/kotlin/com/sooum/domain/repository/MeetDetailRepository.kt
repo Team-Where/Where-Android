@@ -70,7 +70,7 @@ interface MeetDetailRepository {
     suspend fun likeToggle(
         placeId :Int,
         userId: Int,
-    )
+    ) : ActionResult<Unit>
 
     suspend fun exitMeet(
         meetId: Int,

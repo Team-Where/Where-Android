@@ -1,5 +1,6 @@
 package com.sooum.where_android.viewmodel
 
+import android.app.Notification.Action
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ActionResult
@@ -16,6 +17,7 @@ import com.sooum.domain.usecase.meet.GetMeetInviteStatusUseCase
 import com.sooum.domain.usecase.meet.GetMeetPlaceListUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetScheduleUseCase
 import com.sooum.domain.usecase.place.AddPlaceUseCase
+import com.sooum.domain.usecase.place.TogglePlaceLikeUseCase
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +40,7 @@ class MyMeetDetailViewModel @Inject constructor(
     private val exitMeetUseCase: ExitMeetUseCase,
     private val clearMeetUseCase: ClearMeetUseCase,
     private val addPlaceUseCase: AddPlaceUseCase,
+    private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase
 ) : ViewModel() {
 
 
@@ -137,7 +140,8 @@ class MyMeetDetailViewModel @Inject constructor(
             // 정렬 로직
             val grouped = tempData.groupBy { it.userId }
                 .mapNotNull { (userId, items) ->
-                    val header = items.find { it is PlaceList.ProfileHeader } as? PlaceList.ProfileHeader
+                    val header =
+                        items.find { it is PlaceList.ProfileHeader } as? PlaceList.ProfileHeader
                     val posts = items.filterIsInstance<PlaceList.PostItem>()
                     if (header != null) {
                         listOf(header) + posts
@@ -193,7 +197,7 @@ class MyMeetDetailViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             _meetDetail.value?.let {
-                addPlaceUseCase(it.id, shareResult)
+                addPlaceUseCase(it.id, getLoginUserIdUseCase()!!, shareResult)
                 complete()
             }
         }
@@ -217,8 +221,14 @@ class MyMeetDetailViewModel @Inject constructor(
         }
     }
 
-    fun likeToggle(placeId:Int) {
-
+    fun likeToggle(
+        placeId: Int,
+        complete: (ActionResult<Unit>) -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            val result = togglePlaceLikeUseCase(placeId, getLoginUserIdUseCase()!!,)
+            complete(result)
+        }
     }
 
     override fun onCleared() {

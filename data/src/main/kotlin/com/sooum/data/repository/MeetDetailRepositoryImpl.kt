@@ -230,7 +230,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
         }.first()
     }
 
-    override suspend fun likeToggle(placeId: Int, userId: Int) {
+    override suspend fun likeToggle(placeId: Int, userId: Int) : ActionResult<Unit> {
         val result = meetRemoteDataSource.likePlace(placeId, userId).first()
         if (result is ApiResult.Success) {
             val pickStatus = result.data
@@ -253,7 +253,9 @@ class MeetDetailRepositoryImpl @Inject constructor(
                     _meetPlaceList.value = temp
                 }
             }
+            return ActionResult.Success(Unit)
         }
+        return ActionResult.Fail("")
     }
 
     override suspend fun exitMeet(meetId: Int, userId: Int): ActionResult<Unit> {
