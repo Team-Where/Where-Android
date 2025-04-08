@@ -45,7 +45,7 @@ interface MeetApi {
         @Body data: FinishMeetRequest,
     ): Response<Any>
 
-    @GET("api/meeting/participants/{id}")
+    @GET("api/meeting/participant/{id}")
     suspend fun getMeetInviteStatus(
         @Path("id") meetId: Int
     ): Response<List<MeetInviteStatus>>

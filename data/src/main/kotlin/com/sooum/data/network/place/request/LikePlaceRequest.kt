@@ -7,12 +7,12 @@ import kotlinx.serialization.Serializable
 /**
  * 장소 삭제시 사용되는 model
  * @param[placeId] 장소 식별 id
- * @param[like] 좋아요 여부
+ * @param[userId] 좋아요 누른 유저 id
  */
 @Serializable
 data class LikePlaceRequest(
     @SerialName("id")
     val placeId: Int,
-    @SerialName("like")
-    val like : Boolean
+    @SerialName("userId")
+    val userId : Int
 )

@@ -1,6 +1,5 @@
 package com.sooum.data.repository
 
-import android.util.Log
 import com.sooum.domain.datasource.MeetRemoteDataSource
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
@@ -229,6 +228,32 @@ class MeetDetailRepositoryImpl @Inject constructor(
                 emit(ActionResult.Fail(""))
             }
         }.first()
+    }
+
+    override suspend fun likeToggle(placeId: Int, userId: Int) {
+        val result = meetRemoteDataSource.likePlace(placeId, userId).first()
+        if (result is ApiResult.Success) {
+            val pickStatus = result.data
+            val temp = _meetPlaceList.value.toMutableMap()
+            val userPlaceList = temp[userId]?.toMutableList()
+            if (userPlaceList != null) {
+                val placeItemIndex = userPlaceList.indexOfFirst { it.id == placeId }
+                if (placeItemIndex >= 0) {
+                    val tempLikedList = userPlaceList[placeItemIndex].likeUserList.toMutableList()
+                    if (pickStatus.like) {
+                        tempLikedList.add(userId)
+                    } else {
+                        tempLikedList.removeIf {
+                            it == userId
+                        }
+                    }
+                    val newPlaceItem = userPlaceList[placeItemIndex].copy(likeUserList = tempLikedList)
+                    userPlaceList[placeItemIndex] = newPlaceItem
+                    temp[userId] = userPlaceList
+                    _meetPlaceList.value = temp
+                }
+            }
+        }
     }
 
     override suspend fun exitMeet(meetId: Int, userId: Int): ActionResult<Unit> {

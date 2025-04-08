@@ -67,6 +67,11 @@ interface MeetDetailRepository {
     ): ActionResult<Schedule>
     //endregion
 
+    suspend fun likeToggle(
+        placeId :Int,
+        userId: Int,
+    )
+
     suspend fun exitMeet(
         meetId: Int,
         userId: Int

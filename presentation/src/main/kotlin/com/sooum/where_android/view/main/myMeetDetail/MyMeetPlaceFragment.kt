@@ -1,25 +1,34 @@
 package com.sooum.where_android.view.main.myMeetDetail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sooum.domain.model.SelectedPlace
+import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
 import com.sooum.where_android.view.main.myMeetDetail.adapter.AllPlaceListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.SelectedPlaceListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MyMeetPlaceFragment : MyMeetBaseFragment() {
+@AndroidEntryPoint
+class MyMeetPlaceFragment : MyMeetBaseFragment(), AllPlaceListAdapter.PlaceClickCallBack {
     private lateinit var binding: FragmentMyMeetPlaceBinding
     private lateinit var selectedPlaceListAdapter: SelectedPlaceListAdapter
     private lateinit var allPlaceListAdapter: AllPlaceListAdapter
+
+    @Inject
+    lateinit var getLoginUserIdUseCase: GetLoginUserIdUseCase
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,7 +70,11 @@ class MyMeetPlaceFragment : MyMeetBaseFragment() {
         selectedPlaceListAdapter = SelectedPlaceListAdapter()
         selectedPlaceListAdapter.setList(dummyList)
 
-        allPlaceListAdapter = AllPlaceListAdapter()
+        viewLifecycleOwner.lifecycleScope.launch {
+            allPlaceListAdapter = AllPlaceListAdapter(getLoginUserIdUseCase()!!).apply {
+                setCallBack(this@MyMeetPlaceFragment)
+            }
+        }
 
         binding.recyclerView.apply {
             layoutManager =
@@ -90,5 +103,13 @@ class MyMeetPlaceFragment : MyMeetBaseFragment() {
         }
     }
 
+    override fun likeChange(placeId: Int) {
+        myMeetDetailViewModel.likeToggle(placeId)
+    }
 
+
+    override fun startMapUri(uriString: String) {
+        val intent = Intent(Intent.ACTION_VIEW, uriString.toUri())
+        startActivity(intent)
+    }
 }

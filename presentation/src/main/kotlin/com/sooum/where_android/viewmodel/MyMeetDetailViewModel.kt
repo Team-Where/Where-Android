@@ -1,12 +1,10 @@
 package com.sooum.where_android.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.MeetDetail
-import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.PlaceList
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.ShareResult
@@ -24,8 +22,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
@@ -219,6 +215,10 @@ class MyMeetDetailViewModel @Inject constructor(
                 complete(result)
             }
         }
+    }
+
+    fun likeToggle(placeId:Int) {
+
     }
 
     override fun onCleared() {

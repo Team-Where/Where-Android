@@ -9,7 +9,6 @@ open class MyMeetBaseFragment : Fragment() {
 
     protected val myMeetDetailViewModel: MyMeetDetailViewModel by activityViewModels()
 
-
     /**
      * 장소 공유 시트를 노출 합니다.
      */

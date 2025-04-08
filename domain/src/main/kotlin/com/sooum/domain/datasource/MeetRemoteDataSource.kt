@@ -105,7 +105,7 @@ interface MeetRemoteDataSource {
      */
     suspend fun likePlace(
         placeId: Int,
-        like: Boolean
+        userId: Int
     ): Flow<ApiResult<PlacePickStatus>>
 
     /**

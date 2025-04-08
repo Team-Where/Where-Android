@@ -22,24 +22,28 @@ data class Place(
     val kakaoLink: String,
     val name: String,
     val address: String,
-    val likeCount: Int,
+    @SerialName("likes")
+    val likeUserList : List<Int>,
     @SerialName("placeStatus")
     val status: String,
     val together: Boolean
-)
+) {
+    val likeCount :Int
+        get() = likeUserList.size
+}
 
 
 /**
  * @param[id] Place 고유 식별 id
- * @param[likeCount] 장소 좋아요 수
+ * @param[like] 좋아요 여부
  * @param[status] 장소 pick 상태
  */
 @Serializable
 data class PlacePickStatus(
     @SerialName("id")
     val id: Int,
-    @SerialName("likeCount")
-    val likeCount: Int,
+    @SerialName("like")
+    val like: Boolean,
     @SerialName("placeStatus")
     val status: String
 )

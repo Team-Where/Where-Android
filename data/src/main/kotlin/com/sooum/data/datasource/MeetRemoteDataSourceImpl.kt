@@ -166,10 +166,10 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         return safeFlow { placeApi.pickPlace(request) }
     }
 
-    override suspend fun likePlace(placeId: Int, like: Boolean): Flow<ApiResult<PlacePickStatus>> {
+    override suspend fun likePlace(placeId: Int, userId: Int): Flow<ApiResult<PlacePickStatus>> {
         val request = LikePlaceRequest(
             placeId,
-            like
+            userId
         )
         return safeFlow { placeApi.likePlace(request) }
     }
