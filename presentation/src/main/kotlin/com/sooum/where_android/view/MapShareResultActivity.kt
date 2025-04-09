@@ -24,6 +24,13 @@ class MapShareResultActivity : Activity() {
         val activity = WhereApp.currentActivity
         Log.d("JWH", activity.toString())
 
+        Log.d("JWH",intent.toString())
+        intent?.let {
+            Log.d("JWH",it.action.toString())
+            Log.d("JWH",it.data.toString())
+            Log.d("JWH",it.extras.toString())
+
+        }
         if (activity is MyMeetActivity) {
             intent.parseMapShare()?.let { result ->
                 val shareResultText = Json.encodeToString(result)

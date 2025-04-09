@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.firebase.messaging.FirebaseMessaging
 import com.sooum.where_android.databinding.ActivityMainBinding
+import com.sooum.where_android.util.KaKaoShareUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -35,6 +38,13 @@ class MainActivity : AppCompatActivity() {
                     MainScreenView(
                         modifier = Modifier.fillMaxSize()
                     )
+                    Button(
+                        onClick = {
+
+                        }
+                    ) {
+                        Text("123")
+                    }
                 }
             }
         }
