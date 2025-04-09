@@ -18,6 +18,7 @@ import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetDetail
+import com.sooum.domain.model.SimpleMeet
 import com.sooum.where_android.R
 
 @Composable
@@ -44,6 +45,17 @@ fun Meet.CoverImage(
     )
 }
 
+@Composable
+fun SimpleMeet.CoverImage(
+    size: Dp,
+    radius: Dp
+) {
+    CoverImageView(
+        src = image,
+        size = size,
+        radius = radius
+    )
+}
 @Composable
 fun CoverImageView(
     src: String?,

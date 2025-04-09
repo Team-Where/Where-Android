@@ -57,6 +57,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".view.SchemeResultActivity"
+            android:exported="true"
+            android:launchMode="singleInstance">
 
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -66,6 +72,15 @@
 
                 <data android:scheme="https" />
                 <data android:host="audiwhere.codns.com" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="audiwhere" />
             </intent-filter>
         </activity>
 

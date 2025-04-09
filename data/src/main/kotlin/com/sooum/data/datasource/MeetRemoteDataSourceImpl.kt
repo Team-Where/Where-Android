@@ -30,6 +30,7 @@ import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlacePickStatus
 import com.sooum.domain.model.Schedule
+import com.sooum.domain.model.SimpleMeet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -132,6 +133,9 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         return safeFlow { meetApi.inviteMeet(request) }
     }
 
+    override suspend fun getMeetInvite(link: String): Flow<ApiResult<SimpleMeet>> {
+        return safeFlow { meetApi.getMeetInvite(link) }
+    }
 
     override suspend fun addMeetPlace(
         meetId: Int,

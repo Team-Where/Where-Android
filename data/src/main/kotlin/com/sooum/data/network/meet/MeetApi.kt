@@ -6,11 +6,11 @@ import com.sooum.data.network.meet.request.InviteMeetRequest
 import com.sooum.data.network.meet.response.MeetListItemResponse
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetInviteStatus
+import com.sooum.domain.model.SimpleMeet
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.Multipart
@@ -54,6 +54,11 @@ interface MeetApi {
     suspend fun getMeetList(
         @Path("id") userId: Int
     ): Response<List<MeetListItemResponse>>
+
+    @GET("api/meeting/invite/{link}")
+    suspend fun getMeetInvite(
+        @Path("link") link :String
+    ): Response<SimpleMeet>
 
 
     @POST("api/meeting/invite")

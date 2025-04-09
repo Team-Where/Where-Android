@@ -9,6 +9,7 @@ import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlacePickStatus
 import com.sooum.domain.model.Schedule
+import com.sooum.domain.model.SimpleMeet
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
@@ -69,6 +70,12 @@ interface MeetRemoteDataSource {
         toUserId: Int
     ): Flow<ApiResult<Any>>
 
+    /**
+     * [link]에 해당하는 모임정보를 가져온다.
+     */
+    suspend fun getMeetInvite(
+        link :String
+    ) :Flow<ApiResult<SimpleMeet>>
 
     /**
      * 장소를 추가한다.

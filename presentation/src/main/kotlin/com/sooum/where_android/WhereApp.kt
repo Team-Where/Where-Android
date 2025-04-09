@@ -11,6 +11,7 @@ import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
 import com.kakao.sdk.common.KakaoSdk
 import com.sooum.where_android.view.MapShareResultActivity
+import com.sooum.where_android.view.SchemeResultActivity
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
 
@@ -57,7 +58,7 @@ class WhereApp : Application(), SingletonImageLoader.Factory {
     }
 
     private fun updateCurrentActivity(activity: Activity) {
-        if (activity !is MapShareResultActivity) {
+        if (activity !is MapShareResultActivity && activity !is SchemeResultActivity) {
             currentActivity = activity::class.simpleName
         }
     }

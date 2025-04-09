@@ -56,6 +56,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -399,6 +400,7 @@ class InviteFriendFragment : Fragment() {
             )
             setContent {
                 val scope = rememberCoroutineScope()
+                val context = LocalContext.current
                 InviteFriendView(
                     modifier = Modifier
                         .safeDrawingPadding()

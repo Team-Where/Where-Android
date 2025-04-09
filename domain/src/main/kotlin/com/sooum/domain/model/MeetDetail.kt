@@ -102,6 +102,19 @@ data class Meet(
     ) : this(id, title, description, "", image, false, "")
 }
 
+
+@Serializable
+data class SimpleMeet(
+    @SerialName("meetingId")
+    val id: Int,
+    val title: String,
+    val image: String? = null,
+    @SerialName("scheduleDate")
+    val date: String? = null,
+    @SerialName("scheduleTime")
+    val time: String? = null
+)
+
 /**
  * 일정 수신시 사용되는 기본형 데이터
  * @param[meetId] 연결된 모임 id
