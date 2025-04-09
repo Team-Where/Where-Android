@@ -11,15 +11,18 @@ object KaKaoShareUtil {
 
     private const val TAG = "kakao"
 
+    private const val TEMPLATE_INVITE = "invite"
+
     private val templateIds =
-        mapOf("invite" to 119179L)
+        mapOf(TEMPLATE_INVITE to 119538L)
 
     fun sendInvite(
         context: Context,
         userName: String,
-        meetName: String
+        meetName: String,
+        inviteCode: String
     ) {
-        val templateId = templateIds["invite"] as Long
+        val templateId = templateIds[TEMPLATE_INVITE] as Long
 
 // 카카오톡 설치여부 확인
         if (ShareClient.instance.isKakaoTalkSharingAvailable(context)) {
@@ -30,7 +33,7 @@ object KaKaoShareUtil {
                 templateArgs = mapOf(
                     "USER" to userName,
                     "NAME" to meetName,
-                    "MEET_ID" to "1234"
+                    "INVITE_CODE" to inviteCode
                 )
             ) { sharingResult, error ->
                 if (error != null) {

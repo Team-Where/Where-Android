@@ -18,12 +18,12 @@ import okhttp3.OkHttpClient
 class WhereApp : Application(), SingletonImageLoader.Factory {
 
     companion object {
-        var currentActivity: Activity? = null
+        var currentActivity: String? = null
     }
 
     override fun onCreate() {
         super.onCreate()
-        KakaoSdk.init(this, "0627a710dd159ff8638ba57f37f166ba")
+        KakaoSdk.init(this, "7e44ff67eb385fa512ec1019d33a0f1b")
 
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
@@ -49,7 +49,7 @@ class WhereApp : Application(), SingletonImageLoader.Factory {
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
 
             override fun onActivityDestroyed(activity: Activity) {
-                if (currentActivity == activity) {
+                if (currentActivity == activity::class.simpleName) {
                     currentActivity = null
                 }
             }
@@ -58,7 +58,7 @@ class WhereApp : Application(), SingletonImageLoader.Factory {
 
     private fun updateCurrentActivity(activity: Activity) {
         if (activity !is MapShareResultActivity) {
-            currentActivity = activity
+            currentActivity = activity::class.simpleName
         }
     }
 

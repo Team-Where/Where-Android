@@ -51,11 +51,7 @@ class MainActivity : AppCompatActivity() {
                     )
                     Button(
                         onClick = {
-                            KaKaoShareUtil.sendInvite(
-                                context = this@MainActivity,
-                                userName = "테스터",
-                                meetName = "행궁동 갈사람"
-                            )
+
                         }
                     ) {
                         Text("123")
