@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.widget
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,7 +25,8 @@ fun PrimaryButton(
     title: String,
     modifier: Modifier = Modifier,
     radius : Dp = 8.dp,
-    fontWeight: FontWeight = FontWeight.SemiBold
+    fontWeight: FontWeight = FontWeight.SemiBold,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding
 ) {
     Button(
         onClick = onClick,
@@ -38,13 +40,15 @@ fun PrimaryButton(
             disabledContentColor = Color.White
         ),
         shape = RoundedCornerShape(radius),
-        enabled = enabled
+        enabled = enabled,
+        contentPadding = contentPadding
     ) {
         Text(
             text = title,
             fontFamily = pretendard,
             fontSize = 16.sp,
-            fontWeight = fontWeight
+            fontWeight = fontWeight,
+            maxLines = 1
         )
     }
 }
