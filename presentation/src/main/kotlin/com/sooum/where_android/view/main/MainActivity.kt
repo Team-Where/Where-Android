@@ -38,13 +38,6 @@ class MainActivity : AppCompatActivity() {
                     MainScreenView(
                         modifier = Modifier.fillMaxSize()
                     )
-                    Button(
-                        onClick = {
-
-                        }
-                    ) {
-                        Text("123")
-                    }
                 }
             }
         }

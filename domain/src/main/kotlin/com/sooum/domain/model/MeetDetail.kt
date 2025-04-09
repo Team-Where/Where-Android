@@ -12,10 +12,18 @@ data class MeetDetail(
     val title: String,
     val description: String,
     val image: String?,
+    val link: String,
     val finished: Boolean,
     val createdAt: String,
     val schedule: Schedule?
 ) {
+    val inviteCode: String
+        get() = if (link.contains("/")) {
+            link.split("/").last()
+        } else {
+            ""
+        }
+
     constructor(
         id: Int,
         title: String,
@@ -25,6 +33,7 @@ data class MeetDetail(
         id,
         title,
         description,
+        "",
         "",
         false,
         "",
@@ -38,6 +47,7 @@ data class MeetDetail(
         meet.title,
         meet.description,
         meet.image,
+        meet.link,
         meet.finished,
         meet.createdAt,
         null
@@ -51,6 +61,7 @@ data class MeetDetail(
         meet.title,
         meet.description,
         meet.image,
+        meet.link,
         meet.finished,
         meet.createdAt,
         schedule

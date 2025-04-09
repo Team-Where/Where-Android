@@ -1,6 +1,7 @@
 package com.sooum.where_android.view.main.myMeetDetail.modal.invite
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,6 +66,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.sooum.domain.model.User
+import com.sooum.domain.usecase.user.GetLoginUserUseCase
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray100
 import com.sooum.where_android.theme.Gray500
@@ -71,18 +74,23 @@ import com.sooum.where_android.theme.Gray600
 import com.sooum.where_android.theme.Gray700
 import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.util.KaKaoShareUtil
 import com.sooum.where_android.view.main.myMeetDetail.modal.schedule.ScheduleView
 import com.sooum.where_android.view.widget.CircleProfileView
 import com.sooum.where_android.view.widget.SearchField
 import com.sooum.where_android.view.widget.UserItemView
 import com.sooum.where_android.view.widget.UserViewType
 import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @Composable
 fun InviteFriendView(
     modifier: Modifier = Modifier,
     userList: List<User>,
     recentUserList: List<User>,
+    inviteByKaKao: () -> Unit,
     inviteFriend: (User) -> Unit,
     onBack: () -> Unit
 ) {
@@ -108,9 +116,9 @@ fun InviteFriendView(
                 androidx.compose.animation.AnimatedVisibility(
                     visible = !searchingMode,
                     enter =
-                    slideInHorizontally(animationSpec = tween(durationMillis = 500)) { fullWidth ->
-                        -fullWidth / 3
-                    } + fadeIn(animationSpec = tween(durationMillis = 500)),
+                        slideInHorizontally(animationSpec = tween(durationMillis = 500)) { fullWidth ->
+                            -fullWidth / 3
+                        } + fadeIn(animationSpec = tween(durationMillis = 500)),
                     exit = slideOutHorizontally(animationSpec = tween(300)) + fadeOut(),
                     modifier = Modifier.align(Alignment.Center)
                 ) {
@@ -145,9 +153,9 @@ fun InviteFriendView(
                 androidx.compose.animation.AnimatedVisibility(
                     visible = searchingMode,
                     enter =
-                    slideInHorizontally(animationSpec = tween(durationMillis = 500)) { fullWidth ->
-                        fullWidth / 3
-                    } + fadeIn(animationSpec = tween(durationMillis = 500)),
+                        slideInHorizontally(animationSpec = tween(durationMillis = 500)) { fullWidth ->
+                            fullWidth / 3
+                        } + fadeIn(animationSpec = tween(durationMillis = 500)),
                     exit = slideOutHorizontally(animationSpec = tween(300)) + fadeOut(),
                     modifier = Modifier.align(Alignment.Center)
                 ) {
@@ -242,7 +250,8 @@ fun InviteFriendView(
                         recentUserList = recentUserList,
                         userList = userList,
                         inviteFriend = inviteFriend,
-                        headerColor = Gray600
+                        headerColor = Gray600,
+                        kakaoClickAction = inviteByKaKao
                     )
                 }
             }
@@ -366,25 +375,30 @@ private fun InviteFriendViewPreview() {
         onBack = {},
         userList = emptyList(),
         recentUserList = emptyList(),
-        inviteFriend = {}
+        inviteFriend = {},
+        inviteByKaKao = {}
     )
 }
 
 
+@AndroidEntryPoint
 class InviteFriendFragment : Fragment() {
 
     private val myMeetDetailViewModel: MyMeetDetailViewModel by activityViewModels()
+
+    @Inject lateinit var getLoginUserUseCase: GetLoginUserUseCase
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             )
             setContent {
+                val scope = rememberCoroutineScope()
                 InviteFriendView(
                     modifier = Modifier
                         .safeDrawingPadding()
@@ -393,6 +407,20 @@ class InviteFriendFragment : Fragment() {
                     userList = emptyList(),
                     recentUserList = emptyList(),
                     inviteFriend = {},
+                    inviteByKaKao = {
+                        scope.launch {
+                            myMeetDetailViewModel.meetDetail.value?.let { meet ->
+                                Log.d("JWH",meet.toString())
+                                //로그인된 화면이므로 getLoginUserUseCase는 항상 null이 아니다.
+                                KaKaoShareUtil.sendInvite(
+                                    context = context,
+                                    userName = getLoginUserUseCase()!!.name,
+                                    meetName = meet.title,
+                                    inviteCode = meet.inviteCode
+                                )
+                            }
+                        }
+                    },
                     onBack = {
                         findNavController().popBackStack()
                     }
