@@ -67,9 +67,9 @@ class SchemeResultActivity : AppCompatActivity() {
                     intent.apply {
                         addInviteScheme(simpleMeet, name!!)
                     }
+                    finish()
                     startActivity(intent)
                 }
-                finish()
             }
         }
     }
@@ -110,13 +110,17 @@ fun Intent.getInviteData(): InviteData? {
     } else {
         getSerializableExtra("inviteData") as InviteData?
     }
-    return inviteData
+    return inviteData.also {
+        Log.d("JWH","getInviteData : $inviteData")
+
+    }
 }
 
 fun Intent.checkInviteData(
     context: Context
-) {
+) :Boolean {
     val inviteData = this.getInviteData()
+    Log.d("JWH","checkInviteData : $inviteData")
     inviteData?.let {
         context.startActivity(
             Intent(context, SchemeResultActivity::class.java).apply {
@@ -127,5 +131,7 @@ fun Intent.checkInviteData(
                 )
             }
         )
+        return  true
     }
+    return false
 }

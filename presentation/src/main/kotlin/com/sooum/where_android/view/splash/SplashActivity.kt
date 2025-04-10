@@ -3,9 +3,11 @@ package com.sooum.where_android.view.splash
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.sooum.where_android.databinding.ActivitySplashBinding
+import com.sooum.where_android.view.getInviteData
 import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.view.onboarding.OnBoardingActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +24,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
+        intent.getInviteData()
         setContentView(binding.root)
 
         lifecycleScope.launch {
@@ -31,7 +34,7 @@ class SplashActivity : AppCompatActivity() {
             }
             val checkLogin = async {
                 //로그인 되어있는지 홗인(토큰 확인 등)
-                true
+                false
             }
             joinAll(timeJob, checkLogin)
             val result = checkLogin.await()
@@ -44,6 +47,11 @@ class SplashActivity : AppCompatActivity() {
             )
 
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
     }
 
     private fun nextActivity(

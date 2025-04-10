@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.sooum.where_android.databinding.FragmentProfileSettingBinding
 import com.sooum.where_android.databinding.FragmentSignUpCompleteBinding
+import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetDetailFragment
@@ -27,10 +28,8 @@ class SignUpCompleteFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        //예시 화면 보기용 임시 코드
         binding.nextBtn.setOnClickListener {
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            startActivity(intent)
+            (activity as AuthActivity).nextActivity()
         }
 
         return binding.root

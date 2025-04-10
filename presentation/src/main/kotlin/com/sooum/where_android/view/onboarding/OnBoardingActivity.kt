@@ -2,11 +2,13 @@ package com.sooum.where_android.view.onboarding
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.sooum.where_android.databinding.ActivityOnBoardingBinding
 import com.sooum.where_android.view.auth.AuthActivity
+import com.sooum.where_android.view.getInviteData
 
 class OnBoardingActivity : AppCompatActivity(){
     private lateinit var binding : ActivityOnBoardingBinding
@@ -14,6 +16,7 @@ class OnBoardingActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityOnBoardingBinding.inflate(layoutInflater)
+        intent.getInviteData()
         setContentView(binding.root)
 
         binding.container.adapter = ViewPagerAdapter(this)
@@ -45,6 +48,11 @@ class OnBoardingActivity : AppCompatActivity(){
                 binding.container.currentItem = prevItem
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
     }
 
     private fun nextActivity() {

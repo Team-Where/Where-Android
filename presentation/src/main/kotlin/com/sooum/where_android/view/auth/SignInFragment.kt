@@ -16,6 +16,10 @@ class SignInFragment : Fragment() {
     ): View? {
         binding = FragmentSignInBinding.inflate(inflater, container, false)
 
+        binding.nextBtn.setOnClickListener {
+            (activity as AuthActivity).nextActivity()
+        }
+
         return binding.root
     }
 }
