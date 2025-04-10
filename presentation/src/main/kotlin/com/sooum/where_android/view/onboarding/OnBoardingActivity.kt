@@ -32,15 +32,11 @@ class OnBoardingActivity : AppCompatActivity(){
         })
 
         binding.nextBtn.setOnClickListener {
-            val intent = Intent(this, AuthActivity::class.java)
-            startActivity(intent)
-            finish()
+            nextActivity()
         }
 
         binding.skipText.setOnClickListener {
-            val intent = Intent(this, AuthActivity::class.java)
-            startActivity(intent)
-            finish()
+            nextActivity()
         }
 
         binding.imageBack.setOnClickListener {
@@ -49,5 +45,14 @@ class OnBoardingActivity : AppCompatActivity(){
                 binding.container.currentItem = prevItem
             }
         }
+    }
+
+    private fun nextActivity() {
+        Intent(this, AuthActivity::class.java).apply {
+            putExtras(intent)
+        }.also {
+            startActivity(it)
+        }
+        finish()
     }
 }

@@ -30,26 +30,11 @@
         android:theme="@style/Theme.Whereandroid"
         tools:targetApi="31">
 
-        <activity
-            android:name=".view.main.MainActivity"
-            android:exported="true" />
-
-        <activity
-            android:name=".view.auth.AuthActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".view.main.myMeetDetail.MyMeetActivity"
-            android:exported="false"
-            android:launchMode="singleTop" />
-
-        <activity
-            android:name=".view.onboarding.OnBoardingActivity"
-            android:exported="false" />
 
         <activity
             android:name=".view.splash.SplashActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.Design.NoActionBar">
 
             <intent-filter>
@@ -58,6 +43,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".view.onboarding.OnBoardingActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
+        <activity
+            android:name=".view.auth.AuthActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
+        <activity
+            android:name=".view.main.MainActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
+
+        <activity
+            android:name=".view.main.myMeetDetail.MyMeetActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
 
         <activity
             android:name=".view.SchemeResultActivity"
@@ -97,11 +104,13 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <!-- "kakao${YOUR_NATIVE_APP_KEY}://kakaolink" 형식의 앱 실행 스킴을 설정하는데 사용 -->
-                <data android:host="kakaolink"
+                <data
+                    android:host="kakaolink"
                     android:scheme="kakao7e44ff67eb385fa512ec1019d33a0f1b" />
             </intent-filter>
         </activity>

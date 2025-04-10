@@ -46,17 +46,6 @@ fun Meet.CoverImage(
 }
 
 @Composable
-fun SimpleMeet.CoverImage(
-    size: Dp,
-    radius: Dp
-) {
-    CoverImageView(
-        src = image,
-        size = size,
-        radius = radius
-    )
-}
-@Composable
 fun CoverImageView(
     src: String?,
     size: Dp,

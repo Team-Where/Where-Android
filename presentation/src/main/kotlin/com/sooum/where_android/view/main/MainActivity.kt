@@ -1,18 +1,16 @@
 package com.sooum.where_android.view.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import com.google.firebase.messaging.FirebaseMessaging
 import com.sooum.where_android.databinding.ActivityMainBinding
-import com.sooum.where_android.util.KaKaoShareUtil
+import com.sooum.where_android.view.checkInviteData
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -29,6 +27,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
+        intent?.checkInviteData(this@MainActivity)
+
         with(binding.composeView) {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool)
             setContent {
@@ -43,5 +43,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContentView(binding.root)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.checkInviteData(this@MainActivity)
     }
 }

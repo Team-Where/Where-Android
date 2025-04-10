@@ -19,7 +19,7 @@ import okhttp3.OkHttpClient
 class WhereApp : Application(), SingletonImageLoader.Factory {
 
     companion object {
-        var currentActivity: String? = null
+        var currentActivity: Activity? = null
     }
 
     override fun onCreate() {
@@ -50,16 +50,17 @@ class WhereApp : Application(), SingletonImageLoader.Factory {
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
 
             override fun onActivityDestroyed(activity: Activity) {
-                if (currentActivity == activity::class.simpleName) {
+                if (currentActivity == activity) {
                     currentActivity = null
                 }
             }
         })
     }
 
+
     private fun updateCurrentActivity(activity: Activity) {
         if (activity !is MapShareResultActivity && activity !is SchemeResultActivity) {
-            currentActivity = activity::class.simpleName
+            currentActivity = activity
         }
     }
 

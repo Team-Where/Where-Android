@@ -16,7 +16,10 @@ class AuthActivity : AppCompatActivity() {
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        navigateToFragment(SocialLoginFragment())
+        navigateToFragment(
+            fragment = SocialLoginFragment(),
+            addToBackStack = false
+        )
 
     }
 
