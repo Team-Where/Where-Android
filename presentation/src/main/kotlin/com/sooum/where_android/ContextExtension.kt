@@ -1,5 +1,6 @@
 package com.sooum.where_android
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -30,4 +31,18 @@ fun Context.startMapUriOrMarket(
     } else {
         startActivity(intent)
     }
+}
+
+/**
+ * [dest]에 해당하는 Activity로 이동하고, 현재 activity는 종료한다.
+ */
+fun Activity.nextActivity(
+    dest :Class<*>,
+) {
+    Intent(this, dest).apply {
+        putExtras(intent)
+    }.also {
+        startActivity(it)
+    }
+    finish()
 }

@@ -4,12 +4,15 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.sooum.where_android.databinding.ActivitySplashBinding
+import com.sooum.where_android.nextActivity
 import com.sooum.where_android.view.getInviteData
 import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.view.onboarding.OnBoardingActivity
+import com.sooum.where_android.viewmodel.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -20,6 +23,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
+    private val splashViewModel: SplashViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,40 +32,14 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         lifecycleScope.launch {
-            val timeJob = async {
-                //3초대기
-                delay(3000L)
+            splashViewModel.checkSplash { dest ->
+                nextActivity(dest)
             }
-            val checkLogin = async {
-                //로그인 되어있는지 홗인(토큰 확인 등)
-                false
-            }
-            joinAll(timeJob, checkLogin)
-            val result = checkLogin.await()
-            nextActivity(
-                dest = if (result) {
-                    MainActivity::class.java
-                } else {
-                    OnBoardingActivity::class.java
-                }
-            )
-
         }
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
-    }
-
-    private fun nextActivity(
-        dest: Class<*>
-    ) {
-        Intent(this@SplashActivity, dest).apply {
-            putExtras(intent)
-        }.also {
-            startActivity(it)
-        }
-        finish()
     }
 }
