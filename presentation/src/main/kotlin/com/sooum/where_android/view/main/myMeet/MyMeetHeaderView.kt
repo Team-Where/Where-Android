@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.Icon
@@ -50,14 +52,18 @@ internal fun MyMeetHeaderView(
                 Image(
                     painter = painterResource(R.drawable.image_social_where_logo_noncolor),
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(Primary600)
+                    colorFilter = ColorFilter.tint(Primary600),
+                    modifier = Modifier.width(52.7.dp).height(24.05.dp)
                 )
             }
 
             IconButton(
                 onClick = openDrawer
             ) {
-                Icon(Icons.AutoMirrored.Filled.List, null)
+                Icon(
+                    painter = painterResource(R.drawable.icon_drawer),
+                    contentDescription = "drawer icon"
+                )
             }
         }
         Row(
