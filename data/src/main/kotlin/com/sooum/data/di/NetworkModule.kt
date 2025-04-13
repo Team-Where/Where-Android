@@ -1,6 +1,5 @@
 package com.sooum.data.di
 
-import com.sooum.data.network.NullOnEmptyConverterFactory
 import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.place.PlaceApi
 import com.sooum.data.network.schedule.ScheduleApi
@@ -16,7 +15,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import javax.inject.Qualifier
 import javax.inject.Singleton
-
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -45,10 +43,7 @@ object NetworkModule {
     ): Retrofit =
         Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://audiwhere.codns.com")
-            .addConverterFactory(
-                NullOnEmptyConverterFactory()
-            )
+            .baseUrl("https://www.xxxx.com")
             .addConverterFactory(
                 Json.asConverterFactory("application/json; charset=UTF8".toMediaType())
             )

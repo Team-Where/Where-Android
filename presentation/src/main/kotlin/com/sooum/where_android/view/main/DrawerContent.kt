@@ -16,7 +16,7 @@ fun DrawerContent(
     AndroidFragment<SignInFragment>(
         modifier = modifier
     ) {
-        it.binding.nextBtn.setOnClickListener {
+        it.binding.btnLogin.setOnClickListener {
             closeDrawer()
         }
     }

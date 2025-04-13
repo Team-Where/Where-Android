@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MyMeetViewModel @Inject constructor(
+class  MyMeetViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
     private val loadMeetDetailListUseCase: LoadMeetDetailListUseCase,

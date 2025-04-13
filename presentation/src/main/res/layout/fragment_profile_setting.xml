@@ -63,7 +63,7 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
-        android:id="@+id/edit_text_password_recheck"
+        android:id="@+id/edit_nickname"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginStart="12dp"
@@ -86,7 +86,7 @@
         android:textColor="#374151"
         android:layout_marginStart="15dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_text_password_recheck"
+        app:layout_constraintTop_toBottomOf="@id/edit_nickname"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatButton
