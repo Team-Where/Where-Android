@@ -20,6 +20,7 @@ import com.sooum.domain.usecase.place.AddPlaceUseCase
 import com.sooum.domain.usecase.place.TogglePlaceLikeUseCase
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -226,8 +227,30 @@ class MyMeetDetailViewModel @Inject constructor(
         complete: (ActionResult<Unit>) -> Unit = {}
     ) {
         viewModelScope.launch {
-            val result = togglePlaceLikeUseCase(placeId, getLoginUserIdUseCase()!!,)
+            val result = togglePlaceLikeUseCase(placeId, getLoginUserIdUseCase()!!)
             complete(result)
+        }
+    }
+
+    fun updateTitle(
+        newTitle: String,
+        onSuccess: () -> Unit,
+        onFail: () -> Unit
+    ) {
+        viewModelScope.launch {
+            delay(2000L)
+            onSuccess()
+        }
+    }
+
+    fun updateDescription(
+        newDescription: String,
+        onSuccess: () -> Unit,
+        onFail: () -> Unit
+    ) {
+        viewModelScope.launch {
+            delay(2000L)
+            onFail()
         }
     }
 
