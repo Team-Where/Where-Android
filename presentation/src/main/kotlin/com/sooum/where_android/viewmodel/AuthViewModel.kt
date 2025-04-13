@@ -21,10 +21,10 @@ class AuthViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase
 ) : ViewModel(){
 
-    private val _loginState = MutableStateFlow<ApiResult<Any>>(ApiResult.Wait)
+    private val _loginState = MutableStateFlow<ApiResult<Any>>(ApiResult.SuccessEmpty)
     val loginState: StateFlow<ApiResult<Any>> = _loginState.asStateFlow()
 
-    private val _signUpState = MutableStateFlow<ApiResult<SignUpResult>>(ApiResult.Wait)
+    private val _signUpState = MutableStateFlow<ApiResult<SignUpResult>>(ApiResult.SuccessEmpty)
     val signUpState: StateFlow<ApiResult<SignUpResult>> = _signUpState
 
     private val _password = MutableStateFlow("")
