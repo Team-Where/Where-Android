@@ -1,20 +1,13 @@
 package com.sooum.domain.model
 
 sealed class ApiResult<out T> {
-
-    data object Wait : ApiResult<Nothing>()
-    data object Loading : ApiResult<Nothing>()
-
     data class Success<out T>(val data: T) : ApiResult<T>()
+    data object SuccessEmpty : ApiResult<Nothing>()
 
     sealed class Fail : ApiResult<Nothing>() {
         data class Error(val code: Int, val message: String?) : Fail()
         data class Exception(val e: Throwable) : Fail()
     }
-}
-
-inline fun <reified T : Any> ApiResult<T>.onLoading(action: () -> Unit) {
-    if (this is ApiResult.Loading) action()
 }
 
 inline fun <reified T : Any> ApiResult<T>.onSuccess(action: (data: T) -> Unit) {

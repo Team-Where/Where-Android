@@ -1,16 +1,41 @@
 package com.sooum.where_android.view.main.myMeetDetail.adapter
 
-import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.PlaceList
 import com.sooum.where_android.databinding.ItemProfilePlaceListBinding
-import com.sooum.where_android.databinding.ItemSelectedPlaceBinding
 import com.sooum.where_android.databinding.ItemUnselectedPlaceBinding
+import androidx.core.net.toUri
+import coil3.load
+import com.sooum.where_android.R
 
-class AllPlaceListAdapter(private val items: List<PlaceList>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AllPlaceListAdapter(
+    private val myId :Int
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var items: List<PlaceList> = emptyList()
+
+
+    private var placeClickCallBack: PlaceClickCallBack? = null
+
+    interface PlaceClickCallBack {
+        fun likeChange(placeId: Int)
+        fun startMapUri(uriString: String,marketPackage: String)
+    }
+
+    fun setCallBack(callBack: PlaceClickCallBack) {
+        placeClickCallBack = callBack
+    }
+
+
+    fun setData(items: List<PlaceList>) {
+        this.items = items
+        this.notifyDataSetChanged()
+    }
 
     companion object {
         private const val VIEW_TYPE_HEADER = 0
@@ -31,10 +56,12 @@ class AllPlaceListAdapter(private val items: List<PlaceList>) : RecyclerView.Ada
                 val binding = ItemProfilePlaceListBinding.inflate(inflater, parent, false)
                 ProfileHeaderViewHolder(binding)
             }
+
             VIEW_TYPE_ITEM -> {
                 val binding = ItemUnselectedPlaceBinding.inflate(inflater, parent, false)
                 PostViewHolder(binding)
             }
+
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -58,8 +85,50 @@ class AllPlaceListAdapter(private val items: List<PlaceList>) : RecyclerView.Ada
     inner class PostViewHolder(private val binding: ItemUnselectedPlaceBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PlaceList.PostItem) {
-            binding.textPlaceName.text = item.title
-            binding.textAddress.text = item.location
+            val place = item.place
+            val isLiked = place.likeUserList.contains(myId)
+            with(binding) {
+                textPlaceName.text = place.name
+                textAddress.text = place.address
+                if (place.likeCount > 0) {
+                    textLikeNumber.text = place.likeCount.toString()
+                } else {
+                    textLikeNumber.text = ""
+                }
+                val context = binding.root.context
+                if (isLiked) {
+                    val mainColor = ContextCompat.getColor(context, R.color.main_color)
+                    textLikeNumber.setTextColor(mainColor)
+                    textLike.setTextColor(mainColor)
+                    iconHeart.load(R.drawable.icon_heart_fill)
+                    heartArea.setOnClickListener {
+                        placeClickCallBack?.likeChange(place.id)
+                    }
+                } else {
+                    val gray600 = ContextCompat.getColor(context, R.color.gray_600)
+                    textLikeNumber.setTextColor(gray600)
+                    textLike.setTextColor(gray600)
+                    iconHeart.load(R.drawable.icon_heart)
+                    heartArea.setOnClickListener {
+                        placeClickCallBack?.likeChange(place.id)
+                    }
+                }
+
+
+                btnNaverMap.setOnClickListener {
+                    placeClickCallBack?.startMapUri(place.naverLink,"com.nhn.android.nmap")
+                }
+
+                btnKakaoMap.setOnClickListener {
+                    placeClickCallBack?.startMapUri(place.kakaoLink,"net.daum.android.map")
+                }
+                if (place.together) {
+                    textTogether.visibility = View.VISIBLE
+                } else {
+                    textTogether.visibility = View.GONE
+                }
+            }
         }
     }
+
 }

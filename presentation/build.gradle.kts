@@ -102,4 +102,6 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.kotlinx.datetime)
+
+    implementation("com.kakao.sdk:v2-share:2.21.0") // 카카오톡 공유 API 모듈
 }

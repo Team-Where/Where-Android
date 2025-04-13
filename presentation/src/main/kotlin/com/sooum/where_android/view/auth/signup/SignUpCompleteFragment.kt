@@ -52,22 +52,24 @@ class SignUpCompleteFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.signUpState.collect { result ->
                 when (result) {
-                    is ApiResult.Loading -> {
-                    }
                     is ApiResult.Success -> {
                         Toast.makeText(requireContext(), "회원가입 완료!", Toast.LENGTH_SHORT).show()
                         val intent = Intent(requireContext(), AuthActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                     }
+
                     is ApiResult.Fail -> {
-                        Toast.makeText(requireContext(), "회원가입 실패했습니다: ${result}", Toast.LENGTH_SHORT).show()
-                        Log.d("SignUpCompleteFragment",result.toString())
+                        Toast.makeText(
+                            requireContext(),
+                            "회원가입 실패했습니다: ${result}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Log.d("SignUpCompleteFragment", result.toString())
                         binding.nextBtn.isEnabled = true
                     }
-                    ApiResult.Wait -> {
-
-                    }
+                    else -> {}
                 }
             }
         }

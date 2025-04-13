@@ -1,6 +1,16 @@
 package com.sooum.domain.model
 
-sealed class PlaceList {
-    data class ProfileHeader(val userId: String, val userName: String, val profileImage: String) : PlaceList()
-    data class PostItem(val userId: String, val title: String, val location: String) : PlaceList()
+sealed class PlaceList(
+    open val userId: Int
+) {
+    data class ProfileHeader(
+        override val userId: Int,
+        val userName: String,
+        val profileImage: String?
+    ) : PlaceList(userId)
+
+    data class PostItem(
+        override val userId: Int,
+        val place : Place
+    ) : PlaceList(userId)
 }

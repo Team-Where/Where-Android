@@ -5,20 +5,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ImageAddType
-import com.sooum.domain.model.Meet
-import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.NewMeet
+import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.model.User
 import com.sooum.domain.usecase.GetUserListUseCase
 import com.sooum.domain.usecase.meet.AddMeetUseCase
+import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 sealed class NewMeetType(
@@ -38,6 +40,7 @@ sealed class NewMeetType(
 @HiltViewModel
 class NewMeetViewModel @Inject constructor(
     getUserListUseCase: GetUserListUseCase,
+    private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
     private val addMeetUseCase: AddMeetUseCase
 ) : ViewModel() {
 
@@ -55,15 +58,16 @@ class NewMeetViewModel @Inject constructor(
 
 
     fun goStepResult(
-        complete: (ApiResult<Meet>) -> Unit
+        complete: (ActionResult<NewMeetResult>) -> Unit
     ) {
-        viewModelScope.launch {
-            addMeetUseCase(
-                fromId = 1,
+        viewModelScope.launch() {
+            //새로운 모임을 추가하는 시점에서 id값은 null이 아니다
+            val id = getLoginUserIdUseCase()!!
+            val addResult = addMeetUseCase(
+                fromId = id,
                 newMeet = newMeetData
-            ).collect {
-                complete(it)
-            }
+            )
+            complete(addResult)
         }
     }
 
@@ -87,7 +91,7 @@ class NewMeetViewModel @Inject constructor(
 
     fun clear() {
         _viewType.value = NewMeetType.Info
-        newMeetData = NewMeet("", "",null)
+        newMeetData = NewMeet("", "", null)
     }
 
     fun updateTitle(title: String) {

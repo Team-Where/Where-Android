@@ -38,17 +38,17 @@ class UserRepositoryImpl @Inject constructor(
         return userListFlow
     }
 
-    override fun getUserById(userId: Long): User? {
+    override fun getUserById(userId: Int): User? {
         return _userListFlow.value.find { it.id == userId }
     }
 
-    override suspend fun updateUserFavorite(id: Long, favorite: Boolean) {
+    override suspend fun updateUserFavorite(id: Int, favorite: Boolean) {
         _userListFlow.value = _userListFlow.value.map { user ->
             if (user.id == id) user.copy(isFavorite = favorite) else user
         }
     }
 
-    override suspend fun deleteUser(id: Long) {
+    override suspend fun deleteUser(id: Int) {
         _userListFlow.value = _userListFlow.value.filter { it.id != id }
     }
 

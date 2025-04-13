@@ -1,40 +1,48 @@
 package com.sooum.where_android.view.main.myMeetDetail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
-import androidx.fragment.app.Fragment
+import androidx.core.net.toUri
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sooum.domain.model.PlaceList
 import com.sooum.domain.model.SelectedPlace
+import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
-import com.sooum.where_android.databinding.FragmentOnBoardingFirstBinding
+import com.sooum.where_android.startMapUriOrMarket
 import com.sooum.where_android.view.main.myMeetDetail.adapter.AllPlaceListAdapter
-import com.sooum.where_android.view.main.myMeetDetail.adapter.InvitedFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.SelectedPlaceListAdapter
-import com.sooum.where_android.view.main.myMeetDetail.adapter.WaitingFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MyMeetPlaceFragment: MyMeetBaseFragment() {
-    private lateinit var binding : FragmentMyMeetPlaceBinding
+@AndroidEntryPoint
+class MyMeetPlaceFragment : MyMeetBaseFragment(), AllPlaceListAdapter.PlaceClickCallBack {
+    private lateinit var binding: FragmentMyMeetPlaceBinding
     private lateinit var selectedPlaceListAdapter: SelectedPlaceListAdapter
     private lateinit var allPlaceListAdapter: AllPlaceListAdapter
+
+    @Inject
+    lateinit var getLoginUserIdUseCase: GetLoginUserIdUseCase
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentMyMeetPlaceBinding.inflate(inflater, container, false)
 
-        with(binding){
+        with(binding) {
             icWarning.setOnClickListener { view ->
                 TooltipCompat.setTooltipText(view, "친구들과 가기로 결정한 장소 목록입니다")
                 view.performLongClick() // 클릭 시 툴팁 표시
             }
         }
-
         return binding.root
     }
 
@@ -42,33 +50,36 @@ class MyMeetPlaceFragment: MyMeetBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setUpBtn()
+        setupRecyclerView()
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myMeetDetailViewModel.userAndPlaceMap.collect {
+                    allPlaceListAdapter.setData(it)
+                }
+            }
+        }
+
+    }
+
+    private fun setupRecyclerView() {
         val dummyList = listOf(
             SelectedPlace("맛있는 식당", "서울 강남구 테헤란로 123", 5, 12),
             SelectedPlace("한식 전문점", "서울 마포구 홍대입구 456", 3, 8),
             SelectedPlace("카페 모카", "서울 서초구 반포대로 789", 7, 20)
         )
-
-        val postList = listOf(
-            PlaceList.ProfileHeader(userId = "me", userName = "나", profileImage = "my_profile_url"),
-            PlaceList.PostItem(userId = "me", title = "무드서울", location = "서울 용산구 한강대로21길 18 1층"),
-            PlaceList.PostItem(userId = "me", title = "모닝강카페랩", location = "서울 용산구 한강대로21길 18 1층"),
-
-            PlaceList.ProfileHeader(userId = "other", userName = "조나월드", profileImage = "other_profile_url"),
-            PlaceList.PostItem(userId = "other", title = "모닝강카페랩", location = "서울 용산구 한강대로21길 18 1층"),
-            PlaceList.PostItem(userId = "other", title = "모닝강카페랩", location = "서울 용산구 한강대로21길 18 1층")
-        )
-
         selectedPlaceListAdapter = SelectedPlaceListAdapter()
-        allPlaceListAdapter = AllPlaceListAdapter(postList)
-        setupRecyclerView()
-
         selectedPlaceListAdapter.setList(dummyList)
-    }
 
-    private fun setupRecyclerView() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            allPlaceListAdapter = AllPlaceListAdapter(getLoginUserIdUseCase()!!).apply {
+                setCallBack(this@MyMeetPlaceFragment)
+            }
+        }
+
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = selectedPlaceListAdapter
         }
         binding.recyclerView2.apply {
@@ -93,5 +104,14 @@ class MyMeetPlaceFragment: MyMeetBaseFragment() {
         }
     }
 
+    override fun likeChange(placeId: Int) {
+        myMeetDetailViewModel.likeToggle(placeId) {
 
+        }
+    }
+
+
+    override fun startMapUri(uriString: String, marketPackage: String) {
+        context?.startMapUriOrMarket(uriString, marketPackage)
+    }
 }

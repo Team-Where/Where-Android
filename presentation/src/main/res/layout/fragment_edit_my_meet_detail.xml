@@ -68,6 +68,7 @@
         android:layout_height="54dp"
         android:background="@drawable/shape_rounded_background_gray"
         android:stateListAnimator="@null"
+        android:id="@+id/btn_delete_meet"
         android:text="모임 삭제"
         android:textSize="16sp"
         android:fontFamily="@font/pretend_medium"

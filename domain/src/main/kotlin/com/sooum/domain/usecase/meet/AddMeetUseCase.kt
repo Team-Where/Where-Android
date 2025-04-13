@@ -1,12 +1,11 @@
 package com.sooum.domain.usecase.meet
 
-import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ImageAddType
-import com.sooum.domain.model.Meet
 import com.sooum.domain.model.NewMeet
+import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.repository.MeetDetailRepository
 import com.sooum.domain.util.UriConverter
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
@@ -19,7 +18,7 @@ class AddMeetUseCase @Inject constructor(
     suspend operator fun invoke(
         fromId: Int,
         newMeet: NewMeet
-    ): Flow<ApiResult<Meet>> {
+    ) : ActionResult<NewMeetResult> {
         val file = if (newMeet.image is ImageAddType.Content) {
             uriConverter.saveContentUriToTempFile(newMeet.image.uri)
         } else {

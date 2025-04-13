@@ -42,6 +42,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sooum.domain.model.MeetDetail
+import com.sooum.domain.model.NewMeetResult
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.main.friendList.FriendListView
 import com.sooum.where_android.view.main.meetDetail.MeetDetailView

@@ -1,153 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="15dp"
-    android:layout_marginStart="15dp"
+    android:layout_marginHorizontal="15dp"
+    android:layout_marginVertical="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="24dp"
+        android:gravity="center">
 
-        <TextView
-            android:id="@+id/textPlaceName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TYPE"
-            android:textSize="18sp"
-            android:textColor="#1F2937"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/pretend_semibold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="10dp"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textAddress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:fontFamily="@font/pretend_regular"
-            android:text="서울 용산구 한강대로21길 18 1층"
-            android:textColor="#4B5563"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textPlaceName" />
+            <TextView
+                android:id="@+id/textTogether"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_rounded_button_main_color"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:text="같이 찾은 장소"
+                android:textColor="@color/white"
+                android:textSize="11sp"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/iconBalloon"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@drawable/icon_balloon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textAddress"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"/>
+            <LinearLayout
+                android:id="@+id/text_content_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textTogether">
 
-        <TextView
-            android:id="@+id/textComment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="코멘트"
-            android:textSize="11sp"
-            android:textColor="#868E96"
-            android:fontFamily="@font/pretend_medium"
-            app:layout_constraintStart_toEndOf="@id/iconBalloon"
-            app:layout_constraintBottom_toBottomOf="@id/iconBalloon"
-            android:layout_marginStart="5dp"/>
+                <TextView
+                    android:id="@+id/textPlaceName"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:fontFamily="@font/pretend_semibold"
+                    android:textColor="#1F2937"
+                    android:textSize="18sp"
+                    tools:text="장소 이름" />
 
-        <TextView
-            android:id="@+id/textCommentNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3"
-            android:textSize="11sp"
-            android:textColor="#868E96"
-            android:fontFamily="@font/pretend_medium"
-            app:layout_constraintStart_toEndOf="@id/textComment"
-            app:layout_constraintBottom_toBottomOf="@id/textComment"
-            android:layout_marginStart="2dp"/>
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="5dp" />
 
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/icon_heart"
-            android:textSize="11sp"
-            android:textColor="#868E96"
-            android:fontFamily="@font/pretend_medium"
-            app:layout_constraintStart_toEndOf="@id/textCommentNumber"
-            app:layout_constraintBottom_toBottomOf="@id/textCommentNumber"
-            android:layout_marginStart="18dp"
-            tools:ignore="ContentDescription" />
+                <TextView
+                    android:id="@+id/textAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:fontFamily="@font/pretend_regular"
+                    android:textColor="#4B5563"
+                    android:textSize="14sp"
+                    tools:text="서울 용산구 한강대로21길 18 1층" />
 
-        <TextView
-            android:id="@+id/textLike"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="좋아요"
-            android:textSize="11sp"
-            android:textColor="#868E96"
-            android:fontFamily="@font/pretend_medium"
-            app:layout_constraintStart_toEndOf="@id/icon"
-            app:layout_constraintBottom_toBottomOf="@id/icon"
-            android:layout_marginStart="5dp"/>
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="5dp" />
 
-        <TextView
-            android:id="@+id/textLikeNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3"
-            android:textSize="11sp"
-            android:textColor="#868E96"
-            android:fontFamily="@font/pretend_medium"
-            app:layout_constraintStart_toEndOf="@id/textLike"
-            app:layout_constraintBottom_toBottomOf="@id/textLike"
-            android:layout_marginStart="2dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="17dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnNaverMap"
-            android:layout_width="132dp"
-            android:layout_height="37dp"
-            android:background="@drawable/shape_rounded_radius_24"
-            android:text="네이버 지도"
-            android:drawableLeft="@drawable/image_naver_map"
-            android:paddingLeft="25dp"
-            android:paddingEnd="20dp"
-            android:textSize="12sp"
-            android:fontFamily="@font/pretend_regular"
-            android:stateListAnimator="@null"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="15dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iconBalloon"
-            app:layout_constraintStart_toStartOf="parent"/>
+                    <LinearLayout
+                        android:id="@+id/comment_area"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnKakaoMap"
-            android:layout_width="125dp"
-            android:layout_height="37dp"
-            android:background="@drawable/shape_rounded_radius_24"
-            android:text="카카오맵"
-            android:drawableLeft="@drawable/image_kakao_map"
-            android:paddingLeft="25dp"
-            android:paddingEnd="20dp"
-            android:textSize="12sp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:fontFamily="@font/pretend_regular"
-            android:stateListAnimator="@null"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/btnNaverMap"
-            app:layout_constraintStart_toEndOf="@id/btnNaverMap"/>
+                        <ImageView
+                            android:id="@+id/iconBalloon"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:src="@drawable/icon_balloon"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/textAddress" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/textComment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:fontFamily="@font/pretend_medium"
+                            android:text="코멘트"
+                            android:textColor="@color/gray_600"
+                            android:textSize="11sp"
+                            app:layout_constraintBottom_toBottomOf="@id/iconBalloon"
+                            app:layout_constraintStart_toEndOf="@id/iconBalloon" />
+
+                        <TextView
+                            android:id="@+id/textCommentNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="2dp"
+                            android:fontFamily="@font/pretend_medium"
+                            android:minWidth="20dp"
+                            android:text=""
+                            android:textColor="@color/gray_600"
+                            android:textSize="11sp"
+                            app:layout_constraintBottom_toBottomOf="@id/textComment"
+                            app:layout_constraintStart_toEndOf="@id/textComment" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/heart_area"
+                        android:layout_marginStart="18dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/icon_heart"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:fontFamily="@font/pretend_medium"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/icon_heart"
+                            android:textColor="@color/gray_600"
+                            android:textSize="11sp"
+                            app:layout_constraintBottom_toBottomOf="@id/textCommentNumber"
+                            app:layout_constraintStart_toEndOf="@id/textCommentNumber"
+                            tools:ignore="ContentDescription" />
+
+                        <TextView
+                            android:id="@+id/textLike"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:fontFamily="@font/pretend_medium"
+                            android:minWidth="20dp"
+                            android:text="좋아요"
+                            android:textColor="#868E96"
+                            android:textSize="11sp"
+                            app:layout_constraintBottom_toBottomOf="@id/icon_heart"
+                            app:layout_constraintStart_toEndOf="@id/icon_heart" />
+
+                        <TextView
+                            android:id="@+id/textLikeNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="2dp"
+                            android:fontFamily="@font/pretend_medium"
+                            android:text=""
+                            android:textColor="@color/gray_600"
+                            android:textSize="11sp"
+                            app:layout_constraintBottom_toBottomOf="@id/textLike"
+                            app:layout_constraintStart_toEndOf="@id/textLike" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="37dp"
+                android:layout_marginTop="9dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_content_area"
+                app:layout_constraintVertical_bias="1">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnNaverMap"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_rounded_radius_24"
+                    android:drawableStart="@drawable/image_naver_map"
+                    android:fontFamily="@font/pretend_regular"
+                    android:paddingLeft="25dp"
+                    android:paddingEnd="20dp"
+                    android:stateListAnimator="@null"
+                    android:text="네이버 지도"
+                    android:textSize="12sp"
+                    app:iconSize="16dp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnKakaoMap"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_rounded_radius_24"
+                    android:drawableStart="@drawable/image_kakao_map"
+                    android:fontFamily="@font/pretend_regular"
+                    android:paddingStart="25dp"
+                    android:paddingEnd="20dp"
+                    android:stateListAnimator="@null"
+                    android:text="카카오맵"
+                    android:textSize="12sp"
+                    app:iconSize="16dp" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

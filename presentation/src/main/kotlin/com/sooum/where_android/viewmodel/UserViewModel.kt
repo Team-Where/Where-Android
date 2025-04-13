@@ -29,7 +29,7 @@ class UserViewModel @Inject constructor(
             )
 
     fun deleteUser(
-        userId: Long
+        userId: Int
     ) {
         viewModelScope.launch {
             deleteUserUseCase(userId)
@@ -37,7 +37,7 @@ class UserViewModel @Inject constructor(
     }
 
     fun updateUserFavorite(
-        userId: Long,
+        userId: Int,
         favorite: Boolean
     ) {
         viewModelScope.launch {

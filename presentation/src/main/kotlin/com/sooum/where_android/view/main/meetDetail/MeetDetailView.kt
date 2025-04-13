@@ -267,10 +267,12 @@ private fun LazyListScope.initGroupItem(
                                 }
                                 Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = stringResource(
-                                        R.string.meet_detail_month,
-                                        meetDetail.month
-                                    ),
+                                    text = meetDetail.month?.let {
+                                        stringResource(
+                                            R.string.meet_detail_month,
+                                            it
+                                        )
+                                    } ?: "",
                                     fontFamily = pretendard,
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 16.sp
@@ -401,21 +403,18 @@ internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int, 
                         3,
                         "행궁동 갈 사람\uD83C\uDF42",
                         "선선해진 날씨에 같이 사람~!",
-                        "",
                         Schedule(3,"2025-1-27","14:00")
                     ),
                     MeetDetail(
                         1,
                         "2024 연말파티\uD83E\uDD42",
                         "벌써 연말이다 신나게 놀아보장~~",
-                        "",
                         Schedule(1,"2025-1-26","14:00")
                     ),
                     MeetDetail(
                         4,
                         "2024 연말파티\uD83E\uDD42",
                         "벌써 연말이다 신나게 놀아보장~~",
-                        "",
                         Schedule(4,"2025-1-25","14:00")
                     )
                 )
@@ -426,7 +425,6 @@ internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int, 
                         3,
                         "행궁동 갈 사람\uD83C\uDF42",
                         "선선해진 날씨에 같이 사람~!",
-                        "",
                         Schedule(3,"2025-1-27","14:00")
 
                     ),
@@ -434,14 +432,12 @@ internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int, 
                         1,
                         "2024 연말파티\uD83E\uDD42",
                         "벌써 연말이다 신나게 놀아보장~~",
-                        "",
                         Schedule(1,"2025-1-26","14:00")
                     ),
                     MeetDetail(
                         4,
                         "2024 연말파티\uD83E\uDD42",
                         "벌써 연말이다 신나게 놀아보장~~",
-                        "",
                         Schedule(4,"2025-1-25","14:00")
 
                     )
@@ -451,7 +447,6 @@ internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int, 
                         2,
                         "2024 연말파티\uD83E\uDD42",
                         "벌써 연말이다 신나게 놀아보장~~",
-                        "",
                         Schedule(2,"2024-12-25","14:00")
                     ),
                 )
@@ -462,21 +457,18 @@ internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int, 
                         6,
                         "행궁동 갈 사람\uD83C\uDF42",
                         "선선해진 날씨에 같이 사람~!",
-                        "",
                         Schedule(6,"2025-2-2","14:00")
                     ),
                     MeetDetail(
                         7,
                         "행궁동 갈 사람\uD83C\uDF42",
                         "선선해진 날씨에 같이 사람~!",
-                        "",
                         Schedule(7,"2025-2-1","14:00")
                     ),
                     MeetDetail(
                         3,
                         "행궁동 갈 사람\uD83C\uDF42",
                         "선선해진 날씨에 같이 사람~!",
-                        "",
                         Schedule(3,"2025-1-27","14:00")
                     )
                 ),
@@ -485,7 +477,6 @@ internal class GroupDataParameterProvider() : PreviewParameterProvider<Map<Int, 
                         2,
                         "2024 연말파티\uD83E\uDD42",
                         "벌써 연말이다 신나게 놀아보장~~",
-                        "",
                         Schedule(2,"2024-12-25","14:00")
                     ),
                 )

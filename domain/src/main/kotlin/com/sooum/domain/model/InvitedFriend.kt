@@ -2,9 +2,11 @@ package com.sooum.domain.model
 
 import kotlinx.serialization.Serializable
 
-data class InvitedFriend (
-    val image: Int,
-    val name: String
+data class InvitedFriend(
+    val id : Int,
+    val name: String,
+    val image: String?,
+    val isMe :Boolean = false
 )
 
 /**
@@ -18,10 +20,10 @@ data class InvitedFriend (
  */
 @Serializable
 data class MeetInviteStatus(
-    val fromId :Int,
-    val fromName :String,
-    val toId :Int,
-    val toName :String,
-    val status :Boolean,
-    val toImage :String,
+    val fromId: Int,
+    val fromName: String,
+    val toId: Int,
+    val toName: String,
+    val status: Boolean,
+    val toImage: String?
 )

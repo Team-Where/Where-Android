@@ -8,20 +8,17 @@ import javax.inject.Inject
  * 공유된 데이터로 부터
  */
 class AddPlaceUseCase @Inject constructor(
-    private val repository: MeetDetailRepository
+    private val repository: MeetDetailRepository,
 ) {
-    suspend operator fun invoke(meetId: Int, shareResult: ShareResult) {
-        val link = if (shareResult.source == "네이버") {
-            shareResult.link
-        } else {
-            null
-        }
+    suspend operator fun invoke(
+        meetId: Int,
+        userId : Int,
+        shareResult: ShareResult) {
         repository.addMeetPlace(
             meetId = meetId,
-            userId = 1,
+            userId = userId,
             name = shareResult.placeName,
             address =  shareResult.address,
-            naverLink = link
         )
     }
 }

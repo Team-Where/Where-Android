@@ -9,7 +9,9 @@ import coil3.SingletonImageLoader
 import coil3.memory.MemoryCache
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
+import com.kakao.sdk.common.KakaoSdk
 import com.sooum.where_android.view.MapShareResultActivity
+import com.sooum.where_android.view.SchemeResultActivity
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
 
@@ -22,6 +24,7 @@ class WhereApp : Application(), SingletonImageLoader.Factory {
 
     override fun onCreate() {
         super.onCreate()
+        KakaoSdk.init(this, "7e44ff67eb385fa512ec1019d33a0f1b")
 
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
@@ -54,8 +57,9 @@ class WhereApp : Application(), SingletonImageLoader.Factory {
         })
     }
 
+
     private fun updateCurrentActivity(activity: Activity) {
-        if (activity !is MapShareResultActivity) {
+        if (activity !is MapShareResultActivity && activity !is SchemeResultActivity) {
             currentActivity = activity
         }
     }

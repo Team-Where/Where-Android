@@ -17,6 +17,7 @@ import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
 import com.sooum.where_android.databinding.FragmentMyMeetTabBinding
 import com.sooum.where_android.view.MapShareResultActivity
+import com.sooum.where_android.view.checkInviteData
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import com.sooum.where_android.view.main.myMeetDetail.modal.EditMyMeetDetailFragment
 import com.sooum.where_android.view.widget.CustomSnackBar
@@ -41,6 +42,8 @@ class MyMeetActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMyMeetBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        intent?.checkInviteData(this@MyMeetActivity)
+
         intent.getIntExtra(MEET_ID, 0).let { id ->
             myMeetDetailViewModel.loadData(id)
         }
@@ -49,11 +52,13 @@ class MyMeetActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.d("JWH", intent.toString())
+        intent?.checkInviteData(this@MyMeetActivity)
+
         intent?.extras?.getString(MapShareResultActivity.SHARE_RESULT)?.let { data ->
             val shareResult = Json.decodeFromString<ShareResult>(data)
             Log.d("JWH", shareResult.toString())
             myMeetDetailViewModel.addPlace(shareResult) {
-                CustomSnackBar.make(binding.root, "ㅇㅇ", IconType.Check).show()
+                CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
             }
         }
     }

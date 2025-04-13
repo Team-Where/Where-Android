@@ -1,42 +1,24 @@
 package com.sooum.where_android.view.main.myMeetDetail.adapter
 
-import android.annotation.SuppressLint
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.compose.runtime.Composable
 import com.sooum.domain.model.InvitedFriend
-import com.sooum.where_android.databinding.ItemWaitingFriendListBinding
+import com.sooum.domain.model.User
+import com.sooum.where_android.view.common.ComposeItemAdapter
+import com.sooum.where_android.view.widget.UserItemView
+import com.sooum.where_android.view.widget.UserViewType
 
-class WaitingFriendListAdapter() : RecyclerView.Adapter<WaitingFriendListAdapter.MyView>() {
-    private var waitingFriendList:  List<InvitedFriend> = emptyList()
+class WaitingFriendListAdapter() : ComposeItemAdapter<InvitedFriend>() {
 
-    inner class MyView(private val binding: ItemWaitingFriendListBinding) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(waitingFriendModel: InvitedFriend) {
-            binding.textName.text = waitingFriendModel.name
-
-        }
+    @Composable
+    override fun Bind(item: InvitedFriend) {
+        UserItemView(
+            user = User(
+                id = item.id,
+                name = item.name,
+                profileImage = item.image ?: ""
+            ),
+            type = UserViewType.Waiting
+        )
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): MyView {
-        val view = ItemWaitingFriendListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MyView(view)
-    }
-
-    override fun onBindViewHolder(holder: MyView, position: Int) {
-        holder.bind(waitingFriendList[position])
-    }
-
-    override fun getItemCount(): Int {
-        return waitingFriendList.size
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setList(list: List<InvitedFriend>) {
-        waitingFriendList = list
-        notifyDataSetChanged()
-    }
 }

@@ -14,6 +14,8 @@ import kotlinx.serialization.Serializable
 data class AddScheduleRequest(
     @SerialName("meetingId")
     val meetId: Int,
+    @SerialName("userId")
+    val userId: Int,
     val date: String,
     val time: String,
 )

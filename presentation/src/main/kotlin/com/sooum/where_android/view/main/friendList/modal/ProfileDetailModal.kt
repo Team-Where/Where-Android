@@ -45,7 +45,7 @@ fun ProfileDetailModal(
     user: User,
     onDismiss: () -> Unit,
     navigationMeetDetail: () -> Unit,
-    updateFavorite: (id: Long, favorite: Boolean) -> Unit
+    updateFavorite: (id: Int, favorite: Boolean) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -76,7 +76,7 @@ private fun ProfileDetailContent(
     user: User,
     onClose: () -> Unit,
     navigationMeetDetail: () -> Unit,
-    updateFavorite: (id: Long, favorite: Boolean) -> Unit,
+    updateFavorite: (id: Int, favorite: Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(

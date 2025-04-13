@@ -2,6 +2,7 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -47,6 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_selected_place"
+            tools:itemCount="3"
             app:layout_constraintTop_toBottomOf="@id/logoWhere"
             android:layout_marginTop="10dp"
             android:overScrollMode="never"/>
@@ -98,19 +101,14 @@
                 android:layout_marginStart="10dp"/>
         </LinearLayout>
 
-
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
             app:layout_constraintTop_toBottomOf="@id/filterLayout"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
             android:overScrollMode="never"/>
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
