@@ -1,15 +1,12 @@
 package com.sooum.where_android.viewmodel
 
-import android.media.Image
-import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.SignUpResult
-import com.sooum.domain.usecase.meet.LoginUseCase
-import com.sooum.domain.usecase.meet.SignUpUseCase
-import com.sooum.domain.usecase.meet.ValidatePasswordUseCase
+import com.sooum.domain.usecase.auth.LoginUseCase
+import com.sooum.domain.usecase.auth.SignUpUseCase
+import com.sooum.domain.usecase.auth.ValidatePasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

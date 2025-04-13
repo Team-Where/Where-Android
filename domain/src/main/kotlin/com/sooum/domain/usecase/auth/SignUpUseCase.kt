@@ -1,7 +1,6 @@
-package com.sooum.domain.usecase.meet
+package com.sooum.domain.usecase.auth
 
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.model.SignUp
 import com.sooum.domain.model.SignUpResult
 import com.sooum.domain.repository.AuthRepository
 import jakarta.inject.Inject

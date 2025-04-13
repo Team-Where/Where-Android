@@ -1,6 +1,5 @@
-package com.sooum.domain.usecase.meet
+package com.sooum.domain.usecase.auth
 
-import com.sooum.domain.repository.AuthRepository
 import jakarta.inject.Inject
 
 class ValidatePasswordUseCase @Inject constructor(
