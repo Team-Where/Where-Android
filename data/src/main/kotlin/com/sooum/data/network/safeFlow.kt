@@ -27,7 +27,14 @@ fun <T> safeFlow(
                 }
             } else {
                 val code = response.code()
-                var message = response.message()
+                var message = ""
+                val errorString= response.errorBody()?.string()
+                if (errorString != null) {
+                    message = errorString
+                }
+                if (message.isEmpty()) {
+                    message = response.message()
+                }
                 if (message.isEmpty()) {
                     when (code) {
                         400 -> {
