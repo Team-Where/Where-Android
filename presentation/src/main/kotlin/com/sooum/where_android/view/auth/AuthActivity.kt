@@ -1,10 +1,17 @@
 package com.sooum.where_android.view.auth
 
+import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.firebase.messaging.FirebaseMessaging
 import com.sooum.where_android.databinding.ActivityAuthBinding
 import com.sooum.where_android.R
 import com.sooum.where_android.view.getInviteData
@@ -15,6 +22,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class AuthActivity : AppCompatActivity() {
     private lateinit var binding : ActivityAuthBinding
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)
