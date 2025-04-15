@@ -339,6 +339,4 @@ class MeetDetailRepositoryImpl @Inject constructor(
         _meetPlaceList.value = temp
     }
 
-
-
 }
