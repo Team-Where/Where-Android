@@ -24,7 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
@@ -38,6 +40,9 @@ import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.view.widget.CoverImageView
 import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
 
+/**
+ * 모임 상세 화면에서 커버 이미지 클릭시 출력되는 alert
+ */
 class MeetCoverDialog : DialogFragment() {
 
     interface CoverActionHandler {
@@ -108,7 +113,9 @@ class MeetCoverDialog : DialogFragment() {
                         Text(
                             text = "커버 사진 변경",
                             fontFamily = pretendard,
-                            color = Color.White
+                            color = Color.White,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp
                         )
                     }
                 }
