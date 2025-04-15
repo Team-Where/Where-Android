@@ -8,6 +8,7 @@ import com.sooum.data.repository.MeetDetailRepositoryImpl
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.MeetDetail
+import com.sooum.domain.model.MeetingId
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlaceDelete
 import com.sooum.domain.model.PlaceLike
@@ -58,7 +59,7 @@ class MyMeetDetailViewModel @Inject constructor(
         private const val FCM_CODE_PLACE_STATUS_UPDATE = "104"
         private const val FCM_CODE_PLACE_LIKE_UPDATE = "105"
         private const val FCM_CODE_PLACE_PLACE_LIST = "106"
-        private const val FCM_CODE_SCHEDULE_ADD_ = "201"
+        private const val FCM_CODE_SCHEDULE_ADD = "201"
         private const val FCM_CODE_SCHEDULE_PUT = "202"
         private const val FCM_CODE_SCHEDULE_DELETE = "203"
         private const val FCM_CODE_COMMENT_ADD = "301"
@@ -284,39 +285,62 @@ class MyMeetDetailViewModel @Inject constructor(
     }
 
     fun updatePlaceFromFcm(code: String, data: String) {
-        try {
-            when (code) {
-                FCM_CODE_PLACE_ADD -> {
-                    val shareResult = Json.decodeFromString<Place>(data)
-                    repositoryImpl.addPlaceToMeeting(
-                        newPlace = shareResult,
-                        id = shareResult.id
-                    )
-                }
+       viewModelScope.launch {
+           try {
+               when (code) {
+                   FCM_CODE_PLACE_ADD -> {
+                       val shareResult = Json.decodeFromString<Place>(data)
+                       repositoryImpl.addPlaceToMeeting(
+                           newPlace = shareResult,
+                           id = shareResult.id
+                       )
+                   }
 
-                FCM_CODE_PLACE_STATUS_UPDATE -> {
-                    val shareResult = Json.decodeFromString<PlaceStatus>(data)
-                    repositoryImpl.updatePlaceStatusToPicked(
-                        placeId = shareResult.placeId,
-                        newStatus = shareResult.placeStatus
-                    )
-                }
+                   FCM_CODE_PLACE_STATUS_UPDATE -> {
+                       val shareResult = Json.decodeFromString<PlaceStatus>(data)
+                       repositoryImpl.updatePlaceStatusToPicked(
+                           placeId = shareResult.placeId,
+                           newStatus = shareResult.placeStatus
+                       )
+                   }
 
-                FCM_CODE_PLACE_DELETE -> {
-                    val shareResult = Json.decodeFromString<PlaceDelete>(data)
-                    repositoryImpl.deletePlaceFromMeeting(shareResult.id)
-                }
-                FCM_CODE_PLACE_LIKE_UPDATE -> {
-                    val shareResult = Json.decodeFromString<PlaceLike>(data)
-                    repositoryImpl.updatePlaceLike(
-                        shareResult.placeId,
-                        shareResult.likeCount
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("ViewModel", "JSON 파싱 실패: ${e.localizedMessage}")
-        }
+                   FCM_CODE_PLACE_DELETE -> {
+                       val shareResult = Json.decodeFromString<PlaceDelete>(data)
+                       repositoryImpl.deletePlaceFromMeeting(shareResult.id)
+                   }
+
+                   FCM_CODE_PLACE_LIKE_UPDATE -> {
+                       val shareResult = Json.decodeFromString<PlaceLike>(data)
+                       repositoryImpl.updatePlaceLike(
+                           shareResult.placeId,
+                           shareResult.likeCount
+                       )
+                   }
+
+                   FCM_CODE_SCHEDULE_ADD -> {
+                       val shareResult = Json.decodeFromString<Schedule>(data)
+                       addMeetScheduleUseCase(
+                           shareResult.meetId,
+                           shareResult)
+                   }
+                   FCM_CODE_SCHEDULE_PUT -> {
+                       val shareResult = Json.decodeFromString<Schedule>(data)
+                       updateMeetScheduleUseCase(
+                           shareResult.meetId,
+                           shareResult
+                       )
+                   }
+                   FCM_CODE_SCHEDULE_DELETE -> {
+                       val shareResult = Json.decodeFromString<MeetingId>(data)
+                       repositoryImpl.deleteSchedule(
+                           shareResult.meetingId
+                       )
+                   }
+               }
+           } catch (e: Exception) {
+               Log.e("ViewModel", "JSON 파싱 실패: ${e.localizedMessage}")
+           }
+       }
     }
 }
 
