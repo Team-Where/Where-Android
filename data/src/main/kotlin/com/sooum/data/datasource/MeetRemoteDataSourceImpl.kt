@@ -24,6 +24,7 @@ import com.sooum.domain.datasource.MeetRemoteDataSource
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
+import com.sooum.domain.model.EditMeet
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
@@ -79,7 +80,7 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         title: String?,
         description: String?,
         imageFile: File?
-    ): Flow<ApiResult<Meet>> {
+    ): Flow<ApiResult<EditMeet>> {
         val request = EditMeetRequest(
             id,
             userId,

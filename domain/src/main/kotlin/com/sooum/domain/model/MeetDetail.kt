@@ -102,6 +102,17 @@ data class Meet(
     ) : this(id, title, description, "", image, false, "")
 }
 
+/**
+ * 모임 정보 수정 수신시
+ */
+@Serializable
+data class EditMeet(
+    val id: Int,
+    val title: String,
+    val description: String,
+    val link: String,
+    val image: String? = null,
+)
 
 @Serializable
 data class SimpleMeet(
