@@ -1,6 +1,5 @@
 package com.sooum.domain.repository
 
-import android.app.Notification.Action
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
@@ -32,18 +31,45 @@ interface MeetDetailRepository {
         imageFile: File?
     ): ActionResult<NewMeetResult>
 
+    /**
+     * 현재 모임을 종료합니다.
+     */
+    suspend fun finishMeet(
+        meetId: Int,
+        userId: Int
+    ): ActionResult<Unit>
+
+
+    /**
+     * 모임을 탕퇴합니다
+     */
+    suspend fun exitMeet(
+        meetId: Int,
+        userId: Int
+    ): ActionResult<Unit>
+
+
+    /**
+     * 모임 제목을 업데이트 합니다.
+     */
     suspend fun updateTitle(
         meetId: Int,
         userId: Int,
         title: String
     ) : ActionResult<*>
 
+    /**
+     * 모임 설명을 업데이트 합니다.
+     */
     suspend fun updateDescription(
         meetId: Int,
         userId: Int,
         description: String
     ) : ActionResult<*>
 
+    /**
+     * 모임 커버를 업데이트 합니다.
+     */
     suspend fun updateImage(
         meetId: Int,
         userId: Int,
@@ -90,11 +116,6 @@ interface MeetDetailRepository {
         placeId :Int,
         userId: Int,
     ) : ActionResult<Unit>
-
-    suspend fun exitMeet(
-        meetId: Int,
-        userId: Int
-    ): ActionResult<Unit>
 
     suspend fun clearMeetDetail()
 

@@ -8,7 +8,6 @@ import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.model.Place
-import com.sooum.domain.model.PlacePickStatus
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.repository.MeetDetailRepository
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
@@ -86,8 +85,61 @@ class MeetDetailRepositoryImpl @Inject constructor(
 
     override fun getMeetPlaceList(): Flow<Map<Int, List<Place>>> = meetPlaceList
 
-    override fun getMeetDetailById(id: Int): Flow<MeetDetail?> = meetDetailList
-        .map { list -> list.find { it.id == id } }
+    override fun getMeetDetailById(meetId: Int): Flow<MeetDetail?> = meetDetailList
+        .map { list -> list.find { it.id == meetId } }
+
+
+    /**
+     * ApiResult가 [ApiResult.Success]인 경우 data를 반환하고 이외는 에러 메시지를 반환 합니다.
+     */
+    private inline fun <T> ApiResult<T>.covertApiResultToActionResultIfSuccess(
+        onSuccess: (data: T) -> Unit,
+        onFail: (msg: String) -> Unit
+    ) {
+        when (this) {
+            is ApiResult.Success -> {
+                onSuccess(this.data)
+            }
+
+            is ApiResult.Fail.Error -> {
+                onFail(this.message ?: "알수 없는 오류가 발생했습니다.")
+            }
+
+            is ApiResult.Fail.Exception -> {
+                onFail(this.e.localizedMessage ?: "알수 없는 예외가 발생했습니다.")
+            }
+
+            else -> {
+                onFail("알수 없는 예외")
+            }
+        }
+    }
+
+    /**
+     * ApiResult가 [ApiResult.SuccessEmpty]인 경우 성공 이외는 에러 메시지를 반환 합니다.
+     */
+    private inline fun <T> ApiResult<T>.covertApiResultToActionResultIfSuccessEmpty(
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
+    ) {
+        when (this) {
+            is ApiResult.SuccessEmpty -> {
+                onSuccess()
+            }
+
+            is ApiResult.Fail.Error -> {
+                onFail(this.message ?: "알수 없는 오류가 발생했습니다.")
+            }
+
+            is ApiResult.Fail.Exception -> {
+                onFail(this.e.localizedMessage ?: "알수 없는 예외가 발생했습니다.")
+            }
+
+            else -> {
+                onFail("알수 없는 예외")
+            }
+        }
+    }
 
     override suspend fun addMeet(
         title: String,
@@ -103,27 +155,62 @@ class MeetDetailRepositoryImpl @Inject constructor(
             participants,
             imageFile
         ).transform { result ->
-            when (result) {
-                is ApiResult.Success -> {
-                    val newMeetData = result.data
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { newMeetData ->
                     val temp = _meetDetailList.value.toMutableList()
                     temp.add(MeetDetail(newMeetData))
                     _meetDetailList.value = temp
                     emit(ActionResult.Success(NewMeetResult(newMeetData)))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
                 }
+            )
+        }.first()
+    }
 
-                is ApiResult.Fail.Error -> {
-                    emit(ActionResult.Fail(result.message ?: "unknown error "))
+    override suspend fun exitMeet(meetId: Int, userId: Int): ActionResult<Unit> {
+        return meetRemoteDataSource.deleteMeet(
+            meetId = meetId,
+            userId = userId
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccessEmpty(
+                onSuccess = {
+                    val temp = _meetDetailList.value.toMutableList()
+                    temp.removeIf {
+                        it.id == meetId
+                    }
+                    _meetDetailList.value = temp
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
                 }
+            )
+        }.first()
+    }
 
-                is ApiResult.Fail.Exception -> {
-                    emit(ActionResult.Fail(result.e.message ?: "unknown error"))
+    override suspend fun finishMeet(meetId: Int, userId: Int): ActionResult<Unit> {
+        return meetRemoteDataSource.finishMeet(
+            meetId,
+            userId,
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccessEmpty(
+                onSuccess = {
+                    val temp = _meetDetailList.value.toMutableList()
+                    val index = temp.indexOfFirst { it.id == meetId }
+                    if (index >= 0) {
+                        var tempMeet: MeetDetail = temp[index]
+                        tempMeet = tempMeet.copy(finished = true)
+                        temp[index] = tempMeet
+                        _meetDetailList.value = temp
+                    }
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
                 }
-
-                else -> {
-                    emit(ActionResult.Fail(""))
-                }
-            }
+            )
         }.first()
     }
 
@@ -139,8 +226,8 @@ class MeetDetailRepositoryImpl @Inject constructor(
             null,
             null
         ).transform { result ->
-            when (result) {
-                is ApiResult.Success -> {
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = {
                     val temp = _meetDetailList.value.toMutableList()
                     val index = temp.indexOfFirst { it.id == meetId }
                     if (index >= 0) {
@@ -150,20 +237,11 @@ class MeetDetailRepositoryImpl @Inject constructor(
                         _meetDetailList.value = temp
                     }
                     emit(ActionResult.Success(Unit))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
                 }
-
-                is ApiResult.Fail.Error -> {
-                    emit(ActionResult.Fail(result.message ?: "unknown error"))
-                }
-
-                is ApiResult.Fail.Exception -> {
-                    emit(ActionResult.Fail(result.e.message ?: "unknown error"))
-                }
-
-                else -> {
-                    emit(ActionResult.Fail(""))
-                }
-            }
+            )
         }.first()
     }
 
@@ -179,8 +257,8 @@ class MeetDetailRepositoryImpl @Inject constructor(
             description,
             null
         ).transform { result ->
-            when (result) {
-                is ApiResult.Success -> {
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = {
                     val temp = _meetDetailList.value.toMutableList()
                     val index = temp.indexOfFirst { it.id == meetId }
                     if (index >= 0) {
@@ -190,20 +268,11 @@ class MeetDetailRepositoryImpl @Inject constructor(
                         _meetDetailList.value = temp
                     }
                     emit(ActionResult.Success(Unit))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
                 }
-
-                is ApiResult.Fail.Error -> {
-                    emit(ActionResult.Fail(result.message ?: "unknown error"))
-                }
-
-                is ApiResult.Fail.Exception -> {
-                    emit(ActionResult.Fail(result.e.message ?: "unknown error"))
-                }
-
-                else -> {
-                    emit(ActionResult.Fail(""))
-                }
-            }
+            )
         }.first()
     }
 
@@ -215,9 +284,8 @@ class MeetDetailRepositoryImpl @Inject constructor(
             null,
             imageFile
         ).transform { result ->
-            when (result) {
-                is ApiResult.Success -> {
-                    val data = result.data
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { data ->
                     val temp = _meetDetailList.value.toMutableList()
                     val index = temp.indexOfFirst { it.id == meetId }
                     if (index >= 0) {
@@ -227,20 +295,11 @@ class MeetDetailRepositoryImpl @Inject constructor(
                         _meetDetailList.value = temp
                     }
                     emit(ActionResult.Success(Unit))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
                 }
-
-                is ApiResult.Fail.Error -> {
-                    emit(ActionResult.Fail(result.message ?: "unknown error"))
-                }
-
-                is ApiResult.Fail.Exception -> {
-                    emit(ActionResult.Fail(result.e.message ?: "unknown error"))
-                }
-
-                else -> {
-                    emit(ActionResult.Fail(""))
-                }
-            }
+            )
         }.first()
     }
 
@@ -302,21 +361,23 @@ class MeetDetailRepositoryImpl @Inject constructor(
             name,
             address,
         ).transform { result ->
-            if (result is ApiResult.Success) {
-                val place = result.data
-                val temp = _meetPlaceList.value.toMutableMap()
-                if (temp.contains(userId)) {
-                    val tempList = temp[userId]!!.toMutableList()
-                    tempList.add(place)
-                    temp[userId] = tempList
-                } else {
-                    temp[userId] = listOf(place)
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { place ->
+                    val temp = _meetPlaceList.value.toMutableMap()
+                    if (temp.contains(userId)) {
+                        val tempList = temp[userId]!!.toMutableList()
+                        tempList.add(place)
+                        temp[userId] = tempList
+                    } else {
+                        temp[userId] = listOf(place)
+                    }
+                    _meetPlaceList.value = temp
+                    emit(ActionResult.Success(place.toString()))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
                 }
-                _meetPlaceList.value = temp
-                emit(ActionResult.Success(result.data.toString()))
-            } else {
-                emit(ActionResult.Fail(""))
-            }
+            )
         }.first()
     }
 
@@ -332,19 +393,21 @@ class MeetDetailRepositoryImpl @Inject constructor(
             date,
             time,
         ).transform { result ->
-            if (result is ApiResult.Success) {
-                val schedule = result.data
-                val tempList = _meetDetailList.value.toMutableList()
-                val index = tempList.indexOfFirst { it.id == meetId }
-                val item = tempList[index].copy(
-                    schedule = schedule
-                )
-                tempList[index] = item
-                _meetDetailList.value = tempList
-                emit(ActionResult.Success(result.data))
-            } else {
-                emit(ActionResult.Fail(""))
-            }
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { schedule ->
+                    val tempList = _meetDetailList.value.toMutableList()
+                    val index = tempList.indexOfFirst { it.id == meetId }
+                    val item = tempList[index].copy(
+                        schedule = schedule
+                    )
+                    tempList[index] = item
+                    _meetDetailList.value = tempList
+                    emit(ActionResult.Success(schedule))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
+                }
+            )
         }.first()
     }
 
@@ -360,58 +423,48 @@ class MeetDetailRepositoryImpl @Inject constructor(
             date,
             time,
         ).transform { result ->
-            if (result is ApiResult.Success) {
-                val schedule = result.data
-                val tempList = _meetDetailList.value.toMutableList()
-                val index = tempList.indexOfFirst { it.id == meetId }
-                val item = tempList[index].copy(
-                    schedule = schedule
-                )
-                tempList[index] = item
-                _meetDetailList.value = tempList
-                emit(ActionResult.Success(result.data))
-            } else {
-                emit(ActionResult.Fail(""))
-            }
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { schedule ->
+                    val tempList = _meetDetailList.value.toMutableList()
+                    val index = tempList.indexOfFirst { it.id == meetId }
+                    val item = tempList[index].copy(
+                        schedule = schedule
+                    )
+                    tempList[index] = item
+                    _meetDetailList.value = tempList
+                    emit(ActionResult.Success(schedule))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
+                }
+            )
         }.first()
     }
 
     override suspend fun likeToggle(placeId: Int, userId: Int): ActionResult<Unit> {
-        val result = meetRemoteDataSource.likePlace(placeId, userId).first()
-        if (result is ApiResult.Success) {
-            val pickStatus: PlacePickStatus = result.data
-            val temp = _meetPlaceList.value.toMutableMap()
-            val userPlaceList = temp[userId]?.toMutableList()
-            if (userPlaceList != null) {
-                val placeItemIndex = userPlaceList.indexOfFirst { it.id == placeId }
-                if (placeItemIndex >= 0) {
-                    val newPlaceItem = userPlaceList[placeItemIndex].copy(
-                        myLike = pickStatus.myLike,
-                        likeCount = pickStatus.likeCount,
-                        status = pickStatus.status
-                    )
-                    userPlaceList[placeItemIndex] = newPlaceItem
-                    temp[userId] = userPlaceList
-                    _meetPlaceList.value = temp
+        return meetRemoteDataSource.likePlace(placeId, userId).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { pickStatus ->
+                    val temp = _meetPlaceList.value.toMutableMap()
+                    val userPlaceList = temp[userId]?.toMutableList()
+                    if (userPlaceList != null) {
+                        val placeItemIndex = userPlaceList.indexOfFirst { it.id == placeId }
+                        if (placeItemIndex >= 0) {
+                            val newPlaceItem = userPlaceList[placeItemIndex].copy(
+                                myLike = pickStatus.myLike,
+                                likeCount = pickStatus.likeCount,
+                                status = pickStatus.status
+                            )
+                            userPlaceList[placeItemIndex] = newPlaceItem
+                            temp[userId] = userPlaceList
+                            _meetPlaceList.value = temp
+                        }
+                    }
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
                 }
-            }
-            return ActionResult.Success(Unit)
-        }
-        return ActionResult.Fail("")
-    }
-
-    override suspend fun exitMeet(meetId: Int, userId: Int): ActionResult<Unit> {
-        return meetRemoteDataSource.deleteMeet(meetId, userId).transform { result ->
-            if (result is ApiResult.SuccessEmpty) {
-                val temp = _meetDetailList.value.toMutableList()
-                temp.removeIf {
-                    it.id == meetId
-                }
-                _meetDetailList.value = temp
-                emit(ActionResult.Success(Unit))
-            } else {
-                emit(ActionResult.Fail(""))
-            }
+            )
         }.first()
     }
 

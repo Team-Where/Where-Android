@@ -18,6 +18,7 @@ import com.sooum.domain.model.ShareResult
 import com.sooum.domain.usecase.meet.AddMeetScheduleUseCase
 import com.sooum.domain.usecase.meet.ClearMeetUseCase
 import com.sooum.domain.usecase.meet.ExitMeetUseCase
+import com.sooum.domain.usecase.meet.FinishMeetUseCase
 import com.sooum.domain.usecase.meet.GetMeetDetailByIdUseCase
 import com.sooum.domain.usecase.meet.GetMeetInviteStatusUseCase
 import com.sooum.domain.usecase.meet.GetMeetPlaceListUseCase
@@ -54,7 +55,8 @@ class MyMeetDetailViewModel @Inject constructor(
     private val updateMeetCoverUseCase: UpdateMeetCoverUseCase,
     private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase,
     private val clearMeetUseCase: ClearMeetUseCase,
-    private val exitMeetUseCase: ExitMeetUseCase
+    private val exitMeetUseCase: ExitMeetUseCase,
+    private val finishMeetUseCase: FinishMeetUseCase,
 ) : ViewModel() {
 
     companion object {
@@ -231,21 +233,72 @@ class MyMeetDetailViewModel @Inject constructor(
         }
     }
 
+    private inline fun findMeetDetailOrFail(
+        doAction: (MeetDetail) -> Unit,
+        onFail: (msg: String) -> Unit
+    ) {
+        meetDetail.value?.let { meetDetail ->
+            doAction(meetDetail)
+        } ?: run {
+            onFail("존재 하지 않는 id")
+        }
+    }
+
     /**
      * 모임 탈퇴(삭제 합니다)
      */
     fun exitMeet(
-        complete: (ActionResult<Unit>) -> Unit
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
     ) {
         viewModelScope.launch {
             val userId = getLoginUserIdUseCase()!!
-            meetDetail.value?.let { meetDetail ->
-                val result = exitMeetUseCase(
-                    meetId = meetDetail.id,
-                    userId = userId
-                )
-                complete(result)
-            }
+            findMeetDetailOrFail(
+                doAction = { meetDetail ->
+                    val result = exitMeetUseCase(
+                        meetId = meetDetail.id,
+                        userId = userId
+                    )
+                    when (result) {
+                        is ActionResult.Success -> {
+                            onSuccess()
+                        }
+
+                        is ActionResult.Fail -> {
+                            onFail(result.msg)
+                        }
+                    }
+                },
+                onFail = onFail
+            )
+        }
+    }
+
+    /**
+     * 모임 종료
+     */
+    fun finishMeet(
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
+    ) {
+        viewModelScope.launch {
+            findMeetDetailOrFail(
+                doAction = { meetDetail ->
+                    val result = finishMeetUseCase(
+                        meetId = meetDetail.id,
+                    )
+                    when (result) {
+                        is ActionResult.Success -> {
+                            onSuccess()
+                        }
+
+                        is ActionResult.Fail -> {
+                            onFail(result.msg)
+                        }
+                    }
+                },
+                onFail = onFail
+            )
         }
     }
 
@@ -265,22 +318,24 @@ class MyMeetDetailViewModel @Inject constructor(
         onFail: (msg:String) -> Unit
     ) {
         viewModelScope.launch {
-            meetDetail.value?.let { meetDetail ->
-                val result = updateMeetTitleUseCase(
-                    id = meetDetail.id,
-                    title = newTitle
-                )
-                when(result) {
-                    is ActionResult.Success -> {
-                        onSuccess()
+            findMeetDetailOrFail(
+                doAction = { meetDetail ->
+                    val result = updateMeetTitleUseCase(
+                        id = meetDetail.id,
+                        title = newTitle
+                    )
+                    when (result) {
+                        is ActionResult.Success -> {
+                            onSuccess()
+                        }
+
+                        is ActionResult.Fail -> {
+                            onFail(result.msg)
+                        }
                     }
-                    is ActionResult.Fail -> {
-                        onFail(result.msg)
-                    }
-                }
-            } ?: run {
-                onFail("존재 하지 않는 id")
-            }
+                },
+                onFail = onFail
+            )
         }
     }
 
@@ -290,22 +345,24 @@ class MyMeetDetailViewModel @Inject constructor(
         onFail: (msg:String) -> Unit
     ) {
         viewModelScope.launch {
-            meetDetail.value?.let { meetDetail ->
-                val result = updateMeetDescriptionUseCase(
-                    id = meetDetail.id,
-                    description = newDescription
-                )
-                when(result) {
-                    is ActionResult.Success -> {
-                        onSuccess()
+            findMeetDetailOrFail(
+                doAction = { meetDetail ->
+                    val result = updateMeetDescriptionUseCase(
+                        id = meetDetail.id,
+                        description = newDescription
+                    )
+                    when (result) {
+                        is ActionResult.Success -> {
+                            onSuccess()
+                        }
+
+                        is ActionResult.Fail -> {
+                            onFail(result.msg)
+                        }
                     }
-                    is ActionResult.Fail -> {
-                        onFail(result.msg)
-                    }
-                }
-            } ?: run {
-                onFail("존재 하지 않는 id")
-            }
+                },
+                onFail = onFail
+            )
         }
     }
     fun updateImage(
@@ -314,22 +371,24 @@ class MyMeetDetailViewModel @Inject constructor(
         onFail: (msg:String) -> Unit
     ) {
         viewModelScope.launch {
-            meetDetail.value?.let { meetDetail ->
-                val result = updateMeetCoverUseCase(
-                    id = meetDetail.id,
-                    imageFile = image
-                )
-                when(result) {
-                    is ActionResult.Success -> {
-                        onSuccess()
+            findMeetDetailOrFail(
+                doAction = { meetDetail ->
+                    val result = updateMeetCoverUseCase(
+                        id = meetDetail.id,
+                        imageFile = image
+                    )
+                    when (result) {
+                        is ActionResult.Success -> {
+                            onSuccess()
+                        }
+
+                        is ActionResult.Fail -> {
+                            onFail(result.msg)
+                        }
                     }
-                    is ActionResult.Fail -> {
-                        onFail(result.msg)
-                    }
-                }
-            } ?: run {
-                onFail("존재 하지 않는 id")
-            }
+                },
+                onFail = onFail
+            )
         }
     }
 

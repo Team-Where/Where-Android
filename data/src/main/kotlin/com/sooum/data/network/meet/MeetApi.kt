@@ -44,7 +44,7 @@ interface MeetApi {
     @PUT("api/meeting/finish")
     suspend fun finishMeet(
         @Body data: FinishMeetRequest,
-    ): Response<Any>
+    ): Response<String>
 
     @GET("api/meeting/participant/{id}")
     suspend fun getMeetInviteStatus(
