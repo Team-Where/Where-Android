@@ -1,7 +1,10 @@
 package com.sooum.where_android.view.main.myMeetDetail
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -38,6 +41,18 @@ class MyMeetActivity : AppCompatActivity() {
 
     private val myMeetDetailViewModel: MyMeetDetailViewModel by viewModels()
 
+    private val fcmReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val code = intent?.getStringExtra("code").orEmpty()
+            val data = intent?.getStringExtra("data").orEmpty()
+
+            Log.d("MainActivity-FCM", "수신된 code: $code")
+            Log.d("MainActivity-FCM", "수신된 payload: $data")
+
+            myMeetDetailViewModel.updatePlaceFromFcm(code,data)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMyMeetBinding.inflate(layoutInflater)
@@ -47,6 +62,14 @@ class MyMeetActivity : AppCompatActivity() {
         intent.getIntExtra(MEET_ID, 0).let { id ->
             myMeetDetailViewModel.loadData(id)
         }
+
+        val intentFilter = IntentFilter("FCM_DATA_RECEIVED")
+        registerReceiver(fcmReceiver, intentFilter,RECEIVER_EXPORTED)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(fcmReceiver)
     }
 
     override fun onNewIntent(intent: Intent?) {
