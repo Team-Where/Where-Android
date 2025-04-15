@@ -126,6 +126,9 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
                     }
                 )
             }
+            finishOpacity.setOnClickListener {
+                //Block Touch
+            }
         }
     }
 
@@ -170,8 +173,12 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
             }
 
             if (meetDetail.finished) {
+                finishOpacity.visibility = View.VISIBLE
+                finishContainer.visibility = View.VISIBLE
                 btnFinishMeet.visibility = View.GONE
             } else {
+                finishOpacity.visibility = View.GONE
+                finishContainer.visibility = View.GONE
                 btnFinishMeet.visibility = View.VISIBLE
             }
         }
