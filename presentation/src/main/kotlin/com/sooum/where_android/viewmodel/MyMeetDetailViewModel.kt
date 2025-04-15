@@ -21,7 +21,9 @@ import com.sooum.domain.usecase.meet.ExitMeetUseCase
 import com.sooum.domain.usecase.meet.GetMeetDetailByIdUseCase
 import com.sooum.domain.usecase.meet.GetMeetInviteStatusUseCase
 import com.sooum.domain.usecase.meet.GetMeetPlaceListUseCase
+import com.sooum.domain.usecase.meet.UpdateMeetDescriptionUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetScheduleUseCase
+import com.sooum.domain.usecase.meet.UpdateMeetTitleUseCase
 import com.sooum.domain.usecase.place.AddPlaceUseCase
 import com.sooum.domain.usecase.place.TogglePlaceLikeUseCase
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
@@ -45,11 +47,13 @@ class MyMeetDetailViewModel @Inject constructor(
     getMeetInviteStatusUseCase: GetMeetInviteStatusUseCase,
     getMeetPlaceListUseCase: GetMeetPlaceListUseCase,
     private val addMeetScheduleUseCase: AddMeetScheduleUseCase,
-    private val updateMeetScheduleUseCase: UpdateMeetScheduleUseCase,
-    private val exitMeetUseCase: ExitMeetUseCase,
-    private val clearMeetUseCase: ClearMeetUseCase,
     private val addPlaceUseCase: AddPlaceUseCase,
-    private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase
+    private val updateMeetScheduleUseCase: UpdateMeetScheduleUseCase,
+    private val updateMeetTitleUseCase: UpdateMeetTitleUseCase,
+    private val updateMeetDescriptionUseCase: UpdateMeetDescriptionUseCase,
+    private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase,
+    private val clearMeetUseCase: ClearMeetUseCase,
+    private val exitMeetUseCase: ExitMeetUseCase
 ) : ViewModel() {
 
     companion object {
@@ -257,22 +261,50 @@ class MyMeetDetailViewModel @Inject constructor(
     fun updateTitle(
         newTitle: String,
         onSuccess: () -> Unit,
-        onFail: () -> Unit
+        onFail: (msg:String) -> Unit
     ) {
         viewModelScope.launch {
-            delay(2000L)
-            onSuccess()
+            meetDetail.value?.let { meetDetail ->
+                val result = updateMeetTitleUseCase(
+                    id = meetDetail.id,
+                    title = newTitle
+                )
+                when(result) {
+                    is ActionResult.Success -> {
+                        onSuccess()
+                    }
+                    is ActionResult.Fail -> {
+                        onFail(result.msg)
+                    }
+                }
+            } ?: run {
+                onFail("존재 하지 않는 id")
+            }
         }
     }
 
     fun updateDescription(
         newDescription: String,
         onSuccess: () -> Unit,
-        onFail: () -> Unit
+        onFail: (msg:String) -> Unit
     ) {
         viewModelScope.launch {
-            delay(2000L)
-            onFail()
+            meetDetail.value?.let { meetDetail ->
+                val result = updateMeetDescriptionUseCase(
+                    id = meetDetail.id,
+                    description = newDescription
+                )
+                when(result) {
+                    is ActionResult.Success -> {
+                        onSuccess()
+                    }
+                    is ActionResult.Fail -> {
+                        onFail(result.msg)
+                    }
+                }
+            } ?: run {
+                onFail("존재 하지 않는 id")
+            }
         }
     }
 

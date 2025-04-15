@@ -88,11 +88,8 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         )
         val dataPart =
             json.encodeToString(request).toRequestBody("application/json".toMediaTypeOrNull())
-        val imagePart = imageFile?.let { file ->
-            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-            MultipartBody.Part.createFormData("image", file.name, requestFile)
-        }
-        return safeFlow { meetApi.editMeet(dataPart, imagePart) }
+
+        return safeFlow { meetApi.editMeet(dataPart, imageFile.createPart()) }
     }
 
     override suspend fun deleteMeet(
