@@ -18,13 +18,18 @@ import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.ShareResult
 import com.sooum.domain.usecase.meet.AddMeetScheduleUseCase
 import com.sooum.domain.usecase.meet.ClearMeetUseCase
+import com.sooum.domain.usecase.meet.DeleteMeetScheduleUseCase
 import com.sooum.domain.usecase.meet.ExitMeetUseCase
 import com.sooum.domain.usecase.meet.GetMeetDetailByIdUseCase
 import com.sooum.domain.usecase.meet.GetMeetInviteStatusUseCase
 import com.sooum.domain.usecase.meet.GetMeetPlaceListUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetScheduleUseCase
+import com.sooum.domain.usecase.place.AddNewPlaceUserCase
 import com.sooum.domain.usecase.place.AddPlaceUseCase
+import com.sooum.domain.usecase.place.DeletePlaceUseCase
 import com.sooum.domain.usecase.place.TogglePlaceLikeUseCase
+import com.sooum.domain.usecase.place.UpdatePlaceLikeUseCase
+import com.sooum.domain.usecase.place.UpdatePlaceStatusUseCase
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -50,7 +55,12 @@ class MyMeetDetailViewModel @Inject constructor(
     private val exitMeetUseCase: ExitMeetUseCase,
     private val clearMeetUseCase: ClearMeetUseCase,
     private val addPlaceUseCase: AddPlaceUseCase,
-    private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase
+    private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase,
+    private val deleteMeetScheduleUseCase: DeleteMeetScheduleUseCase,
+    private val addNewPlaceUseCase: AddNewPlaceUserCase,
+    private val deletePlaceUseCase: DeletePlaceUseCase,
+    private val updatePlaceLikeUseCase: UpdatePlaceLikeUseCase,
+    private val updatePlaceStatusUseCase: UpdatePlaceStatusUseCase
 ) : ViewModel() {
 
     companion object {
@@ -290,28 +300,30 @@ class MyMeetDetailViewModel @Inject constructor(
                when (code) {
                    FCM_CODE_PLACE_ADD -> {
                        val shareResult = Json.decodeFromString<Place>(data)
-                       repositoryImpl.addPlaceToMeeting(
-                           newPlace = shareResult,
-                           id = shareResult.id
-                       )
-                   }
-
-                   FCM_CODE_PLACE_STATUS_UPDATE -> {
-                       val shareResult = Json.decodeFromString<PlaceStatus>(data)
-                       repositoryImpl.updatePlaceStatusToPicked(
-                           placeId = shareResult.placeId,
-                           newStatus = shareResult.placeStatus
+                       addNewPlaceUseCase(
+                           shareResult.id,
+                           shareResult
                        )
                    }
 
                    FCM_CODE_PLACE_DELETE -> {
                        val shareResult = Json.decodeFromString<PlaceDelete>(data)
-                       repositoryImpl.deletePlaceFromMeeting(shareResult.id)
+                       deletePlaceUseCase(
+                           shareResult.id
+                       )
+                   }
+
+                   FCM_CODE_PLACE_STATUS_UPDATE -> {
+                       val shareResult = Json.decodeFromString<PlaceStatus>(data)
+                       updatePlaceStatusUseCase(
+                           shareResult.placeId,
+                           shareResult.placeStatus
+                       )
                    }
 
                    FCM_CODE_PLACE_LIKE_UPDATE -> {
                        val shareResult = Json.decodeFromString<PlaceLike>(data)
-                       repositoryImpl.updatePlaceLike(
+                       updatePlaceLikeUseCase(
                            shareResult.placeId,
                            shareResult.likeCount
                        )
@@ -321,7 +333,8 @@ class MyMeetDetailViewModel @Inject constructor(
                        val shareResult = Json.decodeFromString<Schedule>(data)
                        addMeetScheduleUseCase(
                            shareResult.meetId,
-                           shareResult)
+                           shareResult
+                       )
                    }
                    FCM_CODE_SCHEDULE_PUT -> {
                        val shareResult = Json.decodeFromString<Schedule>(data)
@@ -332,7 +345,7 @@ class MyMeetDetailViewModel @Inject constructor(
                    }
                    FCM_CODE_SCHEDULE_DELETE -> {
                        val shareResult = Json.decodeFromString<MeetingId>(data)
-                       repositoryImpl.deleteSchedule(
+                       deleteMeetScheduleUseCase(
                            shareResult.meetingId
                        )
                    }

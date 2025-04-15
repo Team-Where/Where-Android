@@ -79,4 +79,16 @@ interface MeetDetailRepository {
 
     suspend fun clearMeetDetail()
 
+    suspend fun deleteSchedule(meetId: Int)
+
+    suspend fun addPlaceToMeeting(id: Int, newPlace: Place)
+
+    suspend fun deletePlaceFromMeeting(id: Int)
+
+    suspend fun updatePlaceStatusToPicked(placeId: Int, newStatus: String)
+
+    suspend fun updatePlaceLike(id: Int, placeLike: List<Int>)
+
+
+
 }

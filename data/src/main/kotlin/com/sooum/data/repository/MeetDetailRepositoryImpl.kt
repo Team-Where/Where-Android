@@ -310,7 +310,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
     /**
      * fcm 코드 101 장소추가일때  함수
      */
-    fun addPlaceToMeeting(id: Int, newPlace: Place) {
+    override suspend fun addPlaceToMeeting(id: Int, newPlace: Place) {
         val temp = _meetPlaceList.value.toMutableMap()
         val myPlaceList = temp[id]?.toMutableList() ?: mutableListOf()
 
@@ -320,9 +320,9 @@ class MeetDetailRepositoryImpl @Inject constructor(
     }
 
     /**
-     * fcm 코드 102 장소삭제일때 함수
+     * fcm 코드 102 장소 삭제일때 함수
      */
-    fun deletePlaceFromMeeting(id: Int) {
+    override suspend fun deletePlaceFromMeeting(id: Int) {
         val temp = _meetPlaceList.value.toMutableMap()
 
         temp.forEach { (meetingId, placeList) ->
@@ -333,9 +333,9 @@ class MeetDetailRepositoryImpl @Inject constructor(
     }
 
     /**
-     * fcm 코드 104 모임수락일때 함수
+     * fcm 코드 104 장소가 picked 됬을때 함수
      */
-    fun updatePlaceStatusToPicked(placeId: Int, newStatus: String) {
+    override suspend fun updatePlaceStatusToPicked(placeId: Int, newStatus: String) {
         val temp = _meetPlaceList.value.toMutableMap()
         val placeList = temp[placeId]?.toMutableList() ?: return
 
@@ -351,13 +351,13 @@ class MeetDetailRepositoryImpl @Inject constructor(
     /**
      * fcm 코드 105 장소 좋아요 업데이트일때 함수
      */
-    fun updatePlaceLike(id: Int, placeLike: List<Int>) {
+    override suspend fun updatePlaceLike(id: Int, placeLike: List<Int>) {
         val temp = _meetPlaceList.value.toMutableMap()
 
         temp.forEach { (meetingId, placeList) ->
             val updatedList = placeList.map { place ->
                 if (place.id == id) {
-                    place.copy(likeUserList = placeLike)  // 좋아요 수 수정
+                    place.copy(likeUserList = placeLike)
                 } else {
                     place
                 }
@@ -370,10 +370,10 @@ class MeetDetailRepositoryImpl @Inject constructor(
     /**
      * fcm 코드 203 일정 삭제 일때 함수
      */
-    fun deleteSchedule(meetId: Int){
+    override suspend fun deleteSchedule(meetId: Int){
         val updatedList = _meetDetailList.value.map { meetDetail ->
             if (meetDetail.id == meetId) {
-                meetDetail.copy(schedule = null)  // 해당 아이디의 스케줄을 null로 변경
+                meetDetail.copy(schedule = null)
             } else {
                 meetDetail
             }
