@@ -1,11 +1,11 @@
 package com.sooum.where_android.viewmodel
 
-import android.app.Notification.Action
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.data.repository.MeetDetailRepositoryImpl
 import com.sooum.domain.model.ActionResult
+import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Place
@@ -21,6 +21,7 @@ import com.sooum.domain.usecase.meet.ExitMeetUseCase
 import com.sooum.domain.usecase.meet.GetMeetDetailByIdUseCase
 import com.sooum.domain.usecase.meet.GetMeetInviteStatusUseCase
 import com.sooum.domain.usecase.meet.GetMeetPlaceListUseCase
+import com.sooum.domain.usecase.meet.UpdateMeetCoverUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetDescriptionUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetScheduleUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetTitleUseCase
@@ -28,7 +29,6 @@ import com.sooum.domain.usecase.place.AddPlaceUseCase
 import com.sooum.domain.usecase.place.TogglePlaceLikeUseCase
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,6 +51,7 @@ class MyMeetDetailViewModel @Inject constructor(
     private val updateMeetScheduleUseCase: UpdateMeetScheduleUseCase,
     private val updateMeetTitleUseCase: UpdateMeetTitleUseCase,
     private val updateMeetDescriptionUseCase: UpdateMeetDescriptionUseCase,
+    private val updateMeetCoverUseCase: UpdateMeetCoverUseCase,
     private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase,
     private val clearMeetUseCase: ClearMeetUseCase,
     private val exitMeetUseCase: ExitMeetUseCase
@@ -293,6 +294,30 @@ class MyMeetDetailViewModel @Inject constructor(
                 val result = updateMeetDescriptionUseCase(
                     id = meetDetail.id,
                     description = newDescription
+                )
+                when(result) {
+                    is ActionResult.Success -> {
+                        onSuccess()
+                    }
+                    is ActionResult.Fail -> {
+                        onFail(result.msg)
+                    }
+                }
+            } ?: run {
+                onFail("존재 하지 않는 id")
+            }
+        }
+    }
+    fun updateImage(
+        image: ImageAddType,
+        onSuccess: () -> Unit,
+        onFail: (msg:String) -> Unit
+    ) {
+        viewModelScope.launch {
+            meetDetail.value?.let { meetDetail ->
+                val result = updateMeetCoverUseCase(
+                    id = meetDetail.id,
+                    imageFile = image
                 )
                 when(result) {
                     is ActionResult.Success -> {

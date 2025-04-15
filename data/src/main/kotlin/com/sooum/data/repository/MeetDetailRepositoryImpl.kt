@@ -207,6 +207,43 @@ class MeetDetailRepositoryImpl @Inject constructor(
         }.first()
     }
 
+    override suspend fun updateImage(meetId: Int, userId: Int, imageFile: File?): ActionResult<*> {
+        return meetRemoteDataSource.editMeet(
+            meetId,
+            userId,
+            null,
+            null,
+            imageFile
+        ).transform { result ->
+            when (result) {
+                is ApiResult.Success -> {
+                    val data = result.data
+                    val temp = _meetDetailList.value.toMutableList()
+                    val index = temp.indexOfFirst { it.id == meetId }
+                    if (index >= 0) {
+                        var tempMeet: MeetDetail = temp[index]
+                        tempMeet = tempMeet.copy(image = data.image)
+                        temp[index] = tempMeet
+                        _meetDetailList.value = temp
+                    }
+                    emit(ActionResult.Success(Unit))
+                }
+
+                is ApiResult.Fail.Error -> {
+                    emit(ActionResult.Fail(result.message ?: "unknown error"))
+                }
+
+                is ApiResult.Fail.Exception -> {
+                    emit(ActionResult.Fail(result.e.message ?: "unknown error"))
+                }
+
+                else -> {
+                    emit(ActionResult.Fail(""))
+                }
+            }
+        }.first()
+    }
+
     private val asyncScope = CoroutineScope(Dispatchers.IO)
 
     override fun loadMeetDetailSubData(meetId: Int) {

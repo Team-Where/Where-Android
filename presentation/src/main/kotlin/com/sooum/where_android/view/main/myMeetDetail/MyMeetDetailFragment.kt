@@ -1,44 +1,53 @@
 package com.sooum.where_android.view.main.myMeetDetail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import coil3.load
-import coil3.request.error
-import coil3.request.placeholder
-import coil3.size.Scale
+import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Schedule
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentMyMeetDetailBinding
+import com.sooum.where_android.showSimpleToast
+import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
+import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.view.main.myMeetDetail.adapter.InvitedFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.WaitingFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
+import com.sooum.where_android.view.main.myMeetDetail.modal.MapShareModalFragment
+import com.sooum.where_android.view.main.myMeetDetail.modal.MeetCoverDialog
 import com.sooum.where_android.view.widget.CoverImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MyMeetDetailFragment : MyMeetBaseFragment(),
-    InvitedFriendListAdapter.OnItemClickEventListener {
+    InvitedFriendListAdapter.OnItemClickEventListener,
+    MeetCoverDialog.CoverActionHandler,
+    ImagePickerDialogFragment.ImageTypeHandler {
     private lateinit var binding: FragmentMyMeetDetailBinding
     private lateinit var invitedFriendAdapter: InvitedFriendListAdapter
     private lateinit var waitingFriendListAdapter: WaitingFriendListAdapter
 
+
+    private val loadingAlertProvider by lazy {
+        LoadingAlertProvider(parentFragmentManager)
+    }
+
+    private var imagePickerDialog :ImagePickerDialogFragment? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentMyMeetDetailBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -94,7 +103,22 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
                     R.id.action_tabFragment_to_InviteFriendFragment
                 )
             }
+            groupImage.setOnClickListener {
+                myMeetDetailViewModel.meetDetail.value?.let {
+                    MeetCoverDialog.getInstance(
+                        imageLink = it.image,
+                        handler = this@MyMeetDetailFragment
+                    ).show(
+                        parentFragmentManager, MeetCoverDialog.TAG
+                    )
+                }
+            }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        imagePickerDialog = null
     }
 
     private fun setupRecyclerView() {
@@ -134,8 +158,37 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
         }
     }
 
-    override fun clicked(item: InvitedFriend) {
+    override fun clickedUserIcon(item: InvitedFriend) {
+        //TODO
         openMapShareSheet()
+    }
+
+
+    override fun changeCover() {
+        if (imagePickerDialog == null) {
+            imagePickerDialog = ImagePickerDialogFragment.getInstance(
+                handler = this@MyMeetDetailFragment,
+                maxImage = 1
+            )
+        }
+        imagePickerDialog?.show(parentFragmentManager, ImagePickerDialogFragment.TAG)
+    }
+
+    override fun receiveImageType(imageType: ImageAddType) {
+        loadingAlertProvider.startLoading()
+        myMeetDetailViewModel.updateImage(
+            imageType,
+            onSuccess = {
+                loadingAlertProvider.endLoading {
+                    imagePickerDialog?.dismiss()
+                }
+            },
+            onFail = { msg ->
+                loadingAlertProvider.endLoading {
+                    showSimpleToast(msg)
+                }
+            }
+        )
     }
 }
 

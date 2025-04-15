@@ -44,6 +44,12 @@ interface MeetDetailRepository {
         description: String
     ) : ActionResult<*>
 
+    suspend fun updateImage(
+        meetId: Int,
+        userId: Int,
+        imageFile: File?
+    ) : ActionResult<*>
+
     //region 사용자
 
     fun loadMeetDetailSubData(
