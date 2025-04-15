@@ -23,15 +23,43 @@ import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
+typealias UserId = Int
+typealias PlaceId = Int
+
 class MeetDetailRepositoryImpl @Inject constructor(
     private val meetRemoteDataSource: MeetRemoteDataSource,
     private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
 ) : MeetDetailRepository {
 
+    /**
+     * 로그인된 유저의 id로 가져온 전체 모임 목록
+     */
     private val _meetDetailList = MutableStateFlow(emptyList<MeetDetail>())
+
+    /**
+     * [loadMeetDetailSubData]이후 해당 모임에 해당되는 초대 현황 리스트
+     */
     private val _meetInviteStatus = MutableStateFlow(emptyList<MeetInviteStatus>())
-    private val _meetPlaceList = MutableStateFlow(emptyMap<Int, List<Place>>())
-    private val _commentList = MutableStateFlow(emptyMap<Int, List<CommentListItem>>())
+
+    /**
+     * [loadMeetDetailSubData]이후에 해당 모임에 해당되는 장소 목록
+     * 모임에 속한 userId = 장소 목록 형태로 가져온다.
+     */
+    private val _meetPlaceList = MutableStateFlow(emptyMap<UserId, List<Place>>())
+
+    /**
+     * [_meetPlaceList]에 정의된 값에서 뽑아온 placeId 목록
+     * (해당 placeId가 있는지 검사할때 사용)
+     */
+    private val _meetPlaceIdSet = _meetPlaceList.transform {placeMap ->
+        emit(placeMap.values.flatten().map { it.id })
+    }
+
+    /**
+     * [loadMeetDetailSubData]이후에 해당 모임에 해당되는 코멘트목록
+     * 모임에 속한 PlaceId = 코멘트 리스트 로 가져온다.
+     */
+    private val _commentList = MutableStateFlow(emptyMap<PlaceId, List<CommentListItem>>())
 
     private val meetDetailList
         get() = _meetDetailList.asStateFlow()
@@ -46,7 +74,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
         get() = _commentList.asStateFlow()
 
 
-    override suspend fun loadMeetDetailList(userId: Int) {
+    override suspend fun loadMeetDetailList(userId: UserId) {
         val meetDetails = meetRemoteDataSource.getMeetList(userId).first()
         _meetDetailList.value = meetDetails
     }
