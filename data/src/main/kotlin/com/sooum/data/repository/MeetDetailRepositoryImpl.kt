@@ -278,4 +278,67 @@ class MeetDetailRepositoryImpl @Inject constructor(
         _meetPlaceList.value = emptyMap()
         _commentList.value = emptyMap()
     }
+
+    /**
+     * fcm 코드 101 장소추가일때 동작하는 함수
+     */
+    fun addPlaceToMeeting(id: Int, newPlace: Place) {
+        val temp = _meetPlaceList.value.toMutableMap()
+        val myPlaceList = temp[id]?.toMutableList() ?: mutableListOf()
+
+        myPlaceList.add(newPlace)  // 새 Place 추가!
+        temp[id] = myPlaceList
+        _meetPlaceList.value = temp
+    }
+
+    /**
+     * fcm 코드 102 장소삭제일 때 동작하는 함수
+     */
+    fun deletePlaceFromMeeting(id: Int) {
+        val temp = _meetPlaceList.value.toMutableMap()
+
+        temp.forEach { (meetingId, placeList) ->
+            val updatedList = placeList.filterNot { it.id == id }
+            temp[meetingId] = updatedList
+        }
+        _meetPlaceList.value = temp
+    }
+
+    /**
+     * fcm 코드 104 모임수락일때 동작하는 함수
+     */
+    fun updatePlaceStatusToPicked(placeId: Int, newStatus: String) {
+        val temp = _meetPlaceList.value.toMutableMap()
+        val placeList = temp[placeId]?.toMutableList() ?: return
+
+        val updatedList = placeList.map { place ->
+            if (place.id == placeId) {
+                place.copy(status = newStatus)
+            } else place
+        }
+        temp[placeId] = updatedList
+        _meetPlaceList.value = temp
+    }
+
+    /**
+     * fcm 코드 105 장소 좋아요 업데이트일 때 동작하는 함수
+     */
+    fun updatePlaceLike(id: Int, placeLike: List<Int>) {
+        val temp = _meetPlaceList.value.toMutableMap()
+
+        temp.forEach { (meetingId, placeList) ->
+            val updatedList = placeList.map { place ->
+                if (place.id == id) {
+                    place.copy(likeUserList = placeLike)  // 좋아요 수 수정
+                } else {
+                    place
+                }
+            }
+            temp[meetingId] = updatedList
+        }
+        _meetPlaceList.value = temp
+    }
+
+
+
 }

@@ -1,12 +1,18 @@
 package com.sooum.where_android.viewmodel
 
 import android.app.Notification.Action
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sooum.data.repository.MeetDetailRepositoryImpl
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.MeetDetail
+import com.sooum.domain.model.Place
+import com.sooum.domain.model.PlaceDelete
+import com.sooum.domain.model.PlaceLike
 import com.sooum.domain.model.PlaceList
+import com.sooum.domain.model.PlaceStatus
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.ShareResult
 import com.sooum.domain.usecase.meet.AddMeetScheduleUseCase
@@ -27,10 +33,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
 class MyMeetDetailViewModel @Inject constructor(
+    private val repositoryImpl: MeetDetailRepositoryImpl,
     private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
     private val getMeetDetailByIdUseCase: GetMeetDetailByIdUseCase,
     getMeetInviteStatusUseCase: GetMeetInviteStatusUseCase,
@@ -43,6 +51,20 @@ class MyMeetDetailViewModel @Inject constructor(
     private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase
 ) : ViewModel() {
 
+    companion object {
+        private const val FCM_CODE_PLACE_ADD = "101"
+        private const val FCM_CODE_PLACE_DELETE = "103"
+        private const val FCM_CODE_PLACE_STATUS_UPDATE = "104"
+        private const val FCM_CODE_PLACE_LIKE_UPDATE = "105"
+        private const val FCM_CODE_PLACE_PLACE_LIST = "106"
+        private const val FCM_CODE_SCHEDULE_ADD_ = "201"
+        private const val FCM_CODE_SCHEDULE_PUT = "202"
+        private const val FCM_CODE_SCHEDULE_DELETE = "203"
+        private const val FCM_CODE_COMMENT_ADD = "301"
+        private const val FCM_CODE_COMMENT_PUT = "302"
+        private const val FCM_CODE_COMMENT_DELETE = "303"
+        private const val FCM_CODE_MEET_ACCEPT = "404"
+    }
 
     private var _meetDetail: MutableStateFlow<MeetDetail?> = MutableStateFlow(null)
 
@@ -236,6 +258,42 @@ class MyMeetDetailViewModel @Inject constructor(
             clearMeetUseCase()
         }
         super.onCleared()
+    }
+
+    fun updatePlaceFromFcm(code: String, data: String) {
+        try {
+            when (code) {
+                FCM_CODE_PLACE_ADD -> {
+                    val shareResult = Json.decodeFromString<Place>(data)
+                    repositoryImpl.addPlaceToMeeting(
+                        newPlace = shareResult,
+                        id = shareResult.id
+                    )
+                }
+
+                FCM_CODE_PLACE_STATUS_UPDATE -> {
+                    val shareResult = Json.decodeFromString<PlaceStatus>(data)
+                    repositoryImpl.updatePlaceStatusToPicked(
+                        placeId = shareResult.placeId,
+                        newStatus = shareResult.placeStatus
+                    )
+                }
+
+                FCM_CODE_PLACE_DELETE -> {
+                    val shareResult = Json.decodeFromString<PlaceDelete>(data)
+                    repositoryImpl.deletePlaceFromMeeting(shareResult.id)
+                }
+                FCM_CODE_PLACE_LIKE_UPDATE -> {
+                    val shareResult = Json.decodeFromString<PlaceLike>(data)
+                    repositoryImpl.updatePlaceLike(
+                        shareResult.placeId,
+                        shareResult.likeCount
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("ViewModel", "JSON 파싱 실패: ${e.localizedMessage}")
+        }
     }
 }
 
