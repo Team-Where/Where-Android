@@ -117,12 +117,10 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
                 loadingAlertProvider.startLoading()
                 myMeetDetailViewModel.finishMeet(
                     onSuccess = {
-                        loadingAlertProvider.endLoading { }
+                        loadingAlertProvider.endLoading()
                     },
                     onFail = { msg ->
-                        loadingAlertProvider.endLoading {
-                            showSimpleToast(msg)
-                        }
+                        loadingAlertProvider.endLoadingWithMessage(msg)
                     }
                 )
             }
@@ -210,9 +208,7 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
                 }
             },
             onFail = { msg ->
-                loadingAlertProvider.endLoading {
-                    showSimpleToast(msg)
-                }
+                loadingAlertProvider.endLoadingWithMessage(msg)
             }
         )
     }

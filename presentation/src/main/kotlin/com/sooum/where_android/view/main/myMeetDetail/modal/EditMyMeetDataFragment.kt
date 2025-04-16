@@ -76,9 +76,7 @@ class EditMyMeetDataFragment : BottomSheetDialogFragment() {
                             }
                         },
                         onFail = { msg ->
-                            loadingAlertProvider.endLoading {
-                                showSimpleToast(msg)
-                            }
+                            loadingAlertProvider.endLoadingWithMessage(msg)
                         }
                     )
                 } else if (type == TYPE_MEMO) {
@@ -90,9 +88,7 @@ class EditMyMeetDataFragment : BottomSheetDialogFragment() {
                             }
                         },
                         onFail = { msg ->
-                            loadingAlertProvider.endLoading {
-                                showSimpleToast(msg)
-                            }
+                            loadingAlertProvider.endLoadingWithMessage(msg)
                         }
                     )
                 }
@@ -106,6 +102,6 @@ class EditMyMeetDataFragment : BottomSheetDialogFragment() {
     }
 
     private val loadingAlertProvider by lazy {
-        LoadingAlertProvider(parentFragmentManager)
+        LoadingAlertProvider(this)
     }
 }

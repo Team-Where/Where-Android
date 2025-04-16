@@ -11,7 +11,7 @@ open class MyMeetBaseFragment : Fragment() {
     protected val myMeetDetailViewModel: MyMeetDetailViewModel by activityViewModels()
 
     protected val loadingAlertProvider by lazy {
-        LoadingAlertProvider(parentFragmentManager)
+        LoadingAlertProvider(this)
     }
     /**
      * 장소 공유 시트를 노출 합니다.

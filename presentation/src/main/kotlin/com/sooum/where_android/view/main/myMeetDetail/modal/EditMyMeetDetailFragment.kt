@@ -21,7 +21,7 @@ class EditMyMeetDetailFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentEditMyMeetDetailBinding
 
     private val loadingAlertProvider by lazy {
-        LoadingAlertProvider(parentFragmentManager)
+        LoadingAlertProvider(this)
     }
 
     override fun onCreateView(
@@ -85,9 +85,7 @@ class EditMyMeetDetailFragment : BottomSheetDialogFragment() {
                     }
                 },
                 onFail = { msg ->
-                    loadingAlertProvider.endLoading {
-                        showSimpleToast(msg)
-                    }
+                    loadingAlertProvider.endLoadingWithMessage(msg)
                 }
             )
         }
