@@ -31,6 +31,7 @@ import com.sooum.domain.usecase.meet.UpdateMeetCoverUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetDescriptionUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetScheduleUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetTitleUseCase
+import com.sooum.domain.usecase.meet.UpdateScheduleUseCase
 import com.sooum.domain.usecase.place.AddNewPlaceUserCase
 import com.sooum.domain.usecase.place.AddPlaceUseCase
 import com.sooum.domain.usecase.place.DeletePlaceUseCase
@@ -64,6 +65,7 @@ class MyMeetDetailViewModel @Inject constructor(
     private val updateMeetCoverUseCase: UpdateMeetCoverUseCase,
     private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase,
     private val clearMeetUseCase: ClearMeetUseCase,
+    private val updateScheduleUseCase: UpdateScheduleUseCase,
     private val deleteMeetScheduleUseCase: DeleteMeetScheduleUseCase,
     private val addNewPlaceUseCase: AddNewPlaceUserCase,
     private val deletePlaceUseCase: DeletePlaceUseCase,
@@ -79,7 +81,7 @@ class MyMeetDetailViewModel @Inject constructor(
         private const val FCM_CODE_PLACE_STATUS_UPDATE = "104"
         private const val FCM_CODE_PLACE_LIKE_UPDATE = "105"
         private const val FCM_CODE_PLACE_PLACE_LIST = "106"
-        private const val FCM_CODE_SCHEDULE_ADD_ = "201"
+        private const val FCM_CODE_SCHEDULE_ADD = "201"
         private const val FCM_CODE_SCHEDULE_PUT = "202"
         private const val FCM_CODE_SCHEDULE_DELETE = "203"
         private const val FCM_CODE_COMMENT_ADD = "301"
@@ -448,18 +450,12 @@ class MyMeetDetailViewModel @Inject constructor(
                         )
                     }
 
-                    FCM_CODE_SCHEDULE_ADD_ -> {
-                        val shareResult = Json.decodeFromString<Schedule>(data)
-                        addMeetScheduleUseCase(
-                            shareResult.meetId,
-                            shareResult
-                        )
-                    }
-                    FCM_CODE_SCHEDULE_PUT -> {
-                        val shareResult = Json.decodeFromString<Schedule>(data)
-                        updateMeetScheduleUseCase(
-                            shareResult.meetId,
-                            shareResult
+                    FCM_CODE_SCHEDULE_ADD, FCM_CODE_SCHEDULE_PUT -> {
+                        val schedule = Json.decodeFromString<Schedule>(data)
+                        updateScheduleUseCase(
+                            schedule.meetId,
+                            schedule.date,
+                            schedule.time
                         )
                     }
                     FCM_CODE_SCHEDULE_DELETE -> {

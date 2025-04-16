@@ -119,8 +119,6 @@ interface MeetDetailRepository {
 
     suspend fun clearMeetDetail()
 
-    suspend fun deleteSchedule(meetId: Int)
-
     suspend fun addPlaceToMeeting(id: Int, newPlace: Place)
 
     suspend fun deletePlaceFromMeeting(id: Int)
@@ -129,6 +127,8 @@ interface MeetDetailRepository {
 
     suspend fun updatePlaceLike(id: Int, placeLike: Int)
 
+    suspend fun deleteSchedule(meetId: Int)
 
+    suspend fun updateSchedule(meetId: Int, date: String, time: String)
 
 }
