@@ -6,6 +6,7 @@ import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.meet.request.AddMeetRequest
 import com.sooum.data.network.meet.request.DeleteMeetRequest
 import com.sooum.data.network.meet.request.EditMeetRequest
+import com.sooum.data.network.meet.request.FinishMeetRequest
 import com.sooum.data.network.meet.request.InviteMeetRequest
 import com.sooum.data.network.place.PlaceApi
 import com.sooum.data.network.place.request.AddCommentRequest
@@ -37,8 +38,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import javax.inject.Inject
@@ -98,11 +97,18 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         userId: Int
     ): Flow<ApiResult<String>> {
         val request = DeleteMeetRequest(
-            meetId,
-            userId
+            meetId = meetId,
+            userId = userId
         )
-        Log.d("JWH", "delete = $request")
         return safeFlow { meetApi.deleteMeet(request) }
+    }
+
+    override suspend fun finishMeet(meetId: Int, userId: Int): Flow<ApiResult<Any>> {
+        val request = FinishMeetRequest(
+            id = meetId,
+            userId = userId
+        )
+        return safeFlow { meetApi.finishMeet(request) }
     }
 
     override suspend fun getMeetInviteStatus(meetId: Int): Flow<ApiResult<List<MeetInviteStatus>>> {

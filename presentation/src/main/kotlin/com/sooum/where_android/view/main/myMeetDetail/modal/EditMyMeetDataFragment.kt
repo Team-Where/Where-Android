@@ -10,7 +10,7 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sooum.where_android.databinding.FragmentEditMyMeetDataBinding
 import com.sooum.where_android.showSimpleToast
-import com.sooum.where_android.view.common.modal.LoadingAlert
+import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
 
 class EditMyMeetDataFragment : BottomSheetDialogFragment() {
@@ -66,29 +66,29 @@ class EditMyMeetDataFragment : BottomSheetDialogFragment() {
                 dismiss()
             }
             btnOk.setOnClickListener {
-                startLoading()
+                loadingAlertProvider.startLoading()
                 if (type == TYPE_TITLE) {
                     myMeetDetailViewModel.updateTitle(
                         newTitle = getEditText(),
                         onSuccess = {
-                            endLoading()
-                            dismiss()
+                            loadingAlertProvider.endLoading {
+                                dismiss()
+                            }
                         },
                         onFail = { msg ->
-                            showSimpleToast(msg)
-                            endLoading()
+                            loadingAlertProvider.endLoadingWithMessage(msg)
                         }
                     )
                 } else if (type == TYPE_MEMO) {
                     myMeetDetailViewModel.updateDescription(
                         newDescription = getEditText(),
                         onSuccess = {
-                            endLoading()
-                            dismiss()
+                            loadingAlertProvider.endLoading {
+                                dismiss()
+                            }
                         },
                         onFail = { msg ->
-                            showSimpleToast(msg)
-                            endLoading()
+                            loadingAlertProvider.endLoadingWithMessage(msg)
                         }
                     )
                 }
@@ -101,16 +101,7 @@ class EditMyMeetDataFragment : BottomSheetDialogFragment() {
         return binding.editMyMeetMemo.text.toString()
     }
 
-    private var loadingAlert: LoadingAlert? = null
-
-    private fun startLoading() {
-        if (loadingAlert == null) {
-            loadingAlert = LoadingAlert()
-        }
-        loadingAlert!!.show(parentFragmentManager, "loading")
-    }
-
-    private fun endLoading() {
-        loadingAlert?.dismiss()
+    private val loadingAlertProvider by lazy {
+        LoadingAlertProvider(this)
     }
 }

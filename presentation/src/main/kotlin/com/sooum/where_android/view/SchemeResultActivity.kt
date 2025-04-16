@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import java.io.Serializable
 import javax.inject.Inject
 
-
+internal const val INVITE_DATA = "inviteData"
 /**
  * 스킵 데이터 터리를 위해
  */
@@ -32,7 +32,6 @@ class SchemeResultActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("JWH",intent.data.toString())
         val inviteData = intent.getInviteData()
         if (inviteData != null) {
             setContent {
@@ -75,6 +74,7 @@ class SchemeResultActivity : AppCompatActivity() {
     }
 }
 
+
 data class InviteData(
     val id: Int,
     val title: String,
@@ -99,34 +99,30 @@ fun Intent.addInviteScheme(
 ) {
     this.putExtras(
         Bundle().apply {
-            putSerializable("inviteData", InviteData(simpleMeet, name))
+            putSerializable(INVITE_DATA, InviteData(simpleMeet, name))
         }
     )
 }
 
 fun Intent.getInviteData(): InviteData? {
     val inviteData = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        getSerializableExtra("inviteData", InviteData::class.java)
+        getSerializableExtra(INVITE_DATA, InviteData::class.java)
     } else {
-        getSerializableExtra("inviteData") as InviteData?
+        getSerializableExtra(INVITE_DATA) as InviteData?
     }
-    return inviteData.also {
-        Log.d("JWH","getInviteData : $inviteData")
-
-    }
+    return inviteData
 }
 
 fun Intent.checkInviteData(
     context: Context
 ) :Boolean {
     val inviteData = this.getInviteData()
-    Log.d("JWH","checkInviteData : $inviteData")
     inviteData?.let {
         context.startActivity(
             Intent(context, SchemeResultActivity::class.java).apply {
                 putExtras(
                     Bundle().apply {
-                        putSerializable("inviteData", inviteData)
+                        putSerializable(INVITE_DATA, inviteData)
                     }
                 )
             }

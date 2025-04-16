@@ -34,6 +34,7 @@ import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.model.User
+import com.sooum.where_android.view.common.modal.LoadingView
 import com.sooum.where_android.viewmodel.NewMeetType
 import com.sooum.where_android.viewmodel.NewMeetViewModel
 import kotlinx.coroutines.launch
@@ -115,16 +116,12 @@ fun NewMeetModal(
                 }
             )
             if (showLoading) {
-                Column(
+                LoadingView(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(Color.Gray.copy(alpha = 0.5f)),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CircularProgressIndicator()
-                    Text("모임 추가중입니다..")
-                }
+                    msg = "모임 추가중입니다."
+                )
             }
         }
     }

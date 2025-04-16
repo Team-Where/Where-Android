@@ -1,44 +1,45 @@
 package com.sooum.where_android.view.main.myMeetDetail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import coil3.load
-import coil3.request.error
-import coil3.request.placeholder
-import coil3.size.Scale
+import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Schedule
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentMyMeetDetailBinding
+import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
 import com.sooum.where_android.view.main.myMeetDetail.adapter.InvitedFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.WaitingFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
-import com.sooum.where_android.view.widget.CoverImage
+import com.sooum.where_android.view.main.myMeetDetail.modal.MeetCoverDialog
+import com.sooum.where_android.view.widget.CoverImageView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MyMeetDetailFragment : MyMeetBaseFragment(),
-    InvitedFriendListAdapter.OnItemClickEventListener {
+    InvitedFriendListAdapter.OnItemClickEventListener,
+    MeetCoverDialog.CoverActionHandler,
+    ImagePickerDialogFragment.ImageTypeHandler {
     private lateinit var binding: FragmentMyMeetDetailBinding
     private lateinit var invitedFriendAdapter: InvitedFriendListAdapter
     private lateinit var waitingFriendListAdapter: WaitingFriendListAdapter
 
+    private var imagePickerDialog: ImagePickerDialogFragment? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentMyMeetDetailBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -80,6 +81,12 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
             }
         }
 
+        setButtonAction(view)
+    }
+
+    private fun setButtonAction(
+        view: View
+    ) {
         with(binding) {
             btnLocation.setOnClickListener {
                 openMapShareSheet()
@@ -94,7 +101,37 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
                     R.id.action_tabFragment_to_InviteFriendFragment
                 )
             }
+            groupImage.setOnClickListener {
+                myMeetDetailViewModel.meetDetail.value?.let {
+                    MeetCoverDialog.getInstance(
+                        imageLink = it.image,
+                        handler = this@MyMeetDetailFragment
+                    ).show(
+                        parentFragmentManager, MeetCoverDialog.TAG
+                    )
+                }
+            }
+
+            btnFinishMeet.setOnClickListener {
+                loadingAlertProvider.startLoading()
+                myMeetDetailViewModel.finishMeet(
+                    onSuccess = {
+                        loadingAlertProvider.endLoading()
+                    },
+                    onFail = { msg ->
+                        loadingAlertProvider.endLoadingWithMessage(msg)
+                    }
+                )
+            }
+            finishOpacity.setOnClickListener {
+                //Block Touch
+            }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        imagePickerDialog = null
     }
 
     private fun setupRecyclerView() {
@@ -118,7 +155,11 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
         meetDetail ?: return
         with(binding) {
             groupImage.setContent {
-                meetDetail.CoverImage(size = 64.dp, radius = 5.dp)
+                CoverImageView(
+                    src = meetDetail.image,
+                    size = 64.dp,
+                    radius = 5.dp
+                )
             }
 
             groupTitle.text = meetDetail.title
@@ -131,11 +172,48 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
                 tvSchedule.text = "아직 정해진 일정이 없어요"
                 btnSchedule.text = "일정 등록"
             }
+
+            if (meetDetail.finished) {
+                finishOpacity.visibility = View.VISIBLE
+                finishContainer.visibility = View.VISIBLE
+                btnFinishMeet.visibility = View.GONE
+            } else {
+                finishOpacity.visibility = View.GONE
+                finishContainer.visibility = View.GONE
+                btnFinishMeet.visibility = View.VISIBLE
+            }
         }
     }
 
-    override fun clicked(item: InvitedFriend) {
+    override fun clickedUserIcon(item: InvitedFriend) {
+        //TODO
         openMapShareSheet()
+    }
+
+
+    override fun changeCover() {
+        if (imagePickerDialog == null) {
+            imagePickerDialog = ImagePickerDialogFragment.getInstance(
+                handler = this@MyMeetDetailFragment,
+                maxImage = 1
+            )
+        }
+        imagePickerDialog?.show(parentFragmentManager, ImagePickerDialogFragment.TAG)
+    }
+
+    override fun receiveImageType(imageType: ImageAddType) {
+        loadingAlertProvider.startLoading()
+        myMeetDetailViewModel.updateImage(
+            imageType,
+            onSuccess = {
+                loadingAlertProvider.endLoading {
+                    imagePickerDialog?.dismiss()
+                }
+            },
+            onFail = { msg ->
+                loadingAlertProvider.endLoadingWithMessage(msg)
+            }
+        )
     }
 }
 
