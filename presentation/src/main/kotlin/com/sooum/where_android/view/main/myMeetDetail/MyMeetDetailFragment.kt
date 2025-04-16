@@ -16,13 +16,12 @@ import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Schedule
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentMyMeetDetailBinding
-import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
 import com.sooum.where_android.view.main.myMeetDetail.adapter.InvitedFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.WaitingFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import com.sooum.where_android.view.main.myMeetDetail.modal.MeetCoverDialog
-import com.sooum.where_android.view.widget.CoverImage
+import com.sooum.where_android.view.widget.CoverImageView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -156,7 +155,11 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
         meetDetail ?: return
         with(binding) {
             groupImage.setContent {
-                meetDetail.CoverImage(size = 64.dp, radius = 5.dp)
+                CoverImageView(
+                    src = meetDetail.image,
+                    size = 64.dp,
+                    radius = 5.dp
+                )
             }
 
             groupTitle.text = meetDetail.title
