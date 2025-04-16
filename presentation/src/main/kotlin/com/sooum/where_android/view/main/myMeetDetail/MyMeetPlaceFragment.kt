@@ -12,6 +12,7 @@ import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
 import com.sooum.where_android.startMapUriOrMarket
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.AllPlaceListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.BestPlaceListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.PlaceClickCallBack
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.SelectedPlaceListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
@@ -24,6 +25,7 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
     private lateinit var binding: FragmentMyMeetPlaceBinding
     private lateinit var selectedPlaceListAdapter: SelectedPlaceListAdapter
     private lateinit var allPlaceListAdapter: AllPlaceListAdapter
+    private lateinit var bestPlaceListAdapter: BestPlaceListAdapter
 
     @Inject
     lateinit var getLoginUserIdUseCase: GetLoginUserIdUseCase
@@ -56,6 +58,13 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
                 }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myMeetDetailViewModel.bestPlaceList.collect {
+                    bestPlaceListAdapter.submitList(it)
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -80,9 +89,13 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
         allPlaceListAdapter = AllPlaceListAdapter().apply {
             setCallBack(this@MyMeetPlaceFragment)
         }
+        bestPlaceListAdapter = BestPlaceListAdapter().apply {
+            setCallBack(this@MyMeetPlaceFragment)
+        }
 
         binding.placePickItemListView.adapter = selectedPlaceListAdapter
         binding.placeAllItemListView.adapter = allPlaceListAdapter
+        binding.placeBestItemListView.adapter = bestPlaceListAdapter
     }
 
     private fun setUpBtn() {
@@ -90,12 +103,16 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
             btnAll.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     btnBest.isChecked = false
+                    placeAllItemListView.visibility = View.VISIBLE
+                    placeBestItemListView.visibility = View.GONE
                 }
             }
 
             btnBest.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     btnAll.isChecked = false
+                    placeAllItemListView.visibility = View.GONE
+                    placeBestItemListView.visibility = View.VISIBLE
                 }
             }
         }

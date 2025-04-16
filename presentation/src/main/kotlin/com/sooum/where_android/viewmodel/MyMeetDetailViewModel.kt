@@ -1,8 +1,5 @@
 package com.sooum.where_android.viewmodel
 
-import android.app.Notification.Action
-import android.os.Parcel
-import android.os.Parcelable
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,6 +13,7 @@ import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlaceDelete
 import com.sooum.domain.model.PlaceLike
 import com.sooum.domain.model.PlaceList
+import com.sooum.domain.model.PlaceRank
 import com.sooum.domain.model.PlaceStatus
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.ShareResult
@@ -100,6 +98,7 @@ class MyMeetDetailViewModel @Inject constructor(
             emptyList()
         )
 
+    //초대된 친구 목록(추가로 나를 넣는다)
     val invitedFriendList = inviteStatus.transform { list ->
         val convertList = mutableListOf<InvitedFriend>()
         val myData = InvitedFriend(
@@ -116,6 +115,7 @@ class MyMeetDetailViewModel @Inject constructor(
         emit(convertList)
     }
 
+    //초대 대기중인 친구 목록
     val waitingFriendList = inviteStatus.transform { list ->
         val convertList = mutableListOf<InvitedFriend>()
         val filterData =
@@ -125,6 +125,7 @@ class MyMeetDetailViewModel @Inject constructor(
         emit(convertList)
     }
 
+    //초대된 유저별로 로드된 placeMap
     private val placeMap = getMeetPlaceListUseCase()
         .stateIn(
             viewModelScope,
@@ -132,6 +133,7 @@ class MyMeetDetailViewModel @Inject constructor(
             emptyMap()
         )
 
+    //plceMap에있는 총 장소 수
     val placeCount = placeMap.transform {
         emit(it.flatMap { it.value }.size)
     }
@@ -172,9 +174,44 @@ class MyMeetDetailViewModel @Inject constructor(
             tempData.sortedWith(comparator)
         }
 
+    //pick된 장소
     val pickPlaceList = placeMap.transform {
         val filterList = it.values.flatten().toSet().filter { it.status == "Picked" }
         emit(filterList.sortedBy { it.likeCount })
+    }
+
+    //상위 3개의 장소
+    val bestPlaceList = placeMap.transform { placeMap ->
+        val places = placeMap.values.flatten()
+        val sorted = places.filter { it.likeCount > 0 }.sortedByDescending { it.likeCount }
+
+        val result = mutableListOf<PlaceRank>()
+        var currentRank = 0
+        var lastLikeCount: Int? = null
+
+        val groupedByRank = linkedMapOf<Int, MutableList<Place>>()
+
+        //3위까지 찾기 시작
+        for (place in sorted) {
+            if (place.likeCount != lastLikeCount) {
+                currentRank += 1
+                lastLikeCount = place.likeCount
+            }
+
+            if (currentRank > 3) break
+
+            groupedByRank.getOrPut(currentRank) { mutableListOf() }.add(place)
+        }
+
+        //rank별 아이템 생성
+        for ((rank, placesInRank) in groupedByRank) {
+            result.add(PlaceRank.RankHeader(rank))
+            placesInRank.forEach { place ->
+                result.add(PlaceRank.PostItem(rank, place))
+            }
+        }
+
+        emit(result)
     }
 
     fun loadData(
