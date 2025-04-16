@@ -54,7 +54,7 @@ class SignUpCompleteFragment : Fragment() {
                 when (result) {
                     is ApiResult.Success -> {
                         Toast.makeText(requireContext(), "회원가입 완료!", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(requireContext(), AuthActivity::class.java)
+                        val intent = Intent(requireContext(), MainActivity::class.java)
                         intent.flags =
                             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
