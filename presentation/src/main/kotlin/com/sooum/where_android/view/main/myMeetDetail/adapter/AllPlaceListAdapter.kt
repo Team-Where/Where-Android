@@ -86,7 +86,6 @@ class AllPlaceListAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PlaceList.PostItem) {
             val place = item.place
-            val isLiked = place.likeUserList.contains(myId)
             with(binding) {
                 textPlaceName.text = place.name
                 textAddress.text = place.address
@@ -96,7 +95,7 @@ class AllPlaceListAdapter(
                     textLikeNumber.text = ""
                 }
                 val context = binding.root.context
-                if (isLiked) {
+                if (place.myLike) {
                     val mainColor = ContextCompat.getColor(context, R.color.main_color)
                     textLikeNumber.setTextColor(mainColor)
                     textLike.setTextColor(mainColor)

@@ -24,6 +24,7 @@ import com.sooum.domain.datasource.MeetRemoteDataSource
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
+import com.sooum.domain.model.EditMeet
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
@@ -79,7 +80,7 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         title: String?,
         description: String?,
         imageFile: File?
-    ): Flow<ApiResult<Meet>> {
+    ): Flow<ApiResult<EditMeet>> {
         val request = EditMeetRequest(
             id,
             userId,
@@ -88,11 +89,8 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         )
         val dataPart =
             json.encodeToString(request).toRequestBody("application/json".toMediaTypeOrNull())
-        val imagePart = imageFile?.let { file ->
-            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-            MultipartBody.Part.createFormData("image", file.name, requestFile)
-        }
-        return safeFlow { meetApi.editMeet(dataPart, imagePart) }
+
+        return safeFlow { meetApi.editMeet(dataPart, imageFile.createPart()) }
     }
 
     override suspend fun deleteMeet(

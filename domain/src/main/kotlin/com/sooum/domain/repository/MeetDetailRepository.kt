@@ -1,5 +1,6 @@
 package com.sooum.domain.repository
 
+import android.app.Notification.Action
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
@@ -30,6 +31,18 @@ interface MeetDetailRepository {
         participants: List<Int>,
         imageFile: File?
     ): ActionResult<NewMeetResult>
+
+    suspend fun updateTitle(
+        meetId: Int,
+        userId: Int,
+        title: String
+    ) : ActionResult<*>
+
+    suspend fun updateDescription(
+        meetId: Int,
+        userId: Int,
+        description: String
+    ) : ActionResult<*>
 
     //region 사용자
 
@@ -87,7 +100,7 @@ interface MeetDetailRepository {
 
     suspend fun updatePlaceStatusToPicked(placeId: Int, newStatus: String)
 
-    suspend fun updatePlaceLike(id: Int, placeLike: List<Int>)
+    suspend fun updatePlaceLike(id: Int, placeLike: Int)
 
 
 

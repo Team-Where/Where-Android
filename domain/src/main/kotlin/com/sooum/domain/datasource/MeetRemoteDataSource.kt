@@ -3,6 +3,7 @@ package com.sooum.domain.datasource
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
+import com.sooum.domain.model.EditMeet
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
@@ -35,7 +36,7 @@ interface MeetRemoteDataSource {
         title: String?,
         description: String?,
         imageFile: File?
-    ): Flow<ApiResult<Meet>>
+    ): Flow<ApiResult<EditMeet>>
 
 
     /**

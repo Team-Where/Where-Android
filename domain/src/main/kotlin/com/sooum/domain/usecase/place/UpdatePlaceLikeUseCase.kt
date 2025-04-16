@@ -6,7 +6,7 @@ import jakarta.inject.Inject
 class UpdatePlaceLikeUseCase @Inject constructor(
     private val meetDetailRepository: MeetDetailRepository
 ) {
-    suspend operator fun invoke(placeId: Int, placeLikeUserList: List<Int>) {
-        meetDetailRepository.updatePlaceLike(placeId, placeLikeUserList)
+    suspend operator fun invoke(placeId: Int, placeLike: Int) {
+        meetDetailRepository.updatePlaceLike(placeId, placeLike)
     }
 }

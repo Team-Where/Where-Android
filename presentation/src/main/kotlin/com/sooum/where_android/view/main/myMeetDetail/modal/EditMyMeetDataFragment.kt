@@ -74,8 +74,8 @@ class EditMyMeetDataFragment : BottomSheetDialogFragment() {
                             endLoading()
                             dismiss()
                         },
-                        onFail = {
-                            showSimpleToast("Error 발생")
+                        onFail = { msg ->
+                            showSimpleToast(msg)
                             endLoading()
                         }
                     )
@@ -86,8 +86,8 @@ class EditMyMeetDataFragment : BottomSheetDialogFragment() {
                             endLoading()
                             dismiss()
                         },
-                        onFail = {
-                            showSimpleToast("Error 발생")
+                        onFail = { msg ->
+                            showSimpleToast(msg)
                             endLoading()
                         }
                     )

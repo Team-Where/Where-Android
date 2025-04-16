@@ -4,6 +4,7 @@ import com.sooum.data.network.meet.request.DeleteMeetRequest
 import com.sooum.data.network.meet.request.FinishMeetRequest
 import com.sooum.data.network.meet.request.InviteMeetRequest
 import com.sooum.data.network.meet.response.MeetListItemResponse
+import com.sooum.domain.model.EditMeet
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.SimpleMeet
@@ -32,8 +33,8 @@ interface MeetApi {
     @PUT("api/meeting")
     suspend fun editMeet(
         @Part("data") data: RequestBody,
-        @Part imageFile: MultipartBody.Part?
-    ): Response<Meet>
+        @Part imageFile: MultipartBody.Part
+    ): Response<EditMeet>
 
     @HTTP(method = "DELETE", path = "api/meeting", hasBody = true)
     suspend fun deleteMeet(

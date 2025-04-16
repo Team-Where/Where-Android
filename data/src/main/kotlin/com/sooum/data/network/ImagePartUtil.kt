@@ -11,7 +11,7 @@ fun File?.createPart() : MultipartBody.Part {
         val requestFile = asRequestBody("image/*".toMediaTypeOrNull())
         return  MultipartBody.Part.createFormData("image", name, requestFile)
     } else {
-        val emptyImageRequestBody = ByteArray(0).toRequestBody("image/*".toMediaTypeOrNull())
-        return MultipartBody.Part.createFormData("image", null, emptyImageRequestBody)
+        val emptyBody = byteArrayOf().toRequestBody("image/*".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData("image", "", emptyBody)
     }
 }
