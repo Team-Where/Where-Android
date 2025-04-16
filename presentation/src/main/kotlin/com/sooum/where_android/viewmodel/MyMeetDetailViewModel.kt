@@ -1,5 +1,8 @@
 package com.sooum.where_android.viewmodel
 
+import android.app.Notification.Action
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +11,7 @@ import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.MeetDetail
+import com.sooum.domain.model.MeetingId
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlaceDelete
 import com.sooum.domain.model.PlaceLike
@@ -17,6 +21,7 @@ import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.ShareResult
 import com.sooum.domain.usecase.meet.AddMeetScheduleUseCase
 import com.sooum.domain.usecase.meet.ClearMeetUseCase
+import com.sooum.domain.usecase.meet.DeleteMeetScheduleUseCase
 import com.sooum.domain.usecase.meet.ExitMeetUseCase
 import com.sooum.domain.usecase.meet.FinishMeetUseCase
 import com.sooum.domain.usecase.meet.GetMeetDetailByIdUseCase
@@ -26,8 +31,12 @@ import com.sooum.domain.usecase.meet.UpdateMeetCoverUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetDescriptionUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetScheduleUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetTitleUseCase
+import com.sooum.domain.usecase.place.AddNewPlaceUserCase
 import com.sooum.domain.usecase.place.AddPlaceUseCase
+import com.sooum.domain.usecase.place.DeletePlaceUseCase
 import com.sooum.domain.usecase.place.TogglePlaceLikeUseCase
+import com.sooum.domain.usecase.place.UpdatePlaceLikeUseCase
+import com.sooum.domain.usecase.place.UpdatePlaceStatusUseCase
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,6 +64,11 @@ class MyMeetDetailViewModel @Inject constructor(
     private val updateMeetCoverUseCase: UpdateMeetCoverUseCase,
     private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase,
     private val clearMeetUseCase: ClearMeetUseCase,
+    private val deleteMeetScheduleUseCase: DeleteMeetScheduleUseCase,
+    private val addNewPlaceUseCase: AddNewPlaceUserCase,
+    private val deletePlaceUseCase: DeletePlaceUseCase,
+    private val updatePlaceLikeUseCase: UpdatePlaceLikeUseCase,
+    private val updatePlaceStatusUseCase: UpdatePlaceStatusUseCase,
     private val exitMeetUseCase: ExitMeetUseCase,
     private val finishMeetUseCase: FinishMeetUseCase,
 ) : ViewModel() {
@@ -400,38 +414,64 @@ class MyMeetDetailViewModel @Inject constructor(
     }
 
     fun updatePlaceFromFcm(code: String, data: String) {
-        try {
-            when (code) {
-                FCM_CODE_PLACE_ADD -> {
-                    val shareResult = Json.decodeFromString<Place>(data)
-                    repositoryImpl.addPlaceToMeeting(
-                        newPlace = shareResult,
-                        id = shareResult.id
-                    )
-                }
+        viewModelScope.launch {
+            try {
+                when (code) {
+                    FCM_CODE_PLACE_ADD -> {
+                        val shareResult = Json.decodeFromString<Place>(data)
+                        addNewPlaceUseCase(
+                            shareResult.id,
+                            shareResult
+                        )
+                    }
 
-                FCM_CODE_PLACE_STATUS_UPDATE -> {
-                    val shareResult = Json.decodeFromString<PlaceStatus>(data)
-                    repositoryImpl.updatePlaceStatusToPicked(
-                        placeId = shareResult.placeId,
-                        newStatus = shareResult.placeStatus
-                    )
-                }
+                    FCM_CODE_PLACE_DELETE -> {
+                        val shareResult = Json.decodeFromString<PlaceDelete>(data)
+                        deletePlaceUseCase(
+                            shareResult.id
+                        )
+                    }
 
-                FCM_CODE_PLACE_DELETE -> {
-                    val shareResult = Json.decodeFromString<PlaceDelete>(data)
-                    repositoryImpl.deletePlaceFromMeeting(shareResult.id)
+                    FCM_CODE_PLACE_STATUS_UPDATE -> {
+                        val shareResult = Json.decodeFromString<PlaceStatus>(data)
+                        updatePlaceStatusUseCase(
+                            shareResult.placeId,
+                            shareResult.placeStatus
+                        )
+                    }
+
+                    FCM_CODE_PLACE_LIKE_UPDATE -> {
+                        val shareResult = Json.decodeFromString<PlaceLike>(data)
+                        updatePlaceLikeUseCase(
+                            shareResult.placeId,
+                            shareResult.likeCount
+                        )
+                    }
+
+                    FCM_CODE_SCHEDULE_ADD_ -> {
+                        val shareResult = Json.decodeFromString<Schedule>(data)
+                        addMeetScheduleUseCase(
+                            shareResult.meetId,
+                            shareResult
+                        )
+                    }
+                    FCM_CODE_SCHEDULE_PUT -> {
+                        val shareResult = Json.decodeFromString<Schedule>(data)
+                        updateMeetScheduleUseCase(
+                            shareResult.meetId,
+                            shareResult
+                        )
+                    }
+                    FCM_CODE_SCHEDULE_DELETE -> {
+                        val shareResult = Json.decodeFromString<MeetingId>(data)
+                        deleteMeetScheduleUseCase(
+                            shareResult.meetingId
+                        )
+                    }
                 }
-                FCM_CODE_PLACE_LIKE_UPDATE -> {
-                    val shareResult = Json.decodeFromString<PlaceLike>(data)
-                    repositoryImpl.updatePlaceLike(
-                        shareResult.placeId,
-                        shareResult.likeCount
-                    )
-                }
+            } catch (e: Exception) {
+                Log.e("ViewModel", "JSON 파싱 실패: ${e.localizedMessage}")
             }
-        } catch (e: Exception) {
-            Log.e("ViewModel", "JSON 파싱 실패: ${e.localizedMessage}")
         }
     }
 }
