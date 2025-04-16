@@ -115,10 +115,12 @@ interface MeetDetailRepository {
     suspend fun likeToggle(
         placeId :Int,
         userId: Int,
-    ) : ActionResult<Unit>
+    ): ActionResult<*>
 
     suspend fun clearMeetDetail()
 
+    //fcm 관련 
+    
     suspend fun addPlaceToMeeting(id: Int, newPlace: Place)
 
     suspend fun deletePlaceFromMeeting(id: Int)
@@ -130,5 +132,5 @@ interface MeetDetailRepository {
     suspend fun deleteSchedule(meetId: Int)
 
     suspend fun updateSchedule(meetId: Int, date: String, time: String)
-
+    
 }

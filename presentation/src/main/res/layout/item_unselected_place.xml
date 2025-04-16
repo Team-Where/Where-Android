@@ -33,185 +33,20 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="gone" />
+                tools:visibility="visible" />
 
-            <LinearLayout
-                android:id="@+id/text_content_area"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textTogether">
 
-                <TextView
-                    android:id="@+id/textPlaceName"
-                    android:layout_width="match_parent"
-                    android:layout_height="25dp"
-                    android:fontFamily="@font/pretend_semibold"
-                    android:textColor="#1F2937"
-                    android:textSize="18sp"
-                    tools:text="장소 이름" />
+                <include
+                    android:id="@+id/content_area"
+                    layout="@layout/layout_place_default" />
+            </RelativeLayout>
 
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="5dp" />
-
-                <TextView
-                    android:id="@+id/textAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:fontFamily="@font/pretend_regular"
-                    android:textColor="#4B5563"
-                    android:textSize="14sp"
-                    tools:text="서울 용산구 한강대로21길 18 1층" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="5dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="17dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/comment_area"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/iconBalloon"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:src="@drawable/icon_balloon"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/textAddress" />
-
-                        <TextView
-                            android:id="@+id/textComment"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:fontFamily="@font/pretend_medium"
-                            android:text="코멘트"
-                            android:textColor="@color/gray_600"
-                            android:textSize="11sp"
-                            app:layout_constraintBottom_toBottomOf="@id/iconBalloon"
-                            app:layout_constraintStart_toEndOf="@id/iconBalloon" />
-
-                        <TextView
-                            android:id="@+id/textCommentNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="2dp"
-                            android:fontFamily="@font/pretend_medium"
-                            android:minWidth="20dp"
-                            android:text=""
-                            android:textColor="@color/gray_600"
-                            android:textSize="11sp"
-                            app:layout_constraintBottom_toBottomOf="@id/textComment"
-                            app:layout_constraintStart_toEndOf="@id/textComment" />
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:id="@+id/heart_area"
-                        android:layout_marginStart="18dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/icon_heart"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:fontFamily="@font/pretend_medium"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/icon_heart"
-                            android:textColor="@color/gray_600"
-                            android:textSize="11sp"
-                            app:layout_constraintBottom_toBottomOf="@id/textCommentNumber"
-                            app:layout_constraintStart_toEndOf="@id/textCommentNumber"
-                            tools:ignore="ContentDescription" />
-
-                        <TextView
-                            android:id="@+id/textLike"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:fontFamily="@font/pretend_medium"
-                            android:minWidth="20dp"
-                            android:text="좋아요"
-                            android:textColor="#868E96"
-                            android:textSize="11sp"
-                            app:layout_constraintBottom_toBottomOf="@id/icon_heart"
-                            app:layout_constraintStart_toEndOf="@id/icon_heart" />
-
-                        <TextView
-                            android:id="@+id/textLikeNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="2dp"
-                            android:fontFamily="@font/pretend_medium"
-                            android:text=""
-                            android:textColor="@color/gray_600"
-                            android:textSize="11sp"
-                            app:layout_constraintBottom_toBottomOf="@id/textLike"
-                            app:layout_constraintStart_toEndOf="@id/textLike" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="37dp"
-                android:layout_marginTop="9dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_content_area"
-                app:layout_constraintVertical_bias="1">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnNaverMap"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/shape_rounded_radius_24"
-                    android:drawableStart="@drawable/image_naver_map"
-                    android:fontFamily="@font/pretend_regular"
-                    android:paddingLeft="25dp"
-                    android:paddingEnd="20dp"
-                    android:stateListAnimator="@null"
-                    android:text="네이버 지도"
-                    android:textSize="12sp"
-                    app:iconSize="16dp" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnKakaoMap"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/shape_rounded_radius_24"
-                    android:drawableStart="@drawable/image_kakao_map"
-                    android:fontFamily="@font/pretend_regular"
-                    android:paddingStart="25dp"
-                    android:paddingEnd="20dp"
-                    android:stateListAnimator="@null"
-                    android:text="카카오맵"
-                    android:textSize="12sp"
-                    app:iconSize="16dp" />
-            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>

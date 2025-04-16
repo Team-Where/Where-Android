@@ -1,8 +1,5 @@
 package com.sooum.where_android.viewmodel
 
-import android.app.Notification.Action
-import android.os.Parcel
-import android.os.Parcelable
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,6 +13,7 @@ import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlaceDelete
 import com.sooum.domain.model.PlaceLike
 import com.sooum.domain.model.PlaceList
+import com.sooum.domain.model.PlaceRank
 import com.sooum.domain.model.PlaceStatus
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.ShareResult
@@ -102,12 +100,13 @@ class MyMeetDetailViewModel @Inject constructor(
             emptyList()
         )
 
+    //초대된 친구 목록(추가로 나를 넣는다)
     val invitedFriendList = inviteStatus.transform { list ->
         val convertList = mutableListOf<InvitedFriend>()
         val myData = InvitedFriend(
             getLoginUserIdUseCase()!!,
             "나",
-            null,
+            null, //TODO 내 프로필 가져오기
             isMe = true
         )
         convertList.add(myData)
@@ -118,6 +117,7 @@ class MyMeetDetailViewModel @Inject constructor(
         emit(convertList)
     }
 
+    //초대 대기중인 친구 목록
     val waitingFriendList = inviteStatus.transform { list ->
         val convertList = mutableListOf<InvitedFriend>()
         val filterData =
@@ -127,6 +127,7 @@ class MyMeetDetailViewModel @Inject constructor(
         emit(convertList)
     }
 
+    //초대된 유저별로 로드된 placeMap
     private val placeMap = getMeetPlaceListUseCase()
         .stateIn(
             viewModelScope,
@@ -134,79 +135,86 @@ class MyMeetDetailViewModel @Inject constructor(
             emptyMap()
         )
 
+    //plceMap에있는 총 장소 수
     val placeCount = placeMap.transform {
         emit(it.flatMap { it.value }.size)
     }
 
-    val userAndPlaceMap = inviteStatus
-        .transform { list ->
-            emit(list.filter { it.status })
-        }
-        .combine(placeMap) { invitedUser, placeMap ->
+    val userAndPlaceMap = invitedFriendList
+        .combine(placeMap) { invitedFriendList, placeMap ->
             val tempData = mutableListOf<PlaceList>()
             val myId = getLoginUserIdUseCase()!!
-            placeMap.forEach { (userId, placeItemList) ->
-                if (userId == myId) {
-                    tempData.add(
-                        PlaceList.ProfileHeader(
-                            userId = userId,
-                            userName = "나",
-                            profileImage = null
-                        )
+
+            //헤더 먼저 추가 (ProfileHeader)
+            invitedFriendList.forEach {
+                tempData.add(
+                    PlaceList.ProfileHeader(
+                        userId = it.id,
+                        userName = if (it.isMe) "나" else it.name,
+                        profileImage = it.image
                     )
-                    placeItemList.forEach { place ->
-                        tempData.add(
-                            PlaceList.PostItem(
-                                userId = userId,
-                                place = place
-                            )
-                        )
-                    }
-                } else {
-                    invitedUser.find { it.toId == userId }?.let { findUser ->
-                        tempData.add(
-                            PlaceList.ProfileHeader(
-                                userId = userId,
-                                userName = findUser.toName,
-                                profileImage = findUser.toImage
-                            )
-                        )
-                        placeItemList.forEach { place ->
-                            tempData.add(
-                                PlaceList.PostItem(
-                                    userId = userId,
-                                    place = place
-                                )
-                            )
-                        }
-                    }
-                }
+                )
             }
 
-            // 정렬 로직
-            val grouped = tempData.groupBy { it.userId }
-                .mapNotNull { (userId, items) ->
-                    val header =
-                        items.find { it is PlaceList.ProfileHeader } as? PlaceList.ProfileHeader
-                    val posts = items.filterIsInstance<PlaceList.PostItem>()
-                    if (header != null) {
-                        listOf(header) + posts
-                    } else {
-                        null // header 없는 유저는 제외하거나 필요 시 처리 가능
-                    }
+            //장소를 돌며 장소를 추가 (PostItem)
+            placeMap.forEach { (userId, placeItemList) ->
+                placeItemList.forEach { place ->
+                    tempData.add(
+                        PlaceList.PostItem(
+                            userId = userId,
+                            place = place
+                        )
+                    )
                 }
+            }
+            val comparator = compareBy<PlaceList>(
+                { if (it.userId == myId) 0 else 1 }, // myId 먼저
+                { it.userId },
+                { if (it is PlaceList.ProfileHeader) 0 else 1 } // Header 먼저
+            )
 
-            val sorted = grouped.sortedWith(
-                compareBy<List<PlaceList>> { group ->
-                    val uid = group.first().userId
-                    if (uid == myId) Int.MIN_VALUE else uid
-                }.thenBy { group ->
-                    (group.first() as? PlaceList.ProfileHeader)?.userName ?: ""
-                }
-            ).flatten()
-
-            sorted
+            tempData.sortedWith(comparator)
         }
+
+    //pick된 장소
+    val pickPlaceList = placeMap.transform {
+        val filterList = it.values.flatten().toSet().filter { it.status == "Picked" }
+        emit(filterList.sortedBy { it.likeCount })
+    }
+
+    //상위 3개의 장소
+    val bestPlaceList = placeMap.transform { placeMap ->
+        val places = placeMap.values.flatten()
+        val sorted = places.filter { it.likeCount > 0 }.sortedByDescending { it.likeCount }
+
+        val result = mutableListOf<PlaceRank>()
+        var currentRank = 0
+        var lastLikeCount: Int? = null
+
+        val groupedByRank = linkedMapOf<Int, MutableList<Place>>()
+
+        //3위까지 찾기 시작
+        for (place in sorted) {
+            if (place.likeCount != lastLikeCount) {
+                currentRank += 1
+                lastLikeCount = place.likeCount
+            }
+
+            if (currentRank > 3) break
+
+            groupedByRank.getOrPut(currentRank) { mutableListOf() }.add(place)
+        }
+
+        //rank별 아이템 생성
+        for ((rank, placesInRank) in groupedByRank) {
+            result.add(PlaceRank.RankHeader(rank))
+            placesInRank.forEach { place ->
+                result.add(PlaceRank.PostItem(rank, place))
+            }
+        }
+
+        emit(result)
+    }
 
     fun loadData(
         meetDetailId: Int
@@ -320,11 +328,20 @@ class MyMeetDetailViewModel @Inject constructor(
 
     fun likeToggle(
         placeId: Int,
-        complete: (ActionResult<Unit>) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
     ) {
         viewModelScope.launch {
-            val result = togglePlaceLikeUseCase(placeId, getLoginUserIdUseCase()!!)
-            complete(result)
+            val result = togglePlaceLikeUseCase(placeId)
+            when (result) {
+                is ActionResult.Success -> {
+                    onSuccess()
+                }
+
+                is ActionResult.Fail -> {
+                    onFail(result.msg)
+                }
+            }
         }
     }
 

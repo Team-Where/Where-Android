@@ -1,32 +1,31 @@
 package com.sooum.where_android.view.main.myMeetDetail
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
-import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.sooum.domain.model.SelectedPlace
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
 import com.sooum.where_android.startMapUriOrMarket
-import com.sooum.where_android.view.main.myMeetDetail.adapter.AllPlaceListAdapter
-import com.sooum.where_android.view.main.myMeetDetail.adapter.SelectedPlaceListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.AllPlaceListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.BestPlaceListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.PlaceClickCallBack
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.SelectedPlaceListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MyMeetPlaceFragment : MyMeetBaseFragment(), AllPlaceListAdapter.PlaceClickCallBack {
+class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
     private lateinit var binding: FragmentMyMeetPlaceBinding
     private lateinit var selectedPlaceListAdapter: SelectedPlaceListAdapter
     private lateinit var allPlaceListAdapter: AllPlaceListAdapter
+    private lateinit var bestPlaceListAdapter: BestPlaceListAdapter
 
     @Inject
     lateinit var getLoginUserIdUseCase: GetLoginUserIdUseCase
@@ -55,37 +54,48 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), AllPlaceListAdapter.PlaceClick
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 myMeetDetailViewModel.userAndPlaceMap.collect {
-                    allPlaceListAdapter.setData(it)
+                    allPlaceListAdapter.submitList(it)
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myMeetDetailViewModel.bestPlaceList.collect {
+                    bestPlaceListAdapter.submitList(it)
                 }
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myMeetDetailViewModel.pickPlaceList.collect { pickList ->
+                    if (pickList.isEmpty()) {
+                        binding.placePickItemListView.visibility = View.INVISIBLE
+                        binding.placePickItemNoData.visibility = View.VISIBLE
+                    } else {
+                        binding.placePickItemListView.visibility = View.VISIBLE
+                        binding.placePickItemNoData.visibility = View.GONE
+                        selectedPlaceListAdapter.submitList(pickList)
+                    }
+                }
+            }
+        }
     }
 
     private fun setupRecyclerView() {
-        val dummyList = listOf(
-            SelectedPlace("맛있는 식당", "서울 강남구 테헤란로 123", 5, 12),
-            SelectedPlace("한식 전문점", "서울 마포구 홍대입구 456", 3, 8),
-            SelectedPlace("카페 모카", "서울 서초구 반포대로 789", 7, 20)
-        )
-        selectedPlaceListAdapter = SelectedPlaceListAdapter()
-        selectedPlaceListAdapter.setList(dummyList)
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            allPlaceListAdapter = AllPlaceListAdapter(getLoginUserIdUseCase()!!).apply {
-                setCallBack(this@MyMeetPlaceFragment)
-            }
+        selectedPlaceListAdapter = SelectedPlaceListAdapter().apply {
+            setCallBack(this@MyMeetPlaceFragment)
+        }
+        allPlaceListAdapter = AllPlaceListAdapter().apply {
+            setCallBack(this@MyMeetPlaceFragment)
+        }
+        bestPlaceListAdapter = BestPlaceListAdapter().apply {
+            setCallBack(this@MyMeetPlaceFragment)
         }
 
-        binding.recyclerView.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            adapter = selectedPlaceListAdapter
-        }
-        binding.recyclerView2.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = allPlaceListAdapter
-        }
+        binding.placePickItemListView.adapter = selectedPlaceListAdapter
+        binding.placeAllItemListView.adapter = allPlaceListAdapter
+        binding.placeBestItemListView.adapter = bestPlaceListAdapter
     }
 
     private fun setUpBtn() {
@@ -93,23 +103,33 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), AllPlaceListAdapter.PlaceClick
             btnAll.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     btnBest.isChecked = false
+                    placeAllItemListView.visibility = View.VISIBLE
+                    placeBestItemListView.visibility = View.GONE
                 }
             }
 
             btnBest.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     btnAll.isChecked = false
+                    placeAllItemListView.visibility = View.GONE
+                    placeBestItemListView.visibility = View.VISIBLE
                 }
             }
         }
     }
 
     override fun likeChange(placeId: Int) {
-        myMeetDetailViewModel.likeToggle(placeId) {
-
-        }
+        loadingAlertProvider.startLoading()
+        myMeetDetailViewModel.likeToggle(
+            placeId,
+            onSuccess = {
+                loadingAlertProvider.endLoading()
+            },
+            onFail = { msg ->
+                loadingAlertProvider.endLoadingWithMessage(msg)
+            }
+        )
     }
-
 
     override fun startMapUri(uriString: String, marketPackage: String) {
         context?.startMapUriOrMarket(uriString, marketPackage)

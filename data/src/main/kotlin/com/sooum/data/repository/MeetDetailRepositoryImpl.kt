@@ -51,9 +51,22 @@ class MeetDetailRepositoryImpl @Inject constructor(
      * [_meetPlaceList]에 정의된 값에서 뽑아온 placeId 목록
      * (해당 placeId가 있는지 검사할때 사용)
      */
-    private val _meetPlaceIdSet = _meetPlaceList.transform { placeMap ->
-        emit(placeMap.values.flatten().map { it.id })
-    }
+    private val placeIdSet: Flow<Set<PlaceId>> =
+        _meetPlaceList.transform { placeMap ->
+            emit(placeMap.values.flatten().map { it.id }.toSet())
+        }
+
+    /**
+     * [_meetPlaceList]에 정의된 값에서 뽑아온 placeId 별 매칭되는 userId 값
+     */
+    private val placeIdToUserIdMap: Flow<Map<PlaceId, UserId>> =
+        _meetPlaceList.transform { placeMap ->
+            emit(
+                placeMap
+                    .flatMap { (userId, places) -> places.map { it.id to userId } }
+                    .toMap()
+            )
+        }
 
     /**
      * [loadMeetDetailSubData]이후에 해당 모임에 해당되는 코멘트목록
@@ -75,9 +88,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
 
 
     override suspend fun loadMeetDetailList(userId: UserId) {
-        val meetDetails = meetRemoteDataSource.getMeetList(userId).first().sortedBy {
-            it.finished
-        }
+        val meetDetails = meetRemoteDataSource.getMeetList(userId).first()
         _meetDetailList.value = meetDetails
     }
 
@@ -312,7 +323,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
             val myId = getLoginUserIdUseCase()
 
             meetRemoteDataSource.getMeetInviteStatus(
-                meetId
+                meetId = meetId
             ).first().let { result ->
                 if (result is ApiResult.Success) {
                     _meetInviteStatus.value = result.data
@@ -443,7 +454,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
         }.first()
     }
 
-    override suspend fun likeToggle(placeId: Int, userId: Int): ActionResult<Unit> {
+    override suspend fun likeToggle(placeId: Int, userId: Int): ActionResult<*> {
         return meetRemoteDataSource.likePlace(placeId, userId).transform { result ->
             result.covertApiResultToActionResultIfSuccess(
                 onSuccess = { pickStatus ->
@@ -462,6 +473,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
                             _meetPlaceList.value = temp
                         }
                     }
+                    emit(ActionResult.Success(Unit))
                 },
                 onFail = {
                     emit(ActionResult.Fail(it))

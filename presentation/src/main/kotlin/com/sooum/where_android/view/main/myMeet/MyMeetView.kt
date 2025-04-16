@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sooum.domain.model.Filter
 import com.sooum.domain.model.MeetDetail
 import com.sooum.where_android.viewmodel.MyMeetViewModel
 
@@ -23,8 +24,10 @@ fun MyMeetView(
     modifier: Modifier
 ) {
     val meetDetailList by myMeetViewModel.meetDetailList.collectAsState()
-
+    val filter by myMeetViewModel.filter.collectAsState()
     MyMeetViewContent(
+        filter = filter,
+        updateFilter = myMeetViewModel::updateFilter,
         openDrawer = openDrawer,
         meetDetailList = meetDetailList,
         navigationGuide = navigationGuide,
@@ -36,6 +39,8 @@ fun MyMeetView(
 
 @Composable
 private fun MyMeetViewContent(
+    filter: Filter,
+    updateFilter: (Filter) -> Unit,
     openDrawer: () -> Unit,
     meetDetailList: List<MeetDetail>,
     navigationGuide: () -> Unit,
@@ -46,7 +51,10 @@ private fun MyMeetViewContent(
         modifier = modifier
     ) {
         MyMeetHeaderView(
-            openDrawer = openDrawer
+            openDrawer = openDrawer,
+            filter = filter,
+            updateFilter = updateFilter,
+            showFilter = meetDetailList.isNotEmpty()
         )
         MyMeetListView(
             meetDetailList = meetDetailList,
@@ -61,6 +69,8 @@ private fun MyMeetViewContent(
 @Preview(showBackground = true, showSystemUi = true)
 private fun MeetListViewContentPreview() {
     MyMeetViewContent(
+        filter = Filter.Time,
+        updateFilter = {},
         openDrawer = {},
         meetDetailList = emptyList(),
         navigationGuide = {},
