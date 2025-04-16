@@ -75,9 +75,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
 
 
     override suspend fun loadMeetDetailList(userId: UserId) {
-        val meetDetails = meetRemoteDataSource.getMeetList(userId).first().sortedBy {
-            it.finished
-        }
+        val meetDetails = meetRemoteDataSource.getMeetList(userId).first()
         _meetDetailList.value = meetDetails
     }
 
