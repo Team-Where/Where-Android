@@ -489,7 +489,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
     }
 
     /**
-     * fcm 코드 101 장소추가일때 동작하는 함수
+     * fcm 코드 101 장소추가일때 동작하는 함수 -> 이거 코드 틀린듯 수정해야할듯 meetingID에 대한 부분 수정해야함
      */
     override suspend fun addPlaceToMeeting(id: Int, newPlace: Place) {
         val temp = _meetPlaceList.value.toMutableMap()
