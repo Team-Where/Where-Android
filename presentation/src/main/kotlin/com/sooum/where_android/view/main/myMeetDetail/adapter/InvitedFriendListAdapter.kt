@@ -10,7 +10,7 @@ import com.sooum.where_android.view.widget.UserViewType
 class InvitedFriendListAdapter() : ComposeItemAdapter<InvitedFriend>() {
 
     interface OnItemClickEventListener {
-        fun clicked(item: InvitedFriend)
+        fun clickedUserIcon(item: InvitedFriend)
     }
 
     private var itemClickListener: OnItemClickEventListener? = null
@@ -28,7 +28,7 @@ class InvitedFriendListAdapter() : ComposeItemAdapter<InvitedFriend>() {
             ),
             type = if (item.isMe) UserViewType.Nothing else UserViewType.Option,
             iconClickAction = {
-                itemClickListener?.clicked(item)
+                itemClickListener?.clickedUserIcon(item)
             }
         )
     }

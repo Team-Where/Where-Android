@@ -66,6 +66,7 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.User
 import com.sooum.domain.usecase.user.GetLoginUserUseCase
 import com.sooum.where_android.R
@@ -76,7 +77,6 @@ import com.sooum.where_android.theme.Gray700
 import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.util.KaKaoShareUtil
-import com.sooum.where_android.view.main.myMeetDetail.modal.schedule.ScheduleView
 import com.sooum.where_android.view.widget.CircleProfileView
 import com.sooum.where_android.view.widget.SearchField
 import com.sooum.where_android.view.widget.UserItemView
@@ -89,6 +89,8 @@ import javax.inject.Inject
 @Composable
 fun InviteFriendView(
     modifier: Modifier = Modifier,
+    inviteFriendList: List<InvitedFriend>,
+    waitingFriendList: List<InvitedFriend>,
     userList: List<User>,
     recentUserList: List<User>,
     inviteByKaKao: () -> Unit,
@@ -236,16 +238,8 @@ fun InviteFriendView(
                     modifier = Modifier.padding(10.dp)
                 ) {
                     InviteFriendHeader(
-                        invitedUser = listOf(
-                            User(0, "hi"),
-                            User(1, "hi2"),
-                            User(2, "hi3")
-                        ),
-                        notInvitedUser = listOf(
-                            User(3, "sad"),
-                            User(4, "sad2"),
-                            User(5, "sad3"),
-                        ),
+                        invitedFriendList = inviteFriendList,
+                        waitingFriendList = waitingFriendList
                     )
                     InviteFriendContentView(
                         recentUserList = recentUserList,
@@ -262,8 +256,8 @@ fun InviteFriendView(
 
 @Composable
 private fun InviteFriendHeader(
-    invitedUser: List<User>,
-    notInvitedUser: List<User>
+    invitedFriendList: List<InvitedFriend>,
+    waitingFriendList: List<InvitedFriend>
 ) {
     Column(
         modifier = Modifier
@@ -286,7 +280,7 @@ private fun InviteFriendHeader(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = stringResource(R.string.invite_friend_header, invitedUser.size),
+                    text = stringResource(R.string.invite_friend_header, invitedFriendList.size),
                     fontFamily = pretendard,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -304,7 +298,7 @@ private fun InviteFriendHeader(
                     Text(
                         text = stringResource(
                             R.string.invite_friend_header_waiting,
-                            notInvitedUser.size,
+                            waitingFriendList.size,
                         ),
                         fontFamily = pretendard,
                         fontSize = 12.sp,
@@ -320,13 +314,13 @@ private fun InviteFriendHeader(
                 horizontalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 items(
-                    items = notInvitedUser
+                    items = invitedFriendList
                 ) { user ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         CircleProfileView(
-                            profileUrl = user.profileImage,
+                            profileUrl = user.image,
                             size = 40.dp,
                         )
                         Spacer(Modifier.height(8.dp))
@@ -340,7 +334,7 @@ private fun InviteFriendHeader(
                     }
                 }
                 items(
-                    items = notInvitedUser
+                    items = waitingFriendList
                 ) { user ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -348,7 +342,7 @@ private fun InviteFriendHeader(
                             .alpha(0.5f)
                     ) {
                         CircleProfileView(
-                            profileUrl = user.profileImage,
+                            profileUrl = user.image,
                             size = 40.dp,
                         )
                         Spacer(Modifier.height(8.dp))
@@ -374,6 +368,8 @@ private fun InviteFriendHeader(
 private fun InviteFriendViewPreview() {
     InviteFriendView(
         onBack = {},
+        inviteFriendList = emptyList(),
+        waitingFriendList = emptyList(),
         userList = emptyList(),
         recentUserList = emptyList(),
         inviteFriend = {},
@@ -387,7 +383,8 @@ class InviteFriendFragment : Fragment() {
 
     private val myMeetDetailViewModel: MyMeetDetailViewModel by activityViewModels()
 
-    @Inject lateinit var getLoginUserUseCase: GetLoginUserUseCase
+    @Inject
+    lateinit var getLoginUserUseCase: GetLoginUserUseCase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -401,18 +398,26 @@ class InviteFriendFragment : Fragment() {
             setContent {
                 val scope = rememberCoroutineScope()
                 val context = LocalContext.current
+                val inviteFriendList by myMeetDetailViewModel.invitedFriendList.collectAsState(
+                    emptyList()
+                )
+                val waitingFriendList by myMeetDetailViewModel.waitingFriendList.collectAsState(
+                    emptyList()
+                )
                 InviteFriendView(
                     modifier = Modifier
                         .safeDrawingPadding()
                         .navigationBarsPadding()
                         .padding(10.dp),
+                    inviteFriendList = inviteFriendList,
+                    waitingFriendList = waitingFriendList,
                     userList = emptyList(),
                     recentUserList = emptyList(),
                     inviteFriend = {},
                     inviteByKaKao = {
                         scope.launch {
                             myMeetDetailViewModel.meetDetail.value?.let { meet ->
-                                Log.d("JWH",meet.toString())
+                                Log.d("JWH", meet.toString())
                                 //로그인된 화면이므로 getLoginUserUseCase는 항상 null이 아니다.
                                 KaKaoShareUtil.sendInvite(
                                     context = context,
