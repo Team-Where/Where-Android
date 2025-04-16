@@ -52,7 +52,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
      * (해당 placeId가 있는지 검사할때 사용)
      */
     private val _meetPlaceIdSet = _meetPlaceList.transform { placeMap ->
-        emit(placeMap.values.flatten().map { it.id })
+        emit(placeMap.values.flatten().map { it.id }.toSet())
     }
 
     /**
