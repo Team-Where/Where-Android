@@ -8,8 +8,6 @@ import androidx.appcompat.widget.TooltipCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.sooum.domain.model.Place
-import com.sooum.domain.model.SelectedPlace
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
 import com.sooum.where_android.startMapUriOrMarket
@@ -54,7 +52,7 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 myMeetDetailViewModel.userAndPlaceMap.collect {
-                    allPlaceListAdapter.setData(it)
+                    allPlaceListAdapter.submitList(it)
                 }
             }
         }
@@ -62,27 +60,13 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 myMeetDetailViewModel.pickPlaceList.collect { pickList ->
-                    val pickList = pickList.toMutableList()
-                    pickList.add(
-                        Place(
-                            999,
-                            "",
-                            "",
-                            "QWER",
-                            "ASDF",
-                            44,
-                            false,
-                            "Picked",
-                            true
-                        )
-                    )
                     if (pickList.isEmpty()) {
                         binding.placePickItemListView.visibility = View.INVISIBLE
                         binding.placePickItemNoData.visibility = View.VISIBLE
                     } else {
                         binding.placePickItemListView.visibility = View.VISIBLE
                         binding.placePickItemNoData.visibility = View.GONE
-                        selectedPlaceListAdapter.setData(pickList.map { SelectedPlace(it) })
+                        selectedPlaceListAdapter.submitList(pickList)
                     }
                 }
             }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
 import com.sooum.domain.model.PlaceList
@@ -12,14 +13,36 @@ import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ItemProfilePlaceListBinding
 import com.sooum.where_android.databinding.ItemUnselectedPlaceBinding
 
-class AllPlaceListAdapter() : PlaceBaseAdapter<PlaceList, RecyclerView.ViewHolder>() {
+class AllPlaceListAdapter() : PlaceBaseAdapter<PlaceList, RecyclerView.ViewHolder>(diffUtil) {
     companion object {
         private const val VIEW_TYPE_HEADER = 0
         private const val VIEW_TYPE_ITEM = 1
+
+        val diffUtil = object : DiffUtil.ItemCallback<PlaceList>() {
+            override fun areItemsTheSame(oldItem: PlaceList, newItem: PlaceList): Boolean {
+                return if (oldItem is PlaceList.ProfileHeader && newItem is PlaceList.ProfileHeader) {
+                    oldItem.userId == newItem.userId
+                } else if (oldItem is PlaceList.PostItem && newItem is PlaceList.PostItem) {
+                    (oldItem.userId == newItem.userId) && (oldItem.place.id == newItem.place.id)
+                } else {
+                    false
+                }
+            }
+
+            override fun areContentsTheSame(oldItem: PlaceList, newItem: PlaceList): Boolean {
+                return if (oldItem is PlaceList.ProfileHeader && newItem is PlaceList.ProfileHeader) {
+                    oldItem == newItem
+                } else if (oldItem is PlaceList.PostItem && newItem is PlaceList.PostItem) {
+                    (oldItem.userId == newItem.userId) && (oldItem.place == newItem.place)
+                } else {
+                    false
+                }
+            }
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (items[position]) {
+        return when (currentList[position]) {
             is PlaceList.ProfileHeader -> VIEW_TYPE_HEADER
             is PlaceList.PostItem -> VIEW_TYPE_ITEM
         }
@@ -43,7 +66,7 @@ class AllPlaceListAdapter() : PlaceBaseAdapter<PlaceList, RecyclerView.ViewHolde
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (val item = items[position]) {
+        when (val item = currentList[position]) {
             is PlaceList.ProfileHeader -> (holder as ProfileHeaderViewHolder).bind(item)
             is PlaceList.PostItem -> (holder as PostViewHolder).bind(item)
         }

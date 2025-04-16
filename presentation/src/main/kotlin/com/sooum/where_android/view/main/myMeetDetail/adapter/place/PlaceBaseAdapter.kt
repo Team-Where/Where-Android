@@ -1,24 +1,16 @@
 package com.sooum.where_android.view.main.myMeetDetail.adapter.place
 
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class PlaceBaseAdapter<ITEM, HOLDER : RecyclerView.ViewHolder> :
-    RecyclerView.Adapter<HOLDER>() {
-
-    protected var items: List<ITEM> = emptyList()
-
-    fun setData(items: List<ITEM>) {
-        this.items = items
-        this.notifyDataSetChanged()
-    }
+abstract class PlaceBaseAdapter<ITEM, HOLDER : RecyclerView.ViewHolder>(
+    diffUtil: DiffUtil.ItemCallback<ITEM>
+) : ListAdapter<ITEM, HOLDER>(diffUtil) {
 
     protected var placeClickCallBack: PlaceClickCallBack? = null
 
     fun setCallBack(callBack: PlaceClickCallBack) {
         placeClickCallBack = callBack
-    }
-
-    override fun getItemCount(): Int {
-        return items.size
     }
 }

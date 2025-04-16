@@ -5,37 +5,49 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
-import com.sooum.domain.model.SelectedPlace
+import com.sooum.domain.model.Place
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ItemSelectedPlaceBinding
 
 class SelectedPlaceListAdapter() :
-    PlaceBaseAdapter<SelectedPlace, SelectedPlaceListAdapter.MyView>() {
+    PlaceBaseAdapter<Place, SelectedPlaceListAdapter.MyView>(diffUtil) {
+    companion object {
+        val diffUtil = object : DiffUtil.ItemCallback<Place>() {
+            override fun areItemsTheSame(oldItem: Place, newItem: Place): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Place, newItem: Place): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
 
     inner class MyView(private val binding: ItemSelectedPlaceBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(selectedPlaceModel: SelectedPlace) {
+        fun bind(place: Place) {
             with(binding) {
                 val context = root.context
-                updateLikeUI(context, selectedPlaceModel.myLike, selectedPlaceModel.likeCount)
+                updateLikeUI(context, place.myLike, place.likeCount)
                 with(contentArea) {
-                    textPlaceName.text = selectedPlaceModel.name
-                    textAddress.text = selectedPlaceModel.address
-                    textCommentNumber.text = selectedPlaceModel.commentCount.toString()
-                    textLikeNumber.text = selectedPlaceModel.likeCount.toString()
+                    textPlaceName.text = place.name
+                    textAddress.text = place.address
+                    textCommentNumber.text = "0"
+                    textLikeNumber.text = place.likeCount.toString()
 
                     btnNaverMap.setOnClickListener {
-                        placeClickCallBack?.startNaverMapUri(selectedPlaceModel.naverLink)
+                        placeClickCallBack?.startNaverMapUri(place.naverLink)
                     }
                     btnKakaoMap.setOnClickListener {
-                        placeClickCallBack?.startKakaoMapUri(selectedPlaceModel.kakaoLink)
+                        placeClickCallBack?.startKakaoMapUri(place.kakaoLink)
                     }
                 }
 
-                if (selectedPlaceModel.status == "Picked") {
+                if (place.status == "Picked") {
                     pickContent.visibility = View.VISIBLE
                 } else {
                     pickContent.visibility = View.INVISIBLE
@@ -69,6 +81,6 @@ class SelectedPlaceListAdapter() :
     }
 
     override fun onBindViewHolder(holder: MyView, position: Int) {
-        holder.bind(items[position])
+        holder.bind(currentList[position])
     }
 }

@@ -47,29 +47,3 @@ data class PlacePickStatus(
     @SerialName("placeStatus")
     val status: String
 )
-
-
-/**
- * 픽 된 장소
- */
-data class SelectedPlace(
-    val naverLink: String,
-    val kakaoLink: String,
-    val name: String,
-    val address: String,
-    val likeCount: Int,
-    val myLike: Boolean,
-    val status: String,
-    val commentCount: Int,
-) {
-    constructor(place: Place) : this(
-        place.naverLink,
-        place.kakaoLink,
-        place.name,
-        place.address,
-        place.likeCount,
-        place.myLike,
-        place.status,
-        0
-    )
-}
