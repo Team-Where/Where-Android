@@ -119,6 +119,9 @@ interface MeetDetailRepository {
 
     suspend fun clearMeetDetail()
 
+
+    //FCM 관련
+
     suspend fun deleteSchedule(meetId: Int)
 
     suspend fun addPlaceToMeeting(id: Int, newPlace: Place)
@@ -128,7 +131,6 @@ interface MeetDetailRepository {
     suspend fun updatePlaceStatusToPicked(placeId: Int, newStatus: String)
 
     suspend fun updatePlaceLike(id: Int, placeLike: Int)
-
 
 
 }
