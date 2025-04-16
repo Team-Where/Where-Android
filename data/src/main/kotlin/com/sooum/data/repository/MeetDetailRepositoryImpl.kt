@@ -310,7 +310,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
             val myId = getLoginUserIdUseCase()
 
             meetRemoteDataSource.getMeetInviteStatus(
-                meetId
+                meetId = meetId
             ).first().let { result ->
                 if (result is ApiResult.Success) {
                     _meetInviteStatus.value = result.data
@@ -441,7 +441,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
         }.first()
     }
 
-    override suspend fun likeToggle(placeId: Int, userId: Int): ActionResult<Unit> {
+    override suspend fun likeToggle(placeId: Int, userId: Int): ActionResult<*> {
         return meetRemoteDataSource.likePlace(placeId, userId).transform { result ->
             result.covertApiResultToActionResultIfSuccess(
                 onSuccess = { pickStatus ->
@@ -460,6 +460,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
                             _meetPlaceList.value = temp
                         }
                     }
+                    emit(ActionResult.Success(Unit))
                 },
                 onFail = {
                     emit(ActionResult.Fail(it))

@@ -115,7 +115,7 @@ interface MeetDetailRepository {
     suspend fun likeToggle(
         placeId :Int,
         userId: Int,
-    ) : ActionResult<Unit>
+    ): ActionResult<*>
 
     suspend fun clearMeetDetail()
 

@@ -49,9 +49,27 @@ data class PlacePickStatus(
 )
 
 
+/**
+ * 픽 된 장소
+ */
 data class SelectedPlace(
-    val restaurantName: String,
-    val restaurantAddress: String,
+    val naverLink: String,
+    val kakaoLink: String,
+    val name: String,
+    val address: String,
+    val likeCount: Int,
+    val myLike: Boolean,
+    val status: String,
     val commentCount: Int,
-    val heartCount: Int
-)
+) {
+    constructor(place: Place) : this(
+        place.naverLink,
+        place.kakaoLink,
+        place.name,
+        place.address,
+        place.likeCount,
+        place.myLike,
+        place.status,
+        0
+    )
+}

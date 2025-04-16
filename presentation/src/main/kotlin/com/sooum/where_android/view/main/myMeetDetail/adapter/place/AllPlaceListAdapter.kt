@@ -1,42 +1,18 @@
-package com.sooum.where_android.view.main.myMeetDetail.adapter
+package com.sooum.where_android.view.main.myMeetDetail.adapter.place
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import coil3.load
 import com.sooum.domain.model.PlaceList
+import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ItemProfilePlaceListBinding
 import com.sooum.where_android.databinding.ItemUnselectedPlaceBinding
-import androidx.core.net.toUri
-import coil3.load
-import com.sooum.where_android.R
 
-class AllPlaceListAdapter(
-    private val myId :Int
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var items: List<PlaceList> = emptyList()
-
-
-    private var placeClickCallBack: PlaceClickCallBack? = null
-
-    interface PlaceClickCallBack {
-        fun likeChange(placeId: Int)
-        fun startMapUri(uriString: String,marketPackage: String)
-    }
-
-    fun setCallBack(callBack: PlaceClickCallBack) {
-        placeClickCallBack = callBack
-    }
-
-
-    fun setData(items: List<PlaceList>) {
-        this.items = items
-        this.notifyDataSetChanged()
-    }
-
+class AllPlaceListAdapter() : PlaceBaseAdapter<PlaceList, RecyclerView.ViewHolder>() {
     companion object {
         private const val VIEW_TYPE_HEADER = 0
         private const val VIEW_TYPE_ITEM = 1
@@ -73,8 +49,6 @@ class AllPlaceListAdapter(
         }
     }
 
-    override fun getItemCount(): Int = items.size
-
     inner class ProfileHeaderViewHolder(private val binding: ItemProfilePlaceListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PlaceList.ProfileHeader) {
@@ -87,45 +61,46 @@ class AllPlaceListAdapter(
         fun bind(item: PlaceList.PostItem) {
             val place = item.place
             with(binding) {
-                textPlaceName.text = place.name
-                textAddress.text = place.address
-                if (place.likeCount > 0) {
-                    textLikeNumber.text = place.likeCount.toString()
-                } else {
-                    textLikeNumber.text = ""
-                }
-                val context = binding.root.context
-                if (place.myLike) {
-                    val mainColor = ContextCompat.getColor(context, R.color.main_color)
-                    textLikeNumber.setTextColor(mainColor)
-                    textLike.setTextColor(mainColor)
-                    iconHeart.load(R.drawable.icon_heart_fill)
+                val context = root.context
+
+                updateLikeUI(context, place.myLike, place.likeCount)
+                with(contentArea) {
+                    textPlaceName.text = place.name
+                    textAddress.text = place.address
+
                     heartArea.setOnClickListener {
                         placeClickCallBack?.likeChange(place.id)
                     }
-                } else {
-                    val gray600 = ContextCompat.getColor(context, R.color.gray_600)
-                    textLikeNumber.setTextColor(gray600)
-                    textLike.setTextColor(gray600)
-                    iconHeart.load(R.drawable.icon_heart)
-                    heartArea.setOnClickListener {
-                        placeClickCallBack?.likeChange(place.id)
+
+                    btnNaverMap.setOnClickListener {
+                        placeClickCallBack?.startNaverMapUri(place.naverLink)
+                    }
+
+                    btnKakaoMap.setOnClickListener {
+                        placeClickCallBack?.startKakaoMapUri(place.kakaoLink)
                     }
                 }
 
-
-                btnNaverMap.setOnClickListener {
-                    placeClickCallBack?.startMapUri(place.naverLink,"com.nhn.android.nmap")
-                }
-
-                btnKakaoMap.setOnClickListener {
-                    placeClickCallBack?.startMapUri(place.kakaoLink,"net.daum.android.map")
-                }
                 if (place.together) {
                     textTogether.visibility = View.VISIBLE
                 } else {
                     textTogether.visibility = View.GONE
                 }
+            }
+        }
+
+        private fun updateLikeUI(context: Context, isLiked: Boolean, likeCount: Int) {
+            val color = if (isLiked) {
+                ContextCompat.getColor(context, R.color.main_color)
+            } else {
+                ContextCompat.getColor(context, R.color.gray_600)
+            }
+
+            with(binding.contentArea) {
+                textLikeNumber.setTextColor(color)
+                textLike.setTextColor(color)
+                iconHeart.load(if (isLiked) R.drawable.icon_heart_fill else R.drawable.icon_heart)
+                textLikeNumber.text = if (likeCount > 0) likeCount.toString() else ""
             }
         }
     }
