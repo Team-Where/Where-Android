@@ -12,8 +12,10 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.google.gson.Gson
 import com.sooum.where_android.view.main.MainActivity
 
+@SuppressLint("MissingFirebaseInstanceTokenRefresh")
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     // 메시지를 수신할 때 호출 된다.
@@ -23,12 +25,19 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         if (remoteMessage.data.isNotEmpty()) {
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
 
-            val title = remoteMessage.data["title"].orEmpty()
-            val body = remoteMessage.data["body"].orEmpty()
+            val code = remoteMessage.data["code"].orEmpty()
+            val title = remoteMessage.notification?.title.orEmpty()
+            val body = remoteMessage.notification?.body.orEmpty()
 
             if (title.isNotBlank() || body.isNotBlank()) {
                 sendNotification(title, body)
             }
+
+            if (code.isNotBlank()) {
+                val fcmData = Gson().toJson(remoteMessage.data)
+                sendBroadcastWithData(code, fcmData)
+            }
+
         } else {
             remoteMessage.notification?.let {
                 val title = it.title.orEmpty()
@@ -41,18 +50,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
-
-    // 새 토큰이 생성될 때마다 onNewToken 콜백이 호출된다.
-    // 등록 토큰이 처음 생성되므로 여기서 토큰을 검색할 수 있다.
-    override fun onNewToken(token: String) {
-        super.onNewToken(token)
-        Log.d(TAG, "FCM Token: $token")
-        sendRegistrationToServer(token)
-    }
-
-    // 타사 서버에 토큰을 유지해주는 메서드이다.
-    private fun sendRegistrationToServer(token: String?) {
-        Log.d(TAG, "sendRegistrationTokenToServer($token)")
+    /**
+     * 브로드케스트로 데이터를 보내는 함수
+     */
+    private fun sendBroadcastWithData(code: String, data: String) {
+        val intent = Intent("FCM_DATA_RECEIVED").apply {
+            putExtra("code", code)
+            putExtra("data", data)
+        }
+        sendBroadcast(intent)
     }
 
     // 수신 된 FCM 메시지를 포함하는 간단한 알림을 만들고 표시한다.
@@ -79,14 +85,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // 오레오 이상에서 알림을 제공하려면 앱의 알림 채널을 시스템에 등록해야 한다.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId,
-                "Channel human readable title",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            notificationManager.createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(
+            channelId,
+            "Channel human readable title",
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        notificationManager.createNotificationChannel(channel)
 
         notificationManager.notify(0, notificationBuilder.build())
     }
