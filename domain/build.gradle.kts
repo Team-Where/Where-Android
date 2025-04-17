@@ -2,7 +2,7 @@
 plugins {
     alias(libs.plugins.where.library)
     alias(libs.plugins.where.hilt)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.where.serialization)
 }
 
 android {
@@ -11,5 +11,4 @@ android {
 
 dependencies {
     api(libs.coroutine)
-    api(libs.kotlinx.serialization.json)
 }

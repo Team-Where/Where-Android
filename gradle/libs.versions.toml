@@ -65,3 +65,4 @@ google-gms-google-services = { id = "com.google.gms.google-services", version.re
 where-hilt = { id = "where.hilt" }
 where-application = { id = "where.application" }
 where-library = { id = "where.library" }
+where-serialization = { id = "where.serialization" }

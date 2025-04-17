@@ -35,5 +35,9 @@ gradlePlugin {
             id = libs.plugins.where.library.get().pluginId
             implementationClass = "AndroidLibraryConventionPlugin"
         }
+        register("serialization") {
+            id = libs.plugins.where.serialization.get().pluginId
+            implementationClass = "SerializationConventionPlugin"
+        }
     }
 }

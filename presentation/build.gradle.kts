@@ -1,8 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     alias(libs.plugins.where.application)
+    alias(libs.plugins.where.serialization)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.where.hilt)
     alias(libs.plugins.google.gms.google.services)
 }
@@ -61,8 +61,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-messaging")
 
-
-    implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.kotlinx.datetime)

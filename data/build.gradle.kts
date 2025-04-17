@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     alias(libs.plugins.where.library)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.where.serialization)
     alias(libs.plugins.where.hilt)
 }
 
@@ -21,7 +21,6 @@ dependencies {
 
     implementation(libs.datastore.preferences)
 
-    testImplementation(libs.kotlinx.serialization.json)
     testImplementation(libs.retrofit.serialization.converter)
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
