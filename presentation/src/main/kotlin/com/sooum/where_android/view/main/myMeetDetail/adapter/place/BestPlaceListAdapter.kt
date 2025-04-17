@@ -1,17 +1,27 @@
 package com.sooum.where_android.view.main.myMeetDetail.adapter.place
 
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil3.load
 import com.sooum.domain.model.PlaceRank
-import com.sooum.where_android.R
-import com.sooum.where_android.databinding.ItemProfilePlaceListBinding
 import com.sooum.where_android.databinding.ItemUnselectedPlaceBinding
+import com.sooum.where_android.theme.Primary600
+import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.viewholder.PostViewHolder
 
 class BestPlaceListAdapter : PlaceBaseAdapter<PlaceRank, RecyclerView.ViewHolder>(diffUtil) {
 
@@ -50,16 +60,18 @@ class BestPlaceListAdapter : PlaceBaseAdapter<PlaceRank, RecyclerView.ViewHolder
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             VIEW_TYPE_HEADER -> {
-                val binding = ItemProfilePlaceListBinding.inflate(inflater, parent, false)
-                ProfileHeaderViewHolder(binding)
+                RankHeaderViewHolder(ComposeView(parent.context))
             }
 
             VIEW_TYPE_ITEM -> {
-                val binding = ItemUnselectedPlaceBinding.inflate(inflater, parent, false)
-                PostViewHolder(binding)
+                val binding = ItemUnselectedPlaceBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                PostViewHolder(binding, placeClickCallBack)
             }
 
             else -> throw IllegalArgumentException("Invalid view type")
@@ -68,65 +80,48 @@ class BestPlaceListAdapter : PlaceBaseAdapter<PlaceRank, RecyclerView.ViewHolder
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = currentList[position]) {
-            is PlaceRank.RankHeader -> (holder as ProfileHeaderViewHolder).bind(item)
-            is PlaceRank.PostItem -> (holder as PostViewHolder).bind(item)
+            is PlaceRank.RankHeader -> (holder as RankHeaderViewHolder).bind(item)
+            is PlaceRank.PostItem -> (holder as PostViewHolder).bind(item.place)
         }
     }
 
-    inner class ProfileHeaderViewHolder(private val binding: ItemProfilePlaceListBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class RankHeaderViewHolder(
+        val composeView: ComposeView
+    ) : RecyclerView.ViewHolder(composeView) {
+
+        init {
+            composeView.setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+            )
+        }
+
         fun bind(item: PlaceRank.RankHeader) {
-            binding.textName.text = item.rank.toString()
-        }
-    }
-
-    inner class PostViewHolder(private val binding: ItemUnselectedPlaceBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: PlaceRank.PostItem) {
-            val place = item.place
-            with(binding) {
-                val context = root.context
-
-                updateLikeUI(context, place.myLike, place.likeCount)
-                with(contentArea) {
-                    textPlaceName.text = place.name
-                    textAddress.text = place.address
-
-                    heartArea.setOnClickListener {
-                        placeClickCallBack?.likeChange(place.id)
-                    }
-
-                    btnNaverMap.setOnClickListener {
-                        placeClickCallBack?.startNaverMapUri(place.naverLink)
-                    }
-
-                    btnKakaoMap.setOnClickListener {
-                        placeClickCallBack?.startKakaoMapUri(place.kakaoLink)
-                    }
+            composeView.setContent {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    Text(
+                        text = "Best ${item.rank}",
+                        fontFamily = pretendard,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        color = Primary600
+                    )
+                    HorizontalDivider(
+                        color = Primary600,
+                        modifier = Modifier.width(100.dp)
+                    )
                 }
-
-                if (place.together) {
-                    textTogether.visibility = View.VISIBLE
-                } else {
-                    textTogether.visibility = View.GONE
-                }
-            }
-        }
-
-        private fun updateLikeUI(context: Context, isLiked: Boolean, likeCount: Int) {
-            val color = if (isLiked) {
-                ContextCompat.getColor(context, R.color.main_color)
-            } else {
-                ContextCompat.getColor(context, R.color.gray_600)
-            }
-
-            with(binding.contentArea) {
-                textLikeNumber.setTextColor(color)
-                textLike.setTextColor(color)
-                iconHeart.load(if (isLiked) R.drawable.icon_heart_fill else R.drawable.icon_heart)
-                textLikeNumber.text = if (likeCount > 0) likeCount.toString() else ""
             }
         }
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        if (holder is RankHeaderViewHolder) {
+            holder.composeView.disposeComposition()
+        }
+    }
 }

@@ -185,7 +185,7 @@ class MyMeetDetailViewModel @Inject constructor(
     //상위 3개의 장소
     val bestPlaceList = placeMap.transform { placeMap ->
         val places = placeMap.values.flatten()
-        val sorted = places.filter { it.likeCount > 0 }.sortedByDescending { it.likeCount }
+        val sorted = places.sortedByDescending { it.likeCount }
 
         val result = mutableListOf<PlaceRank>()
         var currentRank = 0

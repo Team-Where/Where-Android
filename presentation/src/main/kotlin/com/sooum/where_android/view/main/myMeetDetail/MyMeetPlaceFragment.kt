@@ -13,8 +13,8 @@ import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
 import com.sooum.where_android.startMapUriOrMarket
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.AllPlaceListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.BestPlaceListAdapter
-import com.sooum.where_android.view.main.myMeetDetail.adapter.place.PlaceClickCallBack
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.SelectedPlaceListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.PlaceClickCallBack
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
