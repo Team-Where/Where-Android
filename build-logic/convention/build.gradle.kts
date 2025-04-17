@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.sooum.buildlogic"
+group = "com.where.buildlogic"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -21,19 +21,11 @@ dependencies {
 }
 
 
-//gradlePlugin {
-//    plugins {
-//        register("hilt") {
-//            id = libs.plugins.where.hilt.get().pluginId
-//            implementationClass = "HiltConventionPlugin"
-//        }
-//        register("androidApplication") {
-//            id = libs.plugins.where.android.application.get().pluginId
-//            implementationClass = "AndroidApplicationConventionPlugin"
-//        }
-//        register("androidLibrary") {
-//            id = libs.plugins.where.android.library.get().pluginId
-//            implementationClass = "AndroidLibraryConventionPlugin"
-//        }
-//    }
-//}
+gradlePlugin {
+    plugins {
+        register("hilt") {
+            id = libs.plugins.where.hilt.get().pluginId
+            implementationClass = "HiltConventionPlugin"
+        }
+    }
+}

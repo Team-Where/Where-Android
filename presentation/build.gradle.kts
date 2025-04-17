@@ -4,8 +4,7 @@ plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.where.hilt)
     alias(libs.plugins.google.gms.google.services)
 }
 
@@ -57,10 +56,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
 
-    //Hilt
-    implementation(libs.hilt)
     implementation(libs.firebase.messaging)
-    ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
     //Compose
