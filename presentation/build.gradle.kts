@@ -28,21 +28,18 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
 
     //Compose
-    val composeBom = "androidx.compose:compose-bom:2025.02.00"
-    implementation(platform(composeBom))
-    androidTestImplementation(platform(composeBom))
-
-    implementation("androidx.fragment:fragment-compose:1.8.5")
-    implementation("androidx.compose.ui:ui-viewbinding:1.7.8")
-
-
-    implementation("androidx.activity:activity-compose:1.7.2")
-    implementation("androidx.navigation:navigation-compose:2.8.7")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    debugImplementation("androidx.compose.ui:ui-tooling")
+    val composeBom = platform(libs.androidx.compose.bom)
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation("androidx.fragment:fragment-compose:1.8.5")
+    implementation("androidx.compose.ui:ui-viewbinding:1.7.8")
+    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.navigation:navigation-compose:2.8.7")
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
@@ -57,9 +54,11 @@ dependencies {
 
     implementation("de.hdodenhof:circleimageview:3.1.0")
 
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-messaging")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+//    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.performance)
 
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
