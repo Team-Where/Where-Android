@@ -17,7 +17,7 @@ import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.sta
 class SelectedPlaceListAdapter() :
     PlaceBaseAdapter<Place, SelectedPlaceListAdapter.MyView>(diffUtil) {
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<Place>() {
+        private val diffUtil = object : DiffUtil.ItemCallback<Place>() {
             override fun areItemsTheSame(oldItem: Place, newItem: Place): Boolean {
                 return oldItem.id == newItem.id
             }

@@ -14,7 +14,7 @@ class AllPlaceListAdapter() : PlaceBaseAdapter<PlaceList, RecyclerView.ViewHolde
         private const val VIEW_TYPE_HEADER = 0
         private const val VIEW_TYPE_ITEM = 1
 
-        val diffUtil = object : DiffUtil.ItemCallback<PlaceList>() {
+        private val diffUtil = object : DiffUtil.ItemCallback<PlaceList>() {
             override fun areItemsTheSame(oldItem: PlaceList, newItem: PlaceList): Boolean {
                 return if (oldItem is PlaceList.ProfileHeader && newItem is PlaceList.ProfileHeader) {
                     oldItem.userId == newItem.userId

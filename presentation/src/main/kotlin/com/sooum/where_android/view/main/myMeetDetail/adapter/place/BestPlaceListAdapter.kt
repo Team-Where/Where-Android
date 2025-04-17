@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,6 +20,7 @@ import com.sooum.domain.model.PlaceRank
 import com.sooum.where_android.databinding.ItemUnselectedPlaceBinding
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.view.common.ComposeItemViewHolder
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.viewholder.PostViewHolder
 
 class BestPlaceListAdapter : PlaceBaseAdapter<PlaceRank, RecyclerView.ViewHolder>(diffUtil) {
@@ -29,7 +29,7 @@ class BestPlaceListAdapter : PlaceBaseAdapter<PlaceRank, RecyclerView.ViewHolder
         private const val VIEW_TYPE_HEADER = 0
         private const val VIEW_TYPE_ITEM = 1
 
-        val diffUtil = object : DiffUtil.ItemCallback<PlaceRank>() {
+        private val diffUtil = object : DiffUtil.ItemCallback<PlaceRank>() {
             override fun areItemsTheSame(oldItem: PlaceRank, newItem: PlaceRank): Boolean {
                 return if (oldItem is PlaceRank.RankHeader && newItem is PlaceRank.RankHeader) {
                     oldItem.rank == newItem.rank
@@ -86,14 +86,8 @@ class BestPlaceListAdapter : PlaceBaseAdapter<PlaceRank, RecyclerView.ViewHolder
     }
 
     inner class RankHeaderViewHolder(
-        val composeView: ComposeView
-    ) : RecyclerView.ViewHolder(composeView) {
-
-        init {
-            composeView.setViewCompositionStrategy(
-                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-            )
-        }
+        composeView: ComposeView
+    ) : ComposeItemViewHolder(composeView) {
 
         fun bind(item: PlaceRank.RankHeader) {
             composeView.setContent {
