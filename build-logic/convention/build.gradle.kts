@@ -27,5 +27,13 @@ gradlePlugin {
             id = libs.plugins.where.hilt.get().pluginId
             implementationClass = "HiltConventionPlugin"
         }
+        register("application") {
+            id = libs.plugins.where.application.get().pluginId
+            implementationClass = "AndroidApplicationConventionPlugin"
+        }
+        register("library") {
+            id = libs.plugins.where.library.get().pluginId
+            implementationClass = "AndroidLibraryConventionPlugin"
+        }
     }
 }

@@ -13,11 +13,6 @@ coil = "3.0.0"
 
 okhttp = "4.12.0"
 retrofit = "2.11.0"
-
-compileSdk = "34"
-targetSdk = "34"
-minSdk = "26"
-jdk = "17"
 googleGmsGoogleServices = "4.4.2"
 firebaseMessaging = "24.1.1"
 workRuntimeKtx = "2.10.0"
@@ -68,3 +63,5 @@ google-gms-google-services = { id = "com.google.gms.google-services", version.re
 
 # Plugins defined by this project
 where-hilt = { id = "where.hilt" }
+where-application = { id = "where.application" }
+where-library = { id = "where.library" }
