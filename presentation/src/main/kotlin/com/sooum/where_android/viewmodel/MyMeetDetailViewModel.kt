@@ -12,10 +12,10 @@ import com.sooum.domain.model.MeetingId
 import com.sooum.domain.model.PLACE_STATE_PICK
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlaceDelete
+import com.sooum.domain.model.PlaceItem
 import com.sooum.domain.model.PlaceLike
 import com.sooum.domain.model.PlaceRank
 import com.sooum.domain.model.PlaceStatus
-import com.sooum.domain.model.PlaceWithUsers
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.ShareResult
 import com.sooum.domain.usecase.meet.AddMeetScheduleUseCase
@@ -147,25 +147,25 @@ class MyMeetDetailViewModel @Inject constructor(
     }
 
     //상위 3개의 장소
-    val bestPlaceList = placeList.transform { places ->
-        val sorted = places.sortedByDescending { it.likeCount }
+    val bestPlaceList = placeList.transform { placeItems ->
+        val sorted = placeItems.sortedByDescending { it.likeCount }
 
         val result = mutableListOf<PlaceRank>()
         var currentRank = 0
         var lastLikeCount: Int? = null
 
-        val groupedByRank = linkedMapOf<Int, MutableList<PlaceWithUsers>>()
+        val groupedByRank = linkedMapOf<Int, MutableList<PlaceItem>>()
 
         //3위까지 찾기 시작
-        for (place in sorted) {
-            if (place.likeCount != lastLikeCount) {
+        for (placeItem in sorted) {
+            if (placeItem.likeCount != lastLikeCount) {
                 currentRank += 1
-                lastLikeCount = place.likeCount
+                lastLikeCount = placeItem.likeCount
             }
 
             if (currentRank > 3) break
 
-            groupedByRank.getOrPut(currentRank) { mutableListOf() }.add(place)
+            groupedByRank.getOrPut(currentRank) { mutableListOf() }.add(placeItem)
         }
 
         //rank별 아이템 생성

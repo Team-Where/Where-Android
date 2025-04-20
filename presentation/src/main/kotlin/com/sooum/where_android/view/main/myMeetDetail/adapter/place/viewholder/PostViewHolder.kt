@@ -2,8 +2,7 @@ package com.sooum.where_android.view.main.myMeetDetail.adapter.place.viewholder
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.sooum.domain.model.Place
-import com.sooum.domain.model.PlaceWithUsers
+import com.sooum.domain.model.PlaceItem
 import com.sooum.where_android.databinding.ItemUnselectedPlaceBinding
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.PlaceClickCallBack
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startKakaoMapUri
@@ -17,7 +16,8 @@ class PostViewHolder(
     private val placeClickCallBack: PlaceClickCallBack?
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(place: Place) {
+    fun bind(placeItem: PlaceItem) {
+        val place = placeItem.place
         with(binding) {
             updateLikeUI(place.myLike, place.likeCount)
             with(contentArea) {
@@ -35,6 +35,8 @@ class PostViewHolder(
                 btnKakaoMap.setOnClickListener {
                     placeClickCallBack?.startKakaoMapUri(place.kakaoLink)
                 }
+
+                textCommentNumber.text = placeItem.commentCount.toString()
             }
 
             if (place.together) {
@@ -43,10 +45,6 @@ class PostViewHolder(
                 textTogether.visibility = View.GONE
             }
         }
-    }
-
-    fun bind(placeWithUsers: PlaceWithUsers) {
-        bind(place = placeWithUsers.toPlace())
     }
 
     private fun updateLikeUI(isLiked: Boolean, likeCount: Int) {

@@ -8,28 +8,29 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
 import com.sooum.domain.model.PLACE_STATE_PICK
-import com.sooum.domain.model.PlaceWithUsers
+import com.sooum.domain.model.PlaceItem
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ItemSelectedPlaceBinding
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.PlaceBaseAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startKakaoMapUri
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startNaverMapUri
-import com.sooum.where_android.view.main.myMeetDetail.adapter.place.placeWithUsersDiffUtil
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.placeItemDiffUtil
 
 class SelectedPlaceListAdapter() :
-    PlaceBaseAdapter<PlaceWithUsers, SelectedPlaceListAdapter.MyView>(placeWithUsersDiffUtil) {
+    PlaceBaseAdapter<PlaceItem, SelectedPlaceListAdapter.MyView>(placeItemDiffUtil) {
 
     inner class MyView(private val binding: ItemSelectedPlaceBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(place: PlaceWithUsers) {
+        fun bind(placeItem: PlaceItem) {
+            val place = placeItem.place
             with(binding) {
                 val context = root.context
                 updateLikeUI(context, place.myLike, place.likeCount)
                 with(contentArea) {
                     textPlaceName.text = place.name
                     textAddress.text = place.address
-                    textCommentNumber.text = "0"
+                    textCommentNumber.text = placeItem.commentCount.toString()
                     textLikeNumber.text = place.likeCount.toString()
 
                     btnNaverMap.setOnClickListener {

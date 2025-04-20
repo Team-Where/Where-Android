@@ -81,7 +81,7 @@
                     android:layout_marginStart="2dp"
                     android:fontFamily="@font/pretend_medium"
                     android:minWidth="20dp"
-                    android:text=""
+                    android:text="0"
                     android:textColor="@color/gray_600"
                     android:textSize="11sp" />
             </LinearLayout>

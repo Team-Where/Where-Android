@@ -35,7 +35,7 @@ class BestPlaceListAdapter : PlaceBaseAdapter<PlaceRank, RecyclerView.ViewHolder
                 return if (oldItem is PlaceRank.RankHeader && newItem is PlaceRank.RankHeader) {
                     oldItem.rank == newItem.rank
                 } else if (oldItem is PlaceRank.PostItem && newItem is PlaceRank.PostItem) {
-                    (oldItem.rank == newItem.rank) && (oldItem.place.id == newItem.place.id)
+                    (oldItem.rank == newItem.rank) && (oldItem.place.placeId == newItem.place.placeId)
                 } else {
                     false
                 }
@@ -45,7 +45,7 @@ class BestPlaceListAdapter : PlaceBaseAdapter<PlaceRank, RecyclerView.ViewHolder
                 return if (oldItem is PlaceRank.RankHeader && newItem is PlaceRank.RankHeader) {
                     oldItem == newItem
                 } else if (oldItem is PlaceRank.PostItem && newItem is PlaceRank.PostItem) {
-                    (oldItem.rank == newItem.rank) && (oldItem.place == newItem.place)
+                    (oldItem.rank == newItem.rank) && (oldItem == newItem)
                 } else {
                     false
                 }

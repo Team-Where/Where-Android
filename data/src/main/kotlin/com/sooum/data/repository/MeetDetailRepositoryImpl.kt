@@ -4,10 +4,12 @@ import com.sooum.domain.datasource.MeetRemoteDataSource
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.CommentListItem
+import com.sooum.domain.model.CommentSimple
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.model.Place
+import com.sooum.domain.model.PlaceItem
 import com.sooum.domain.model.PlaceWithUsers
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.repository.MeetDetailRepository
@@ -18,6 +20,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
@@ -44,6 +47,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
      */
     private val _meetInviteStatus = MutableStateFlow(emptyList<MeetInviteStatus>())
 
+
     /**
      * [loadMeetDetailSubData]이후에 해당 모임에 해당되는 장소 목록
      * 모임에 속한 장소 목록을 가져온다.
@@ -65,18 +69,24 @@ class MeetDetailRepositoryImpl @Inject constructor(
      */
     private val _commentList = MutableStateFlow(emptyMap<PlaceId, List<CommentListItem>>())
 
+
     private val meetDetailList
         get() = _meetDetailList.asStateFlow()
 
     private val meetInviteStatus
         get() = _meetInviteStatus.asStateFlow()
 
-    private val meetPlaceList
-        get() = _meetPlaceList.asStateFlow()
 
-    private val commentList
-        get() = _commentList.asStateFlow()
-
+    private val meetPlaceWithCommentList: Flow<List<PlaceItem>> =
+        _meetPlaceList.combine(_commentList) { placeList, commentList ->
+            return@combine placeList.map { placeWithUsers: PlaceWithUsers ->
+                val id = placeWithUsers.id
+                PlaceItem(
+                    id,
+                    placeWithUsers,
+                    commentList.getOrDefault(id, emptyList()).map { CommentSimple(it) })
+            }
+        }
 
     override suspend fun loadMeetDetailList(userId: UserId) {
         val meetDetails = meetRemoteDataSource.getMeetList(userId).first()
@@ -87,7 +97,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
 
     override fun getMeetInviteList(): Flow<List<MeetInviteStatus>> = meetInviteStatus
 
-    override fun getMeetPlaceList(): Flow<List<PlaceWithUsers>> = meetPlaceList
+    override fun getMeetPlaceList(): Flow<List<PlaceItem>> = meetPlaceWithCommentList
 
     override fun getMeetDetailById(meetId: Int): Flow<MeetDetail?> = meetDetailList
         .map { list -> list.find { it.id == meetId } }
