@@ -3,6 +3,9 @@ package com.sooum.domain.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+const val PLACE_STATE_PICK = "Picked"
+const val PLACE_STATE_NOT_PICK = "NotPicked"
+
 
 /**
  * @param[id] Place 고유 식별 id
@@ -33,7 +36,7 @@ data class Place(
 
 /**
  * @param[id] Place 고유 식별 id
- * @param[likes] 좋아요 수
+ * @param[likeCount] 좋아요 수
  * @param[myLike] 장소 좋아요 여부
  * @param[status] 장소 pick 상태
  */
