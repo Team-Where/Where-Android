@@ -115,6 +115,10 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
                     placeBestItemListView.visibility = View.VISIBLE
                 }
             }
+
+            btnPlaceShare.setOnClickListener {
+                openMapShareSheet()
+            }
         }
     }
 

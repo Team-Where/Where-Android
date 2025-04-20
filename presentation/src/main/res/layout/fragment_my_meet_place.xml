@@ -80,44 +80,83 @@
             android:background="#F3F4F6"
             app:layout_constraintTop_toBottomOf="@id/place_pick_item_list_view" />
 
-        <LinearLayout
-            android:id="@+id/filterLayout"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/place_filter_area"
+            android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view">
 
-            <ToggleButton
-                android:id="@+id/btnAll"
-                android:layout_width="80dp"
-                android:layout_height="37dp"
-                android:background="@drawable/toggle_button_selector"
-                android:checked="true"
-                android:fontFamily="@font/pretend_medium"
-                android:padding="10dp"
-                android:stateListAnimator="@null"
-                android:textOff="전체보기"
-                android:textOn="전체보기"
-                android:textSize="12sp" />
+            <LinearLayout
+                android:id="@+id/filterLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <ToggleButton
-                android:id="@+id/btnBest"
-                android:layout_width="80dp"
-                android:layout_height="37dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/toggle_button_selector"
-                android:fontFamily="@font/pretend_medium"
-                android:padding="10dp"
-                android:stateListAnimator="@null"
-                android:textColor="#6B7280"
-                android:textOff="BEST 순위"
-                android:textOn="BEST 순위"
-                android:textSize="12sp" />
-        </LinearLayout>
+                <ToggleButton
+                    android:id="@+id/btnAll"
+                    android:layout_width="80dp"
+                    android:layout_height="37dp"
+                    android:background="@drawable/toggle_button_selector"
+                    android:checked="true"
+                    android:fontFamily="@font/pretend_medium"
+                    android:padding="10dp"
+                    android:stateListAnimator="@null"
+                    android:textOff="전체보기"
+                    android:textOn="전체보기"
+                    android:textSize="12sp" />
+
+                <ToggleButton
+                    android:id="@+id/btnBest"
+                    android:layout_width="80dp"
+                    android:layout_height="37dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/toggle_button_selector"
+                    android:fontFamily="@font/pretend_medium"
+                    android:padding="10dp"
+                    android:stateListAnimator="@null"
+                    android:textColor="#6B7280"
+                    android:textOff="BEST 순위"
+                    android:textOn="BEST 순위"
+                    android:textSize="12sp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:id="@+id/btn_place_share"
+                android:orientation="horizontal"
+                android:paddingHorizontal="3dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/icon_plus" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/pretend_medium"
+                    android:text="장소 공유"
+                    android:textColor="@color/main_color"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/place_all_item_list_view"
@@ -128,7 +167,7 @@
             android:nestedScrollingEnabled="false"
             android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/filterLayout" />
+            app:layout_constraintTop_toBottomOf="@id/place_filter_area" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/place_best_item_list_view"
