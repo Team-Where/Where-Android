@@ -9,12 +9,13 @@ import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetingId
+import com.sooum.domain.model.PLACE_STATE_PICK
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlaceDelete
 import com.sooum.domain.model.PlaceLike
-import com.sooum.domain.model.PlaceList
 import com.sooum.domain.model.PlaceRank
 import com.sooum.domain.model.PlaceStatus
+import com.sooum.domain.model.PlaceWithUsers
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.ShareResult
 import com.sooum.domain.usecase.meet.AddMeetScheduleUseCase
@@ -41,7 +42,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
@@ -127,71 +127,34 @@ class MyMeetDetailViewModel @Inject constructor(
         emit(convertList)
     }
 
-    //초대된 유저별로 로드된 placeMap
-    private val placeMap = getMeetPlaceListUseCase()
+    //모임 상세에 로드된 place 목록
+    val placeList = getMeetPlaceListUseCase()
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
-            emptyMap()
+            emptyList()
         )
 
     //plceMap에있는 총 장소 수
-    val placeCount = placeMap.transform {
-        emit(it.flatMap { it.value }.size)
+    val placeCount = placeList.transform {
+        emit(it.size)
     }
 
-    val userAndPlaceMap = invitedFriendList
-        .combine(placeMap) { invitedFriendList, placeMap ->
-            val tempData = mutableListOf<PlaceList>()
-            val myId = getLoginUserIdUseCase()!!
-
-            //헤더 먼저 추가 (ProfileHeader)
-            invitedFriendList.forEach {
-                tempData.add(
-                    PlaceList.ProfileHeader(
-                        userId = it.id,
-                        userName = if (it.isMe) "나" else it.name,
-                        profileImage = it.image
-                    )
-                )
-            }
-
-            //장소를 돌며 장소를 추가 (PostItem)
-            placeMap.forEach { (userId, placeItemList) ->
-                placeItemList.forEach { place ->
-                    tempData.add(
-                        PlaceList.PostItem(
-                            userId = userId,
-                            place = place
-                        )
-                    )
-                }
-            }
-            val comparator = compareBy<PlaceList>(
-                { if (it.userId == myId) 0 else 1 }, // myId 먼저
-                { it.userId },
-                { if (it is PlaceList.ProfileHeader) 0 else 1 } // Header 먼저
-            )
-
-            tempData.sortedWith(comparator)
-        }
-
     //pick된 장소
-    val pickPlaceList = placeMap.transform {
-        val filterList = it.values.flatten().toSet().filter { it.status == "Picked" }
+    val pickPlaceList = placeList.transform { places ->
+        val filterList = places.filter { it.status == PLACE_STATE_PICK }
         emit(filterList.sortedBy { it.likeCount })
     }
 
     //상위 3개의 장소
-    val bestPlaceList = placeMap.transform { placeMap ->
-        val places = placeMap.values.flatten()
+    val bestPlaceList = placeList.transform { places ->
         val sorted = places.sortedByDescending { it.likeCount }
 
         val result = mutableListOf<PlaceRank>()
         var currentRank = 0
         var lastLikeCount: Int? = null
 
-        val groupedByRank = linkedMapOf<Int, MutableList<Place>>()
+        val groupedByRank = linkedMapOf<Int, MutableList<PlaceWithUsers>>()
 
         //3위까지 찾기 시작
         for (place in sorted) {

@@ -11,9 +11,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
 import com.sooum.where_android.startMapUriOrMarket
-import com.sooum.where_android.view.main.myMeetDetail.adapter.place.AllPlaceListAdapter
-import com.sooum.where_android.view.main.myMeetDetail.adapter.place.BestPlaceListAdapter
-import com.sooum.where_android.view.main.myMeetDetail.adapter.place.SelectedPlaceListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.adapter.AllPlaceListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.adapter.BestPlaceListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.adapter.SelectedPlaceListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.PlaceClickCallBack
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,7 +53,7 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myMeetDetailViewModel.userAndPlaceMap.collect {
+                myMeetDetailViewModel.placeList.collect {
                     allPlaceListAdapter.submitList(it)
                 }
             }

@@ -9,9 +9,9 @@ import com.sooum.data.network.place.request.LikePlaceRequest
 import com.sooum.data.network.place.request.PickPlaceRequest
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
-import com.sooum.domain.model.Meet
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlacePickStatus
+import com.sooum.domain.model.PlaceWithUsers
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -32,7 +32,7 @@ interface PlaceApi {
     suspend fun getPlaceList(
         @Query("meetingId") meetingId: Int,
         @Query("userId") userId : Int
-    ): Response<List<Place>>
+    ): Response<List<PlaceWithUsers>>
 
     @DELETE("api/place")
     suspend fun deletePlace(

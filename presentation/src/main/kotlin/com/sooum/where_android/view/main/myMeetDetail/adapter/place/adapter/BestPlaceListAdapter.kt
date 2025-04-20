@@ -1,4 +1,4 @@
-package com.sooum.where_android.view.main.myMeetDetail.adapter.place
+package com.sooum.where_android.view.main.myMeetDetail.adapter.place.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -21,6 +21,7 @@ import com.sooum.where_android.databinding.ItemUnselectedPlaceBinding
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.common.ComposeItemViewHolder
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.PlaceBaseAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.viewholder.PostViewHolder
 
 class BestPlaceListAdapter : PlaceBaseAdapter<PlaceRank, RecyclerView.ViewHolder>(diffUtil) {

@@ -9,6 +9,7 @@ import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlacePickStatus
+import com.sooum.domain.model.PlaceWithUsers
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.SimpleMeet
 import kotlinx.coroutines.flow.Flow
@@ -100,7 +101,7 @@ interface MeetRemoteDataSource {
     suspend fun getMeetPlaceList(
         meetId: Int,
         userId: Int,
-    ): Flow<ApiResult<List<Place>>>
+    ): Flow<ApiResult<List<PlaceWithUsers>>>
 
 
     /**

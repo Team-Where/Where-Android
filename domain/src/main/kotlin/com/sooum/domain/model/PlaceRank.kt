@@ -9,6 +9,6 @@ sealed class PlaceRank(
 
     data class PostItem(
         override val rank: Int,
-        val place: Place
+        val place: PlaceWithUsers
     ) : PlaceRank(rank)
 }

@@ -1,37 +1,28 @@
-package com.sooum.where_android.view.main.myMeetDetail.adapter.place
+package com.sooum.where_android.view.main.myMeetDetail.adapter.place.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
-import com.sooum.domain.model.Place
+import com.sooum.domain.model.PLACE_STATE_PICK
+import com.sooum.domain.model.PlaceWithUsers
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ItemSelectedPlaceBinding
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.PlaceBaseAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startKakaoMapUri
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startNaverMapUri
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.placeWithUsersDiffUtil
 
 class SelectedPlaceListAdapter() :
-    PlaceBaseAdapter<Place, SelectedPlaceListAdapter.MyView>(diffUtil) {
-    companion object {
-        private val diffUtil = object : DiffUtil.ItemCallback<Place>() {
-            override fun areItemsTheSame(oldItem: Place, newItem: Place): Boolean {
-                return oldItem.id == newItem.id
-            }
-
-            override fun areContentsTheSame(oldItem: Place, newItem: Place): Boolean {
-                return oldItem == newItem
-            }
-        }
-    }
+    PlaceBaseAdapter<PlaceWithUsers, SelectedPlaceListAdapter.MyView>(placeWithUsersDiffUtil) {
 
     inner class MyView(private val binding: ItemSelectedPlaceBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(place: Place) {
+        fun bind(place: PlaceWithUsers) {
             with(binding) {
                 val context = root.context
                 updateLikeUI(context, place.myLike, place.likeCount)
@@ -49,7 +40,7 @@ class SelectedPlaceListAdapter() :
                     }
                 }
 
-                if (place.status == "Picked") {
+                if (place.status == PLACE_STATE_PICK) {
                     pickContent.visibility = View.VISIBLE
                 } else {
                     pickContent.visibility = View.INVISIBLE

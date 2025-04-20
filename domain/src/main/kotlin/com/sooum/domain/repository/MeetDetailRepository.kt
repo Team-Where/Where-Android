@@ -5,6 +5,7 @@ import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.model.Place
+import com.sooum.domain.model.PlaceWithUsers
 import com.sooum.domain.model.Schedule
 import kotlinx.coroutines.flow.Flow
 import java.io.File
@@ -16,7 +17,7 @@ interface MeetDetailRepository {
     fun getMeetDetailList(): Flow<List<MeetDetail>>
 
     fun getMeetInviteList(): Flow<List<MeetInviteStatus>>
-    fun getMeetPlaceList(): Flow<Map<Int, List<Place>>>
+    fun getMeetPlaceList(): Flow<List<PlaceWithUsers>>
 
     fun getMeetDetailById(meetId: Int): Flow<MeetDetail?>
 

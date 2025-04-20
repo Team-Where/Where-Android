@@ -17,6 +17,50 @@ const val PLACE_STATE_NOT_PICK = "NotPicked"
  * @param[myLike] 장소 좋아요 여부
  * @param[status] 장소 pick 상태
  * @param together 같이 찾은 장소 여부
+ * @param users 같이 찾은 유저 데이터 목록
+ */
+@Serializable
+data class PlaceWithUsers(
+    val id: Int,
+    val naverLink: String,
+    val kakaoLink: String,
+    val name: String,
+    val address: String,
+    @SerialName("likes")
+    val likeCount: Int,
+    val myLike: Boolean,
+    @SerialName("placeStatus")
+    val status: String,
+    val together: Boolean,
+    val users: List<String?>?
+) {
+    constructor(place: Place) : this(
+        place.id,
+        place.naverLink,
+        place.kakaoLink,
+        place.name,
+        place.address,
+        place.likeCount,
+        place.myLike,
+        place.status,
+        place.together,
+        null
+    )
+
+    fun toPlace(): Place =
+        Place(id, naverLink, kakaoLink, name, address, likeCount, myLike, status, together)
+}
+
+/**
+ * @param[id] Place 고유 식별 id
+ * @param[naverLink] 네이버 연결 링ㅋ,
+ * @param[kakaoLink] 카카오 연결 링크
+ * @param[name] 장소 이름
+ * @param[address] 장소 주소
+ * @param[likeCount] 장소 좋아요 수
+ * @param[myLike] 장소 좋아요 여부
+ * @param[status] 장소 pick 상태
+ * @param together 같이 찾은 장소 여부
  */
 @Serializable
 data class Place(
@@ -30,7 +74,7 @@ data class Place(
     val myLike: Boolean,
     @SerialName("placeStatus")
     val status: String,
-    val together: Boolean
+    val together: Boolean,
 )
 
 
