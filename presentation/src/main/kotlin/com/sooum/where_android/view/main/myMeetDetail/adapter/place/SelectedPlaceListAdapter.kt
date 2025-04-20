@@ -11,11 +11,13 @@ import coil3.load
 import com.sooum.domain.model.Place
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ItemSelectedPlaceBinding
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startKakaoMapUri
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startNaverMapUri
 
 class SelectedPlaceListAdapter() :
     PlaceBaseAdapter<Place, SelectedPlaceListAdapter.MyView>(diffUtil) {
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<Place>() {
+        private val diffUtil = object : DiffUtil.ItemCallback<Place>() {
             override fun areItemsTheSame(oldItem: Place, newItem: Place): Boolean {
                 return oldItem.id == newItem.id
             }

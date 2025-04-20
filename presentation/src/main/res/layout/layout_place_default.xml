@@ -103,7 +103,7 @@
                     android:layout_height="15dp"
                     android:fontFamily="@font/pretend_medium"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/icon_heart"
+                    android:src="@drawable/icon_heart_selector"
                     android:textColor="@color/gray_600"
                     android:textSize="11sp" />
 
@@ -117,7 +117,7 @@
                     android:fontFamily="@font/pretend_medium"
                     android:minWidth="20dp"
                     android:text="좋아요"
-                    android:textColor="#868E96"
+                    android:textColor="@color/text_color_selector"
                     android:textSize="11sp" />
 
                 <TextView
@@ -129,7 +129,7 @@
                     android:layout_marginStart="2dp"
                     android:fontFamily="@font/pretend_medium"
                     android:text=""
-                    android:textColor="@color/gray_600"
+                    android:textColor="@color/text_color_selector"
                     android:textSize="11sp" />
 
             </LinearLayout>

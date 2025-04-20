@@ -17,8 +17,8 @@ import com.sooum.domain.model.Schedule
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentMyMeetDetailBinding
 import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
-import com.sooum.where_android.view.main.myMeetDetail.adapter.InvitedFriendListAdapter
-import com.sooum.where_android.view.main.myMeetDetail.adapter.WaitingFriendListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.firend.InvitedFriendListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.firend.WaitingFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import com.sooum.where_android.view.main.myMeetDetail.modal.MeetCoverDialog
 import com.sooum.where_android.view.widget.CoverImageView
@@ -60,7 +60,7 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 myMeetDetailViewModel.invitedFriendList.collect { list ->
                     binding.tvFriendNumber.text = list.size.toString()
-                    invitedFriendAdapter.setList(list)
+                    invitedFriendAdapter.submitList(list)
                 }
             }
         }
@@ -68,7 +68,7 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 myMeetDetailViewModel.waitingFriendList.collect { list ->
-                    waitingFriendListAdapter.setList(list)
+                    waitingFriendListAdapter.submitList(list)
                 }
             }
         }

@@ -1,24 +1,20 @@
 package com.sooum.where_android.view.main.myMeetDetail.adapter.place
 
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil3.load
 import com.sooum.domain.model.PlaceList
-import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ItemProfilePlaceListBinding
 import com.sooum.where_android.databinding.ItemUnselectedPlaceBinding
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.viewholder.PostViewHolder
 
 class AllPlaceListAdapter() : PlaceBaseAdapter<PlaceList, RecyclerView.ViewHolder>(diffUtil) {
     companion object {
         private const val VIEW_TYPE_HEADER = 0
         private const val VIEW_TYPE_ITEM = 1
 
-        val diffUtil = object : DiffUtil.ItemCallback<PlaceList>() {
+        private val diffUtil = object : DiffUtil.ItemCallback<PlaceList>() {
             override fun areItemsTheSame(oldItem: PlaceList, newItem: PlaceList): Boolean {
                 return if (oldItem is PlaceList.ProfileHeader && newItem is PlaceList.ProfileHeader) {
                     oldItem.userId == newItem.userId
@@ -58,7 +54,7 @@ class AllPlaceListAdapter() : PlaceBaseAdapter<PlaceList, RecyclerView.ViewHolde
 
             VIEW_TYPE_ITEM -> {
                 val binding = ItemUnselectedPlaceBinding.inflate(inflater, parent, false)
-                PostViewHolder(binding)
+                PostViewHolder(binding, placeClickCallBack)
             }
 
             else -> throw IllegalArgumentException("Invalid view type")
@@ -68,7 +64,7 @@ class AllPlaceListAdapter() : PlaceBaseAdapter<PlaceList, RecyclerView.ViewHolde
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = currentList[position]) {
             is PlaceList.ProfileHeader -> (holder as ProfileHeaderViewHolder).bind(item)
-            is PlaceList.PostItem -> (holder as PostViewHolder).bind(item)
+            is PlaceList.PostItem -> (holder as PostViewHolder).bind(item.place)
         }
     }
 
@@ -78,54 +74,4 @@ class AllPlaceListAdapter() : PlaceBaseAdapter<PlaceList, RecyclerView.ViewHolde
             binding.textName.text = item.userName
         }
     }
-
-    inner class PostViewHolder(private val binding: ItemUnselectedPlaceBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: PlaceList.PostItem) {
-            val place = item.place
-            with(binding) {
-                val context = root.context
-
-                updateLikeUI(context, place.myLike, place.likeCount)
-                with(contentArea) {
-                    textPlaceName.text = place.name
-                    textAddress.text = place.address
-
-                    heartArea.setOnClickListener {
-                        placeClickCallBack?.likeChange(place.id)
-                    }
-
-                    btnNaverMap.setOnClickListener {
-                        placeClickCallBack?.startNaverMapUri(place.naverLink)
-                    }
-
-                    btnKakaoMap.setOnClickListener {
-                        placeClickCallBack?.startKakaoMapUri(place.kakaoLink)
-                    }
-                }
-
-                if (place.together) {
-                    textTogether.visibility = View.VISIBLE
-                } else {
-                    textTogether.visibility = View.GONE
-                }
-            }
-        }
-
-        private fun updateLikeUI(context: Context, isLiked: Boolean, likeCount: Int) {
-            val color = if (isLiked) {
-                ContextCompat.getColor(context, R.color.main_color)
-            } else {
-                ContextCompat.getColor(context, R.color.gray_600)
-            }
-
-            with(binding.contentArea) {
-                textLikeNumber.setTextColor(color)
-                textLike.setTextColor(color)
-                iconHeart.load(if (isLiked) R.drawable.icon_heart_fill else R.drawable.icon_heart)
-                textLikeNumber.text = if (likeCount > 0) likeCount.toString() else ""
-            }
-        }
-    }
-
 }
