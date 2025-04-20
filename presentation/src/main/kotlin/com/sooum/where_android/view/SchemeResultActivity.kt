@@ -4,14 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.SimpleMeet
 import com.sooum.domain.usecase.meet.invite.GetMeetInviteLinkUseCase
 import com.sooum.where_android.WhereApp
+import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.view.invite.InviteBySchemeView
 import com.sooum.where_android.view.splash.SplashActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,22 +56,42 @@ class SchemeResultActivity : AppCompatActivity() {
             }
 
             lifecycleScope.launch {
-                val result = getMeetInviteLinkUseCase(code!!).first()
-                if (result is ApiResult.Success) {
-                    val simpleMeet = result.data
-                    val intent = if (activity == null) {
-                        Intent(this@SchemeResultActivity, SplashActivity::class.java)
-                    } else {
-                        Intent(this@SchemeResultActivity, activity::class.java)
+                when (val result = getMeetInviteLinkUseCase(code!!).first()) {
+                    is ApiResult.Success -> {
+                        val simpleMeet = result.data
+                        val intent = if (activity == null) {
+                            Intent(this@SchemeResultActivity, SplashActivity::class.java)
+                        } else {
+                            Intent(this@SchemeResultActivity, activity::class.java)
+                        }
+                        intent.apply {
+                            addInviteScheme(simpleMeet, name!!)
+                        }
+                        clearActivity()
+                        startActivity(intent)
                     }
-                    intent.apply {
-                        addInviteScheme(simpleMeet, name!!)
+
+                    is ApiResult.Fail.Error -> {
+                        showSimpleToast(result.message ?: "error")
+                        clearActivity()
                     }
-                    finish()
-                    startActivity(intent)
+
+                    is ApiResult.Fail.Exception -> {
+                        showSimpleToast(result.e.localizedMessage ?: "error")
+                        clearActivity()
+                    }
+
+                    else -> {
+                        showSimpleToast("잘못된 접근 입니다.")
+                        clearActivity()
+                    }
                 }
             }
         }
+    }
+
+    private fun clearActivity() {
+        ActivityCompat.finishAffinity(this@SchemeResultActivity)
     }
 }
 
