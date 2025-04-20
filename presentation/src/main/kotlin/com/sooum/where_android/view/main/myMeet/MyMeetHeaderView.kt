@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -32,8 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sooum.domain.model.Filter
 import com.sooum.where_android.R
-import com.sooum.where_android.theme.Gray500
 import com.sooum.where_android.theme.Gray800
+import com.sooum.where_android.theme.GrayScale700
 import com.sooum.where_android.theme.GrayScale900
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
@@ -118,19 +119,19 @@ internal fun MyMeetHeaderView(
                                 expanded = true
                             },
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Text(
                             text = filter.getDisplay(),
                             fontFamily = pretendard,
-                            fontWeight = FontWeight.Normal,
+                            fontWeight = FontWeight.Medium,
                             fontSize = 14.sp,
-                            color = Gray500
+                            color = GrayScale700
                         )
                         Icon(
-                            painter = painterResource(R.drawable.icon_schedule_open),
+                            painter = painterResource(R.drawable.icon_filter_arrow),
                             contentDescription = null,
-                            tint = Gray500
+                            tint = GrayScale700,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
 
@@ -178,7 +179,7 @@ private fun MyMeetHeaderPreview() {
             openDrawer = {},
             filter = Filter.Time,
             updateFilter = {},
-            showFilter = false
+            showFilter = true
         )
     }
 }
