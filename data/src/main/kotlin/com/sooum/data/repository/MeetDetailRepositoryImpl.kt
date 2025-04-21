@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import java.io.File
@@ -480,7 +481,6 @@ class MeetDetailRepositoryImpl @Inject constructor(
      * fcm 코드 101 장소추가일때 동작하는 함수 -> 이거 코드 틀린듯 수정해야할듯 meetingID에 대한 부분 수정해야함
      */
     override suspend fun addPlaceToMeeting(meetId: Int, newPlace: PlaceWithUsers) {
-        val currentMeet = _meetDetailList.value.find { it.id == meetId }
         val exists = _meetPlaceList.value.any { it.id == newPlace.id}
 
         if(!exists){
@@ -554,5 +554,56 @@ class MeetDetailRepositoryImpl @Inject constructor(
         }
         _meetDetailList.value = updatedList
     }
+
+    /**
+     * fcm 코드 301 코멘트 추가 일때 함수
+     */
+    override suspend fun addComment(placeId: Int, newComment: CommentListItem) {
+        _commentList.update { currentMap ->
+            val currentList = currentMap[placeId] ?: emptyList()
+            val updateList = currentList + newComment
+            currentMap.toMutableMap().apply {
+                this[placeId] = updateList
+            }
+        }
+    }
+
+    /**
+     * fcm 코드 302 코멘트 수정 일때 함수
+     */
+    override suspend fun updateComment(commentId: Int, description: String) {
+        _commentList.update { commentMap ->
+            commentMap.mapValues { (_, commentList) ->
+                if (commentList.any { it.commentId == commentId }) {
+                    commentList.map { comment ->
+                        if (comment.commentId == commentId) {
+                            comment.copy(description = description)
+                        } else {
+                            comment
+                        }
+                    }
+                } else {
+                    commentList
+                }
+            }
+        }
+    }
+
+
+    /**
+     * fcm 코드 303 코멘트 삭제 일때 함수
+     */
+    override suspend fun deleteComment(commentId: Int) {
+        _commentList.update { commentMap ->
+            commentMap.mapValues { (_, commentList) ->
+                if (commentList.any { it.commentId == commentId }) {
+                    commentList.filter { it.commentId != commentId }
+                } else {
+                    commentList
+                }
+            }
+        }
+    }
+
 
 }

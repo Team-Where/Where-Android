@@ -1,6 +1,7 @@
 package com.sooum.domain.repository
 
 import com.sooum.domain.model.ActionResult
+import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.NewMeetResult
@@ -123,7 +124,7 @@ interface MeetDetailRepository {
 
     //fcm 관련 
     
-    suspend fun addPlaceToMeeting(id: Int, newPlace: PlaceWithUsers)
+    suspend fun addPlaceToMeeting(meetId: Int, newPlace: PlaceWithUsers)
 
     suspend fun deletePlaceFromMeeting(id: Int)
 
@@ -134,5 +135,11 @@ interface MeetDetailRepository {
     suspend fun deleteSchedule(meetId: Int)
 
     suspend fun updateSchedule(meetId: Int, date: String, time: String)
+
+    suspend fun addComment(placeId: Int, newComment:CommentListItem)
+
+    suspend fun updateComment(commentId: Int, description: String)
+
+    suspend fun deleteComment(commentId: Int)
     
 }

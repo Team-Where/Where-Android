@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.data.repository.MeetDetailRepositoryImpl
 import com.sooum.domain.model.ActionResult
+import com.sooum.domain.model.CommentData
+import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.MeetDetail
@@ -16,6 +18,7 @@ import com.sooum.domain.model.PlaceItem
 import com.sooum.domain.model.PlaceLike
 import com.sooum.domain.model.PlaceRank
 import com.sooum.domain.model.PlaceStatus
+import com.sooum.domain.model.PlaceWithUsers
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.ShareResult
 import com.sooum.domain.usecase.meet.AddMeetScheduleUseCase
@@ -31,10 +34,13 @@ import com.sooum.domain.usecase.meet.UpdateMeetDescriptionUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetScheduleUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetTitleUseCase
 import com.sooum.domain.usecase.meet.UpdateScheduleUseCase
+import com.sooum.domain.usecase.place.AddCommentUseCase
 import com.sooum.domain.usecase.place.AddNewPlaceUserCase
 import com.sooum.domain.usecase.place.AddPlaceUseCase
+import com.sooum.domain.usecase.place.DeleteCommentUseCase
 import com.sooum.domain.usecase.place.DeletePlaceUseCase
 import com.sooum.domain.usecase.place.TogglePlaceLikeUseCase
+import com.sooum.domain.usecase.place.UpdateCommentUseCase
 import com.sooum.domain.usecase.place.UpdatePlaceLikeUseCase
 import com.sooum.domain.usecase.place.UpdatePlaceStatusUseCase
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
@@ -71,6 +77,9 @@ class MyMeetDetailViewModel @Inject constructor(
     private val updatePlaceStatusUseCase: UpdatePlaceStatusUseCase,
     private val exitMeetUseCase: ExitMeetUseCase,
     private val finishMeetUseCase: FinishMeetUseCase,
+    private val addCommentUseCase: AddCommentUseCase,
+    private val updateCommentUseCase: UpdateCommentUseCase,
+    private val deleteCommentUseCase: DeleteCommentUseCase
 ) : ViewModel() {
 
     companion object {
@@ -400,7 +409,7 @@ class MyMeetDetailViewModel @Inject constructor(
             try {
                 when (code) {
                     FCM_CODE_PLACE_ADD -> {
-                        val shareResult = Json.decodeFromString<Place>(data)
+                        val shareResult = Json.decodeFromString<PlaceWithUsers>(data)
                         addNewPlaceUseCase(
                             shareResult.id,
                             shareResult
@@ -442,6 +451,28 @@ class MyMeetDetailViewModel @Inject constructor(
                         val shareResult = Json.decodeFromString<MeetingId>(data)
                         deleteMeetScheduleUseCase(
                             shareResult.meetingId
+                        )
+                    }
+                    FCM_CODE_COMMENT_ADD -> {
+                        val shareResult = Json.decodeFromString<CommentListItem>(data)
+                        addCommentUseCase(
+                            shareResult.placeId,
+                            shareResult
+                        )
+
+                    }
+                    FCM_CODE_COMMENT_PUT -> {
+                        val shareResult = Json.decodeFromString<CommentData.Detail>(data)
+                        updateCommentUseCase(
+                            shareResult.id,
+                            shareResult.description
+                        )
+                    }
+
+                    FCM_CODE_COMMENT_DELETE -> {
+                        val shareResult = Json.decodeFromString<CommentData.IdOnly>(data)
+                        deleteCommentUseCase(
+                            shareResult.id
                         )
                     }
                 }
