@@ -6,6 +6,7 @@ import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlaceItem
+import com.sooum.domain.model.PlaceWithUsers
 import com.sooum.domain.model.Schedule
 import kotlinx.coroutines.flow.Flow
 import java.io.File
@@ -122,13 +123,13 @@ interface MeetDetailRepository {
 
     //fcm 관련 
     
-    suspend fun addPlaceToMeeting(id: Int, newPlace: Place)
+    suspend fun addPlaceToMeeting(id: Int, newPlace: PlaceWithUsers)
 
     suspend fun deletePlaceFromMeeting(id: Int)
 
     suspend fun updatePlaceStatusToPicked(placeId: Int, newStatus: String)
 
-    suspend fun updatePlaceLike(id: Int, placeLike: Int)
+    suspend fun updatePlaceLike(placeId: Int, placeLike: Int)
 
     suspend fun deleteSchedule(meetId: Int)
 
