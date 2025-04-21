@@ -5,6 +5,7 @@ import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.model.Place
+import com.sooum.domain.model.PlaceItem
 import com.sooum.domain.model.Schedule
 import kotlinx.coroutines.flow.Flow
 import java.io.File
@@ -16,7 +17,7 @@ interface MeetDetailRepository {
     fun getMeetDetailList(): Flow<List<MeetDetail>>
 
     fun getMeetInviteList(): Flow<List<MeetInviteStatus>>
-    fun getMeetPlaceList(): Flow<Map<Int, List<Place>>>
+    fun getMeetPlaceList(): Flow<List<PlaceItem>>
 
     fun getMeetDetailById(meetId: Int): Flow<MeetDetail?>
 
@@ -115,10 +116,12 @@ interface MeetDetailRepository {
     suspend fun likeToggle(
         placeId :Int,
         userId: Int,
-    ) : ActionResult<Unit>
+    ): ActionResult<*>
 
     suspend fun clearMeetDetail()
 
+    //fcm 관련 
+    
     suspend fun addPlaceToMeeting(id: Int, newPlace: Place)
 
     suspend fun deletePlaceFromMeeting(id: Int)
@@ -130,5 +133,5 @@ interface MeetDetailRepository {
     suspend fun deleteSchedule(meetId: Int)
 
     suspend fun updateSchedule(meetId: Int, date: String, time: String)
-
+    
 }

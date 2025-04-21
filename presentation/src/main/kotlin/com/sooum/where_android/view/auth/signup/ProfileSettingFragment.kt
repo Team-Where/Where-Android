@@ -6,17 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ImageAddType
 import com.sooum.where_android.R
-import com.sooum.where_android.databinding.FragmentPasswordBinding
 import com.sooum.where_android.databinding.FragmentProfileSettingBinding
-import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
-import com.sooum.where_android.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -24,7 +18,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ProfileSettingFragment : AuthBaseFragment() {
     private lateinit var binding : FragmentProfileSettingBinding
-    private val viewModel: AuthViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

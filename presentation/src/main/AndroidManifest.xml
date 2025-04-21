@@ -78,7 +78,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="https" />
-                <data android:host="audiwhere.codns.com" />
+                <data android:host="audiwhere.shop" />
             </intent-filter>
 
             <intent-filter>

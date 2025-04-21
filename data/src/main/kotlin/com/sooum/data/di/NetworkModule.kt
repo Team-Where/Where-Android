@@ -45,7 +45,7 @@ object NetworkModule {
     ): Retrofit =
         Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://audiwhere.codns.com")
+            .baseUrl("https://audiwhere.shop")
             .addConverterFactory(
                 NullOnEmptyConverterFactory()
             )

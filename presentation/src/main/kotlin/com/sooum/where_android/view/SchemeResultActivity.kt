@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +11,7 @@ import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.SimpleMeet
 import com.sooum.domain.usecase.meet.invite.GetMeetInviteLinkUseCase
 import com.sooum.where_android.WhereApp
+import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.view.invite.InviteBySchemeView
 import com.sooum.where_android.view.splash.SplashActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,6 +21,7 @@ import java.io.Serializable
 import javax.inject.Inject
 
 internal const val INVITE_DATA = "inviteData"
+
 /**
  * 스킵 데이터 터리를 위해
  */
@@ -51,25 +52,51 @@ class SchemeResultActivity : AppCompatActivity() {
             val code = intent.data?.pathSegments?.lastOrNull()
 
             if (name == null || code == null || code.length != 10) {
-                finish()
-            }
+                clearActivity()
+            } else {
+                lifecycleScope.launch {
+                    when (val result = getMeetInviteLinkUseCase(code!!).first()) {
+                        is ApiResult.Success -> {
+                            val simpleMeet = result.data
+                            val intent = if (activity == null) {
+                                Intent(this@SchemeResultActivity, SplashActivity::class.java)
+                            } else {
+                                Intent(this@SchemeResultActivity, activity::class.java)
+                            }
+                            intent.apply {
+                                addInviteScheme(simpleMeet, name!!)
+                            }
+                            finish()
+                            startActivity(intent)
+                        }
 
-            lifecycleScope.launch {
-                val result = getMeetInviteLinkUseCase(code!!).first()
-                if (result is ApiResult.Success) {
-                    val simpleMeet = result.data
-                    val intent = if (activity == null) {
-                        Intent(this@SchemeResultActivity, SplashActivity::class.java)
-                    } else {
-                        Intent(this@SchemeResultActivity, activity::class.java)
+                        is ApiResult.Fail.Error -> {
+                            showSimpleToast(result.message ?: "error")
+                            clearActivity()
+                        }
+
+                        is ApiResult.Fail.Exception -> {
+                            showSimpleToast(result.e.localizedMessage ?: "error")
+                            clearActivity()
+                        }
+
+                        else -> {
+                            showSimpleToast("잘못된 접근 입니다.")
+                            clearActivity()
+                        }
                     }
-                    intent.apply {
-                        addInviteScheme(simpleMeet, name!!)
-                    }
-                    finish()
-                    startActivity(intent)
                 }
             }
+        }
+    }
+
+    private fun clearActivity() {
+        val activity = WhereApp.currentActivity
+        finish()
+        if (activity != null) {
+            val intent = Intent(this@SchemeResultActivity, activity::class.java)
+            startActivity(intent)
+
         }
     }
 }
@@ -115,7 +142,7 @@ fun Intent.getInviteData(): InviteData? {
 
 fun Intent.checkInviteData(
     context: Context
-) :Boolean {
+): Boolean {
     val inviteData = this.getInviteData()
     inviteData?.let {
         context.startActivity(
@@ -127,7 +154,7 @@ fun Intent.checkInviteData(
                 )
             }
         )
-        return  true
+        return true
     }
     return false
 }

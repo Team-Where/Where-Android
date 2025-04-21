@@ -121,6 +121,7 @@ class MyMeetTabFragment : MyMeetBaseFragment() {
         lifecycleScope.launch {
             myMeetDetailViewModel.meetDetail.collect { meetDetail ->
                 binding.tvTitle.text = meetDetail?.title
+                binding.imageEdit.isEnabled = meetDetail?.finished != true
             }
         }
     }
