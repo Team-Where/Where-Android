@@ -48,14 +48,14 @@ class SchemeResultActivity : AppCompatActivity() {
             }
         } else {
             val activity = WhereApp.currentActivity
-            val name = intent.data?.getQueryParameter("user")
+            val name = intent.data?.getQueryParameter("name")
             val code = intent.data?.pathSegments?.lastOrNull()
 
             if (name == null || code == null || code.length != 10) {
                 clearActivity()
             } else {
                 lifecycleScope.launch {
-                    when (val result = getMeetInviteLinkUseCase(code!!).first()) {
+                    when (val result = getMeetInviteLinkUseCase(code).first()) {
                         is ApiResult.Success -> {
                             val simpleMeet = result.data
                             val intent = if (activity == null) {
@@ -64,7 +64,7 @@ class SchemeResultActivity : AppCompatActivity() {
                                 Intent(this@SchemeResultActivity, activity::class.java)
                             }
                             intent.apply {
-                                addInviteScheme(simpleMeet, name!!)
+                                addInviteScheme(simpleMeet, name)
                             }
                             finish()
                             startActivity(intent)

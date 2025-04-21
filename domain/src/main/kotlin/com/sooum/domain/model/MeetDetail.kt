@@ -1,5 +1,6 @@
 package com.sooum.domain.model
 
+import androidx.core.net.toUri
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -18,11 +19,9 @@ data class MeetDetail(
     val schedule: Schedule?
 ) {
     val inviteCode: String
-        get() = if (link.contains("/")) {
-            link.split("/").last()
-        } else {
-            ""
-        }
+        get() = runCatching {
+            link.toUri().lastPathSegment!!
+        }.getOrDefault("")
 
     constructor(
         id: Int,
