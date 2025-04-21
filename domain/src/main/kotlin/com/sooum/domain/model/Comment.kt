@@ -33,3 +33,9 @@ data class CommentListItem(
     val placeId: Int,
     val description: String
 )
+
+@Serializable
+sealed class CommentData {
+    data class IdOnly(val id: Int) : CommentData()
+    data class Detail(val id: Int, val description: String) : CommentData()
+}
