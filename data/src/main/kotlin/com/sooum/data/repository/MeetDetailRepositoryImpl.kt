@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.joinAll
@@ -478,61 +479,52 @@ class MeetDetailRepositoryImpl @Inject constructor(
     /**
      * fcm 코드 101 장소추가일때 동작하는 함수 -> 이거 코드 틀린듯 수정해야할듯 meetingID에 대한 부분 수정해야함
      */
-    override suspend fun addPlaceToMeeting(id: Int, newPlace: Place) {
-//        val temp = _meetPlaceList.value.toMutableMap()
-//        val myPlaceList = temp[id]?.toMutableList() ?: mutableListOf()
-//
-//        myPlaceList.add(newPlace)  // 새 Place 추가!
-//        temp[id] = myPlaceList
-//        _meetPlaceList.value = temp
+    override suspend fun addPlaceToMeeting(meetId: Int, newPlace: PlaceWithUsers) {
+        val currentMeet = _meetDetailList.value.find { it.id == meetId }
+        val exists = _meetPlaceList.value.any { it.id == newPlace.id}
+
+        if(!exists){
+            val updateList = _meetPlaceList.value.toMutableList()
+            updateList.add(newPlace)
+            _meetPlaceList.value = updateList
+        }
     }
 
     /**
-     * fcm 코드 102 장소삭제일 때 동작하는 함수
+     * fcm 코드 103 장소삭제일 때 동작하는 함수
      */
     override suspend fun deletePlaceFromMeeting(id: Int) {
-//        val temp = _meetPlaceList.value.toMutableMap()
-//
-//        temp.forEach { (meetingId, placeList) ->
-//            val updatedList = placeList.filterNot { it.id == id }
-//            temp[meetingId] = updatedList
-//        }
-//        _meetPlaceList.value = temp
+        val filteredList = _meetPlaceList.value.toMutableList().filter { it.id != id }
+        _meetPlaceList.value = filteredList
     }
 
     /**
-     * fcm 코드 104 모임수락일때 동작하는 함수
+     * fcm 코드 104 장소 pickStatus 변경
      */
     override suspend fun updatePlaceStatusToPicked(placeId: Int, newStatus: String) {
-//        val temp = _meetPlaceList.value.toMutableMap()
-//        val placeList = temp[placeId]?.toMutableList() ?: return
-//
-//        val updatedList = placeList.map { place ->
-//            if (place.id == placeId) {
-//                place.copy(status = newStatus)
-//            } else place
-//        }
-//        temp[placeId] = updatedList
-//        _meetPlaceList.value = temp
+        val updatedList = _meetPlaceList.value.map { place ->
+            if (place.id == placeId) {
+                place.copy(status = newStatus)
+            } else {
+                place
+            }
+        }
+        _meetPlaceList.value = updatedList
     }
+
 
     /**
      * fcm 코드 105 장소 좋아요 업데이트일 때 동작하는 함수
      */
-    override suspend fun updatePlaceLike(id: Int, placeLike: Int) {
-//        val temp = _meetPlaceList.value.toMutableMap()
-//
-//        temp.forEach { (meetingId, placeList) ->
-//            val updatedList = placeList.map { place ->
-//                if (place.id == id) {
-//                    place.copy(likeCount = placeLike)  // 좋아요 수 수정
-//                } else {
-//                    place
-//                }
-//            }
-//            temp[meetingId] = updatedList
-//        }
-//        _meetPlaceList.value = temp
+    override suspend fun updatePlaceLike(placeId: Int, placeLike: Int) {
+        val updatedList = _meetPlaceList.value.map { place ->
+            if (place.id == placeId) {
+                place.copy(likeCount = placeLike)
+            } else {
+                place
+            }
+        }
+        _meetPlaceList.value = updatedList
     }
 
     /**
