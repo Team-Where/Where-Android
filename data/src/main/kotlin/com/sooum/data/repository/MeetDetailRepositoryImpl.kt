@@ -539,7 +539,6 @@ class MeetDetailRepositoryImpl @Inject constructor(
     /**
      * fcm 코드 201,202 일정 수정,추가 일때 함수
      */
-
     override suspend fun updateSchedule(meetId: Int, date: String, time: String) {
         val updateList = _meetDetailList.value.map { meetDetail ->
             if(meetDetail.id == meetId){
