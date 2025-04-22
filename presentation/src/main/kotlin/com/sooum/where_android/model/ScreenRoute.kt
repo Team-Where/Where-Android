@@ -17,6 +17,10 @@ sealed class ScreenRoute {
     }
 
     sealed class Home :ScreenRoute() {
+
+        @Serializable
+        data object Main : Home()
+
         @Serializable
         data class FriendMeetDetail(
             val detailUserId: Int

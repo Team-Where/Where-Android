@@ -1,4 +1,4 @@
-package com.sooum.where_android.view.main.myMeet
+package com.sooum.where_android.view.main.home.myMeet
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

@@ -1,4 +1,4 @@
-package com.sooum.where_android.view.main.newMeet
+package com.sooum.where_android.view.main.home.newMeet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

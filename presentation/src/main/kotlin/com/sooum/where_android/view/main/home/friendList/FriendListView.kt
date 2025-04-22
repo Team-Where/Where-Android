@@ -1,4 +1,4 @@
-package com.sooum.where_android.view.main.friendList
+package com.sooum.where_android.view.main.home.friendList
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
@@ -50,8 +50,8 @@ import com.sooum.where_android.theme.GrayScale600
 import com.sooum.where_android.theme.GrayScale700
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
-import com.sooum.where_android.view.main.friendList.modal.DeleteUserModal
-import com.sooum.where_android.view.main.friendList.modal.ProfileDetailModal
+import com.sooum.where_android.view.main.home.friendList.modal.DeleteUserModal
+import com.sooum.where_android.view.main.home.friendList.modal.ProfileDetailModal
 import com.sooum.where_android.view.widget.SearchField
 import com.sooum.where_android.view.widget.UserItemView
 import com.sooum.where_android.view.widget.UserViewType
