@@ -1,11 +1,16 @@
 package com.sooum.where_android.view.auth
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
+import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentSignInBinding
 import com.sooum.where_android.view.auth.signup.AuthBaseFragment
+import com.sooum.where_android.view.main.MainActivity
+import kotlinx.coroutines.launch
 
 class SignInFragment : AuthBaseFragment() {
     lateinit var binding: FragmentSignInBinding
@@ -29,6 +34,25 @@ class SignInFragment : AuthBaseFragment() {
             }
             imageBack.setOnClickListener {
                 popBackStack()
+            }
+            observeSignInResult()
+        }
+    }
+
+    private fun observeSignInResult() {
+        lifecycleScope.launch {
+            viewModel.loginState.collect { result ->
+                when (result) {
+                    is ApiResult.Success -> {
+                        showToast("로그인 성공")
+                        navigateActivity(MainActivity())
+                    }
+
+                    is ApiResult.Fail -> {
+                        showToast("로그인 실패")
+                    }
+                    else -> {}
+                }
             }
         }
     }

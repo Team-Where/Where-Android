@@ -46,7 +46,7 @@ class SignUpCompleteFragment : AuthBaseFragment() {
                     }
 
                     is ApiResult.Fail -> {
-                        showToast("회원가입 실패했습니다: $result")
+                        showToast("회원가입 실패했습니다")
                         Log.d("SignUpCompleteFragment", result.toString())
                         binding.nextBtn.isEnabled = true
                     }

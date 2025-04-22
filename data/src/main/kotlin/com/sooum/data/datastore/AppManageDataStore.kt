@@ -26,6 +26,7 @@ class AppManageDataStore @Inject constructor(
     companion object {
 
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
+        private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         private val FIRST_LAUNCH = booleanPreferencesKey("first_launch")
     }
 
@@ -35,9 +36,22 @@ class AppManageDataStore @Inject constructor(
         }
     }
 
+    suspend fun saveRefreshToken(token: String) {
+        appDataStore.edit { preferences ->
+            preferences[REFRESH_TOKEN] = token
+        }
+    }
+
     fun getAccessToken(): Flow<String?> {
         return appDataStore.data.map { preferences ->
             preferences[ACCESS_TOKEN]
+        }
+    }
+
+
+    fun getRefreshToken(): Flow<String?> {
+        return appDataStore.data.map { preferences ->
+            preferences[REFRESH_TOKEN]
         }
     }
 

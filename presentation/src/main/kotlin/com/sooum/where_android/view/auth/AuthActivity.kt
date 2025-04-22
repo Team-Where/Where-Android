@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.firebase.messaging.FirebaseMessaging
+import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.where_android.databinding.ActivityAuthBinding
 import com.sooum.where_android.R
 import com.sooum.where_android.view.getInviteData
@@ -34,6 +35,7 @@ class AuthActivity : AppCompatActivity() {
             fragment = SocialLoginFragment(),
             addToBackStack = false
         )
+
 
     }
 

@@ -9,6 +9,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.where_android.databinding.ActivityMainBinding
 import com.sooum.where_android.view.checkInviteData
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +23,7 @@ val LocalActivity = compositionLocalOf<MainActivity> {
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var appManageDataStore : AppManageDataStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +43,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        appManageDataStore = AppManageDataStore(this)
+        Log.d("token", "$appManageDataStore.getRefreshToken()")
+        Log.d("token", "$appManageDataStore.getAccessToken()")
 
         setContentView(binding.root)
     }

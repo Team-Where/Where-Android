@@ -1,11 +1,16 @@
 package com.sooum.data.network.auth.request
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializer
+
 /**
  * 로그인시 사용하는 model
- * @param[email] 이메일
+ * @param[username] 이메일
  * @param[password] 비밀번호
  */
+
+@Serializable
 data class LoginRequest (
-    val email: String,
+    val username: String,
     val password: String
 )
