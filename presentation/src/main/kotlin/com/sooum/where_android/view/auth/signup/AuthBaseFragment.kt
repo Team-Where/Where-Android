@@ -1,5 +1,7 @@
 package com.sooum.where_android.view.auth.signup
 
+import android.app.Activity
+import android.content.Intent
 import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -23,5 +25,10 @@ abstract class AuthBaseFragment : Fragment() {
 
     protected fun popBackStack() {
         parentFragmentManager.popBackStack()
+    }
+
+    fun navigateActivity(activity: Activity) {
+        val intent = Intent(requireContext(), activity::class.java)
+        startActivity(intent)
     }
 }
