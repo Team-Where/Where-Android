@@ -1,35 +1,53 @@
 package com.sooum.where_android.viewmodel
 
-import android.app.Notification.Action
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.data.repository.MeetDetailRepositoryImpl
 import com.sooum.domain.model.ActionResult
+import com.sooum.domain.model.CommentData
+import com.sooum.domain.model.CommentListItem
+import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.MeetDetail
+import com.sooum.domain.model.MeetingId
+import com.sooum.domain.model.PLACE_STATE_PICK
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlaceDelete
+import com.sooum.domain.model.PlaceItem
 import com.sooum.domain.model.PlaceLike
-import com.sooum.domain.model.PlaceList
+import com.sooum.domain.model.PlaceRank
 import com.sooum.domain.model.PlaceStatus
+import com.sooum.domain.model.PlaceWithUsers
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.ShareResult
 import com.sooum.domain.usecase.meet.AddMeetScheduleUseCase
 import com.sooum.domain.usecase.meet.ClearMeetUseCase
+import com.sooum.domain.usecase.meet.DeleteMeetScheduleUseCase
 import com.sooum.domain.usecase.meet.ExitMeetUseCase
+import com.sooum.domain.usecase.meet.FinishMeetUseCase
 import com.sooum.domain.usecase.meet.GetMeetDetailByIdUseCase
 import com.sooum.domain.usecase.meet.GetMeetInviteStatusUseCase
 import com.sooum.domain.usecase.meet.GetMeetPlaceListUseCase
+import com.sooum.domain.usecase.meet.UpdateMeetCoverUseCase
+import com.sooum.domain.usecase.meet.UpdateMeetDescriptionUseCase
 import com.sooum.domain.usecase.meet.UpdateMeetScheduleUseCase
+import com.sooum.domain.usecase.meet.UpdateMeetTitleUseCase
+import com.sooum.domain.usecase.meet.UpdateScheduleUseCase
+import com.sooum.domain.usecase.place.AddCommentUseCase
+import com.sooum.domain.usecase.place.AddNewPlaceUserCase
 import com.sooum.domain.usecase.place.AddPlaceUseCase
+import com.sooum.domain.usecase.place.DeleteCommentUseCase
+import com.sooum.domain.usecase.place.DeletePlaceUseCase
 import com.sooum.domain.usecase.place.TogglePlaceLikeUseCase
+import com.sooum.domain.usecase.place.UpdateCommentUseCase
+import com.sooum.domain.usecase.place.UpdatePlaceLikeUseCase
+import com.sooum.domain.usecase.place.UpdatePlaceStatusUseCase
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
@@ -44,11 +62,24 @@ class MyMeetDetailViewModel @Inject constructor(
     getMeetInviteStatusUseCase: GetMeetInviteStatusUseCase,
     getMeetPlaceListUseCase: GetMeetPlaceListUseCase,
     private val addMeetScheduleUseCase: AddMeetScheduleUseCase,
-    private val updateMeetScheduleUseCase: UpdateMeetScheduleUseCase,
-    private val exitMeetUseCase: ExitMeetUseCase,
-    private val clearMeetUseCase: ClearMeetUseCase,
     private val addPlaceUseCase: AddPlaceUseCase,
-    private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase
+    private val updateMeetScheduleUseCase: UpdateMeetScheduleUseCase,
+    private val updateMeetTitleUseCase: UpdateMeetTitleUseCase,
+    private val updateMeetDescriptionUseCase: UpdateMeetDescriptionUseCase,
+    private val updateMeetCoverUseCase: UpdateMeetCoverUseCase,
+    private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase,
+    private val clearMeetUseCase: ClearMeetUseCase,
+    private val updateScheduleUseCase: UpdateScheduleUseCase,
+    private val deleteMeetScheduleUseCase: DeleteMeetScheduleUseCase,
+    private val addNewPlaceUseCase: AddNewPlaceUserCase,
+    private val deletePlaceUseCase: DeletePlaceUseCase,
+    private val updatePlaceLikeUseCase: UpdatePlaceLikeUseCase,
+    private val updatePlaceStatusUseCase: UpdatePlaceStatusUseCase,
+    private val exitMeetUseCase: ExitMeetUseCase,
+    private val finishMeetUseCase: FinishMeetUseCase,
+    private val addCommentUseCase: AddCommentUseCase,
+    private val updateCommentUseCase: UpdateCommentUseCase,
+    private val deleteCommentUseCase: DeleteCommentUseCase
 ) : ViewModel() {
 
     companion object {
@@ -57,7 +88,7 @@ class MyMeetDetailViewModel @Inject constructor(
         private const val FCM_CODE_PLACE_STATUS_UPDATE = "104"
         private const val FCM_CODE_PLACE_LIKE_UPDATE = "105"
         private const val FCM_CODE_PLACE_PLACE_LIST = "106"
-        private const val FCM_CODE_SCHEDULE_ADD_ = "201"
+        private const val FCM_CODE_SCHEDULE_ADD = "201"
         private const val FCM_CODE_SCHEDULE_PUT = "202"
         private const val FCM_CODE_SCHEDULE_DELETE = "203"
         private const val FCM_CODE_COMMENT_ADD = "301"
@@ -78,12 +109,13 @@ class MyMeetDetailViewModel @Inject constructor(
             emptyList()
         )
 
+    //초대된 친구 목록(추가로 나를 넣는다)
     val invitedFriendList = inviteStatus.transform { list ->
         val convertList = mutableListOf<InvitedFriend>()
         val myData = InvitedFriend(
             getLoginUserIdUseCase()!!,
             "나",
-            null,
+            null, //TODO 내 프로필 가져오기
             isMe = true
         )
         convertList.add(myData)
@@ -94,6 +126,7 @@ class MyMeetDetailViewModel @Inject constructor(
         emit(convertList)
     }
 
+    //초대 대기중인 친구 목록
     val waitingFriendList = inviteStatus.transform { list ->
         val convertList = mutableListOf<InvitedFriend>()
         val filterData =
@@ -103,86 +136,57 @@ class MyMeetDetailViewModel @Inject constructor(
         emit(convertList)
     }
 
-    private val placeMap = getMeetPlaceListUseCase()
+    //모임 상세에 로드된 place 목록
+    val placeList = getMeetPlaceListUseCase()
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
-            emptyMap()
+            emptyList()
         )
 
-    val placeCount = placeMap.transform {
-        emit(it.flatMap { it.value }.size)
+    //plceMap에있는 총 장소 수
+    val placeCount = placeList.transform {
+        emit(it.size)
     }
 
-    val userAndPlaceMap = inviteStatus
-        .transform { list ->
-            emit(list.filter { it.status })
-        }
-        .combine(placeMap) { invitedUser, placeMap ->
-            val tempData = mutableListOf<PlaceList>()
-            val myId = getLoginUserIdUseCase()!!
-            placeMap.forEach { (userId, placeItemList) ->
-                if (userId == myId) {
-                    tempData.add(
-                        PlaceList.ProfileHeader(
-                            userId = userId,
-                            userName = "나",
-                            profileImage = null
-                        )
-                    )
-                    placeItemList.forEach { place ->
-                        tempData.add(
-                            PlaceList.PostItem(
-                                userId = userId,
-                                place = place
-                            )
-                        )
-                    }
-                } else {
-                    invitedUser.find { it.toId == userId }?.let { findUser ->
-                        tempData.add(
-                            PlaceList.ProfileHeader(
-                                userId = userId,
-                                userName = findUser.toName,
-                                profileImage = findUser.toImage
-                            )
-                        )
-                        placeItemList.forEach { place ->
-                            tempData.add(
-                                PlaceList.PostItem(
-                                    userId = userId,
-                                    place = place
-                                )
-                            )
-                        }
-                    }
-                }
+    //pick된 장소
+    val pickPlaceList = placeList.transform { places ->
+        val filterList = places.filter { it.status == PLACE_STATE_PICK }
+        emit(filterList.sortedBy { it.likeCount })
+    }
+
+    //상위 3개의 장소
+    val bestPlaceList = placeList.transform { placeItems ->
+        val sorted = placeItems.sortedByDescending { it.likeCount }
+
+        val result = mutableListOf<PlaceRank>()
+        var currentRank = 0
+        var lastLikeCount: Int? = null
+
+        val groupedByRank = linkedMapOf<Int, MutableList<PlaceItem>>()
+
+        //3위까지 찾기 시작
+        for (placeItem in sorted) {
+            if (placeItem.likeCount != lastLikeCount) {
+                currentRank += 1
+                lastLikeCount = placeItem.likeCount
             }
 
-            // 정렬 로직
-            val grouped = tempData.groupBy { it.userId }
-                .mapNotNull { (userId, items) ->
-                    val header =
-                        items.find { it is PlaceList.ProfileHeader } as? PlaceList.ProfileHeader
-                    val posts = items.filterIsInstance<PlaceList.PostItem>()
-                    if (header != null) {
-                        listOf(header) + posts
-                    } else {
-                        null // header 없는 유저는 제외하거나 필요 시 처리 가능
-                    }
-                }
+            if (currentRank > 3) break
 
-            val sorted = grouped.sortedWith(
-                compareBy<List<PlaceList>> { group ->
-                    val uid = group.first().userId
-                    if (uid == myId) Int.MIN_VALUE else uid
-                }.thenBy { group ->
-                    (group.first() as? PlaceList.ProfileHeader)?.userName ?: ""
-                }
-            ).flatten()
-
-            sorted
+            groupedByRank.getOrPut(currentRank) { mutableListOf() }.add(placeItem)
         }
+
+        //rank별 아이템 생성
+        for ((rank, placesInRank) in groupedByRank) {
+            result.add(PlaceRank.RankHeader(rank))
+            placesInRank.forEach { place ->
+                result.add(PlaceRank.PostItem(rank, place))
+            }
+        }
+
+        emit(result)
+    }
 
     fun loadData(
         meetDetailId: Int
@@ -225,31 +229,171 @@ class MyMeetDetailViewModel @Inject constructor(
         }
     }
 
+    private inline fun findMeetDetailOrFail(
+        doAction: (MeetDetail) -> Unit,
+        onFail: (msg: String) -> Unit
+    ) {
+        meetDetail.value?.let { meetDetail ->
+            doAction(meetDetail)
+        } ?: run {
+            onFail("존재 하지 않는 id")
+        }
+    }
+
     /**
      * 모임 탈퇴(삭제 합니다)
      */
     fun exitMeet(
-        complete: (ActionResult<Unit>) -> Unit
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
     ) {
         viewModelScope.launch {
             val userId = getLoginUserIdUseCase()!!
-            meetDetail.value?.let { meetDetail ->
-                val result = exitMeetUseCase(
-                    meetId = meetDetail.id,
-                    userId = userId
-                )
-                complete(result)
-            }
+            findMeetDetailOrFail(
+                doAction = { meetDetail ->
+                    val result = exitMeetUseCase(
+                        meetId = meetDetail.id,
+                        userId = userId
+                    )
+                    when (result) {
+                        is ActionResult.Success -> {
+                            onSuccess()
+                        }
+
+                        is ActionResult.Fail -> {
+                            onFail(result.msg)
+                        }
+                    }
+                },
+                onFail = onFail
+            )
+        }
+    }
+
+    /**
+     * 모임 종료
+     */
+    fun finishMeet(
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
+    ) {
+        viewModelScope.launch {
+            findMeetDetailOrFail(
+                doAction = { meetDetail ->
+                    val result = finishMeetUseCase(
+                        meetId = meetDetail.id,
+                    )
+                    when (result) {
+                        is ActionResult.Success -> {
+                            onSuccess()
+                        }
+
+                        is ActionResult.Fail -> {
+                            onFail(result.msg)
+                        }
+                    }
+                },
+                onFail = onFail
+            )
         }
     }
 
     fun likeToggle(
         placeId: Int,
-        complete: (ActionResult<Unit>) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
     ) {
         viewModelScope.launch {
-            val result = togglePlaceLikeUseCase(placeId, getLoginUserIdUseCase()!!,)
-            complete(result)
+            val result = togglePlaceLikeUseCase(placeId)
+            when (result) {
+                is ActionResult.Success -> {
+                    onSuccess()
+                }
+
+                is ActionResult.Fail -> {
+                    onFail(result.msg)
+                }
+            }
+        }
+    }
+
+    fun updateTitle(
+        newTitle: String,
+        onSuccess: () -> Unit,
+        onFail: (msg:String) -> Unit
+    ) {
+        viewModelScope.launch {
+            findMeetDetailOrFail(
+                doAction = { meetDetail ->
+                    val result = updateMeetTitleUseCase(
+                        id = meetDetail.id,
+                        title = newTitle
+                    )
+                    when (result) {
+                        is ActionResult.Success -> {
+                            onSuccess()
+                        }
+
+                        is ActionResult.Fail -> {
+                            onFail(result.msg)
+                        }
+                    }
+                },
+                onFail = onFail
+            )
+        }
+    }
+
+    fun updateDescription(
+        newDescription: String,
+        onSuccess: () -> Unit,
+        onFail: (msg:String) -> Unit
+    ) {
+        viewModelScope.launch {
+            findMeetDetailOrFail(
+                doAction = { meetDetail ->
+                    val result = updateMeetDescriptionUseCase(
+                        id = meetDetail.id,
+                        description = newDescription
+                    )
+                    when (result) {
+                        is ActionResult.Success -> {
+                            onSuccess()
+                        }
+
+                        is ActionResult.Fail -> {
+                            onFail(result.msg)
+                        }
+                    }
+                },
+                onFail = onFail
+            )
+        }
+    }
+    fun updateImage(
+        image: ImageAddType,
+        onSuccess: () -> Unit,
+        onFail: (msg:String) -> Unit
+    ) {
+        viewModelScope.launch {
+            findMeetDetailOrFail(
+                doAction = { meetDetail ->
+                    val result = updateMeetCoverUseCase(
+                        id = meetDetail.id,
+                        imageFile = image
+                    )
+                    when (result) {
+                        is ActionResult.Success -> {
+                            onSuccess()
+                        }
+
+                        is ActionResult.Fail -> {
+                            onFail(result.msg)
+                        }
+                    }
+                },
+                onFail = onFail
+            )
         }
     }
 
@@ -261,38 +405,80 @@ class MyMeetDetailViewModel @Inject constructor(
     }
 
     fun updatePlaceFromFcm(code: String, data: String) {
-        try {
-            when (code) {
-                FCM_CODE_PLACE_ADD -> {
-                    val shareResult = Json.decodeFromString<Place>(data)
-                    repositoryImpl.addPlaceToMeeting(
-                        newPlace = shareResult,
-                        id = shareResult.id
-                    )
-                }
+        viewModelScope.launch {
+            try {
+                when (code) {
+                    FCM_CODE_PLACE_ADD -> {
+                        val shareResult = Json.decodeFromString<PlaceWithUsers>(data)
+                        addNewPlaceUseCase(
+                            shareResult.id,
+                            shareResult
+                        )
+                    }
 
-                FCM_CODE_PLACE_STATUS_UPDATE -> {
-                    val shareResult = Json.decodeFromString<PlaceStatus>(data)
-                    repositoryImpl.updatePlaceStatusToPicked(
-                        placeId = shareResult.placeId,
-                        newStatus = shareResult.placeStatus
-                    )
-                }
+                    FCM_CODE_PLACE_DELETE -> {
+                        val shareResult = Json.decodeFromString<PlaceDelete>(data)
+                        deletePlaceUseCase(
+                            shareResult.id
+                        )
+                    }
 
-                FCM_CODE_PLACE_DELETE -> {
-                    val shareResult = Json.decodeFromString<PlaceDelete>(data)
-                    repositoryImpl.deletePlaceFromMeeting(shareResult.id)
+                    FCM_CODE_PLACE_STATUS_UPDATE -> {
+                        val shareResult = Json.decodeFromString<PlaceStatus>(data)
+                        updatePlaceStatusUseCase(
+                            shareResult.placeId,
+                            shareResult.placeStatus
+                        )
+                    }
+
+                    FCM_CODE_PLACE_LIKE_UPDATE -> {
+                        val shareResult = Json.decodeFromString<PlaceLike>(data)
+                        updatePlaceLikeUseCase(
+                            shareResult.placeId,
+                            shareResult.likeCount
+                        )
+                    }
+
+                    FCM_CODE_SCHEDULE_ADD, FCM_CODE_SCHEDULE_PUT -> {
+                        val schedule = Json.decodeFromString<Schedule>(data)
+                        updateScheduleUseCase(
+                            schedule.meetId,
+                            schedule.date,
+                            schedule.time
+                        )
+                    }
+                    FCM_CODE_SCHEDULE_DELETE -> {
+                        val shareResult = Json.decodeFromString<MeetingId>(data)
+                        deleteMeetScheduleUseCase(
+                            shareResult.meetingId
+                        )
+                    }
+                    FCM_CODE_COMMENT_ADD -> {
+                        val shareResult = Json.decodeFromString<CommentListItem>(data)
+                        addCommentUseCase(
+                            shareResult.placeId,
+                            shareResult
+                        )
+
+                    }
+                    FCM_CODE_COMMENT_PUT -> {
+                        val shareResult = Json.decodeFromString<CommentData.Detail>(data)
+                        updateCommentUseCase(
+                            shareResult.id,
+                            shareResult.description
+                        )
+                    }
+
+                    FCM_CODE_COMMENT_DELETE -> {
+                        val shareResult = Json.decodeFromString<CommentData.IdOnly>(data)
+                        deleteCommentUseCase(
+                            shareResult.id
+                        )
+                    }
                 }
-                FCM_CODE_PLACE_LIKE_UPDATE -> {
-                    val shareResult = Json.decodeFromString<PlaceLike>(data)
-                    repositoryImpl.updatePlaceLike(
-                        shareResult.placeId,
-                        shareResult.likeCount
-                    )
-                }
+            } catch (e: Exception) {
+                Log.e("ViewModel", "JSON 파싱 실패: ${e.localizedMessage}")
             }
-        } catch (e: Exception) {
-            Log.e("ViewModel", "JSON 파싱 실패: ${e.localizedMessage}")
         }
     }
 }

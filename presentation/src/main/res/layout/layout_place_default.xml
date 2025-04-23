@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/text_content_area"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textPlaceName"
+            tools:text="장소 이름"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:fontFamily="@font/pretend_semibold"
+            android:textColor="#1F2937"
+            android:textSize="18sp" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="5dp" />
+
+        <TextView
+            android:id="@+id/textAddress"
+            tools:text="서울 용산구 한강대로21길 18 1층"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:fontFamily="@font/pretend_regular"
+            android:textColor="#4B5563"
+            android:textSize="14sp" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="17dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/comment_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iconBalloon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textAddress"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/icon_balloon" />
+
+                <TextView
+                    android:id="@+id/textComment"
+                    app:layout_constraintBottom_toBottomOf="@id/iconBalloon"
+                    app:layout_constraintStart_toEndOf="@id/iconBalloon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:fontFamily="@font/pretend_medium"
+                    android:text="코멘트"
+                    android:textColor="@color/gray_600"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/textCommentNumber"
+                    app:layout_constraintBottom_toBottomOf="@id/textComment"
+                    app:layout_constraintStart_toEndOf="@id/textComment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:fontFamily="@font/pretend_medium"
+                    android:minWidth="20dp"
+                    android:text="0"
+                    android:textColor="@color/gray_600"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/heart_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/icon_heart"
+                    app:layout_constraintBottom_toBottomOf="@id/textCommentNumber"
+                    app:layout_constraintStart_toEndOf="@id/textCommentNumber"
+                    tools:ignore="ContentDescription"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:fontFamily="@font/pretend_medium"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/icon_heart_selector"
+                    android:textColor="@color/gray_600"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/textLike"
+                    app:layout_constraintBottom_toBottomOf="@id/icon_heart"
+                    app:layout_constraintStart_toEndOf="@id/icon_heart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:fontFamily="@font/pretend_medium"
+                    android:minWidth="20dp"
+                    android:text="좋아요"
+                    android:textColor="@color/text_color_selector"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/textLikeNumber"
+                    app:layout_constraintBottom_toBottomOf="@id/textLike"
+                    app:layout_constraintStart_toEndOf="@id/textLike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:fontFamily="@font/pretend_medium"
+                    android:text=""
+                    android:textColor="@color/text_color_selector"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_content_area"
+        app:layout_constraintVertical_bias="1"
+        android:layout_width="0dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="9dp"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnNaverMap"
+            app:iconSize="16dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_rounded_radius_24"
+            android:drawableStart="@drawable/image_naver_map"
+            android:fontFamily="@font/pretend_regular"
+            android:paddingLeft="25dp"
+            android:paddingEnd="20dp"
+            android:stateListAnimator="@null"
+            android:text="네이버 지도"
+            android:textSize="12sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnKakaoMap"
+            app:iconSize="16dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_rounded_radius_24"
+            android:drawableStart="@drawable/image_kakao_map"
+            android:fontFamily="@font/pretend_regular"
+            android:paddingStart="25dp"
+            android:paddingEnd="20dp"
+            android:stateListAnimator="@null"
+            android:text="카카오맵"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

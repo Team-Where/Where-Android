@@ -6,6 +6,7 @@ import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.meet.request.AddMeetRequest
 import com.sooum.data.network.meet.request.DeleteMeetRequest
 import com.sooum.data.network.meet.request.EditMeetRequest
+import com.sooum.data.network.meet.request.FinishMeetRequest
 import com.sooum.data.network.meet.request.InviteMeetRequest
 import com.sooum.data.network.place.PlaceApi
 import com.sooum.data.network.place.request.AddCommentRequest
@@ -24,11 +25,13 @@ import com.sooum.domain.datasource.MeetRemoteDataSource
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.CommentSimple
+import com.sooum.domain.model.EditMeet
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.Place
 import com.sooum.domain.model.PlacePickStatus
+import com.sooum.domain.model.PlaceWithUsers
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.SimpleMeet
 import kotlinx.coroutines.flow.Flow
@@ -36,8 +39,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import javax.inject.Inject
@@ -79,7 +80,7 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         title: String?,
         description: String?,
         imageFile: File?
-    ): Flow<ApiResult<Meet>> {
+    ): Flow<ApiResult<EditMeet>> {
         val request = EditMeetRequest(
             id,
             userId,
@@ -88,11 +89,8 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         )
         val dataPart =
             json.encodeToString(request).toRequestBody("application/json".toMediaTypeOrNull())
-        val imagePart = imageFile?.let { file ->
-            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-            MultipartBody.Part.createFormData("image", file.name, requestFile)
-        }
-        return safeFlow { meetApi.editMeet(dataPart, imagePart) }
+
+        return safeFlow { meetApi.editMeet(dataPart, imageFile.createPart()) }
     }
 
     override suspend fun deleteMeet(
@@ -100,11 +98,18 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         userId: Int
     ): Flow<ApiResult<String>> {
         val request = DeleteMeetRequest(
-            meetId,
-            userId
+            meetId = meetId,
+            userId = userId
         )
-        Log.d("JWH", "delete = $request")
         return safeFlow { meetApi.deleteMeet(request) }
+    }
+
+    override suspend fun finishMeet(meetId: Int, userId: Int): Flow<ApiResult<Any>> {
+        val request = FinishMeetRequest(
+            id = meetId,
+            userId = userId
+        )
+        return safeFlow { meetApi.finishMeet(request) }
     }
 
     override suspend fun getMeetInviteStatus(meetId: Int): Flow<ApiResult<List<MeetInviteStatus>>> {
@@ -152,7 +157,10 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         return safeFlow { placeApi.addPlace(request) }
     }
 
-    override suspend fun getMeetPlaceList(meetId: Int, userId: Int): Flow<ApiResult<List<Place>>> {
+    override suspend fun getMeetPlaceList(
+        meetId: Int,
+        userId: Int
+    ): Flow<ApiResult<List<PlaceWithUsers>>> {
         return safeFlow { placeApi.getPlaceList(meetId, userId) }
     }
 

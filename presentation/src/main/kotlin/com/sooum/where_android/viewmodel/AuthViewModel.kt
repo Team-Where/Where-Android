@@ -2,6 +2,7 @@ package com.sooum.where_android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.SignUpResult
 import com.sooum.domain.usecase.auth.LoginUseCase
@@ -68,7 +69,8 @@ class AuthViewModel @Inject constructor(
     /**
      * 회원가입 기능
      */
-    fun signUp() {
+    fun signUp(
+    ) {
         viewModelScope.launch {
             signUpUseCase(
                 email = _email.value,
@@ -77,6 +79,7 @@ class AuthViewModel @Inject constructor(
                 profileImage = _profileImage.value
             ).collect { result ->
                 _signUpState.value = result
+
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.sooum.domain.model
 
+import androidx.core.net.toUri
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -18,11 +19,9 @@ data class MeetDetail(
     val schedule: Schedule?
 ) {
     val inviteCode: String
-        get() = if (link.contains("/")) {
-            link.split("/").last()
-        } else {
-            ""
-        }
+        get() = runCatching {
+            link.toUri().lastPathSegment!!
+        }.getOrDefault("")
 
     constructor(
         id: Int,
@@ -102,6 +101,17 @@ data class Meet(
     ) : this(id, title, description, "", image, false, "")
 }
 
+/**
+ * 모임 정보 수정 수신시
+ */
+@Serializable
+data class EditMeet(
+    val id: Int,
+    val title: String,
+    val description: String,
+    val link: String,
+    val image: String? = null,
+)
 
 @Serializable
 data class SimpleMeet(
@@ -142,14 +152,16 @@ data class Schedule(
         hour: Int
     ) : this(meetId, date, "$hour:00")
 
-    val year = date.split("-")[0].toInt()
-    val month = date.split("-")[1].toInt()
-    val day = date.split("-")[2].toInt()
+    private val dateParts by lazy { date.split("-").map { it.toInt() } }
+    val year: Int get() = dateParts[0]
+    val month: Int get() = dateParts[1]
+    val day: Int get() = dateParts[2]
 
     val formatDate = String.format("%04d-%02d-%02d", year, month, day)
 
-    val hour = time.split(":")[0].toInt()
-    val minute = time.split(":")[1].toInt()
+    private val timeParts by lazy { time.split(":").map { it.toInt() } }
+    val hour: Int get() = timeParts[0]
+    val minute: Int get() = timeParts[1]
 
     val formatTime = String.format("%02d:%02d", hour, minute)
 }

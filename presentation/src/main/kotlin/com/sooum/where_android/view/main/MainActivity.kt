@@ -9,9 +9,15 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.where_android.databinding.ActivityMainBinding
 import com.sooum.where_android.view.checkInviteData
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 val LocalActivity = compositionLocalOf<MainActivity> {
@@ -41,6 +47,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+
 
         setContentView(binding.root)
     }

@@ -18,7 +18,7 @@ import com.sooum.where_android.R
 
 @Composable
 fun CircleProfileView(
-    profileUrl: String,
+    profileUrl: String?,
     size: Dp,
     modifier: Modifier = Modifier
 ) {

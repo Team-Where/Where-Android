@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:fillViewport="true"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,101 +14,172 @@
             android:id="@+id/logoWhere"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@drawable/image_place_fragment_logo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="15dp"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:src="@drawable/image_social_where_icon_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="정한장소"
-            android:textSize="18sp"
-            android:textColor="#1F2937"
-            android:fontFamily="@font/pretend_semibold"
             android:layout_marginStart="7dp"
-            app:layout_constraintStart_toEndOf="@id/logoWhere"
-            app:layout_constraintBottom_toBottomOf="@id/logoWhere"/>
+            android:fontFamily="@font/pretend_semibold"
+            android:text="정한장소"
+            android:textColor="#1F2937"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/logoWhere"
+            app:layout_constraintStart_toEndOf="@id/logoWhere" />
 
         <ImageView
             android:id="@+id/icWarning"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/icon_info"
-            android:layout_marginEnd="15dp"
             android:layout_marginTop="2dp"
-            android:tooltipText="친구들과 가기로 결정한 장소 목록입니다"
+            android:layout_marginEnd="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/icon_info"
+            android:tooltipText="친구들과 가기로 결정한 장소 목록입니다"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/logoWhere"/>
+            app:layout_constraintTop_toTopOf="@id/logoWhere" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+            android:id="@+id/place_pick_item_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            tools:listitem="@layout/item_selected_place"
-            tools:itemCount="3"
-            app:layout_constraintTop_toBottomOf="@id/logoWhere"
             android:layout_marginTop="10dp"
-            android:overScrollMode="never"/>
+            android:minHeight="150dp"
+            android:nestedScrollingEnabled="false"
+            android:orientation="horizontal"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/logoWhere"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_selected_place" />
+
+        <TextView
+            android:id="@+id/place_pick_item_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretend_regular"
+            android:text="아직 정한 장소가 없어요"
+            android:textAlignment="center"
+            android:textColor="@color/gray_scale_700"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/place_pick_item_list_view"
+            app:layout_constraintLeft_toLeftOf="@id/place_pick_item_list_view"
+            app:layout_constraintRight_toRightOf="@id/place_pick_item_list_view"
+            app:layout_constraintTop_toTopOf="@id/place_pick_item_list_view" />
 
         <View
             android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="7dp"
-            android:background="#F3F4F6"
-            app:layout_constraintTop_toBottomOf="@id/recycler_view"
-            android:layout_marginTop="15dp"/>
-
-        <LinearLayout
-            android:id="@+id/filterLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:gravity="center"
             android:layout_marginTop="15dp"
+            android:background="#F3F4F6"
+            app:layout_constraintTop_toBottomOf="@id/place_pick_item_list_view" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/place_filter_area"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
             android:layout_marginStart="15dp"
-            app:layout_constraintTop_toBottomOf="@id/view"
-            app:layout_constraintStart_toStartOf="parent">
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view">
 
-            <ToggleButton
-                android:id="@+id/btnAll"
-                android:layout_width="80dp"
-                android:layout_height="37dp"
-                android:textOff="전체보기"
-                android:textOn="전체보기"
-                android:stateListAnimator="@null"
-                android:fontFamily="@font/pretend_medium"
-                android:checked="true"
-                android:background="@drawable/toggle_button_selector"
-                android:textSize="12sp"
-                android:padding="10dp"/>
+            <LinearLayout
+                android:id="@+id/filterLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <ToggleButton
-                android:id="@+id/btnBest"
-                android:layout_width="80dp"
-                android:layout_height="37dp"
-                android:textOff="BEST 순위"
-                android:textOn="BEST 순위"
-                android:stateListAnimator="@null"
-                android:textColor="#6B7280"
-                android:fontFamily="@font/pretend_medium"
-                android:background="@drawable/toggle_button_selector"
-                android:textSize="12sp"
-                android:padding="10dp"
-                android:layout_marginStart="10dp"/>
-        </LinearLayout>
+                <ToggleButton
+                    android:id="@+id/btnAll"
+                    android:layout_width="80dp"
+                    android:layout_height="37dp"
+                    android:background="@drawable/toggle_button_selector"
+                    android:checked="true"
+                    android:fontFamily="@font/pretend_medium"
+                    android:padding="10dp"
+                    android:stateListAnimator="@null"
+                    android:textOff="전체보기"
+                    android:textOn="전체보기"
+                    android:textSize="12sp" />
+
+                <ToggleButton
+                    android:id="@+id/btnBest"
+                    android:layout_width="80dp"
+                    android:layout_height="37dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/toggle_button_selector"
+                    android:fontFamily="@font/pretend_medium"
+                    android:padding="10dp"
+                    android:stateListAnimator="@null"
+                    android:textColor="#6B7280"
+                    android:textOff="BEST 순위"
+                    android:textOn="BEST 순위"
+                    android:textSize="12sp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_place_share"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingHorizontal="3dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/icon_plus" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/pretend_medium"
+                    android:text="장소 공유"
+                    android:textColor="@color/main_color"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_2"
+            android:id="@+id/place_all_item_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            app:layout_constraintTop_toBottomOf="@id/filterLayout"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:overScrollMode="never"/>
+            android:nestedScrollingEnabled="false"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/place_filter_area" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/place_best_item_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:nestedScrollingEnabled="false"
+            android:overScrollMode="never"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/place_filter_area" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

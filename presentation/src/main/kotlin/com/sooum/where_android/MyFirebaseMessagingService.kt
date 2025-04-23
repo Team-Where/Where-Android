@@ -34,10 +34,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             }
 
             if (code.isNotBlank()) {
-                val fullDataJson = Gson().toJson(remoteMessage.data)  // data 전체 JSON화
-                sendBroadcastWithData(code, fullDataJson)
+                val fcmData = Gson().toJson(remoteMessage.data)
+                sendBroadcastWithData(code, fcmData)
             }
-
 
         } else {
             remoteMessage.notification?.let {

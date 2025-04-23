@@ -27,6 +27,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.Whereandroid"
         tools:targetApi="31">
 
@@ -78,7 +79,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="https" />
-                <data android:host="audiwhere.codns.com" />
+                <data android:host="audiwhere.shop" />
             </intent-filter>
 
             <intent-filter>

@@ -13,7 +13,11 @@ import kotlinx.serialization.Serializable
 data class CommentSimple(
     val commentId: Int,
     val description: String
-)
+) {
+    constructor(commentListItem: CommentListItem) : this(
+        commentListItem.commentId, commentListItem.description
+    )
+}
 
 /**
  * 코멘트 수신 기본형
@@ -26,6 +30,12 @@ data class CommentListItem(
     @SerialName("id")
     val commentId: Int,
     @SerialName("placeId")
-    val placeId :Int,
+    val placeId: Int,
     val description: String
 )
+
+@Serializable
+sealed class CommentData {
+    data class IdOnly(val id: Int) : CommentData()
+    data class Detail(val id: Int, val description: String) : CommentData()
+}

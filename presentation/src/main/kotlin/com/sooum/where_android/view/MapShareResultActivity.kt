@@ -3,7 +3,7 @@ package com.sooum.where_android.view
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import androidx.core.app.ActivityCompat
 import com.sooum.domain.model.ShareResult
 import com.sooum.where_android.WhereApp
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
@@ -36,7 +36,7 @@ class MapShareResultActivity : Activity() {
             }
         }
 
-        finish()
+        ActivityCompat.finishAffinity(this)
     }
 
     /**

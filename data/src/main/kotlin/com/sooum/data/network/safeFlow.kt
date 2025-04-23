@@ -6,6 +6,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
+import kotlinx.serialization.json.JsonObject
 import retrofit2.HttpException
 import retrofit2.Response
 
@@ -25,7 +26,23 @@ fun <T> safeFlow(
                     emit(ApiResult.Success(body))
                 }
             } else {
-                emit(ApiResult.Fail.Error(response.code(), response.message()))
+                val code = response.code()
+                var message = ""
+                val errorString= response.errorBody()?.string()
+                if (errorString != null) {
+                    message = errorString
+                }
+                if (message.isEmpty()) {
+                    message = response.message()
+                }
+                if (message.isEmpty()) {
+                    when (code) {
+                        400 -> {
+                            message = "잘못된 요청입니다."
+                        }
+                    }
+                }
+                emit(ApiResult.Fail.Error(code, message))
             }
         }.onFailure { e ->
             e.printStackTrace()

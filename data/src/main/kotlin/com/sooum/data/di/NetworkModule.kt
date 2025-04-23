@@ -1,5 +1,6 @@
 package com.sooum.data.di
 
+import com.sooum.data.network.NullOnEmptyConverterFactory
 import com.sooum.data.network.auth.AuthApi
 import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.place.PlaceApi
@@ -44,7 +45,10 @@ object NetworkModule {
     ): Retrofit =
         Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://audiwhere.codns.com")
+            .baseUrl("https://audiwhere.shop")
+            .addConverterFactory(
+                NullOnEmptyConverterFactory()
+            )
             .addConverterFactory(
                 Json.asConverterFactory("application/json; charset=UTF8".toMediaType())
             )
@@ -77,7 +81,8 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideAuthApi(
-        @WhereRetrofit retrofit: Retrofit): AuthApi {
+        @WhereRetrofit retrofit: Retrofit
+    ): AuthApi {
         return retrofit.create(AuthApi::class.java)
     }
 }

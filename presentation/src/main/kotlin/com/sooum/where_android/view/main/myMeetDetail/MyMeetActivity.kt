@@ -79,7 +79,6 @@ class MyMeetActivity : AppCompatActivity() {
 
         intent?.extras?.getString(MapShareResultActivity.SHARE_RESULT)?.let { data ->
             val shareResult = Json.decodeFromString<ShareResult>(data)
-            Log.d("JWH", shareResult.toString())
             myMeetDetailViewModel.addPlace(shareResult) {
                 CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
             }
@@ -122,6 +121,7 @@ class MyMeetTabFragment : MyMeetBaseFragment() {
         lifecycleScope.launch {
             myMeetDetailViewModel.meetDetail.collect { meetDetail ->
                 binding.tvTitle.text = meetDetail?.title
+                binding.imageEdit.isEnabled = meetDetail?.finished != true
             }
         }
     }

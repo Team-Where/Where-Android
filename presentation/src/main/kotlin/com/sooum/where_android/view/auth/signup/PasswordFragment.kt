@@ -1,22 +1,14 @@
 package com.sooum.where_android.view.auth.signup
 
+import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.lifecycleScope
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentPasswordBinding
-import com.sooum.where_android.view.auth.AuthActivity
-import android.graphics.Color
-import android.util.Log
-import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.sooum.where_android.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -24,7 +16,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class PasswordFragment : AuthBaseFragment() {
     private lateinit var binding : FragmentPasswordBinding
-    private val viewModel: AuthViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
