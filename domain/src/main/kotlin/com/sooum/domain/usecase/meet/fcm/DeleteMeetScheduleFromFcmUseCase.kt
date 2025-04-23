@@ -1,12 +1,12 @@
-package com.sooum.domain.usecase.meet
+package com.sooum.domain.usecase.meet.fcm
 
 import com.sooum.domain.repository.MeetDetailRepository
 import jakarta.inject.Inject
 
-class DeleteMeetScheduleUseCase @Inject constructor(
+class DeleteMeetScheduleFromFcmUseCase @Inject constructor(
     private val meetDetailRepository: MeetDetailRepository
 ) {
    suspend operator fun invoke(meetId: Int) {
-        meetDetailRepository.deleteSchedule(meetId)
+       meetDetailRepository.deleteScheduleFcm(meetId)
     }
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.Filter
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.usecase.meet.GetMeetDetailListUseCase
-import com.sooum.domain.usecase.meet.LoadMeetDetailListUseCase
+import com.sooum.domain.usecase.meet.detail.LoadMeetDetailListUseCase
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

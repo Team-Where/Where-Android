@@ -75,7 +75,7 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myMeetDetailViewModel.placeCount.collect { placeCount ->
+                myMeetDetailPlaceWithCommentViewModel.placeCount.collect { placeCount ->
                     binding.tvLocationNumber.text = placeCount.toString()
                 }
             }

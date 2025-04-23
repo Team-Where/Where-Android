@@ -53,14 +53,14 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myMeetDetailViewModel.placeList.collect {
+                myMeetDetailPlaceWithCommentViewModel.placeList.collect {
                     allPlaceListAdapter.submitList(it)
                 }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myMeetDetailViewModel.bestPlaceList.collect {
+                myMeetDetailPlaceWithCommentViewModel.bestPlaceList.collect {
                     bestPlaceListAdapter.submitList(it)
                 }
             }
@@ -68,7 +68,7 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myMeetDetailViewModel.pickPlaceList.collect { pickList ->
+                myMeetDetailPlaceWithCommentViewModel.pickPlaceList.collect { pickList ->
                     if (pickList.isEmpty()) {
                         binding.placePickItemListView.visibility = View.INVISIBLE
                         binding.placePickItemNoData.visibility = View.VISIBLE
@@ -124,8 +124,8 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
 
     override fun likeChange(placeId: Int) {
         loadingAlertProvider.startLoading()
-        myMeetDetailViewModel.likeToggle(
-            placeId,
+        myMeetDetailPlaceWithCommentViewModel.likeToggle(
+            placeId = placeId,
             onSuccess = {
                 loadingAlertProvider.endLoading()
             },

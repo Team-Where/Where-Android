@@ -1,18 +1,17 @@
-package com.sooum.domain.usecase.meet
+package com.sooum.domain.usecase.meet.detail
 
-import com.sooum.domain.model.Schedule
 import com.sooum.domain.repository.MeetDetailRepository
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import javax.inject.Inject
 
-class UpdateMeetTitleUseCase @Inject constructor(
+class UpdateMeetDescriptionUseCase @Inject constructor(
     private val repository: MeetDetailRepository,
     private val getLoginUserIdUseCase: GetLoginUserIdUseCase
 ) {
-    suspend operator fun invoke(id: Int, title:String) = repository.updateTitle(
+    suspend operator fun invoke(id: Int, description:String) = repository.updateDescription(
         meetId = id,
         userId = getLoginUserIdUseCase()!!,
-        title = title
+        description = description
     )
 
 }

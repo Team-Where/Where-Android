@@ -25,7 +25,9 @@ import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import com.sooum.where_android.view.main.myMeetDetail.modal.EditMyMeetDetailFragment
 import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
-import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailFcmViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailPlaceWithCommentViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -40,6 +42,8 @@ class MyMeetActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyMeetBinding
 
     private val myMeetDetailViewModel: MyMeetDetailViewModel by viewModels()
+    private val myMeetDetailPlaceWithCommentViewModel: MyMeetDetailPlaceWithCommentViewModel by viewModels()
+    private val myMeetDetailFcmViewModel: MyMeetDetailFcmViewModel by viewModels()
 
     private val fcmReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -49,7 +53,7 @@ class MyMeetActivity : AppCompatActivity() {
             Log.d("MainActivity-FCM", "수신된 code: $code")
             Log.d("MainActivity-FCM", "수신된 payload: $data")
 
-            myMeetDetailViewModel.updatePlaceFromFcm(code,data)
+            myMeetDetailFcmViewModel.updatePlaceFromFcm(code, data)
         }
     }
 
@@ -61,6 +65,7 @@ class MyMeetActivity : AppCompatActivity() {
 
         intent.getIntExtra(MEET_ID, 0).let { id ->
             myMeetDetailViewModel.loadData(id)
+            myMeetDetailPlaceWithCommentViewModel.loadData(id)
         }
 
         val intentFilter = IntentFilter("FCM_DATA_RECEIVED")
@@ -79,7 +84,7 @@ class MyMeetActivity : AppCompatActivity() {
 
         intent?.extras?.getString(MapShareResultActivity.SHARE_RESULT)?.let { data ->
             val shareResult = Json.decodeFromString<ShareResult>(data)
-            myMeetDetailViewModel.addPlace(shareResult) {
+            myMeetDetailPlaceWithCommentViewModel.addPlace(shareResult) {
                 CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
             }
         }

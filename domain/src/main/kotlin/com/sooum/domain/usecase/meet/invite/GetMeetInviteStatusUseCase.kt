@@ -1,4 +1,4 @@
-package com.sooum.domain.usecase.meet
+package com.sooum.domain.usecase.meet.invite
 
 import com.sooum.domain.repository.MeetDetailRepository
 import javax.inject.Inject

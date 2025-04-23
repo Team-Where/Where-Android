@@ -10,9 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sooum.where_android.databinding.FragmentEditMyMeetDetailBinding
-import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.view.common.modal.LoadingAlertProvider
-import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 import kotlinx.coroutines.launch
 
 class EditMyMeetDetailFragment : BottomSheetDialogFragment() {

@@ -1,4 +1,4 @@
-package com.sooum.domain.usecase.meet
+package com.sooum.domain.usecase.meet.detail
 
 import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.repository.MeetDetailRepository
