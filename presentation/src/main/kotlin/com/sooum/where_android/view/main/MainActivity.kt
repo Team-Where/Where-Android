@@ -13,6 +13,11 @@ import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.where_android.databinding.ActivityMainBinding
 import com.sooum.where_android.view.checkInviteData
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 val LocalActivity = compositionLocalOf<MainActivity> {
@@ -23,7 +28,6 @@ val LocalActivity = compositionLocalOf<MainActivity> {
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var appManageDataStore : AppManageDataStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,9 +48,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        appManageDataStore = AppManageDataStore(this)
-        Log.d("token", "$appManageDataStore.getRefreshToken()")
-        Log.d("token", "$appManageDataStore.getAccessToken()")
+
 
         setContentView(binding.root)
     }
