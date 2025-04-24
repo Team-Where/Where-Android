@@ -8,9 +8,12 @@ import androidx.appcompat.widget.TooltipCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.skydoves.balloon.balloon
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
 import com.sooum.where_android.startMapUriOrMarket
+import com.sooum.where_android.view.balloon.PlaceAddBalloonFactory
+import com.sooum.where_android.view.balloon.PlaceInfoBalloonFactory
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.adapter.AllPlaceListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.adapter.BestPlaceListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.adapter.SelectedPlaceListAdapter
@@ -30,6 +33,10 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
     @Inject
     lateinit var getLoginUserIdUseCase: GetLoginUserIdUseCase
 
+    private val placeInfoBalloon by balloon<PlaceInfoBalloonFactory>()
+    private val placeAddBalloon by balloon<PlaceAddBalloonFactory>()
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,6 +52,8 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
         return binding.root
     }
 
+    private var find = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -55,6 +64,10 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 myMeetDetailPlaceWithCommentViewModel.placeList.collect {
                     allPlaceListAdapter.submitList(it)
+                    if (!find && it.isEmpty()) {
+                        placeAddBalloon.showAlignBottom(binding.btnPlaceShareIcon)
+                        find = true
+                    }
                 }
             }
         }
@@ -118,6 +131,10 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
 
             btnPlaceShare.setOnClickListener {
                 openMapShareSheet()
+            }
+
+            icWarning.setOnClickListener {
+                placeInfoBalloon.showAlignBottom(icWarning)
             }
         }
     }
