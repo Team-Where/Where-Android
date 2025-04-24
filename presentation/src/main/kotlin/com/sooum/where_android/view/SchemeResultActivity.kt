@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -47,17 +48,23 @@ class SchemeResultActivity : AppCompatActivity() {
                 )
             }
         } else {
-            val activity = WhereApp.currentActivity
+            window.setBackgroundDrawableResource(android.R.color.transparent)
+            val activity = WhereApp.currentActivity?.get()
             val name = intent.data?.getQueryParameter("name")
             val code = intent.data?.pathSegments?.lastOrNull()
+            Log.d("JWH", intent.data.toString())
 
             if (name == null || code == null || code.length != 10) {
                 clearActivity()
             } else {
                 lifecycleScope.launch {
-                    when (val result = getMeetInviteLinkUseCase(code).first()) {
+                    val result = getMeetInviteLinkUseCase(code).first()
+                    Log.d("JWH", result.toString())
+                    when (result) {
+
                         is ApiResult.Success -> {
                             val simpleMeet = result.data
+
                             val intent = if (activity == null) {
                                 Intent(this@SchemeResultActivity, SplashActivity::class.java)
                             } else {
@@ -91,12 +98,11 @@ class SchemeResultActivity : AppCompatActivity() {
     }
 
     private fun clearActivity() {
-        val activity = WhereApp.currentActivity
+        val activity = WhereApp.currentActivity?.get()
         finish()
         if (activity != null) {
             val intent = Intent(this@SchemeResultActivity, activity::class.java)
             startActivity(intent)
-
         }
     }
 }
