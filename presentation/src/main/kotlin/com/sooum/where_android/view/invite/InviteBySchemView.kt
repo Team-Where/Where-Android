@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -29,8 +31,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sooum.domain.model.Schedule
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray200
+import com.sooum.where_android.theme.GrayScale700
 import com.sooum.where_android.theme.GrayScale800
 import com.sooum.where_android.theme.GrayScale900
 import com.sooum.where_android.theme.pretendard
@@ -104,8 +108,40 @@ fun InviteBySchemeView(
                 color = GrayScale900
             )
             Spacer(Modifier.height(12.dp))
-            Text("${inviteData.date} + ${inviteData.time}")
-            Spacer(Modifier.height(24.dp))
+            inviteData.schedule?.let { schedule: Schedule ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.icon_calender_black),
+                        contentDescription = "calender icon",
+                        modifier = Modifier.size(16.dp),
+                        tint = GrayScale700
+                    )
+                    Text(
+                        text = schedule.formatDateWithDot,
+                        fontFamily = pretendard,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                        color = GrayScale700
+                    )
+                    Text(
+                        text = with(schedule.hour) {
+                            if (this > 12) {
+                                "오후 ${this - 12}시"
+                            } else {
+                                "오전 ${this}시"
+                            }
+                        },
+                        fontFamily = pretendard,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                        color = GrayScale700
+                    )
+                }
+                Spacer(Modifier.height(24.dp))
+            }
             PrimaryButton(
                 onClick = onClick,
                 title = "수락하기",

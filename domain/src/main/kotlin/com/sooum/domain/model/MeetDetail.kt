@@ -158,6 +158,7 @@ data class Schedule(
     val day: Int get() = dateParts[2]
 
     val formatDate = String.format("%04d-%02d-%02d", year, month, day)
+    val formatDateWithDot = String.format("%04d.%02d.%02d", year, month, day)
 
     private val timeParts by lazy { time.split(":").map { it.toInt() } }
     val hour: Int get() = timeParts[0]

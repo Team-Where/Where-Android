@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.SimpleMeet
 import com.sooum.domain.usecase.meet.invite.GetMeetInviteLinkUseCase
 import com.sooum.where_android.WhereApp
@@ -116,6 +117,7 @@ data class InviteData(
     val time: String?,
     val name: String
 ) : Serializable {
+
     constructor(simpleMeet: SimpleMeet, name: String) : this(
         simpleMeet.id,
         simpleMeet.title,
@@ -124,6 +126,13 @@ data class InviteData(
         simpleMeet.time,
         name
     )
+
+    val schedule: Schedule?
+        get() = if (date != null && time != null) {
+            Schedule(id, date, time)
+        } else {
+            null
+        }
 }
 
 fun Intent.addInviteScheme(
