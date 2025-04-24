@@ -32,30 +32,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
-import com.sooum.domain.model.ImageAddType
-import com.sooum.domain.model.Meet
-import com.sooum.domain.model.NewMeet
+import com.sooum.domain.model.NewMeetResult
 import com.sooum.where_android.R
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.theme.Gray200
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
-import com.sooum.where_android.view.main.newMeet.NewMeetModal
-import kotlinx.serialization.Serializable
-
-fun Meet.toResult() = NewMeetResult(
-    id = id,
-    title = title,
-    image = image
-)
-
-@Serializable
-data class NewMeetResult(
-    val id : Int,
-    val title: String,
-    val image: String?
-)
-
+import com.sooum.where_android.view.main.home.newMeet.NewMeetModal
 
 @Composable
 fun BottomNavigation(
@@ -63,7 +46,7 @@ fun BottomNavigation(
     navigation: (ScreenRoute.BottomNavigation) -> Unit = {},
     navigationResult: (NewMeetResult) -> Unit = {}
 ) {
-    val currentRoute = navBackStackEntry?.destination?.route ?: ""
+    val currentDestination = navBackStackEntry?.destination
 
     var addNewMeetModal by remember {
         mutableStateOf(false)
@@ -95,7 +78,7 @@ fun BottomNavigation(
                     onClick = {
                         navigation(ScreenRoute.BottomNavigation.MeetList)
                     },
-                    isSelected = currentRoute.contains(ScreenRoute.BottomNavigation.MeetList.toString())
+                    isSelected = currentDestination?.route == ScreenRoute.BottomNavigation.MeetList::class.qualifiedName
                 )
             }
             Row(
@@ -129,9 +112,7 @@ fun BottomNavigation(
                     onClick = {
                         navigation(ScreenRoute.BottomNavigation.FriendsList)
                     },
-                    isSelected = currentRoute.contains(ScreenRoute.BottomNavigation.FriendsList::class.java.simpleName) || currentRoute.contains(
-                        ScreenRoute.Home.FriendMeetDetail::class.java.simpleName
-                    )
+                    isSelected = currentDestination?.route == ScreenRoute.BottomNavigation.FriendsList::class.qualifiedName
                 )
             }
         }
@@ -144,7 +125,7 @@ fun BottomNavigation(
                 addNewMeetModal = false
             },
             navigationResult = {
-                navigationResult(it.toResult())
+                navigationResult(it)
             }
         )
     }

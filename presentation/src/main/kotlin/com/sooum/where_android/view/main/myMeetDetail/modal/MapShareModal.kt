@@ -44,6 +44,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sooum.where_android.R
 import com.sooum.where_android.view.widget.ModalHeader
 import kotlinx.coroutines.launch
+import androidx.core.net.toUri
+import com.sooum.where_android.startMapUriOrMarket
 
 private sealed class MapItem(
     @DrawableRes val imageRes: Int,
@@ -55,35 +57,19 @@ private sealed class MapItem(
         imageRes = R.drawable.icon_map_naver,
         stringRes = R.string.map_share_by_naver,
         marketPackage = "com.nhn.android.nmap",
-        scheme = Uri.parse("nmap://search?")
+        scheme = "nmap://search?".toUri()
     )
 
     data object Kakao : MapItem(
         imageRes = R.drawable.icon_map_kakao,
         stringRes = R.string.map_share_by_kakao,
         marketPackage = "net.daum.android.map",
-        scheme = Uri.parse("kakaomap://open?page=placeSearch")
+        scheme = "kakaomap://open?page=placeSearch".toUri()
     )
 
     fun checkOrStart(
         context: Context
-    ) {
-        val intent = Intent(Intent.ACTION_VIEW, scheme)
-        intent.addCategory(Intent.CATEGORY_BROWSABLE)
-
-        val list: List<ResolveInfo> =
-            context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-        if (list.isEmpty()) {
-            context.startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("market://details?id=$marketPackage")
-                )
-            )
-        } else {
-            context.startActivity(intent)
-        }
-    }
+    ) = context.startMapUriOrMarket(scheme,marketPackage)
 }
 
 

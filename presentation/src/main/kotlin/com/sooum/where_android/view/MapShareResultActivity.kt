@@ -3,7 +3,7 @@ package com.sooum.where_android.view
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import androidx.core.app.ActivityCompat
 import com.sooum.domain.model.ShareResult
 import com.sooum.where_android.WhereApp
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
@@ -21,8 +21,7 @@ class MapShareResultActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val activity = WhereApp.currentActivity
-        Log.d("JWH", activity.toString())
+        val activity = WhereApp.currentActivity?.get()
 
         if (activity is MyMeetActivity) {
             intent.parseMapShare()?.let { result ->
@@ -39,7 +38,7 @@ class MapShareResultActivity : Activity() {
             }
         }
 
-        finish()
+        ActivityCompat.finishAffinity(this)
     }
 
     /**

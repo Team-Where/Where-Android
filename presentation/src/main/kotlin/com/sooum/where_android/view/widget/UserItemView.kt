@@ -81,6 +81,11 @@ sealed class UserViewType {
      * 초대 대기중
      */
     data object Waiting : UserViewType()
+
+    /**
+     * 아무것도 없음
+     */
+    data object Nothing : UserViewType()
 }
 
 @Composable
@@ -96,7 +101,7 @@ fun UserItemView(
             50.dp
         }
 
-        is UserViewType.Option, is UserViewType.Invite, is UserViewType.Waiting -> {
+        is UserViewType.Option, is UserViewType.Invite, is UserViewType.Waiting, is UserViewType.Nothing -> {
             40.dp
         }
     }

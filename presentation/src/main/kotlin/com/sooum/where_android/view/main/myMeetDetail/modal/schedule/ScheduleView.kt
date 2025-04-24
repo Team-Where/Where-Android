@@ -45,12 +45,13 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.Schedule
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray500
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.widget.PrimaryButton
-import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 import kotlinx.datetime.LocalDate
 
 fun Schedule.toLocalDate(): LocalDate {
@@ -275,7 +276,7 @@ class ScheduleFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
@@ -292,8 +293,12 @@ class ScheduleFragment : Fragment() {
                         findNavController().popBackStack()
                     },
                     onNewSchedule = { schedule ->
-                        myMeetDetailViewModel.newSchedule(schedule) {
-                            findNavController().popBackStack()
+                        myMeetDetailViewModel.newSchedule(schedule) {result ->
+                            if (result is ActionResult.Success) {
+                                findNavController().popBackStack()
+                            } else {
+
+                            }
                         }
                     }
                 )

@@ -7,15 +7,17 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentAgreementBinding
 import com.sooum.where_android.databinding.FragmentSignInBinding
 import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.auth.SignInFragment
+import com.sooum.where_android.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AgreementFragment : Fragment() {
+class AgreementFragment : AuthBaseFragment() {
     private lateinit var binding : FragmentAgreementBinding
     private lateinit var allCheckboxes: List<CheckBox>
 
@@ -34,14 +36,14 @@ class AgreementFragment : Fragment() {
 
         binding.nextBtn.setOnClickListener {
             if (!isRequiredChecked()) {
-                Toast.makeText(requireContext(), "체크박스를 확인해주세요.",Toast.LENGTH_SHORT).show()
+             showToast("체크박스를 확인해주세요.")
                 return@setOnClickListener
             }
-            (activity as AuthActivity).navigateToFragment(EmailVerificationFragment())
+            navigateTo(EmailVerificationFragment())
         }
 
         binding.imageBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+           popBackStack()
         }
 
         setupCheckboxListeners()

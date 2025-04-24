@@ -14,6 +14,8 @@ import kotlinx.serialization.Serializable
 data class EditScheduleRequest(
     @SerialName("meetingId")
     val meetId: Int,
+    @SerialName("userId")
+    val userId: Int,
     val date: String? = null,
     val time: String? = null,
 )

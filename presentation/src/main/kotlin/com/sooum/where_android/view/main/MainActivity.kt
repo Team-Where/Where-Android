@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -8,9 +9,15 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import com.google.firebase.messaging.FirebaseMessaging
+import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.where_android.databinding.ActivityMainBinding
+import com.sooum.where_android.view.checkInviteData
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 val LocalActivity = compositionLocalOf<MainActivity> {
@@ -26,16 +33,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-        // 로그 출력
-        FirebaseMessaging.getInstance().token
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val token = task.result
-                    Log.d("MainActivity", "FCM Token: $token")
-                }
-            }
-
-
+        intent?.checkInviteData(this@MainActivity)
 
         with(binding.composeView) {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool)
@@ -50,6 +48,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+
         setContentView(binding.root)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.checkInviteData(this@MainActivity)
     }
 }

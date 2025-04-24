@@ -36,7 +36,7 @@ fun InviteFriendContentView(
     userList: List<User>,
     inviteFriend: (User) -> Unit,
     headerColor: Color = Color(0xff374151),
-    useKaKao :Boolean = true
+    kakaoClickAction : (() -> Unit) ? = null,
 ) {
     Column(
         modifier = Modifier
@@ -46,9 +46,9 @@ fun InviteFriendContentView(
                 bottom = 20.dp
             )
     ) {
-        if (useKaKao) {
+        kakaoClickAction?.let {action ->
             Button(
-                onClick = {},
+                onClick = action,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),

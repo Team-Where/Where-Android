@@ -1,7 +1,10 @@
 package com.sooum.where_android.view.main.myMeetDetail
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,11 +20,14 @@ import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
 import com.sooum.where_android.databinding.FragmentMyMeetTabBinding
 import com.sooum.where_android.view.MapShareResultActivity
+import com.sooum.where_android.view.checkInviteData
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import com.sooum.where_android.view.main.myMeetDetail.modal.EditMyMeetDetailFragment
 import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
-import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailFcmViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailPlaceWithCommentViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -36,24 +42,50 @@ class MyMeetActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyMeetBinding
 
     private val myMeetDetailViewModel: MyMeetDetailViewModel by viewModels()
+    private val myMeetDetailPlaceWithCommentViewModel: MyMeetDetailPlaceWithCommentViewModel by viewModels()
+    private val myMeetDetailFcmViewModel: MyMeetDetailFcmViewModel by viewModels()
+
+    private val fcmReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val code = intent?.getStringExtra("code").orEmpty()
+            val data = intent?.getStringExtra("data").orEmpty()
+
+            Log.d("MainActivity-FCM", "수신된 code: $code")
+            Log.d("MainActivity-FCM", "수신된 payload: $data")
+
+            myMeetDetailFcmViewModel.updatePlaceFromFcm(code, data)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMyMeetBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        intent?.checkInviteData(this@MyMeetActivity)
+
         intent.getIntExtra(MEET_ID, 0).let { id ->
             myMeetDetailViewModel.loadData(id)
+            myMeetDetailPlaceWithCommentViewModel.loadData(id)
         }
+
+        val intentFilter = IntentFilter("FCM_DATA_RECEIVED")
+        registerReceiver(fcmReceiver, intentFilter,RECEIVER_EXPORTED)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(fcmReceiver)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.d("JWH", intent.toString())
+        intent?.checkInviteData(this@MyMeetActivity)
+
         intent?.extras?.getString(MapShareResultActivity.SHARE_RESULT)?.let { data ->
             val shareResult = Json.decodeFromString<ShareResult>(data)
-            Log.d("JWH", shareResult.toString())
-            myMeetDetailViewModel.addPlace(shareResult) {
-                CustomSnackBar.make(binding.root, "ㅇㅇ", IconType.Check).show()
+            myMeetDetailPlaceWithCommentViewModel.addPlace(shareResult) {
+                CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
             }
         }
     }
@@ -94,6 +126,7 @@ class MyMeetTabFragment : MyMeetBaseFragment() {
         lifecycleScope.launch {
             myMeetDetailViewModel.meetDetail.collect { meetDetail ->
                 binding.tvTitle.text = meetDetail?.title
+                binding.imageEdit.isEnabled = meetDetail?.finished != true
             }
         }
     }

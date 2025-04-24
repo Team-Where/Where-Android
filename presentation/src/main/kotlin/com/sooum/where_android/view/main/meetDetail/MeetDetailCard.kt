@@ -26,7 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Schedule
 import com.sooum.where_android.R
@@ -34,7 +33,7 @@ import com.sooum.where_android.theme.Gray300
 import com.sooum.where_android.theme.Gray500
 import com.sooum.where_android.theme.GrayScale800
 import com.sooum.where_android.theme.pretendard
-import com.sooum.where_android.view.widget.CoverImage
+import com.sooum.where_android.view.widget.CoverImageView
 
 @Composable
 fun MeetDetailCard(
@@ -58,9 +57,10 @@ fun MeetDetailCard(
                 .fillMaxWidth()
                 .height(65.dp)
         ) {
-            meetDetail.CoverImage(
-                65.dp,
-                12.dp
+            CoverImageView(
+                src = meetDetail.image,
+                size = 65.dp,
+                radius = 12.dp
             )
             Spacer(
                 Modifier.width(16.dp)
@@ -70,7 +70,7 @@ fun MeetDetailCard(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = meetDetail.schedule.date,
+                    text = meetDetail.schedule?.date ?: "",
                     fontFamily = pretendard,
                     fontWeight = FontWeight.Normal,
                     fontSize = 12.sp,
@@ -121,7 +121,6 @@ fun MeetDetailCardPreview() {
             1,
             "2024 연말파티\uD83E\uDD42",
             "벌써 연말이다 신나게 놀아보장~~",
-            "",
             Schedule(1,"2025-01-29","14:00")
         ),
         modifier = Modifier.fillMaxWidth(),

@@ -8,7 +8,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -33,6 +32,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -42,13 +42,13 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sooum.domain.model.MeetDetail
+import com.sooum.domain.model.NewMeetResult
 import com.sooum.where_android.model.ScreenRoute
-import com.sooum.where_android.view.main.friendList.FriendListView
+import com.sooum.where_android.view.main.home.HomeScreenView
+import com.sooum.where_android.view.main.home.myMeet.MyMeetGuideView
+import com.sooum.where_android.view.main.home.newMeet.NewMeetResultView
 import com.sooum.where_android.view.main.meetDetail.MeetDetailView
-import com.sooum.where_android.view.main.myMeet.MyMeetGuideView
-import com.sooum.where_android.view.main.myMeet.MyMeetView
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
-import com.sooum.where_android.view.main.newMeet.NewMeetResultView
 import kotlinx.coroutines.launch
 
 /**
@@ -67,6 +67,8 @@ fun MainScreenView(
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val bottomNavController = rememberNavController()
+    val bottomNavBackStackEntry by bottomNavController.currentBackStackEntryAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -92,13 +94,19 @@ fun MainScreenView(
                     contentPadding = PaddingValues(0.dp)
                 ) {
                     BottomNavigation(
-                        navBackStackEntry = navBackStackEntry,
+                        navBackStackEntry = bottomNavBackStackEntry,
                         navigation = { type ->
                             scope.launch {
                                 if (drawerState.isOpen) {
                                     drawerState.close()
                                 }
-                                navController.navigate(type)
+                                bottomNavController.navigate(type) {
+                                    popUpTo(bottomNavController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             }
                         },
                         navigationResult = {
@@ -130,7 +138,8 @@ fun MainScreenView(
                         }
                         ModalDrawerSheet(
                             drawerState = drawerState,
-                            drawerShape = RectangleShape
+                            drawerShape = RectangleShape,
+                            drawerContainerColor = Color.White
                         ) {
                             DrawerContent(
                                 closeDrawer = {
@@ -143,7 +152,8 @@ fun MainScreenView(
                         }
                     }
                 },
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
+                gesturesEnabled = false
             ) {
                 CompositionLocalProvider(
                     LocalLayoutDirection provides LayoutDirection.Ltr
@@ -153,16 +163,10 @@ fun MainScreenView(
                         startDestination = ScreenRoute.MainGraph,
                         modifier = Modifier
                     ) {
-                        composable(
-                            route = "test"
-                        ) {
-                            Column(Modifier.fillMaxSize()){
-
-                            }
-                        }
-                        navigation<ScreenRoute.MainGraph>(startDestination = ScreenRoute.BottomNavigation.MeetList) {
-                            composable<ScreenRoute.BottomNavigation.MeetList>() {
-                                MyMeetView(
+                        navigation<ScreenRoute.MainGraph>(startDestination = ScreenRoute.Home.Main) {
+                            composable<ScreenRoute.Home.Main> {
+                                HomeScreenView(
+                                    navController = bottomNavController,
                                     openDrawer = {
                                         scope.launch {
                                             drawerState.apply {
@@ -170,16 +174,7 @@ fun MainScreenView(
                                             }
                                         }
                                     },
-                                    navigationGuide = {
-                                        navController.navigate(ScreenRoute.Home.MeetGuide) {
-                                            launchSingleTop = true
-                                        }
-                                    },
-                                    navigationMeetDetail = navController::navigateMeetDetail,
-                                    modifier = Modifier
-                                        .padding(
-                                            horizontal = 10.dp,
-                                        )
+                                    navigationMeetDetail = navController::navigateMeetDetail
                                 )
                             }
                             composable<ScreenRoute.Home.MeetGuide>() {
@@ -187,34 +182,12 @@ fun MainScreenView(
                                     onBack = navController::popBackStack
                                 )
                             }
-                            composable<ScreenRoute.BottomNavigation.FriendsList>() {
-                                FriendListView(
-                                    navigationMeetDetail = { meetDetail ->
-                                        navController.navigate(meetDetail) {
-                                            launchSingleTop = true
-                                        }
-                                    },
-                                    modifier = Modifier
-                                        .padding(
-                                            horizontal = 10.dp,
-                                        )
-                                )
-                            }
-
                             composable<ScreenRoute.Home.FriendMeetDetail>() {
                                 MeetDetailView(
                                     onBack = navController::popBackStack,
                                     navigationMeetDetail = navController::navigateMeetDetail
                                 )
                             }
-                            composable<ScreenRoute.MeetDetail> {
-                                val route = it.toRoute<ScreenRoute.MeetDetail>()
-//                                MyMeetDetailScreenView(
-//                                    id = route.meetDetailId,
-//                                    onBack = navController::popBackStack
-//                                )
-                            }
-
                             dialog<NewMeetResult>(
                                 dialogProperties = DialogProperties(
                                     usePlatformDefaultWidth = false,

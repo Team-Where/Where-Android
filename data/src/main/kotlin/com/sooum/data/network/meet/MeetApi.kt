@@ -3,14 +3,17 @@ package com.sooum.data.network.meet
 import com.sooum.data.network.meet.request.DeleteMeetRequest
 import com.sooum.data.network.meet.request.FinishMeetRequest
 import com.sooum.data.network.meet.request.InviteMeetRequest
+import com.sooum.data.network.meet.response.MeetListItemResponse
+import com.sooum.domain.model.EditMeet
 import com.sooum.domain.model.Meet
 import com.sooum.domain.model.MeetInviteStatus
+import com.sooum.domain.model.SimpleMeet
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -23,27 +26,27 @@ interface MeetApi {
     @POST("api/meeting")
     suspend fun addMeet(
         @Part("data") data: RequestBody,
-        @Part imageFile: MultipartBody.Part?
+        @Part imageFile: MultipartBody.Part
     ): Response<Meet>
 
     @Multipart
     @PUT("api/meeting")
     suspend fun editMeet(
         @Part("data") data: RequestBody,
-        @Part imageFile: MultipartBody.Part?
-    ): Response<Meet>
+        @Part imageFile: MultipartBody.Part
+    ): Response<EditMeet>
 
-    @DELETE("api/meeting")
+    @HTTP(method = "DELETE", path = "api/meeting", hasBody = true)
     suspend fun deleteMeet(
         @Body data: DeleteMeetRequest,
-    ): Response<Any>
+    ): Response<String>
 
     @PUT("api/meeting/finish")
     suspend fun finishMeet(
         @Body data: FinishMeetRequest,
-    ): Response<Any>
+    ): Response<String>
 
-    @GET("api/meeting/participants/{id}")
+    @GET("api/meeting/participant/{id}")
     suspend fun getMeetInviteStatus(
         @Path("id") meetId: Int
     ): Response<List<MeetInviteStatus>>
@@ -51,7 +54,12 @@ interface MeetApi {
     @GET("api/meeting/{id}")
     suspend fun getMeetList(
         @Path("id") userId: Int
-    ): Response<List<Meet>>
+    ): Response<List<MeetListItemResponse>>
+
+    @GET("api/meeting/invite/{link}")
+    suspend fun getMeetInvite(
+        @Path("link") link :String
+    ): Response<SimpleMeet>
 
 
     @POST("api/meeting/invite")

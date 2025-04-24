@@ -1,51 +1,67 @@
 package com.sooum.data.repository
 
-import com.sooum.data.network.meet.MeetApi
-import com.sooum.data.network.meet.request.AddMeetRequest
-import com.sooum.data.network.meet.request.DeleteMeetRequest
-import com.sooum.data.network.meet.request.EditMeetRequest
-import com.sooum.data.network.meet.request.InviteMeetRequest
-import com.sooum.data.network.place.PlaceApi
-import com.sooum.data.network.place.request.AddCommentRequest
-import com.sooum.data.network.place.request.AddPlaceRequest
-import com.sooum.data.network.place.request.DeleteCommentRequest
-import com.sooum.data.network.place.request.DeletePlaceRequest
-import com.sooum.data.network.place.request.EditCommentRequest
-import com.sooum.data.network.place.request.LikePlaceRequest
-import com.sooum.data.network.place.request.PickPlaceRequest
-import com.sooum.data.network.safeFlow
-import com.sooum.data.network.schedule.ScheduleApi
-import com.sooum.data.network.schedule.request.AddScheduleRequest
-import com.sooum.data.network.schedule.request.DeleteScheduleRequest
-import com.sooum.data.network.schedule.request.EditScheduleRequest
+import com.sooum.data.extension.covertApiResultToActionResultIfSuccess
+import com.sooum.data.extension.covertApiResultToActionResultIfSuccessEmpty
+import com.sooum.domain.datasource.MeetRemoteDataSource
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.model.Comment
-import com.sooum.domain.model.CommentListItem
-import com.sooum.domain.model.CommentSimple
-import com.sooum.domain.model.Meet
+import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
-import com.sooum.domain.model.Place
-import com.sooum.domain.model.PlacePickStatus
+import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.repository.MeetDetailRepository
+import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
+typealias UserId = Int
+typealias PlaceId = Int
+
 class MeetDetailRepositoryImpl @Inject constructor(
-    private val meetApi: MeetApi,
-    private val placeApi: PlaceApi,
-    private val scheduleApi: ScheduleApi
+    private val meetRemoteDataSource: MeetRemoteDataSource,
+    private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
 ) : MeetDetailRepository {
 
-    private val json = Json {
-        encodeDefaults = true
+    /**
+     * 로그인된 유저의 id로 가져온 전체 모임 목록
+     */
+    private val _meetDetailList = MutableStateFlow(emptyList<MeetDetail>())
+
+    /**
+     * [loadMeetDetailSubData]이후 해당 모임에 해당되는 초대 현황 리스트
+     */
+    private val _meetInviteStatus = MutableStateFlow(emptyList<MeetInviteStatus>())
+
+    private val meetDetailList
+        get() = _meetDetailList.asStateFlow()
+
+    private val meetInviteStatus
+        get() = _meetInviteStatus.asStateFlow()
+
+
+    override suspend fun loadMeetDetailList(userId: UserId) {
+        val meetDetails = meetRemoteDataSource.getMeetList(userId).first()
+        _meetDetailList.value = meetDetails
     }
+
+    override fun getMeetDetailList(): Flow<List<MeetDetail>> = meetDetailList
+
+    override fun getMeetInviteList(): Flow<List<MeetInviteStatus>> = meetInviteStatus
+
+    override fun getMeetDetailById(meetId: Int): Flow<MeetDetail?> = meetDetailList
+        .map { list -> list.find { it.id == meetId } }
+
+
 
     override suspend fun addMeet(
         title: String,
@@ -53,192 +69,264 @@ class MeetDetailRepositoryImpl @Inject constructor(
         description: String,
         participants: List<Int>,
         imageFile: File?
-    ): Flow<ApiResult<Meet>> {
-
-        val request = AddMeetRequest(
+    ): ActionResult<NewMeetResult> {
+        return meetRemoteDataSource.addMeet(
             title,
             fromId,
             description,
-            participants
-        )
-
-        val dataPart =
-            json.encodeToString(request).toRequestBody("application/json".toMediaTypeOrNull())
-
-        val imagePart = imageFile?.let { file ->
-            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-            MultipartBody.Part.createFormData("image", file.name, requestFile)
-        }
-        return safeFlow { meetApi.addMeet(dataPart, imagePart) }
+            participants,
+            imageFile
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { newMeetData ->
+                    val temp = _meetDetailList.value.toMutableList()
+                    temp.add(MeetDetail(newMeetData))
+                    _meetDetailList.value = temp
+                    emit(ActionResult.Success(NewMeetResult(newMeetData)))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
+                }
+            )
+        }.first()
     }
 
-    override suspend fun editMeet(
-        id: Int,
+    override suspend fun exitMeet(meetId: Int, userId: Int): ActionResult<Unit> {
+        return meetRemoteDataSource.deleteMeet(
+            meetId = meetId,
+            userId = userId
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccessEmpty(
+                onSuccess = {
+                    val temp = _meetDetailList.value.toMutableList()
+                    temp.removeIf {
+                        it.id == meetId
+                    }
+                    _meetDetailList.value = temp
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
+                }
+            )
+        }.first()
+    }
+
+    override suspend fun finishMeet(meetId: Int, userId: Int): ActionResult<Unit> {
+        return meetRemoteDataSource.finishMeet(
+            meetId,
+            userId,
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccessEmpty(
+                onSuccess = {
+                    val temp = _meetDetailList.value.toMutableList()
+                    val index = temp.indexOfFirst { it.id == meetId }
+                    if (index >= 0) {
+                        var tempMeet: MeetDetail = temp[index]
+                        tempMeet = tempMeet.copy(finished = true)
+                        temp[index] = tempMeet
+                        _meetDetailList.value = temp
+                    }
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
+                }
+            )
+        }.first()
+    }
+
+    override suspend fun updateTitle(
+        meetId: Int,
         userId: Int,
-        title: String?,
-        description: String?,
-        imageFile: File?
-    ): Flow<ApiResult<Meet>> {
-        val request = EditMeetRequest(
-            id,
+        title: String
+    ): ActionResult<*> {
+        return meetRemoteDataSource.editMeet(
+            meetId,
             userId,
             title,
-            description,
-        )
-        val dataPart =
-            json.encodeToString(request).toRequestBody("application/json".toMediaTypeOrNull())
-        val imagePart = imageFile?.let { file ->
-            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-            MultipartBody.Part.createFormData("image", file.name, requestFile)
-        }
-        return safeFlow { meetApi.editMeet(dataPart, imagePart) }
+            null,
+            null
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = {
+                    val temp = _meetDetailList.value.toMutableList()
+                    val index = temp.indexOfFirst { it.id == meetId }
+                    if (index >= 0) {
+                        var tempMeet: MeetDetail = temp[index]
+                        tempMeet = tempMeet.copy(title = title)
+                        temp[index] = tempMeet
+                        _meetDetailList.value = temp
+                    }
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
+                }
+            )
+        }.first()
     }
 
-    override suspend fun deleteMeet(
-        meetId: Int,
-        userId: Int
-    ): Flow<ApiResult<Any>> {
-        val request = DeleteMeetRequest(
-            meetId,
-            userId
-        )
-        return safeFlow { meetApi.deleteMeet(request) }
-    }
-
-    override suspend fun getMeetInviteStatus(meetId: Int): Flow<ApiResult<List<MeetInviteStatus>>> {
-        return safeFlow { meetApi.getMeetInviteStatus(meetId) }
-    }
-
-    override suspend fun getMeetList(userId: Int): Flow<ApiResult<List<Meet>>> {
-        return safeFlow { meetApi.getMeetList(userId) }
-    }
-
-    override suspend fun inviteMeet(
-        meetId: Int,
-        fromUserId: Int,
-        toUserId: Int
-    ): Flow<ApiResult<Any>> {
-        val request = InviteMeetRequest(
-            meetId,
-            fromUserId,
-            toUserId
-        )
-        return safeFlow { meetApi.inviteMeet(request) }
-    }
-
-
-    override suspend fun addMeetPlace(
+    override suspend fun updateDescription(
         meetId: Int,
         userId: Int,
-        name: String,
-        address: String,
-        naverLink: String?
-    ): Flow<ApiResult<Place>> {
-        val request = AddPlaceRequest(
+        description: String
+    ): ActionResult<*> {
+        return meetRemoteDataSource.editMeet(
             meetId,
             userId,
-            name,
-            address,
-            naverLink
-        )
-        return safeFlow { placeApi.addPlace(request) }
+            null,
+            description,
+            null
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = {
+                    val temp = _meetDetailList.value.toMutableList()
+                    val index = temp.indexOfFirst { it.id == meetId }
+                    if (index >= 0) {
+                        var tempMeet: MeetDetail = temp[index]
+                        tempMeet = tempMeet.copy(description = description)
+                        temp[index] = tempMeet
+                        _meetDetailList.value = temp
+                    }
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
+                }
+            )
+        }.first()
     }
 
-    override suspend fun deleteMeetPlace(placeId: Int): Flow<ApiResult<Any>> {
-        val request = DeletePlaceRequest(
-            placeId = placeId
-        )
-        return safeFlow { placeApi.deletePlace(request) }
+    override suspend fun updateImage(meetId: Int, userId: Int, imageFile: File?): ActionResult<*> {
+        return meetRemoteDataSource.editMeet(
+            meetId,
+            userId,
+            null,
+            null,
+            imageFile
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { data ->
+                    val temp = _meetDetailList.value.toMutableList()
+                    val index = temp.indexOfFirst { it.id == meetId }
+                    if (index >= 0) {
+                        var tempMeet: MeetDetail = temp[index]
+                        tempMeet = tempMeet.copy(image = data.image)
+                        temp[index] = tempMeet
+                        _meetDetailList.value = temp
+                    }
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
+                }
+            )
+        }.first()
     }
 
-    override suspend fun pickPlace(placeId: Int): Flow<ApiResult<PlacePickStatus>> {
-        val request = PickPlaceRequest(
-            placeId
-        )
-        return safeFlow { placeApi.pickPlace(request) }
-    }
+    private val asyncScope = CoroutineScope(Dispatchers.IO)
 
-    override suspend fun likePlace(placeId: Int, like: Boolean): Flow<ApiResult<PlacePickStatus>> {
-        val request = LikePlaceRequest(
-            placeId,
-            like
-        )
-        return safeFlow { placeApi.likePlace(request) }
+    override fun loadMeetDetailSubData(meetId: Int) {
+        asyncScope.launch {
+            val meetInviteStatusJob = async {
+                meetRemoteDataSource.getMeetInviteStatus(
+                    meetId = meetId
+                )
+            }
+            val meetInviteResult = meetInviteStatusJob.await().first()
+            if (meetInviteResult is ApiResult.Success) {
+                _meetInviteStatus.value = meetInviteResult.data
+            }
+        }
     }
-
-    override suspend fun addComment(
-        placeId: Int,
-        userId: Int,
-        description: String
-    ): Flow<ApiResult<Comment>> {
-        val request = AddCommentRequest(
-            placeId = placeId,
-            userId = userId,
-            description = description
-        )
-        return safeFlow { placeApi.addPlaceComment(request) }
-    }
-
-    override suspend fun editComment(
-        commentId: Int,
-        userId: Int,
-        description: String
-    ): Flow<ApiResult<CommentSimple>> {
-        val request = EditCommentRequest(
-            commentId = commentId,
-            userId = userId,
-            description = description
-        )
-        return safeFlow { placeApi.editPlaceComment(request) }
-    }
-
-    override suspend fun deleteComment(commentId: Int, userId: Int): Flow<ApiResult<Any>> {
-        val request = DeleteCommentRequest(
-            commentId = commentId,
-            userId = userId,
-        )
-        return safeFlow { placeApi.deletePlaceComment(request) }
-    }
-
-    override suspend fun getPlaceCommentList(placeId: Int): Flow<ApiResult<List<CommentListItem>>> {
-        return safeFlow { placeApi.getPlaceCommentList(placeId) }
-    }
-
 
     override suspend fun addSchedule(
         meetId: Int,
+        userId: Int,
         date: String,
         time: String
-    ): Flow<ApiResult<Schedule>> {
-        val request = AddScheduleRequest(
-            meetId = meetId,
-            date = date,
-            time = time
-        )
-        return safeFlow { scheduleApi.addSchedule(request) }
-    }
-
-    override suspend fun getSchedule(scheduleId: Int): Flow<ApiResult<Schedule>> {
-        return safeFlow { scheduleApi.getSchedule(scheduleId) }
+    ): ActionResult<Schedule> {
+        return meetRemoteDataSource.addSchedule(
+            meetId,
+            userId,
+            date,
+            time,
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { schedule ->
+                    val tempList = _meetDetailList.value.toMutableList()
+                    val index = tempList.indexOfFirst { it.id == meetId }
+                    val item = tempList[index].copy(
+                        schedule = schedule
+                    )
+                    tempList[index] = item
+                    _meetDetailList.value = tempList
+                    emit(ActionResult.Success(schedule))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
+                }
+            )
+        }.first()
     }
 
     override suspend fun editSchedule(
         meetId: Int,
-        date: String,
-        time: String
-    ): Flow<ApiResult<Schedule>> {
-        val request = EditScheduleRequest(
-            meetId = meetId,
-            date = date,
-            time = time
-        )
-        return safeFlow { scheduleApi.editSchedule(request) }
+        userId: Int,
+        date: String?,
+        time: String?
+    ): ActionResult<Schedule> {
+        return meetRemoteDataSource.editSchedule(
+            meetId,
+            userId,
+            date,
+            time,
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { schedule ->
+                    val tempList = _meetDetailList.value.toMutableList()
+                    val index = tempList.indexOfFirst { it.id == meetId }
+                    val item = tempList[index].copy(
+                        schedule = schedule
+                    )
+                    tempList[index] = item
+                    _meetDetailList.value = tempList
+                    emit(ActionResult.Success(schedule))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
+                }
+            )
+        }.first()
     }
 
-    override suspend fun deleteSchedule(meetId: Int): Flow<ApiResult<Any>> {
-        val request = DeleteScheduleRequest(
-            meetId = meetId
-        )
-        return safeFlow { scheduleApi.deleteSchedule(request) }
+    override suspend fun clearMeetDetail() {
+        _meetInviteStatus.value = emptyList()
     }
+
+
+    override suspend fun updateScheduleFromFcm(meetId: Int, date: String, time: String) {
+        val updateList = _meetDetailList.value.map { meetDetail ->
+            if (meetDetail.id == meetId) {
+                meetDetail.copy(schedule = Schedule(meetId, date, time))
+            } else {
+                meetDetail
+            }
+        }
+        _meetDetailList.value = updateList
+    }
+
+
+    override suspend fun deleteScheduleFcm(meetId: Int) {
+        val updatedList = _meetDetailList.value.map { meetDetail ->
+            if (meetDetail.id == meetId) {
+                meetDetail.copy(schedule = null)
+            } else {
+                meetDetail
+            }
+        }
+        _meetDetailList.value = updatedList
+    }
+
 }

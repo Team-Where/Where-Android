@@ -16,15 +16,15 @@ interface UserRepository {
     /**
      * id에 해당하는 유저정보를 가져옵니다.
      */
-    fun getUserById(userId:Long) : User?
+    fun getUserById(userId: Int): User?
 
     /**
      * 즐겨 찾기를 변경합니다.
      */
-    suspend fun updateUserFavorite(id: Long, favorite: Boolean)
+    suspend fun updateUserFavorite(id: Int, favorite: Boolean)
 
     /**
      * 유저를 삭제합니다.
      */
-    suspend fun deleteUser(id: Long)
+    suspend fun deleteUser(id: Int)
 }

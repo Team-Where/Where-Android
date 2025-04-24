@@ -1,21 +1,25 @@
 package com.sooum.domain.repository
 
-import com.sooum.domain.model.ApiResult
-import com.sooum.domain.model.Comment
-import com.sooum.domain.model.CommentListItem
-import com.sooum.domain.model.CommentSimple
-import com.sooum.domain.model.Meet
+import com.sooum.domain.model.ActionResult
+import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
-import com.sooum.domain.model.Place
-import com.sooum.domain.model.PlacePickStatus
+import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.model.Schedule
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface MeetDetailRepository {
 
+    suspend fun loadMeetDetailList(userId: Int)
+
+    fun getMeetDetailList(): Flow<List<MeetDetail>>
+
+    fun getMeetInviteList(): Flow<List<MeetInviteStatus>>
+
+    fun getMeetDetailById(meetId: Int): Flow<MeetDetail?>
+
     /**
-     * 새로운 모임을 추가한다.
+     * 모임을 추가합니다.
      */
     suspend fun addMeet(
         title: String,
@@ -23,150 +27,102 @@ interface MeetDetailRepository {
         description: String,
         participants: List<Int>,
         imageFile: File?
-    ): Flow<ApiResult<Meet>>
+    ): ActionResult<NewMeetResult>
 
     /**
-     * 새로운 모임을 추가한다.
+     * 현재 모임을 종료합니다.
      */
-    suspend fun editMeet(
-        id: Int,
+    suspend fun finishMeet(
+        meetId: Int,
+        userId: Int
+    ): ActionResult<Unit>
+
+
+    /**
+     * 모임을 탕퇴합니다
+     */
+    suspend fun exitMeet(
+        meetId: Int,
+        userId: Int
+    ): ActionResult<Unit>
+
+
+    /**
+     * 모임 제목을 업데이트 합니다.
+     */
+    suspend fun updateTitle(
+        meetId: Int,
         userId: Int,
-        title: String?,
-        description: String?,
+        title: String
+    ) : ActionResult<*>
+
+    /**
+     * 모임 설명을 업데이트 합니다.
+     */
+    suspend fun updateDescription(
+        meetId: Int,
+        userId: Int,
+        description: String
+    ) : ActionResult<*>
+
+    /**
+     * 모임 커버를 업데이트 합니다.
+     */
+    suspend fun updateImage(
+        meetId: Int,
+        userId: Int,
         imageFile: File?
-    ): Flow<ApiResult<Meet>>
+    ) : ActionResult<*>
 
 
     /**
-     * meetId에서 userId를 삭제한다.
+     * 특정 id 모임을 불러온 후 불러온 상세 데이터
      */
-    suspend fun deleteMeet(
-        meetId: Int,
-        userId: Int
-    ): Flow<ApiResult<Any>>
-
-    /**
-     * [meetId]에 해당하는 초대 현황을 가져온다.
-     */
-    suspend fun getMeetInviteStatus(
-       meetId: Int
-    ): Flow<ApiResult<List<MeetInviteStatus>>>
-
-    /**
-     * userId에 해당하는 모든 meet목록을 가져온다.
-     */
-    suspend fun getMeetList(
-        userId: Int
-    ): Flow<ApiResult<List<Meet>>>
+    fun loadMeetDetailSubData(
+        meetId: Int
+    )
 
 
     /**
-     * [toUserId]에 해당하는 유저를 초대한다.
-     */
-    suspend fun inviteMeet(
-        meetId: Int,
-        fromUserId: Int,
-        toUserId: Int
-    ): Flow<ApiResult<Any>>
-
-
-    /**
-     * 장소를 추가한다.
-     */
-    suspend fun addMeetPlace(
-        meetId: Int,
-        userId: Int,
-        name: String,
-        address: String,
-        naverLink: String?
-    ): Flow<ApiResult<Place>>
-
-
-    /**
-     * 장소를 삭제한다.
-     */
-    suspend fun deleteMeetPlace(
-        placeId: Int,
-    ): Flow<ApiResult<Any>>
-
-    /**
-     * 장소를 선택한다.
-     */
-    suspend fun pickPlace(
-        placeId: Int
-    ): Flow<ApiResult<PlacePickStatus>>
-
-    /**
-     * 장소 좋아요 여부
-     */
-    suspend fun likePlace(
-        placeId: Int,
-        like: Boolean
-    ): Flow<ApiResult<PlacePickStatus>>
-
-    /**
-     * 코멘트 추가
-     */
-    suspend fun addComment(
-        placeId: Int,
-        userId: Int,
-        description: String
-    ): Flow<ApiResult<Comment>>
-
-    /**
-     * 코멘트 수정
-     */
-    suspend fun editComment(
-        commentId: Int,
-        userId: Int,
-        description: String
-    ): Flow<ApiResult<CommentSimple>>
-
-    /**
-     * 코멘트 삭제
-     */
-    suspend fun deleteComment(
-        commentId: Int,
-        userId: Int
-    ): Flow<ApiResult<Any>>
-
-    /**
-     * 코멘트 목록 가져오기
-     */
-    suspend fun getPlaceCommentList(
-        placeId: Int
-    ): Flow<ApiResult<List<CommentListItem>>>
-
-
-    /**
-     * 일정 추가
+     * 일정을 추가합니다.
      */
     suspend fun addSchedule(
         meetId: Int,
+        userId: Int,
         date: String,
         time: String
-    ): Flow<ApiResult<Schedule>>
+    ): ActionResult<Schedule>
 
     /**
-     * 일정 추가
-     */
-    suspend fun getSchedule(
-        scheduleId: Int,
-    ): Flow<ApiResult<Schedule>>
-
-    /**
-     * 일정 추가
+     * 일정을 수정합니다.
      */
     suspend fun editSchedule(
         meetId: Int,
-        date: String,
-        time: String
-    ): Flow<ApiResult<Schedule>>
+        userId: Int,
+        date: String?,
+        time: String?
+    ): ActionResult<Schedule>
+
 
     /**
-     * 일정 추가
+     * 해당 화면 탈출시
      */
-    suspend fun deleteSchedule(
-        meetId: Int,
-    ): Flow<ApiResult<Any>>
+    suspend fun clearMeetDetail()
+
+    //fcm 관련
+
+    /**
+     * fcm 일정 변경 수신
+     * - 201[com.sooum.domain.core.FcmConst.FCM_CODE_SCHEDULE_ADD] 수정
+     * - 202[com.sooum.domain.core.FcmConst.FCM_CODE_SCHEDULE_PUT] 추가
+     */
+    suspend fun updateScheduleFromFcm(meetId: Int, date: String, time: String)
+
+    /**
+     * fcm 일정 삭제 수신
+     * - 203[com.sooum.domain.core.FcmConst.FCM_CODE_SCHEDULE_DELETE] 삭제
+     */
+    suspend fun deleteScheduleFcm(meetId: Int)
+
+    
 }

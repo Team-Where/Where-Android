@@ -1,7 +1,11 @@
 package com.sooum.data.di
 
+import com.sooum.data.repository.AuthRepositoryImpl
+import com.sooum.data.repository.MeetDetailPlaceWithCommentRepositoryImpl
 import com.sooum.data.repository.MeetDetailRepositoryImpl
 import com.sooum.data.repository.UserRepositoryImpl
+import com.sooum.domain.repository.AuthRepository
+import com.sooum.domain.repository.MeetDetailPlaceWithCommentRepository
 import com.sooum.domain.repository.MeetDetailRepository
 import com.sooum.domain.repository.UserRepository
 import dagger.Binds
@@ -21,10 +25,22 @@ abstract class RepositoryModule {
         userRepositoryImpl: UserRepositoryImpl
     ): UserRepository
 
-
     @Binds
     @Singleton
     abstract fun bindMeetDetailRepository(
         meetDetailRepositoryImpl: MeetDetailRepositoryImpl
     ): MeetDetailRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMeetDetailPlaceWithCommentRepository(
+        meetDetailPlaceWithCommentRepositoryImpl: MeetDetailPlaceWithCommentRepositoryImpl
+    ): MeetDetailPlaceWithCommentRepository
+
+
+    @Binds
+    @Singleton
+    abstract fun bindAuthRepository(
+        impl: AuthRepositoryImpl
+    ): AuthRepository
 }
