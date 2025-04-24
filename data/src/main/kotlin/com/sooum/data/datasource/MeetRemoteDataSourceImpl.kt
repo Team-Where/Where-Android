@@ -7,6 +7,7 @@ import com.sooum.data.network.meet.request.AddMeetRequest
 import com.sooum.data.network.meet.request.DeleteMeetRequest
 import com.sooum.data.network.meet.request.EditMeetRequest
 import com.sooum.data.network.meet.request.FinishMeetRequest
+import com.sooum.data.network.meet.request.InviteMeetOkLinkRequest
 import com.sooum.data.network.meet.request.InviteMeetRequest
 import com.sooum.data.network.place.PlaceApi
 import com.sooum.data.network.place.request.AddCommentRequest
@@ -267,5 +268,13 @@ class MeetRemoteDataSourceImpl @Inject constructor(
             meetId = meetId
         )
         return safeFlow { scheduleApi.deleteSchedule(request) }
+    }
+
+    override suspend fun inviteOkFromLink(userId: Int, code: String): Flow<ApiResult<Meet>> {
+        val request = InviteMeetOkLinkRequest(
+            userId = userId,
+            link = code
+        )
+        return safeFlow { meetApi.inviteMeetOkLink(request) }
     }
 }

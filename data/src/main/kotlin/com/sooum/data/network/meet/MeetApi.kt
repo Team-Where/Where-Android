@@ -2,6 +2,7 @@ package com.sooum.data.network.meet
 
 import com.sooum.data.network.meet.request.DeleteMeetRequest
 import com.sooum.data.network.meet.request.FinishMeetRequest
+import com.sooum.data.network.meet.request.InviteMeetOkLinkRequest
 import com.sooum.data.network.meet.request.InviteMeetRequest
 import com.sooum.data.network.meet.response.MeetListItemResponse
 import com.sooum.domain.model.EditMeet
@@ -61,7 +62,6 @@ interface MeetApi {
         @Path("link") link :String
     ): Response<SimpleMeet>
 
-
     @POST("api/meeting/invite")
     suspend fun inviteMeet(
         @Body data: InviteMeetRequest
@@ -70,5 +70,10 @@ interface MeetApi {
     @POST("api/meeting/invite/ok")
     suspend fun inviteMeetOk(
         @Body data: InviteMeetRequest
+    ): Response<Meet>
+
+    @POST("api/meeting/invite/ok/link")
+    suspend fun inviteMeetOkLink(
+        @Body data: InviteMeetOkLinkRequest
     ): Response<Meet>
 }
