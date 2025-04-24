@@ -62,19 +62,30 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myMeetDetailPlaceWithCommentViewModel.placeList.collect {
-                    allPlaceListAdapter.submitList(it)
-                    if (!find && it.isEmpty()) {
-                        placeAddBalloon.showAlignBottom(binding.btnPlaceShareIcon)
-                        find = true
+                myMeetDetailPlaceWithCommentViewModel.placeList.collect { placeList ->
+                    if (placeList.isEmpty()) {
+                        if (!find) {
+                            //1회만 작동하도록
+                            placeAddBalloon.showAlignBottom(binding.btnPlaceShareIcon)
+                            binding.placeItemNoData.visibility = View.VISIBLE
+                            find = true
+                        }
+                    } else {
+                        binding.placeItemNoData.visibility = View.GONE
+                        allPlaceListAdapter.submitList(placeList)
                     }
                 }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myMeetDetailPlaceWithCommentViewModel.bestPlaceList.collect {
-                    bestPlaceListAdapter.submitList(it)
+                myMeetDetailPlaceWithCommentViewModel.bestPlaceList.collect { bestPlace ->
+                    if (bestPlace.isEmpty()) {
+
+                    } else {
+                        binding.placeItemNoData.visibility = View.GONE
+                        bestPlaceListAdapter.submitList(bestPlace)
+                    }
                 }
             }
         }
@@ -116,16 +127,30 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
             btnAll.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     btnBest.isChecked = false
-                    placeAllItemListView.visibility = View.VISIBLE
-                    placeBestItemListView.visibility = View.GONE
+                    if (allPlaceListAdapter.itemCount == 0) {
+                        placeItemNoData.visibility = View.VISIBLE
+                        placeAllItemListView.visibility = View.GONE
+                        placeBestItemListView.visibility = View.GONE
+                    } else {
+                        placeItemNoData.visibility = View.GONE
+                        placeAllItemListView.visibility = View.VISIBLE
+                        placeBestItemListView.visibility = View.GONE
+                    }
                 }
             }
 
             btnBest.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     btnAll.isChecked = false
-                    placeAllItemListView.visibility = View.GONE
-                    placeBestItemListView.visibility = View.VISIBLE
+                    if (bestPlaceListAdapter.itemCount == 0) {
+                        placeItemNoData.visibility = View.VISIBLE
+                        placeAllItemListView.visibility = View.GONE
+                        placeBestItemListView.visibility = View.GONE
+                    } else {
+                        placeItemNoData.visibility = View.GONE
+                        placeAllItemListView.visibility = View.GONE
+                        placeBestItemListView.visibility = View.VISIBLE
+                    }
                 }
             }
 
