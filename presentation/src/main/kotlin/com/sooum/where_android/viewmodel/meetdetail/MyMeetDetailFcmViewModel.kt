@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.sooum.domain.core.FcmConst
 import com.sooum.domain.model.CommentData
 import com.sooum.domain.model.CommentListItem
+import com.sooum.domain.model.FcmMeetInviteStatus
 import com.sooum.domain.model.MeetingId
 import com.sooum.domain.model.PlaceDelete
 import com.sooum.domain.model.PlaceLike
@@ -16,6 +17,7 @@ import com.sooum.domain.usecase.comment.fcm.AddCommentFromFcmUseCase
 import com.sooum.domain.usecase.comment.fcm.DeleteCommentFromFcmUseCase
 import com.sooum.domain.usecase.comment.fcm.UpdateCommentFromFcmUseCase
 import com.sooum.domain.usecase.meet.fcm.DeleteMeetScheduleFromFcmUseCase
+import com.sooum.domain.usecase.meet.fcm.UpdateMeetStatusFromFcmUseCase
 import com.sooum.domain.usecase.meet.fcm.UpdateScheduleFromFcmUseCase
 import com.sooum.domain.usecase.place.fcm.AddNewPlaceUserFromFcmCase
 import com.sooum.domain.usecase.place.fcm.DeletePlaceFromFcmUseCase
@@ -36,7 +38,8 @@ class MyMeetDetailFcmViewModel @Inject constructor(
     private val updatePlaceStatusUseCase: UpdatePlaceStatusFromFcmUseCase,
     private val addCommentUseCase: AddCommentFromFcmUseCase,
     private val updateCommentUseCase: UpdateCommentFromFcmUseCase,
-    private val deleteCommentUseCase: DeleteCommentFromFcmUseCase
+    private val deleteCommentUseCase: DeleteCommentFromFcmUseCase,
+    private val updateMeetStatusFromFcmUseCase: UpdateMeetStatusFromFcmUseCase
 ) : ViewModel() {
 
     fun updatePlaceFromFcm(code: String, data: String) {
@@ -111,6 +114,12 @@ class MyMeetDetailFcmViewModel @Inject constructor(
                         val shareResult = Json.decodeFromString<CommentData.IdOnly>(data)
                         deleteCommentUseCase(
                             shareResult.id
+                        )
+                    }
+                    FcmConst.FCM_CODE_MEET_ACCEPT -> {
+                        val shareResult = Json.decodeFromString<FcmMeetInviteStatus>(data)
+                        updateMeetStatusFromFcmUseCase(
+                            shareResult.userId
                         )
                     }
                 }

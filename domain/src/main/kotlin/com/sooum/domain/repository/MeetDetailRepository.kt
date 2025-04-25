@@ -124,5 +124,9 @@ interface MeetDetailRepository {
      */
     suspend fun deleteScheduleFcm(meetId: Int)
 
-    
+    /**
+     * fcm 모임 수락 수신
+     * - 404[com.sooum.domain.core.FcmConst.FCM_CODE_MEET_ACCEPT] 수정
+     */
+    suspend fun updateMeetInviteStatus(userId: Int)
 }
