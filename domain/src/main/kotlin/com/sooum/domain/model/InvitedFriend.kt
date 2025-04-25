@@ -1,5 +1,6 @@
 package com.sooum.domain.model
 
+import android.media.Image
 import kotlinx.serialization.Serializable
 
 data class InvitedFriend(
@@ -26,4 +27,12 @@ data class MeetInviteStatus(
     val toName: String,
     val status: Boolean,
     val toImage: String?
+)
+
+@Serializable
+data class FcmMeetInviteStatus(
+    val meetingId : Int,
+    val userId: Int,
+    val userName: String,
+    val userImage: String
 )

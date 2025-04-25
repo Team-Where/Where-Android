@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -327,6 +328,17 @@ class MeetDetailRepositoryImpl @Inject constructor(
             }
         }
         _meetDetailList.value = updatedList
+    }
+
+    override suspend fun updateMeetInviteStatus(userId: Int) {
+        val updateList = _meetInviteStatus.value.map { meetInviteStatus ->
+            if(meetInviteStatus.toId == userId){
+                meetInviteStatus.copy(status = true)
+            }else {
+                meetInviteStatus
+            }
+        }
+        _meetInviteStatus.value = updateList
     }
 
 }
