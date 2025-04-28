@@ -80,9 +80,11 @@ class MeetDetailRepositoryImpl @Inject constructor(
         ).transform { result ->
             result.covertApiResultToActionResultIfSuccess(
                 onSuccess = { newMeetData ->
-                    val temp = _meetDetailList.value.toMutableList()
-                    temp.add(MeetDetail(newMeetData))
-                    _meetDetailList.value = temp
+                    _meetDetailList.update { meetDetailList ->
+                        val tempList = meetDetailList.toMutableList()
+                        tempList.add(MeetDetail(newMeetData))
+                        tempList
+                    }
                     emit(ActionResult.Success(NewMeetResult(newMeetData)))
                 },
                 onFail = { msg ->
@@ -99,11 +101,11 @@ class MeetDetailRepositoryImpl @Inject constructor(
         ).transform { result ->
             result.covertApiResultToActionResultIfSuccessEmpty(
                 onSuccess = {
-                    val temp = _meetDetailList.value.toMutableList()
-                    temp.removeIf {
-                        it.id == meetId
+                    _meetDetailList.update { meetDetailList ->
+                        val tempList = meetDetailList.toMutableList()
+                        tempList.removeIf { it.id == meetId }
+                        tempList
                     }
-                    _meetDetailList.value = temp
                     emit(ActionResult.Success(Unit))
                 },
                 onFail = {
@@ -120,13 +122,16 @@ class MeetDetailRepositoryImpl @Inject constructor(
         ).transform { result ->
             result.covertApiResultToActionResultIfSuccessEmpty(
                 onSuccess = {
-                    val temp = _meetDetailList.value.toMutableList()
-                    val index = temp.indexOfFirst { it.id == meetId }
-                    if (index >= 0) {
-                        var tempMeet: MeetDetail = temp[index]
-                        tempMeet = tempMeet.copy(finished = true)
-                        temp[index] = tempMeet
-                        _meetDetailList.value = temp
+                    _meetDetailList.update { meetDetailList ->
+                        val index = meetDetailList.indexOfFirst { it.id == meetId }
+                        if (index >= 0) {
+                            val tempList = meetDetailList.toMutableList()
+                            var tempMeet: MeetDetail = tempList[index].copy(finished = true)
+                            tempList[index] = tempMeet
+                            tempList
+                        } else {
+                            meetDetailList
+                        }
                     }
                     emit(ActionResult.Success(Unit))
                 },
@@ -151,13 +156,16 @@ class MeetDetailRepositoryImpl @Inject constructor(
         ).transform { result ->
             result.covertApiResultToActionResultIfSuccess(
                 onSuccess = {
-                    val temp = _meetDetailList.value.toMutableList()
-                    val index = temp.indexOfFirst { it.id == meetId }
-                    if (index >= 0) {
-                        var tempMeet: MeetDetail = temp[index]
-                        tempMeet = tempMeet.copy(title = title)
-                        temp[index] = tempMeet
-                        _meetDetailList.value = temp
+                    _meetDetailList.update { meetDetailList ->
+                        val index = meetDetailList.indexOfFirst { it.id == meetId }
+                        if (index >= 0) {
+                            val tempList = meetDetailList.toMutableList()
+                            var tempMeet: MeetDetail = tempList[index].copy(title = title)
+                            tempList[index] = tempMeet
+                            tempList
+                        } else {
+                            meetDetailList
+                        }
                     }
                     emit(ActionResult.Success(Unit))
                 },
@@ -182,13 +190,17 @@ class MeetDetailRepositoryImpl @Inject constructor(
         ).transform { result ->
             result.covertApiResultToActionResultIfSuccess(
                 onSuccess = {
-                    val temp = _meetDetailList.value.toMutableList()
-                    val index = temp.indexOfFirst { it.id == meetId }
-                    if (index >= 0) {
-                        var tempMeet: MeetDetail = temp[index]
-                        tempMeet = tempMeet.copy(description = description)
-                        temp[index] = tempMeet
-                        _meetDetailList.value = temp
+                    _meetDetailList.update { meetDetailList ->
+                        val index = meetDetailList.indexOfFirst { it.id == meetId }
+                        if (index >= 0) {
+                            val tempList = meetDetailList.toMutableList()
+                            var tempMeet: MeetDetail =
+                                tempList[index].copy(description = description)
+                            tempList[index] = tempMeet
+                            tempList
+                        } else {
+                            meetDetailList
+                        }
                     }
                     emit(ActionResult.Success(Unit))
                 },
@@ -209,13 +221,17 @@ class MeetDetailRepositoryImpl @Inject constructor(
         ).transform { result ->
             result.covertApiResultToActionResultIfSuccess(
                 onSuccess = { data ->
-                    val temp = _meetDetailList.value.toMutableList()
-                    val index = temp.indexOfFirst { it.id == meetId }
-                    if (index >= 0) {
-                        var tempMeet: MeetDetail = temp[index]
-                        tempMeet = tempMeet.copy(image = data.image)
-                        temp[index] = tempMeet
-                        _meetDetailList.value = temp
+                    _meetDetailList.update { meetDetailList ->
+                        val index = meetDetailList.indexOfFirst { it.id == meetId }
+                        if (index >= 0) {
+                            val tempList = meetDetailList.toMutableList()
+                            var tempMeet: MeetDetail = tempList[index]
+                                .copy(image = data.image)
+                            tempList[index] = tempMeet
+                            tempList
+                        } else {
+                            meetDetailList
+                        }
                     }
                     emit(ActionResult.Success(Unit))
                 },
@@ -256,13 +272,18 @@ class MeetDetailRepositoryImpl @Inject constructor(
         ).transform { result ->
             result.covertApiResultToActionResultIfSuccess(
                 onSuccess = { schedule ->
-                    val tempList = _meetDetailList.value.toMutableList()
-                    val index = tempList.indexOfFirst { it.id == meetId }
-                    val item = tempList[index].copy(
-                        schedule = schedule
-                    )
-                    tempList[index] = item
-                    _meetDetailList.value = tempList
+                    _meetDetailList.update { meetDetailList ->
+                        val index = meetDetailList.indexOfFirst { it.id == meetId }
+                        if (index >= 0) {
+                            val tempList = meetDetailList.toMutableList()
+                            var tempMeet: MeetDetail = tempList[index]
+                                .copy(schedule = schedule)
+                            tempList[index] = tempMeet
+                            tempList
+                        } else {
+                            meetDetailList
+                        }
+                    }
                     emit(ActionResult.Success(schedule))
                 },
                 onFail = {
@@ -286,13 +307,18 @@ class MeetDetailRepositoryImpl @Inject constructor(
         ).transform { result ->
             result.covertApiResultToActionResultIfSuccess(
                 onSuccess = { schedule ->
-                    val tempList = _meetDetailList.value.toMutableList()
-                    val index = tempList.indexOfFirst { it.id == meetId }
-                    val item = tempList[index].copy(
-                        schedule = schedule
-                    )
-                    tempList[index] = item
-                    _meetDetailList.value = tempList
+                    _meetDetailList.update { meetDetailList ->
+                        val index = meetDetailList.indexOfFirst { it.id == meetId }
+                        if (index >= 0) {
+                            val tempList = meetDetailList.toMutableList()
+                            var tempMeet: MeetDetail = tempList[index]
+                                .copy(schedule = schedule)
+                            tempList[index] = tempMeet
+                            tempList
+                        } else {
+                            meetDetailList
+                        }
+                    }
                     emit(ActionResult.Success(schedule))
                 },
                 onFail = {
@@ -303,7 +329,9 @@ class MeetDetailRepositoryImpl @Inject constructor(
     }
 
     override suspend fun clearMeetDetail() {
-        _meetInviteStatus.value = emptyList()
+        _meetInviteStatus.update {
+            emptyList()
+        }
     }
 
 
