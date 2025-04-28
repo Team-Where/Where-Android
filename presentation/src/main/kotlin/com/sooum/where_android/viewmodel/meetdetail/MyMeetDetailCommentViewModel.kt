@@ -2,8 +2,12 @@ package com.sooum.where_android.viewmodel.meetdetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.PlaceItem
+import com.sooum.domain.usecase.comment.AddCommentUseCase
 import com.sooum.domain.usecase.comment.ClearCommentUseCase
+import com.sooum.domain.usecase.comment.DeleteCommentUseCase
+import com.sooum.domain.usecase.comment.EditCommentUseCase
 import com.sooum.domain.usecase.comment.GetCommentListUseCase
 import com.sooum.domain.usecase.place.GetPlaceByIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +22,9 @@ class MyMeetDetailCommentViewModel @Inject constructor(
     private val getPlaceByIdUseCase: GetPlaceByIdUseCase,
     getCommentListUseCase: GetCommentListUseCase,
     private val clearCommentUseCase: ClearCommentUseCase,
+    private val addCommentUseCase: AddCommentUseCase,
+    private val editCommentUseCase: EditCommentUseCase,
+    private val deleteCommentUseCase: DeleteCommentUseCase
 ) : ViewModel() {
 
     private var _placeItem: MutableStateFlow<PlaceItem?> = MutableStateFlow(null)
@@ -51,6 +58,66 @@ class MyMeetDetailCommentViewModel @Inject constructor(
         viewModelScope.launch {
             _placeItem.value = null
             clearCommentUseCase.invoke()
+        }
+    }
+
+    fun addComment(
+        placeId: Int?,
+        comment: String,
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
+    ) {
+        if (placeId == null) {
+            onFail("not Match placeId")
+        } else {
+            viewModelScope.launch {
+                when (val result = addCommentUseCase(placeId, comment)) {
+                    is ActionResult.Success -> {
+                        onSuccess()
+                    }
+
+                    is ActionResult.Fail -> {
+                        onFail(result.msg)
+                    }
+                }
+            }
+        }
+    }
+
+    fun editComment(
+        commentId: Int,
+        comment: String,
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
+    ) {
+        viewModelScope.launch {
+            when (val result = editCommentUseCase(commentId, comment)) {
+                is ActionResult.Success -> {
+                    onSuccess()
+                }
+
+                is ActionResult.Fail -> {
+                    onFail(result.msg)
+                }
+            }
+        }
+    }
+
+    fun deleteComment(
+        commentId: Int,
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
+    ) {
+        viewModelScope.launch {
+            when (val result = deleteCommentUseCase(commentId)) {
+                is ActionResult.Success -> {
+                    onSuccess()
+                }
+
+                is ActionResult.Fail -> {
+                    onFail(result.msg)
+                }
+            }
         }
     }
 }
