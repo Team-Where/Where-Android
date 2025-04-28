@@ -36,6 +36,10 @@ class PostViewHolder(
                     placeClickCallBack?.startKakaoMapUri(place.kakaoLink)
                 }
 
+                root.setOnClickListener {
+                    placeClickCallBack?.clickPlace(place.id)
+                }
+
                 textCommentNumber.text = placeItem.commentCount.toString()
             }
 

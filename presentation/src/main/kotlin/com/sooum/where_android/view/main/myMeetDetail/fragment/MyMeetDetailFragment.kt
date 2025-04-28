@@ -1,4 +1,4 @@
-package com.sooum.where_android.view.main.myMeetDetail
+package com.sooum.where_android.view.main.myMeetDetail.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.Navigation.findNavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.InvitedFriend
@@ -25,6 +25,9 @@ import com.sooum.where_android.view.widget.CoverImageView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * 탭에서 상세를 눌렀을때 보이는 화면
+ */
 @AndroidEntryPoint
 class MyMeetDetailFragment : MyMeetBaseFragment(),
     InvitedFriendListAdapter.OnItemClickEventListener,
@@ -75,7 +78,7 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myMeetDetailPlaceWithCommentViewModel.placeCount.collect { placeCount ->
+                myMeetDetailPlaceViewModel.placeCount.collect { placeCount ->
                     binding.tvLocationNumber.text = placeCount.toString()
                 }
             }
@@ -92,12 +95,12 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
                 openMapShareSheet()
             }
             btnSchedule.setOnClickListener {
-                findNavController(view).navigate(
+                Navigation.findNavController(view).navigate(
                     R.id.action_tabFragment_to_ScheduleFragment
                 )
             }
             btnFriend.setOnClickListener {
-                findNavController(view).navigate(
+                Navigation.findNavController(view).navigate(
                     R.id.action_tabFragment_to_InviteFriendFragment
                 )
             }

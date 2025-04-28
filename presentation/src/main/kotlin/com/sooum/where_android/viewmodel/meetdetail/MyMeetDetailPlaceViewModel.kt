@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MyMeetDetailPlaceWithCommentViewModel @Inject constructor(
+class MyMeetDetailPlaceViewModel @Inject constructor(
     private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
     getMeetPlaceListUseCase: GetMeetPlaceListUseCase,
     private val addPlaceUseCase: AddPlaceUseCase,

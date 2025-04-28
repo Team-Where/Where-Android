@@ -4,13 +4,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.view.main.myMeetDetail.modal.MapShareModalFragment
-import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailPlaceWithCommentViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailCommentViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailPlaceViewModel
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 
 open class MyMeetBaseFragment : Fragment() {
 
     protected val myMeetDetailViewModel: MyMeetDetailViewModel by activityViewModels()
-    protected val myMeetDetailPlaceWithCommentViewModel: MyMeetDetailPlaceWithCommentViewModel by activityViewModels()
+    protected val myMeetDetailPlaceViewModel: MyMeetDetailPlaceViewModel by activityViewModels()
+    protected val myMeetDetailCommentViewModel: MyMeetDetailCommentViewModel by activityViewModels()
 
     protected val loadingAlertProvider by lazy {
         LoadingAlertProvider(this)

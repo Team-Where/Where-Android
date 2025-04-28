@@ -1,15 +1,18 @@
-package com.sooum.where_android.view.main.myMeetDetail
+package com.sooum.where_android.view.main.myMeetDetail.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.Navigation
 import com.skydoves.balloon.balloon
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
+import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
 import com.sooum.where_android.startMapUriOrMarket
 import com.sooum.where_android.view.balloon.PlaceAddBalloonFactory
@@ -23,6 +26,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * 탭에서 장소를 눌렀을때 보이는 화면
+ */
 @AndroidEntryPoint
 class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
     private lateinit var binding: FragmentMyMeetPlaceBinding
@@ -62,7 +68,7 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myMeetDetailPlaceWithCommentViewModel.placeList.collect { placeList ->
+                myMeetDetailPlaceViewModel.placeList.collect { placeList ->
                     if (placeList.isEmpty()) {
                         if (!find) {
                             //1회만 작동하도록
@@ -79,7 +85,7 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myMeetDetailPlaceWithCommentViewModel.bestPlaceList.collect { bestPlace ->
+                myMeetDetailPlaceViewModel.bestPlaceList.collect { bestPlace ->
                     if (bestPlace.isEmpty()) {
 
                     } else {
@@ -92,7 +98,7 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myMeetDetailPlaceWithCommentViewModel.pickPlaceList.collect { pickList ->
+                myMeetDetailPlaceViewModel.pickPlaceList.collect { pickList ->
                     if (pickList.isEmpty()) {
                         binding.placePickItemListView.visibility = View.INVISIBLE
                         binding.placePickItemNoData.visibility = View.VISIBLE
@@ -166,7 +172,7 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
 
     override fun likeChange(placeId: Int) {
         loadingAlertProvider.startLoading()
-        myMeetDetailPlaceWithCommentViewModel.likeToggle(
+        myMeetDetailPlaceViewModel.likeToggle(
             placeId = placeId,
             onSuccess = {
                 loadingAlertProvider.endLoading()
@@ -179,5 +185,14 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
 
     override fun startMapUri(uriString: String, marketPackage: String) {
         context?.startMapUriOrMarket(uriString, marketPackage)
+    }
+
+    override fun clickPlace(placeId: Int) {
+        Navigation.findNavController(binding.root).navigate(
+            R.id.action_tabFragment_to_PlaceDetailFragment,
+            bundleOf(
+                MyMeetPlaceDetailFragment.PLACE_ID to placeId
+            )
+        )
     }
 }
