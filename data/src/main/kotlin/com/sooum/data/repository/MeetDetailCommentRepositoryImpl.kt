@@ -1,6 +1,7 @@
 package com.sooum.data.repository
 
 import com.sooum.data.extension.covertApiResultToActionResultIfSuccess
+import com.sooum.data.extension.covertApiResultToActionResultIfSuccessEmpty
 import com.sooum.domain.datasource.MeetRemoteDataSource
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
@@ -119,13 +120,13 @@ class MeetDetailCommentRepositoryImpl @Inject constructor(
         }.first()
     }
 
-    override suspend fun deleteComment(commentId: Int, userId: Int): ActionResult<*> {
+    override suspend fun deleteComment(commentId: Int, userId: Int): ActionResult<Unit> {
         return meetRemoteDataSource.deleteComment(
             commentId = commentId,
             userId = userId,
         ).transform { result ->
-            result.covertApiResultToActionResultIfSuccess(
-                onSuccess = { commentSimple ->
+            result.covertApiResultToActionResultIfSuccessEmpty(
+                onSuccess = {
                     _commentList.update { commentList ->
                         val index = commentList.indexOfFirst { it.commentId == commentId }
                         if (index >= 0) {

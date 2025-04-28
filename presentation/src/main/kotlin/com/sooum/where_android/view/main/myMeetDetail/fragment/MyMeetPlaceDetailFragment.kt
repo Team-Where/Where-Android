@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -47,10 +48,10 @@ class MyMeetPlaceDetailFragment : MyMeetBaseFragment() {
             )
             setContent {
                 this@MyMeetPlaceDetailFragment.TestContent(
-                    myMeetDetailCommentViewModel,
-                    myMeetDetailPlaceViewModel,
-                    loadingAlertProvider,
-                    findNavController()
+                    commentViewmodel = myMeetDetailCommentViewModel,
+                    placeViewModel = myMeetDetailPlaceViewModel,
+                    loadingAlertProvider = loadingAlertProvider,
+                    navigation = findNavController()
                 )
             }
         }
@@ -70,6 +71,15 @@ class MyMeetPlaceDetailFragment : MyMeetBaseFragment() {
     ) {
         val placeItem by commentViewmodel.placeItem.collectAsState()
         val commentList by commentViewmodel.commentList.collectAsState()
+
+        LaunchedEffect(commentList) {
+            //해당 코멘트가 변동이 생기면 placeItem의 코멘트를 갱신해준다.
+            placeViewModel.updateCommentCountLocally(
+                placeId = placeItem?.placeId,
+                commentCount = commentList.size
+            )
+        }
+
         Column {
             Text(
                 placeItem.toString()
@@ -110,7 +120,22 @@ class MyMeetPlaceDetailFragment : MyMeetBaseFragment() {
                     Text("Delete")
                 }
             }
-
+            Button(
+                onClick = {
+                    myMeetDetailCommentViewModel.addComment(
+                        placeId = placeItem?.placeId,
+                        comment = "Test",
+                        onSuccess = {
+                            loadingAlertProvider.endLoading()
+                        },
+                        onFail = { msg ->
+                            loadingAlertProvider.endLoadingWithMessage(msg)
+                        }
+                    )
+                }
+            ) {
+                Text("Add [Test] Comment")
+            }
             HorizontalDivider()
             LazyColumn {
                 items(
@@ -118,8 +143,42 @@ class MyMeetPlaceDetailFragment : MyMeetBaseFragment() {
                     key = {
                         it.commentId
                     }
-                ) {
-                    Text(it.toString())
+                ) { commentItem ->
+                    Column {
+                        Text(commentItem.toString())
+                        Button(
+                            onClick = {
+                                myMeetDetailCommentViewModel.editComment(
+                                    commentId = commentItem.commentId,
+                                    comment = "Test Edit",
+                                    onSuccess = {
+                                        loadingAlertProvider.endLoading()
+                                    },
+                                    onFail = { msg ->
+                                        loadingAlertProvider.endLoadingWithMessage(msg)
+                                    }
+                                )
+                            }
+                        ) {
+                            Text("Edit to [Test Edit] Comment")
+                        }
+
+                        Button(
+                            onClick = {
+                                myMeetDetailCommentViewModel.deleteComment(
+                                    commentId = commentItem.commentId,
+                                    onSuccess = {
+                                        loadingAlertProvider.endLoading()
+                                    },
+                                    onFail = { msg ->
+                                        loadingAlertProvider.endLoadingWithMessage(msg)
+                                    }
+                                )
+                            }
+                        ) {
+                            Text("Delete Comment")
+                        }
+                    }
                 }
             }
         }

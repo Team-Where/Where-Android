@@ -29,7 +29,7 @@ interface MeetDetailPlaceRepository {
     suspend fun deleteMeetPlace(
         placeId: Int,
         userId: Int
-    ): ActionResult<String>
+    ): ActionResult<Unit>
 
     /**
      * 장소의 좋아요를 변경합니다.
@@ -47,6 +47,14 @@ interface MeetDetailPlaceRepository {
         userId: Int,
     ): ActionResult<*>
 
+
+    /**
+     * 장소의 comment수를 업데이트 합니다.
+     */
+    suspend fun updateCommentCount(
+        placeId: Int,
+        commentCount: Int
+    )
 
     fun loadMeetPlaceData(
         meetId: Int

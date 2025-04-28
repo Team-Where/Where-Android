@@ -28,7 +28,7 @@ interface CommentApi {
     @HTTP(method = "DELETE", path = "api/place/comment", hasBody = true)
     suspend fun deletePlaceComment(
         @Body data: DeleteCommentRequest
-    ): Response<Any>
+    ): Response<String>
 
     @GET("api/place/comment/{id}")
     suspend fun getPlaceCommentList(

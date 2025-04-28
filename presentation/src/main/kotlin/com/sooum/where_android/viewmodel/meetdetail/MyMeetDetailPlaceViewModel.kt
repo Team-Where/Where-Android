@@ -11,6 +11,7 @@ import com.sooum.domain.usecase.place.AddPlaceUseCase
 import com.sooum.domain.usecase.place.DeletePlaceUseCase
 import com.sooum.domain.usecase.place.GetMeetPlaceListUseCase
 import com.sooum.domain.usecase.place.TogglePlaceLikeUseCase
+import com.sooum.domain.usecase.place.UpdatePlaceCommentCountLocalUseCase
 import com.sooum.domain.usecase.place.UpdatePlacePickUseCase
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +28,8 @@ class MyMeetDetailPlaceViewModel @Inject constructor(
     private val addPlaceUseCase: AddPlaceUseCase,
     private val deletePlaceUseCase: DeletePlaceUseCase,
     private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase,
-    private val updatePlacePickUseCase: UpdatePlacePickUseCase
+    private val updatePlacePickUseCase: UpdatePlacePickUseCase,
+    private val updatePlaceCommentCountLocalUseCase: UpdatePlaceCommentCountLocalUseCase
 ) : ViewModel() {
 
     //모임 상세에 로드된 place 목록
@@ -160,6 +162,22 @@ class MyMeetDetailPlaceViewModel @Inject constructor(
                         onFail(result.msg)
                     }
                 }
+            }
+        }
+    }
+
+    fun updateCommentCountLocally(
+        placeId: Int?,
+        commentCount: Int
+    ) {
+        if (placeId == null) {
+
+        } else {
+            viewModelScope.launch {
+                updatePlaceCommentCountLocalUseCase(
+                    placeId,
+                    commentCount
+                )
             }
         }
     }

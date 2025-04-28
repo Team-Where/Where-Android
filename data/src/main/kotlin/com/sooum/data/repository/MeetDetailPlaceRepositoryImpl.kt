@@ -1,6 +1,7 @@
 package com.sooum.data.repository
 
 import com.sooum.data.extension.covertApiResultToActionResultIfSuccess
+import com.sooum.data.extension.covertApiResultToActionResultIfSuccessEmpty
 import com.sooum.domain.datasource.MeetRemoteDataSource
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
@@ -100,13 +101,13 @@ class MeetDetailPlaceRepositoryImpl @Inject constructor(
         }.first()
     }
 
-    override suspend fun deleteMeetPlace(placeId: Int, userId: Int): ActionResult<String> {
+    override suspend fun deleteMeetPlace(placeId: Int, userId: Int): ActionResult<Unit> {
         return meetRemoteDataSource.deleteMeetPlace(
             placeId,
             userId
         ).transform { result ->
-            result.covertApiResultToActionResultIfSuccess(
-                onSuccess = { place ->
+            result.covertApiResultToActionResultIfSuccessEmpty(
+                onSuccess = {
                     _meetPlaceList.update { placeList ->
                         val index = placeList.indexOfFirst { it.id == placeId }
                         if (index >= 0) {
@@ -117,7 +118,7 @@ class MeetDetailPlaceRepositoryImpl @Inject constructor(
                             placeList
                         }
                     }
-                    emit(ActionResult.Success(place.toString()))
+                    emit(ActionResult.Success(Unit))
                 },
                 onFail = { msg ->
                     emit(ActionResult.Fail(msg))
@@ -177,6 +178,20 @@ class MeetDetailPlaceRepositoryImpl @Inject constructor(
                 }
             )
         }.first()
+    }
+
+    override suspend fun updateCommentCount(placeId: Int, commentCount: Int) {
+        _meetPlaceList.update { meetPlaceList ->
+            val index = meetPlaceList.indexOfFirst { it.id == placeId }
+            if (index >= 0) {
+                val tempList = meetPlaceList.toMutableList()
+                val tempItem = tempList[index].copy(comments = commentCount)
+                tempList[index] = tempItem
+                tempList
+            } else {
+                meetPlaceList
+            }
+        }
     }
 
     override suspend fun clearPlaceData() {
