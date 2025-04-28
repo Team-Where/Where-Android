@@ -148,45 +148,28 @@ class MeetDetailCommentRepositoryImpl @Inject constructor(
 
     override suspend fun addCommentFromFcm(placeId: Int, newComment: CommentListItem) {
         if (focusPlaceId == placeId) {
-            //현재 보고있는 화면인지 확인
-            //TODO
+           _commentList.update { currentList->
+               currentList + newComment
+           }
         }
-//        _commentList.update { currentList ->
-//            val currentList = currentMap[placeId] ?: emptyList()
-//            val updateList = currentList + newComment
-//            currentMap.toMutableMap().apply {
-//                this[placeId] = updateList
-//            }
-//        }
+
     }
 
     override suspend fun updateCommentFromFcm(commentId: Int, description: String) {
-//        _commentList.update { currentList ->
-//            commentMap.mapValues { (_, commentList) ->
-//                if (commentList.any { it.commentId == commentId }) {
-//                    commentList.map { comment ->
-//                        if (comment.commentId == commentId) {
-//                            comment.copy(description = description)
-//                        } else {
-//                            comment
-//                        }
-//                    }
-//                } else {
-//                    commentList
-//                }
-//            }
-//        }
+        _commentList.update { currentList->
+            currentList.map { comment->
+                if(comment.commentId == commentId){
+                    comment.copy(description = description)
+                }else{
+                    comment
+                }
+            }
+        }
     }
 
     override suspend fun deleteCommentFromFcm(commentId: Int) {
-//        _commentList.update { currentList ->
-//            commentMap.mapValues { (_, commentList) ->
-//                if (commentList.any { it.commentId == commentId }) {
-//                    commentList.filter { it.commentId != commentId }
-//                } else {
-//                    commentList
-//                }
-//            }
-//        }
+        _commentList.update { currentList->
+           currentList.filter { it.commentId != commentId }
+        }
     }
 }
