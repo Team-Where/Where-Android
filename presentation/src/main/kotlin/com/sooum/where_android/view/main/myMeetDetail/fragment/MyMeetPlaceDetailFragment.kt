@@ -18,6 +18,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.sooum.domain.model.PLACE_STATE_NOT_PICK
+import com.sooum.domain.model.PLACE_STATE_PICK
 import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailCommentViewModel
@@ -85,6 +87,22 @@ class MyMeetPlaceDetailFragment : MyMeetBaseFragment() {
                 placeItem.toString()
             )
             placeItem?.place?.let { place ->
+                when (place.status) {
+                    PLACE_STATE_PICK -> {
+                        Text("Pick 됨")
+                    }
+
+                    PLACE_STATE_NOT_PICK -> {
+                        Text("Pick 안됨")
+                    }
+
+                    else -> {
+                        Text("이상한 값")
+                    }
+                }
+
+                Text("코멘트 수 : ${place.comments}")
+
                 Button(
                     onClick = {
                         loadingAlertProvider.startLoading()
