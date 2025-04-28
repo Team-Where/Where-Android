@@ -125,15 +125,17 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
     }
 
     private fun setupRecyclerView() {
-        selectedPlaceListAdapter = SelectedPlaceListAdapter().apply {
-            setCallBack(this@MyMeetPlaceFragment)
-        }
-        allPlaceListAdapter = AllPlaceListAdapter().apply {
-            setCallBack(this@MyMeetPlaceFragment)
-        }
-        bestPlaceListAdapter = BestPlaceListAdapter().apply {
-            setCallBack(this@MyMeetPlaceFragment)
-        }
+        selectedPlaceListAdapter = SelectedPlaceListAdapter(
+            this@MyMeetPlaceFragment
+        )
+
+        allPlaceListAdapter = AllPlaceListAdapter(
+            this@MyMeetPlaceFragment
+        )
+
+        bestPlaceListAdapter = BestPlaceListAdapter(
+            this@MyMeetPlaceFragment
+        )
 
         binding.placePickItemListView.adapter = selectedPlaceListAdapter
         binding.placeAllItemListView.adapter = allPlaceListAdapter

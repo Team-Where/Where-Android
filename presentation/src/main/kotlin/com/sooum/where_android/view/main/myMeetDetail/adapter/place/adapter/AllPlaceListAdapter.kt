@@ -5,12 +5,16 @@ import android.view.ViewGroup
 import com.sooum.domain.model.PlaceItem
 import com.sooum.where_android.databinding.ItemUnselectedPlaceBinding
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.PlaceBaseAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.PlaceClickCallBack
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.placeItemDiffUtil
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.viewholder.PostViewHolder
 
 class AllPlaceListAdapter() : PlaceBaseAdapter<PlaceItem, PostViewHolder>(
     placeItemDiffUtil
 ) {
+    constructor(callBack: PlaceClickCallBack) : this() {
+        setCallBack(callBack)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val inflater = LayoutInflater.from(parent.context)

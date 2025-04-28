@@ -22,9 +22,14 @@ import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.common.ComposeItemViewHolder
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.PlaceBaseAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.PlaceClickCallBack
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.viewholder.PostViewHolder
 
-class BestPlaceListAdapter : PlaceBaseAdapter<PlaceRank, RecyclerView.ViewHolder>(diffUtil) {
+class BestPlaceListAdapter() : PlaceBaseAdapter<PlaceRank, RecyclerView.ViewHolder>(diffUtil) {
+
+    constructor(callBack: PlaceClickCallBack) : this() {
+        setCallBack(callBack)
+    }
 
     companion object {
         private const val VIEW_TYPE_HEADER = 0
