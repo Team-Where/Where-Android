@@ -1,4 +1,4 @@
-package com.sooum.data.network.place.request
+package com.sooum.data.network.comment.request
 
 import kotlinx.serialization.Serializable
 

@@ -2,6 +2,7 @@ package com.sooum.data.di
 
 import com.sooum.data.network.NullOnEmptyConverterFactory
 import com.sooum.data.network.auth.AuthApi
+import com.sooum.data.network.comment.CommentApi
 import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.place.PlaceApi
 import com.sooum.data.network.schedule.ScheduleApi
@@ -68,6 +69,15 @@ object NetworkModule {
         @WhereRetrofit retrofit: Retrofit
     ): PlaceApi {
         return retrofit.create(PlaceApi::class.java)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideCommentApi(
+        @WhereRetrofit retrofit: Retrofit
+    ): CommentApi {
+        return retrofit.create(CommentApi::class.java)
     }
 
     @Provides
