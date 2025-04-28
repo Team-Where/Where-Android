@@ -260,10 +260,10 @@ class MyMeetDetailViewModel @Inject constructor(
     }
 
     override fun onCleared() {
+        super.onCleared()
         viewModelScope.launch {
             clearMeetUseCase()
         }
-        super.onCleared()
     }
 }
 

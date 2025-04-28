@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
 import com.sooum.where_android.databinding.FragmentMyMeetTabBinding
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
-import com.sooum.where_android.view.main.myMeetDetail.modal.EditMyMeetDetailFragment
 import kotlinx.coroutines.launch
 
 /**
@@ -24,12 +23,6 @@ class MyMeetTabFragment : MyMeetBaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMyMeetTabBinding.inflate(inflater, container, false)
-
-        binding.imageEdit.setOnClickListener {
-            val bottomSheet = EditMyMeetDetailFragment()
-            bottomSheet.show(parentFragmentManager, bottomSheet.tag)
-        }
-
         return binding.root
     }
 
@@ -63,8 +56,12 @@ class MyMeetTabFragment : MyMeetBaseFragment() {
             })
 
             myMeetDetailTabViewModel.selectedTabPosition.let { position ->
-                selectTab(getTabAt(position))
-                loadFragment(position)
+                if (position == 1) {
+                    val tab = getTabAt(position)
+                    selectTab(tab)
+                } else {
+                    loadFragment(0)
+                }
             }
         }
     }

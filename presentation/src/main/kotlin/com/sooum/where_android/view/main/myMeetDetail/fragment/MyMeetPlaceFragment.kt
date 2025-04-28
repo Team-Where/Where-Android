@@ -59,12 +59,14 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
     }
 
     private var find = false
+    private var restoreType: Int = -1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpBtn()
         setupRecyclerView()
+        setUpBtn()
+        restoreType()
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -78,7 +80,12 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
                         }
                     } else {
                         binding.placeItemNoData.visibility = View.GONE
-                        allPlaceListAdapter.submitList(placeList)
+                        allPlaceListAdapter.submitList(placeList) {
+                            if (getSelectedTabState() == 0) {
+                                binding.placeAllItemListView.visibility = View.VISIBLE
+                                restoreScroll(0)
+                            }
+                        }
                     }
                 }
             }
@@ -90,7 +97,12 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
 
                     } else {
                         binding.placeItemNoData.visibility = View.GONE
-                        bestPlaceListAdapter.submitList(bestPlace)
+                        bestPlaceListAdapter.submitList(bestPlace) {
+                            if (getSelectedTabState() == 1) {
+                                binding.placeBestItemListView.visibility = View.VISIBLE
+                                restoreScroll(1)
+                            }
+                        }
                     }
                 }
             }
@@ -170,6 +182,57 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
         }
     }
 
+    /**
+     * 마지막 상태를 복구한다.
+     */
+    private fun restoreType() {
+        with(myMeetDetailTabViewModel) {
+            when (selectedPlaceType) {
+                0 -> {
+                    binding.btnAll.isChecked = true
+                    restoreType = 0
+                }
+
+                1 -> {
+                    binding.btnBest.isChecked = true
+                    restoreType = 1
+                }
+            }
+        }
+    }
+
+    /**
+     * 현재 탭의 state을 가져온다.
+     */
+    private fun getSelectedTabState(): Int {
+        with(binding) {
+            return if (btnAll.isChecked) {
+                0
+            } else if (btnBest.isChecked) {
+                1
+            } else {
+                -1
+            }
+        }
+    }
+
+    /**
+     * 복구할 scroll 위차가 있다면 복구한다.
+     */
+    private fun restoreScroll(type: Int) {
+        if (type == restoreType) {
+            with(myMeetDetailTabViewModel) {
+                if (savedScroll > 0) {
+                    val temp = savedScroll
+                    binding.root.post {
+                        binding.root.scrollTo(0, temp)
+                    }
+                    savedScroll = -1
+                }
+            }
+        }
+    }
+
     override fun likeChange(placeId: Int) {
         loadingAlertProvider.startLoading()
         myMeetDetailPlaceViewModel.likeToggle(
@@ -188,6 +251,10 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
     }
 
     override fun clickPlace(placeId: Int) {
+        with(myMeetDetailTabViewModel) {
+            selectedPlaceType = getSelectedTabState()
+            savedScroll = binding.root.scrollY
+        }
         findNavController().navigate(
             R.id.action_tabFragment_to_PlaceDetailFragment,
             bundleOf(
