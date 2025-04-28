@@ -108,6 +108,7 @@ interface MeetRemoteDataSource {
      */
     suspend fun deleteMeetPlace(
         placeId: Int,
+        userId: Int
     ): Flow<ApiResult<Any>>
 
     /**

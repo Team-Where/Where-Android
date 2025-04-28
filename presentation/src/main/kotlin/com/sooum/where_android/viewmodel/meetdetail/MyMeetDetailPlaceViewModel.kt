@@ -8,6 +8,7 @@ import com.sooum.domain.model.PlaceItem
 import com.sooum.domain.model.PlaceRank
 import com.sooum.domain.model.ShareResult
 import com.sooum.domain.usecase.place.AddPlaceUseCase
+import com.sooum.domain.usecase.place.DeletePlaceUseCase
 import com.sooum.domain.usecase.place.GetMeetPlaceListUseCase
 import com.sooum.domain.usecase.place.TogglePlaceLikeUseCase
 import com.sooum.domain.usecase.place.UpdatePlacePickUseCase
@@ -24,6 +25,7 @@ class MyMeetDetailPlaceViewModel @Inject constructor(
     private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
     getMeetPlaceListUseCase: GetMeetPlaceListUseCase,
     private val addPlaceUseCase: AddPlaceUseCase,
+    private val deletePlaceUseCase: DeletePlaceUseCase,
     private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase,
     private val updatePlacePickUseCase: UpdatePlacePickUseCase
 ) : ViewModel() {
@@ -96,6 +98,28 @@ class MyMeetDetailPlaceViewModel @Inject constructor(
             meetDetailId?.let {
                 addPlaceUseCase(it, getLoginUserIdUseCase()!!, shareResult)
                 complete()
+            }
+        }
+    }
+
+    fun deletePlace(
+        placeId: Int?,
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
+    ) {
+        if (placeId == null) {
+            onFail("not Match placeId")
+        } else {
+            viewModelScope.launch {
+                when (val result = deletePlaceUseCase(placeId)) {
+                    is ActionResult.Success -> {
+                        onSuccess()
+                    }
+
+                    is ActionResult.Fail -> {
+                        onFail(result.msg)
+                    }
+                }
             }
         }
     }

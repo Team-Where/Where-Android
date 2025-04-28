@@ -100,6 +100,33 @@ class MeetDetailPlaceRepositoryImpl @Inject constructor(
         }.first()
     }
 
+    override suspend fun deleteMeetPlace(placeId: Int, userId: Int): ActionResult<String> {
+        return meetRemoteDataSource.deleteMeetPlace(
+            placeId,
+            userId
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { place ->
+                    _meetPlaceList.update { placeList ->
+                        val index = placeList.indexOfFirst { it.id == placeId }
+                        if (index >= 0) {
+                            val tempList = placeList.toMutableList()
+                            tempList.removeAt(index)
+                            tempList
+                        } else {
+                            placeList
+                        }
+                    }
+                    emit(ActionResult.Success(place.toString()))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
+                }
+            )
+        }.first()
+    }
+
+
     override suspend fun likeToggle(placeId: Int, userId: Int): ActionResult<*> {
         return meetRemoteDataSource.likePlace(placeId, userId).transform { result ->
             result.covertApiResultToActionResultIfSuccess(

@@ -25,4 +25,5 @@ open class MyMeetBaseFragment : Fragment() {
             parentFragmentManager, MapShareModalFragment.TAG
         )
     }
+
 }

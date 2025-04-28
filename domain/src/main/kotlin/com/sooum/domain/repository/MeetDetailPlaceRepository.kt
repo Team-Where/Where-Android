@@ -24,6 +24,14 @@ interface MeetDetailPlaceRepository {
 
 
     /**
+     * 장소를 삭제합니다.
+     */
+    suspend fun deleteMeetPlace(
+        placeId: Int,
+        userId: Int
+    ): ActionResult<String>
+
+    /**
      * 장소의 좋아요를 변경합니다.
      */
     suspend fun likeToggle(

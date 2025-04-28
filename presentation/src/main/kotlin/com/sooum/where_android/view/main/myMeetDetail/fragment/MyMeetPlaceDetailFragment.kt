@@ -15,6 +15,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailCommentViewModel
@@ -47,7 +49,8 @@ class MyMeetPlaceDetailFragment : MyMeetBaseFragment() {
                 this@MyMeetPlaceDetailFragment.TestContent(
                     myMeetDetailCommentViewModel,
                     myMeetDetailPlaceViewModel,
-                    loadingAlertProvider
+                    loadingAlertProvider,
+                    findNavController()
                 )
             }
         }
@@ -63,6 +66,7 @@ class MyMeetPlaceDetailFragment : MyMeetBaseFragment() {
         commentViewmodel: MyMeetDetailCommentViewModel,
         placeViewModel: MyMeetDetailPlaceViewModel,
         loadingAlertProvider: LoadingAlertProvider,
+        navigation: NavController
     ) {
         val placeItem by commentViewmodel.placeItem.collectAsState()
         val commentList by commentViewmodel.commentList.collectAsState()
@@ -70,22 +74,43 @@ class MyMeetPlaceDetailFragment : MyMeetBaseFragment() {
             Text(
                 placeItem.toString()
             )
-            Button(
-                onClick = {
-                    loadingAlertProvider.startLoading()
-                    placeViewModel.updatePick(
-                        placeId = placeItem?.placeId,
-                        onSuccess = {
-                            loadingAlertProvider.endLoading()
-                        },
-                        onFail = { msg ->
-                            loadingAlertProvider.endLoadingWithMessage(msg)
-                        }
-                    )
+            placeItem?.place?.let { place ->
+                Button(
+                    onClick = {
+                        loadingAlertProvider.startLoading()
+                        placeViewModel.updatePick(
+                            placeId = placeItem?.placeId,
+                            onSuccess = {
+                                loadingAlertProvider.endLoading()
+                            },
+                            onFail = { msg ->
+                                loadingAlertProvider.endLoadingWithMessage(msg)
+                            }
+                        )
+                    }
+                ) {
+                    Text("Pick Toggle[Now : ${place.status}")
                 }
-            ) {
-                Text("Pick")
+
+                Button(
+                    onClick = {
+                        loadingAlertProvider.startLoading()
+                        placeViewModel.deletePlace(
+                            placeId = placeItem?.placeId,
+                            onSuccess = {
+                                navigation.popBackStack()
+                                loadingAlertProvider.endLoading()
+                            },
+                            onFail = { msg ->
+                                loadingAlertProvider.endLoadingWithMessage(msg)
+                            }
+                        )
+                    }
+                ) {
+                    Text("Delete")
+                }
             }
+
             HorizontalDivider()
             LazyColumn {
                 items(
