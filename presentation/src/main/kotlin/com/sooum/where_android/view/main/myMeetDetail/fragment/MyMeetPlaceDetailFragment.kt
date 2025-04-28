@@ -5,10 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailCommentViewModel
 
 /**
  * 장소를 눌렀을때 이동되는 화면
@@ -23,17 +30,46 @@ class MyMeetPlaceDetailFragment : MyMeetBaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val placeId = arguments?.getInt(PLACE_ID, 0)
+        val placeId = arguments?.getInt(PLACE_ID, 0) ?: 0
+        if (placeId < 0) {
+            //Error
+        } else {
+            myMeetDetailCommentViewModel.loadData(placeId)
+        }
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner)
             )
             setContent {
-                //TODO
-                Column {
-                    Text(
-                        placeId.toString()
-                    )
+                TestContent(myMeetDetailCommentViewModel)
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        myMeetDetailCommentViewModel.clearData()
+    }
+
+    @Composable
+    fun TestContent(
+        viewmodel: MyMeetDetailCommentViewModel
+    ) {
+        val placeItem by viewmodel.placeItem.collectAsState()
+        val commentList by viewmodel.commentList.collectAsState()
+        Column {
+            Text(
+                placeItem.toString()
+            )
+            HorizontalDivider()
+            LazyColumn {
+                items(
+                    commentList,
+                    key = {
+                        it.commentId
+                    }
+                ) {
+                    Text(it.toString())
                 }
             }
         }

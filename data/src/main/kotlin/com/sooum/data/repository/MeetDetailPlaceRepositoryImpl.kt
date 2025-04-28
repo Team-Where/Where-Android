@@ -14,6 +14,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -53,6 +54,9 @@ class MeetDetailPlaceRepositoryImpl @Inject constructor(
         }
 
     override fun getMeetPlaceList(): Flow<List<PlaceItem>> = meetPlaceItemList
+
+    override fun getMeetPlaceById(placeId: Int): Flow<PlaceItem?> = meetPlaceItemList
+        .map { list -> list.find { it.placeId == placeId } }
 
     private val asyncScope = CoroutineScope(Dispatchers.IO)
 

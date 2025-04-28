@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface MeetDetailPlaceRepository {
     fun getMeetPlaceList(): Flow<List<PlaceItem>>
+    fun getMeetPlaceById(placeId: Int): Flow<PlaceItem?>
 
     /**
      * 장소를 추가합니다.
