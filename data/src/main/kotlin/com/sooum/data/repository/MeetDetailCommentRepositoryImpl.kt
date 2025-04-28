@@ -46,10 +46,15 @@ class MeetDetailCommentRepositoryImpl @Inject constructor(
 
     override fun loadMeetCommentData(placeId: Int) {
         asyncScope.launch {
+            _commentList.update {
+                emptyList()
+            }
             focusPlaceId = placeId
             meetRemoteDataSource.getPlaceCommentList(placeId).first().let { result ->
                 if (result is ApiResult.Success) {
-                    _commentList.value = result.data
+                    _commentList.update {
+                        result.data
+                    }
                 }
             }
         }

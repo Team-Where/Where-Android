@@ -64,13 +64,18 @@ class MeetDetailPlaceRepositoryImpl @Inject constructor(
 
     override fun loadMeetPlaceData(meetId: Int) {
         asyncScope.launch {
+            _meetPlaceList.update {
+                emptyList()
+            }
             val myId = getLoginUserIdUseCase()!!
             val placeListJob = async {
                 meetRemoteDataSource.getMeetPlaceList(meetId, myId)
             }
             val placeListResult = placeListJob.await().first()
             if (placeListResult is ApiResult.Success) {
-                _meetPlaceList.value = placeListResult.data
+                _meetPlaceList.update {
+                    placeListResult.data
+                }
             }
         }
     }
@@ -195,7 +200,9 @@ class MeetDetailPlaceRepositoryImpl @Inject constructor(
     }
 
     override suspend fun clearPlaceData() {
-        _meetPlaceList.value = emptyList()
+        _meetPlaceList.update {
+            emptyList()
+        }
     }
 
     override suspend fun addPlaceFromFcm(meetId: Int, newPlace: PlaceWithUsers) {
