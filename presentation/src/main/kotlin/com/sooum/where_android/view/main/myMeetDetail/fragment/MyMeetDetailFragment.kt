@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.InvitedFriend
@@ -84,23 +84,21 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
             }
         }
 
-        setButtonAction(view)
+        setButtonAction()
     }
 
-    private fun setButtonAction(
-        view: View
-    ) {
+    private fun setButtonAction() {
         with(binding) {
             btnLocation.setOnClickListener {
                 openMapShareSheet()
             }
             btnSchedule.setOnClickListener {
-                Navigation.findNavController(view).navigate(
+                findNavController().navigate(
                     R.id.action_tabFragment_to_ScheduleFragment
                 )
             }
             btnFriend.setOnClickListener {
-                Navigation.findNavController(view).navigate(
+                findNavController().navigate(
                     R.id.action_tabFragment_to_InviteFriendFragment
                 )
             }

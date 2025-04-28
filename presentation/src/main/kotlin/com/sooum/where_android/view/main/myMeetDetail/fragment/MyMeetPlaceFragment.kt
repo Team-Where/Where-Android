@@ -9,7 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.skydoves.balloon.balloon
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import com.sooum.where_android.R
@@ -188,7 +188,7 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
     }
 
     override fun clickPlace(placeId: Int) {
-        Navigation.findNavController(binding.root).navigate(
+        findNavController().navigate(
             R.id.action_tabFragment_to_PlaceDetailFragment,
             bundleOf(
                 MyMeetPlaceDetailFragment.PLACE_ID to placeId
