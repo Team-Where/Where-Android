@@ -48,7 +48,7 @@ class MyMeetDetailPlaceViewModel @Inject constructor(
     //pick된 장소
     val pickPlaceList = placeList.transform { places ->
         val filterList = places.filter { it.status == PLACE_STATE_PICK }
-        emit(filterList.sortedBy { it.likeCount })
+        emit(filterList.sortedByDescending { it.likeCount })
     }
 
     //상위 3개의 장소
