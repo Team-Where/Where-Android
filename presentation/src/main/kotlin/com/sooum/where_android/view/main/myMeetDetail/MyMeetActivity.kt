@@ -16,6 +16,7 @@ import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailFcmViewModel
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailPlaceViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailTabViewModel
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.json.Json
@@ -29,6 +30,7 @@ class MyMeetActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMyMeetBinding
 
+    private val myMeetDetailTabViewModel: MyMeetDetailTabViewModel by viewModels()
     private val myMeetDetailViewModel: MyMeetDetailViewModel by viewModels()
     private val myMeetDetailPlaceWithCommentViewModel: MyMeetDetailPlaceViewModel by viewModels()
     private val myMeetDetailFcmViewModel: MyMeetDetailFcmViewModel by viewModels()

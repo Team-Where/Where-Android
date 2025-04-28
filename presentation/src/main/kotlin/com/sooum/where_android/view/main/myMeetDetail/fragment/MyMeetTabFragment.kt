@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
 import com.sooum.where_android.databinding.FragmentMyMeetTabBinding
@@ -37,7 +36,6 @@ class MyMeetTabFragment : MyMeetBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loadFragment(MyMeetDetailFragment())
         setupTabLayoutListener()
 
         with(binding) {
@@ -54,23 +52,33 @@ class MyMeetTabFragment : MyMeetBaseFragment() {
     }
 
     private fun setupTabLayoutListener() {
-        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                val fragment = when (tab.position) {
-                    0 -> MyMeetDetailFragment()
-                    1 -> MyMeetPlaceFragment()
-                    else -> return
+        with(binding.tabLayout) {
+            addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab) {
+                    loadFragment(tab.position)
                 }
-                loadFragment(fragment)
-            }
 
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })
+                override fun onTabUnselected(tab: TabLayout.Tab) {}
+                override fun onTabReselected(tab: TabLayout.Tab) {}
+            })
+
+            myMeetDetailTabViewModel.selectedTabPosition.let { position ->
+                selectTab(getTabAt(position))
+                loadFragment(position)
+            }
+        }
     }
 
     @SuppressLint("CommitTransaction")
-    private fun loadFragment(fragment: Fragment) {
+    private fun loadFragment(
+        position: Int
+    ) {
+        val fragment = when (position) {
+            0 -> MyMeetDetailFragment()
+            1 -> MyMeetPlaceFragment()
+            else -> return
+        }
+        myMeetDetailTabViewModel.selectedTabPosition = position
         parentFragmentManager.beginTransaction()
             .replace(binding.flame.id, fragment)
             .commit()
