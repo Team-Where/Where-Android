@@ -1,5 +1,6 @@
 package com.sooum.domain.repository
 
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.CommentListItem
 import kotlinx.coroutines.flow.Flow
 
@@ -21,6 +22,32 @@ interface MeetDetailCommentRepository {
     fun loadMeetCommentData(
         placeId: Int
     )
+
+    /**
+     * 코멘트 추가
+     */
+    suspend fun addComment(
+        placeId: Int,
+        userId: Int,
+        comment: String
+    ): ActionResult<*>
+
+    /**
+     * 코멘트 수정
+     */
+    suspend fun editComment(
+        commentId: Int,
+        userId: Int,
+        comment: String
+    ): ActionResult<*>
+
+    /**
+     * 코멘트 삭제
+     */
+    suspend fun deleteComment(
+        commentId: Int,
+        userId: Int
+    ): ActionResult<*>
 
     /**
      * fcm 코드 301 코멘트 추가 일때 함수

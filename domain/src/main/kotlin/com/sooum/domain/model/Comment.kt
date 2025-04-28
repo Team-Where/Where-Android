@@ -33,8 +33,17 @@ data class CommentListItem(
     @SerialName("placeId")
     val placeId: Int,
     val description: String,
-    val createdAt: String
-)
+    val createdAt: String = ""
+) {
+    constructor(
+        commentSimple: CommentSimple,
+        placeId: Int,
+    ) : this(
+        commentSimple.commentId,
+        placeId,
+        commentSimple.description,
+    )
+}
 
 @Serializable
 sealed class CommentData {

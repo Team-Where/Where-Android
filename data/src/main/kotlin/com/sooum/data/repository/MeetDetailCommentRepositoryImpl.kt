@@ -1,6 +1,8 @@
 package com.sooum.data.repository
 
+import com.sooum.data.extension.covertApiResultToActionResultIfSuccess
 import com.sooum.domain.datasource.MeetRemoteDataSource
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.repository.MeetDetailCommentRepository
@@ -11,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -54,6 +57,92 @@ class MeetDetailCommentRepositoryImpl @Inject constructor(
     override suspend fun clearCommentData() {
         focusPlaceId = -1
         _commentList.value = emptyList()
+    }
+
+    override suspend fun addComment(
+        placeId: Int,
+        userId: Int,
+        comment: String
+    ): ActionResult<*> {
+        return meetRemoteDataSource.addComment(
+            placeId = placeId,
+            userId = userId,
+            description = comment
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { commentSimple ->
+                    _commentList.update { commentList ->
+                        val tempList = commentList.toMutableList()
+                        tempList.add(CommentListItem(commentSimple, placeId))
+                        tempList
+                    }
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
+                }
+            )
+        }.first()
+    }
+
+    override suspend fun editComment(
+        commentId: Int,
+        userId: Int,
+        comment: String
+    ): ActionResult<*> {
+        return meetRemoteDataSource.editComment(
+            commentId = commentId,
+            userId = userId,
+            description = comment
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { commentSimple ->
+                    _commentList.update { commentList ->
+                        val index = commentList.indexOfFirst { it.commentId == commentId }
+                        if (index >= 0) {
+                            val tempList = commentList.toMutableList()
+                            val item = tempList[index].copy(
+                                description = commentSimple.description
+                            )
+                            tempList[index] = item
+                            tempList
+                        } else {
+                            commentList
+                        }
+                    }
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
+                }
+            )
+        }.first()
+    }
+
+    override suspend fun deleteComment(commentId: Int, userId: Int): ActionResult<*> {
+        return meetRemoteDataSource.deleteComment(
+            commentId = commentId,
+            userId = userId,
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { commentSimple ->
+                    _commentList.update { commentList ->
+                        val index = commentList.indexOfFirst { it.commentId == commentId }
+                        if (index >= 0) {
+                            val tempList = commentList.toMutableList()
+                            tempList.removeAt(index)
+                            tempList
+                        } else {
+                            commentList
+                        }
+                    }
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
+                }
+            )
+        }.first()
     }
 
     override suspend fun addCommentFromFcm(placeId: Int, newComment: CommentListItem) {
