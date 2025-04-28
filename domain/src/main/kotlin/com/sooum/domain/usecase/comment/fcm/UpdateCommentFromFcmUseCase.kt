@@ -1,12 +1,12 @@
 package com.sooum.domain.usecase.comment.fcm
 
-import com.sooum.domain.repository.MeetDetailPlaceWithCommentRepository
+import com.sooum.domain.repository.MeetDetailCommentRepository
 import jakarta.inject.Inject
 
 class UpdateCommentFromFcmUseCase @Inject constructor(
-    private val meetDetailPlaceWithCommentRepository: MeetDetailPlaceWithCommentRepository
+    private val meetDetailCommentRepository: MeetDetailCommentRepository
 ) {
     suspend operator fun invoke(commentId: Int, description: String) {
-        meetDetailPlaceWithCommentRepository.updateCommentFromFcm(commentId, description)
+        meetDetailCommentRepository.updateCommentFromFcm(commentId, description)
     }
 }

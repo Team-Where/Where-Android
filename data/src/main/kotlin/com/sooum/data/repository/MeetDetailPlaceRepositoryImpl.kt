@@ -4,31 +4,27 @@ import com.sooum.data.extension.covertApiResultToActionResultIfSuccess
 import com.sooum.domain.datasource.MeetRemoteDataSource
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.model.CommentListItem
-import com.sooum.domain.model.CommentSimple
 import com.sooum.domain.model.PlaceItem
 import com.sooum.domain.model.PlaceWithUsers
-import com.sooum.domain.repository.MeetDetailPlaceWithCommentRepository
+import com.sooum.domain.repository.MeetDetailPlaceRepository
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.transform
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MeetDetailPlaceWithCommentRepositoryImpl @Inject constructor(
+class MeetDetailPlaceRepositoryImpl @Inject constructor(
     private val meetRemoteDataSource: MeetRemoteDataSource,
     private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
-) : MeetDetailPlaceWithCommentRepository {
+) : MeetDetailPlaceRepository {
 
     /**
-     * [loadMeetDetailSubData]이후에 해당 모임에 해당되는 장소 목록
+     * [loadMeetPlaceData]이후에 해당 모임에 해당되는 장소 목록
      * 모임에 속한 장소 목록을 가져온다.
      */
     private val _meetPlaceList = MutableStateFlow(emptyList<PlaceWithUsers>())
@@ -42,31 +38,25 @@ class MeetDetailPlaceWithCommentRepositoryImpl @Inject constructor(
             emit(placeList.map { it.id }.toSet())
         }
 
-    /**
-     * [loadMeetDetailSubData]이후에 해당 모임에 해당되는 코멘트목록
-     * 모임에 속한 PlaceId = 코멘트 리스트 로 가져온다.
-     */
-    private val _commentList = MutableStateFlow(emptyMap<PlaceId, List<CommentListItem>>())
-
 
     /**
-     * 장소별 코멘트 처리를 위해 place와 commentList를 병합한 형태의 아이템
+     * 장소별 코멘트 처리를 위해 place를 PlaceItem으로 변환한 아이템
      */
-    private val meetPlaceWithCommentList: Flow<List<PlaceItem>> =
-        _meetPlaceList.combine(_commentList) { placeList, commentList ->
-            return@combine placeList.map { placeWithUsers: PlaceWithUsers ->
-                val id = placeWithUsers.id
-                PlaceItem(
-                    id,
-                    placeWithUsers,
-                    commentList.getOrDefault(id, emptyList()).map { CommentSimple(it) })
-            }
+    private val meetPlaceItemList: Flow<List<PlaceItem>> =
+        _meetPlaceList.transform { placeList ->
+            emit(
+                placeList.map { placeWithUsers: PlaceWithUsers ->
+                    val id = placeWithUsers.id
+                    PlaceItem(id, placeWithUsers)
+                }
+            )
         }
 
-    override fun getMeetPlaceList(): Flow<List<PlaceItem>> = meetPlaceWithCommentList
+    override fun getMeetPlaceList(): Flow<List<PlaceItem>> = meetPlaceItemList
 
     private val asyncScope = CoroutineScope(Dispatchers.IO)
-    override fun loadMeetDetailSubData(meetId: Int) {
+
+    override fun loadMeetPlaceData(meetId: Int) {
         asyncScope.launch {
             val myId = getLoginUserIdUseCase()!!
             val placeListJob = async {
@@ -75,18 +65,6 @@ class MeetDetailPlaceWithCommentRepositoryImpl @Inject constructor(
             val placeListResult = placeListJob.await().first()
             if (placeListResult is ApiResult.Success) {
                 _meetPlaceList.value = placeListResult.data
-
-                val commentTemp = mutableMapOf<Int, List<CommentListItem>>()
-
-                _meetPlaceList.value.forEach { place ->
-                    val placeId = place.id
-                    meetRemoteDataSource.getPlaceCommentList(placeId).first().let { result ->
-                        if (result is ApiResult.Success) {
-                            commentTemp[placeId] = result.data
-                        }
-                    }
-                }
-                _commentList.value = commentTemp
             }
         }
     }
@@ -141,9 +119,8 @@ class MeetDetailPlaceWithCommentRepositoryImpl @Inject constructor(
         }.first()
     }
 
-    override suspend fun clearMeetDetail() {
+    override suspend fun clearPlaceData() {
         _meetPlaceList.value = emptyList()
-        _commentList.value = emptyMap()
     }
 
     override suspend fun addPlaceFromFcm(meetId: Int, newPlace: PlaceWithUsers) {
@@ -181,45 +158,5 @@ class MeetDetailPlaceWithCommentRepositoryImpl @Inject constructor(
             }
         }
         _meetPlaceList.value = updatedList
-    }
-
-    override suspend fun addCommentFromFcm(placeId: Int, newComment: CommentListItem) {
-        _commentList.update { currentMap ->
-            val currentList = currentMap[placeId] ?: emptyList()
-            val updateList = currentList + newComment
-            currentMap.toMutableMap().apply {
-                this[placeId] = updateList
-            }
-        }
-    }
-
-    override suspend fun updateCommentFromFcm(commentId: Int, description: String) {
-        _commentList.update { commentMap ->
-            commentMap.mapValues { (_, commentList) ->
-                if (commentList.any { it.commentId == commentId }) {
-                    commentList.map { comment ->
-                        if (comment.commentId == commentId) {
-                            comment.copy(description = description)
-                        } else {
-                            comment
-                        }
-                    }
-                } else {
-                    commentList
-                }
-            }
-        }
-    }
-
-    override suspend fun deleteCommentFromFcm(commentId: Int) {
-        _commentList.update { commentMap ->
-            commentMap.mapValues { (_, commentList) ->
-                if (commentList.any { it.commentId == commentId }) {
-                    commentList.filter { it.commentId != commentId }
-                } else {
-                    commentList
-                }
-            }
-        }
     }
 }

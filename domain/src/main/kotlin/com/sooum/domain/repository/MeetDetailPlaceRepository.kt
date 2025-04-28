@@ -1,7 +1,6 @@
 package com.sooum.domain.repository
 
 import com.sooum.domain.model.ActionResult
-import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.PlaceItem
 import com.sooum.domain.model.PlaceWithUsers
 import kotlinx.coroutines.flow.Flow
@@ -9,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * 모임 상세화면에서 Place및 Comment 관련 처리
  */
-interface MeetDetailPlaceWithCommentRepository {
+interface MeetDetailPlaceRepository {
     fun getMeetPlaceList(): Flow<List<PlaceItem>>
 
     /**
@@ -32,14 +31,14 @@ interface MeetDetailPlaceWithCommentRepository {
     ): ActionResult<*>
 
 
-    fun loadMeetDetailSubData(
+    fun loadMeetPlaceData(
         meetId: Int
     )
 
     /**
      * 해당 화면 탈출시
      */
-    suspend fun clearMeetDetail()
+    suspend fun clearPlaceData()
 
 
     /**
@@ -61,19 +60,4 @@ interface MeetDetailPlaceWithCommentRepository {
      * fcm 코드 105 장소 좋아요 업데이트일 때 동작하는 함수
      */
     suspend fun updatePlaceLikeFromFcm(placeId: Int, placeLike: Int)
-
-    /**
-     * fcm 코드 301 코멘트 추가 일때 함수
-     */
-    suspend fun addCommentFromFcm(placeId: Int, newComment: CommentListItem)
-
-    /**
-     * fcm 코드 302 코멘트 수정 일때 함수
-     */
-    suspend fun updateCommentFromFcm(commentId: Int, description: String)
-
-    /**
-     * fcm 코드 303 코멘트 삭제 일때 함수
-     */
-    suspend fun deleteCommentFromFcm(commentId: Int)
 }

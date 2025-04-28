@@ -1,10 +1,10 @@
 package com.sooum.domain.usecase.place
 
-import com.sooum.domain.repository.MeetDetailPlaceWithCommentRepository
+import com.sooum.domain.repository.MeetDetailPlaceRepository
 import javax.inject.Inject
 
 class GetMeetPlaceListUseCase @Inject constructor(
-    private val meetDetailPlaceWithCommentRepository: MeetDetailPlaceWithCommentRepository
+    private val meetDetailPlaceWithCommentRepository: MeetDetailPlaceRepository
 ) {
     operator fun invoke() = meetDetailPlaceWithCommentRepository.getMeetPlaceList()
 }
