@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,14 +18,23 @@ class MeetDetailCommentRepositoryImpl @Inject constructor(
     private val meetRemoteDataSource: MeetRemoteDataSource
 ) : MeetDetailCommentRepository {
 
-    /**
-     * [loadMeetDetailSubData]이후에 해당 모임에 해당되는 코멘트목록
-     * 모임에 속한 PlaceId = 코멘트 리스트 로 가져온다.
-     */
     private val _commentList = MutableStateFlow(emptyList<CommentListItem>())
 
     private val commentList
         get() = _commentList.asStateFlow()
+
+    /**
+     * [_commentList]에 정의된 값에서 뽑아온 commentId 목록
+     */
+    private val commentIdSet: Flow<Set<PlaceId>> =
+        _commentList.transform { commentList ->
+            emit(commentList.map { it.commentId }.toSet())
+        }
+
+    /**
+     * 현재 focus된 placeId
+     */
+    private var focusPlaceId: Int = -1
 
     override fun getCommentList(): Flow<List<CommentListItem>> = commentList
 
@@ -33,6 +42,7 @@ class MeetDetailCommentRepositoryImpl @Inject constructor(
 
     override fun loadMeetCommentData(placeId: Int) {
         asyncScope.launch {
+            focusPlaceId = placeId
             meetRemoteDataSource.getPlaceCommentList(placeId).first().let { result ->
                 if (result is ApiResult.Success) {
                     _commentList.value = result.data
@@ -42,22 +52,26 @@ class MeetDetailCommentRepositoryImpl @Inject constructor(
     }
 
     override suspend fun clearCommentData() {
+        focusPlaceId = -1
         _commentList.value = emptyList()
     }
 
     override suspend fun addCommentFromFcm(placeId: Int, newComment: CommentListItem) {
-        _commentList.update { currentList ->
+        if (focusPlaceId == placeId) {
+            //현재 보고있는 화면인지 확인
+            //TODO
+        }
+//        _commentList.update { currentList ->
 //            val currentList = currentMap[placeId] ?: emptyList()
 //            val updateList = currentList + newComment
 //            currentMap.toMutableMap().apply {
 //                this[placeId] = updateList
 //            }
-            currentList
-        }
+//        }
     }
 
     override suspend fun updateCommentFromFcm(commentId: Int, description: String) {
-        _commentList.update { currentList ->
+//        _commentList.update { currentList ->
 //            commentMap.mapValues { (_, commentList) ->
 //                if (commentList.any { it.commentId == commentId }) {
 //                    commentList.map { comment ->
@@ -71,12 +85,11 @@ class MeetDetailCommentRepositoryImpl @Inject constructor(
 //                    commentList
 //                }
 //            }
-            currentList
-        }
+//        }
     }
 
     override suspend fun deleteCommentFromFcm(commentId: Int) {
-        _commentList.update { currentList ->
+//        _commentList.update { currentList ->
 //            commentMap.mapValues { (_, commentList) ->
 //                if (commentList.any { it.commentId == commentId }) {
 //                    commentList.filter { it.commentId != commentId }
@@ -84,7 +97,6 @@ class MeetDetailCommentRepositoryImpl @Inject constructor(
 //                    commentList
 //                }
 //            }
-            currentList
-        }
+//        }
     }
 }
