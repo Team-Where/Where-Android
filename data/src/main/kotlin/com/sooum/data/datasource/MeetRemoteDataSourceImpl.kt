@@ -171,9 +171,10 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         return safeFlow { placeApi.deletePlace(request) }
     }
 
-    override suspend fun pickPlace(placeId: Int): Flow<ApiResult<PlacePickStatus>> {
+    override suspend fun pickPlace(placeId: Int, userId: Int): Flow<ApiResult<PlacePickStatus>> {
         val request = PickPlaceRequest(
-            placeId
+            placeId = placeId,
+            userId = userId
         )
         return safeFlow { placeApi.pickPlace(request) }
     }

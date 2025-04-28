@@ -31,6 +31,14 @@ interface MeetDetailPlaceRepository {
         userId: Int,
     ): ActionResult<*>
 
+    /**
+     * 장소의 pick 상태를 변경합니다.
+     */
+    suspend fun updatePickStatus(
+        placeId: Int,
+        userId: Int,
+    ): ActionResult<*>
+
 
     fun loadMeetPlaceData(
         meetId: Int

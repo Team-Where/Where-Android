@@ -12,4 +12,6 @@ import kotlinx.serialization.Serializable
 data class PickPlaceRequest(
     @SerialName("id")
     val placeId: Int,
+    @SerialName("userId")
+    val userId: Int
 )

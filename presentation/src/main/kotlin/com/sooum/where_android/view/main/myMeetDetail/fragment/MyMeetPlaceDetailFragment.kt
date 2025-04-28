@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,8 +15,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailCommentViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailPlaceViewModel
 
 /**
  * 장소를 눌렀을때 이동되는 화면
@@ -41,7 +44,11 @@ class MyMeetPlaceDetailFragment : MyMeetBaseFragment() {
                 ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner)
             )
             setContent {
-                TestContent(myMeetDetailCommentViewModel)
+                this@MyMeetPlaceDetailFragment.TestContent(
+                    myMeetDetailCommentViewModel,
+                    myMeetDetailPlaceViewModel,
+                    loadingAlertProvider
+                )
             }
         }
     }
@@ -53,14 +60,32 @@ class MyMeetPlaceDetailFragment : MyMeetBaseFragment() {
 
     @Composable
     fun TestContent(
-        viewmodel: MyMeetDetailCommentViewModel
+        commentViewmodel: MyMeetDetailCommentViewModel,
+        placeViewModel: MyMeetDetailPlaceViewModel,
+        loadingAlertProvider: LoadingAlertProvider,
     ) {
-        val placeItem by viewmodel.placeItem.collectAsState()
-        val commentList by viewmodel.commentList.collectAsState()
+        val placeItem by commentViewmodel.placeItem.collectAsState()
+        val commentList by commentViewmodel.commentList.collectAsState()
         Column {
             Text(
                 placeItem.toString()
             )
+            Button(
+                onClick = {
+                    loadingAlertProvider.startLoading()
+                    placeViewModel.updatePick(
+                        placeId = placeItem?.placeId,
+                        onSuccess = {
+                            loadingAlertProvider.endLoading()
+                        },
+                        onFail = { msg ->
+                            loadingAlertProvider.endLoadingWithMessage(msg)
+                        }
+                    )
+                }
+            ) {
+                Text("Pick")
+            }
             HorizontalDivider()
             LazyColumn {
                 items(

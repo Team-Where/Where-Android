@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -113,6 +114,34 @@ class MeetDetailPlaceRepositoryImpl @Inject constructor(
                         )
                         tempList[index] = tempPlace
                         _meetPlaceList.value = tempList
+                    }
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
+                }
+            )
+        }.first()
+    }
+
+    override suspend fun updatePickStatus(placeId: Int, userId: Int): ActionResult<*> {
+        return meetRemoteDataSource.pickPlace(placeId, userId).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { pickStatus ->
+                    _meetPlaceList.update { placeList ->
+                        val index = placeList.indexOfFirst { it.id == placeId }
+                        if (index >= 0) {
+                            val tempList = placeList.toMutableList()
+                            val tempPlace = tempList[index].copy(
+                                myLike = pickStatus.myLike,
+                                likeCount = pickStatus.likeCount,
+                                status = pickStatus.status
+                            )
+                            tempList[index] = tempPlace
+                            tempList
+                        } else {
+                            placeList
+                        }
                     }
                     emit(ActionResult.Success(Unit))
                 },

@@ -85,8 +85,8 @@ interface MeetRemoteDataSource {
      * [link]에 해당하는 모임정보를 가져온다.
      */
     suspend fun getMeetInvite(
-        link :String
-    ) :Flow<ApiResult<SimpleMeet>>
+        link: String
+    ): Flow<ApiResult<SimpleMeet>>
 
     /**
      * 장소를 추가한다.
@@ -103,7 +103,6 @@ interface MeetRemoteDataSource {
         userId: Int,
     ): Flow<ApiResult<List<PlaceWithUsers>>>
 
-
     /**
      * 장소를 삭제한다.
      */
@@ -115,7 +114,8 @@ interface MeetRemoteDataSource {
      * 장소를 선택한다.
      */
     suspend fun pickPlace(
-        placeId: Int
+        placeId: Int,
+        userId: Int
     ): Flow<ApiResult<PlacePickStatus>>
 
     /**

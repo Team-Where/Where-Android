@@ -10,6 +10,7 @@ import com.sooum.domain.model.ShareResult
 import com.sooum.domain.usecase.place.AddPlaceUseCase
 import com.sooum.domain.usecase.place.GetMeetPlaceListUseCase
 import com.sooum.domain.usecase.place.TogglePlaceLikeUseCase
+import com.sooum.domain.usecase.place.UpdatePlacePickUseCase
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,6 +25,7 @@ class MyMeetDetailPlaceViewModel @Inject constructor(
     getMeetPlaceListUseCase: GetMeetPlaceListUseCase,
     private val addPlaceUseCase: AddPlaceUseCase,
     private val togglePlaceLikeUseCase: TogglePlaceLikeUseCase,
+    private val updatePlacePickUseCase: UpdatePlacePickUseCase
 ) : ViewModel() {
 
     //모임 상세에 로드된 place 목록
@@ -104,14 +106,35 @@ class MyMeetDetailPlaceViewModel @Inject constructor(
         onFail: (msg: String) -> Unit
     ) {
         viewModelScope.launch {
-            val result = togglePlaceLikeUseCase(placeId)
-            when (result) {
+            when (val result = togglePlaceLikeUseCase(placeId)) {
                 is ActionResult.Success -> {
                     onSuccess()
                 }
 
                 is ActionResult.Fail -> {
                     onFail(result.msg)
+                }
+            }
+        }
+    }
+
+    fun updatePick(
+        placeId: Int?,
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
+    ) {
+        if (placeId == null) {
+            onFail("not Match placeId")
+        } else {
+            viewModelScope.launch {
+                when (val result = updatePlacePickUseCase(placeId)) {
+                    is ActionResult.Success -> {
+                        onSuccess()
+                    }
+
+                    is ActionResult.Fail -> {
+                        onFail(result.msg)
+                    }
                 }
             }
         }
