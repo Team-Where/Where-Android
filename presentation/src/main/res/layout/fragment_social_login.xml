@@ -24,16 +24,17 @@
         android:id="@+id/img_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="28dp"
         android:src="@drawable/image_social_where_logo_color"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_slogan" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/image_social_login_ch1"
+        android:src="@drawable/image_login_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_logo" />
 
@@ -43,7 +44,7 @@
         android:layout_width="350dp"
         android:layout_height="48dp"
         android:layout_marginBottom="15dp"
-        android:src="@drawable/image_social_naver_login"
+        android:src="@drawable/image_naver_login"
         app:layout_constraintBottom_toTopOf="@+id/img_kakao"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -52,7 +53,7 @@
         android:layout_width="150dp"
         android:layout_marginBottom="-14dp"
         android:layout_height="35dp"
-        android:src="@drawable/image_social_start_in_5seconds"
+        android:src="@drawable/image_5seconds"
         app:layout_constraintBottom_toTopOf="@id/image_naver"
         app:layout_constraintEnd_toEndOf="@id/image_naver"
         app:layout_constraintStart_toStartOf="@id/image_naver" />
@@ -62,7 +63,7 @@
         android:layout_width="350dp"
         android:layout_height="48dp"
         android:layout_marginBottom="15dp"
-        android:src="@drawable/image_social_kakao_login"
+        android:src="@drawable/image_kakao_login"
         app:layout_constraintBottom_toTopOf="@+id/btn_sign_up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
