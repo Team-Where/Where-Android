@@ -1,10 +1,6 @@
 package com.sooum.where_android.view.main.myMeetDetail.fragment
 
 import android.annotation.SuppressLint
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
 import com.sooum.where_android.databinding.FragmentMyMeetTabBinding
@@ -15,20 +11,11 @@ import kotlinx.coroutines.launch
  * 네비게이션 사용을 위해 Tab 화면을 분리
  * @see[R.navigation.nav_graph]
  */
-class MyMeetTabFragment : MyMeetBaseFragment() {
-    private lateinit var binding: FragmentMyMeetTabBinding
+class MyMeetTabFragment : MyMeetBaseFragment<FragmentMyMeetTabBinding>(
+    FragmentMyMeetTabBinding::inflate
+) {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentMyMeetTabBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun initView() {
         setupTabLayoutListener()
 
         with(binding) {
@@ -43,7 +30,6 @@ class MyMeetTabFragment : MyMeetBaseFragment() {
             }
         }
     }
-
     private fun setupTabLayoutListener() {
         with(binding.tabLayout) {
             addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

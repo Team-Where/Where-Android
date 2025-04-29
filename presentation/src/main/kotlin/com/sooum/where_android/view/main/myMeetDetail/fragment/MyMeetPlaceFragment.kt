@@ -1,10 +1,6 @@
 package com.sooum.where_android.view.main.myMeetDetail.fragment
 
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.TooltipCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -30,8 +26,9 @@ import javax.inject.Inject
  * 탭에서 장소를 눌렀을때 보이는 화면
  */
 @AndroidEntryPoint
-class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
-    private lateinit var binding: FragmentMyMeetPlaceBinding
+class MyMeetPlaceFragment : MyMeetBaseFragment<FragmentMyMeetPlaceBinding>(
+    FragmentMyMeetPlaceBinding::inflate
+), PlaceClickCallBack {
     private lateinit var selectedPlaceListAdapter: SelectedPlaceListAdapter
     private lateinit var allPlaceListAdapter: AllPlaceListAdapter
     private lateinit var bestPlaceListAdapter: BestPlaceListAdapter
@@ -42,28 +39,10 @@ class MyMeetPlaceFragment : MyMeetBaseFragment(), PlaceClickCallBack {
     private val placeInfoBalloon by balloon<PlaceInfoBalloonFactory>()
     private val placeAddBalloon by balloon<PlaceAddBalloonFactory>()
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentMyMeetPlaceBinding.inflate(inflater, container, false)
-
-        with(binding) {
-            icWarning.setOnClickListener { view ->
-                TooltipCompat.setTooltipText(view, "친구들과 가기로 결정한 장소 목록입니다")
-                view.performLongClick() // 클릭 시 툴팁 표시
-            }
-        }
-        return binding.root
-    }
-
     private var find = false
     private var restoreType: Int = -1
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun initView() {
         setupRecyclerView()
         setUpBtn()
         restoreType()

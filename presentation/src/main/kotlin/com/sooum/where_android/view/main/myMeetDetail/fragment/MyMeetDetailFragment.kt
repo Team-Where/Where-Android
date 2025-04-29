@@ -1,9 +1,6 @@
 package com.sooum.where_android.view.main.myMeetDetail.fragment
 
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -30,27 +27,17 @@ import kotlinx.coroutines.launch
  * 탭에서 상세를 눌렀을때 보이는 화면
  */
 @AndroidEntryPoint
-class MyMeetDetailFragment : MyMeetBaseFragment(),
+class MyMeetDetailFragment :
+    MyMeetBaseFragment<FragmentMyMeetDetailBinding>(FragmentMyMeetDetailBinding::inflate),
     InvitedFriendListAdapter.OnItemClickEventListener,
     MeetCoverDialog.CoverActionHandler,
     ImagePickerDialogFragment.ImageTypeHandler {
-    private lateinit var binding: FragmentMyMeetDetailBinding
     private lateinit var invitedFriendAdapter: InvitedFriendListAdapter
     private lateinit var waitingFriendListAdapter: WaitingFriendListAdapter
 
     private var imagePickerDialog: ImagePickerDialogFragment? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentMyMeetDetailBinding.inflate(inflater, container, false)
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun initView() {
         setupRecyclerView()
 
         viewLifecycleOwner.lifecycleScope.launch {
