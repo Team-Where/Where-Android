@@ -20,6 +20,7 @@ import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
 import com.sooum.where_android.view.main.myMeetDetail.adapter.firend.InvitedFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.firend.WaitingFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
+import com.sooum.where_android.view.main.myMeetDetail.modal.DeleteFriendFragment
 import com.sooum.where_android.view.main.myMeetDetail.modal.MeetCoverDialog
 import com.sooum.where_android.view.widget.CoverImageView
 import dagger.hilt.android.AndroidEntryPoint
@@ -187,8 +188,19 @@ class MyMeetDetailFragment : MyMeetBaseFragment(),
     }
 
     override fun clickedUserIcon(item: InvitedFriend) {
-        //TODO
-        openMapShareSheet()
+        openDeleteFriendSheet(
+            friendId = item.id
+        )
+    }
+
+    private fun openDeleteFriendSheet(
+        friendId: Int
+    ) {
+        DeleteFriendFragment.getInstance(
+            friendId = friendId
+        ).show(
+            parentFragmentManager, DeleteFriendFragment.TAG
+        )
     }
 
 
