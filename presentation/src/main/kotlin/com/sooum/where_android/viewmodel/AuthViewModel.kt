@@ -60,6 +60,7 @@ class AuthViewModel @Inject constructor(
      */
     fun login(email: String, password: String) {
         viewModelScope.launch {
+            _loginState.value = ApiResult.Loading
             loginUseCase(email, password).collect { result ->
                 _loginState.value = result
             }

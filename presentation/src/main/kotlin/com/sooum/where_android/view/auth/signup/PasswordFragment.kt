@@ -30,8 +30,8 @@ class PasswordFragment : AuthBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.nextBtn.setOnClickListener {
-            viewModel.setPassword(binding.editTextPassword.text.toString())
-            viewModel.setEmail(binding.editTextEmail.text.toString())
+            viewModel.setPassword(binding.editTextPassword.text.toString().trim())
+            viewModel.setEmail(binding.editTextEmail.text.toString().trim())
 
            navigateTo(ProfileSettingFragment())
         }

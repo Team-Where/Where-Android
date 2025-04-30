@@ -9,11 +9,16 @@ import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentSignInBinding
 import com.sooum.where_android.view.auth.signup.AuthBaseFragment
+import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.view.main.MainActivity
 import kotlinx.coroutines.launch
 
 class SignInFragment : AuthBaseFragment() {
     lateinit var binding: FragmentSignInBinding
+
+    private val loadingAlertProvider by lazy {
+        LoadingAlertProvider(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,8 +33,8 @@ class SignInFragment : AuthBaseFragment() {
         with(binding) {
             btnLogin.setOnClickListener {
                 viewModel.login(
-                    binding.editTextEmail.text.toString(),
-                    binding.editTextPassword.text.toString()
+                    binding.editTextEmail.text.toString().trim(),
+                    binding.editTextPassword.text.toString().trim()
                 )
             }
             imageBack.setOnClickListener {
@@ -43,13 +48,19 @@ class SignInFragment : AuthBaseFragment() {
         lifecycleScope.launch {
             viewModel.loginState.collect { result ->
                 when (result) {
+                    is ApiResult.Loading -> {
+                        loadingAlertProvider.startLoading()
+                    }
                     is ApiResult.Success -> {
+                        loadingAlertProvider.endLoading {
+                            requireActivity().finish()
+                        }
                         showToast("로그인 성공")
                         navigateActivity(MainActivity())
                     }
 
                     is ApiResult.Fail -> {
-                        showToast("로그인 실패")
+                        loadingAlertProvider.endLoadingWithMessage("로그인 실패")
                     }
                     else -> {}
                 }
