@@ -14,12 +14,13 @@ import com.sooum.where_android.view.MapShareResultActivity
 import com.sooum.where_android.view.SchemeResultActivity
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
+import java.lang.ref.WeakReference
 
 @HiltAndroidApp
 class WhereApp : Application(), SingletonImageLoader.Factory {
 
     companion object {
-        var currentActivity: Activity? = null
+        var currentActivity: WeakReference<Activity>? = null
     }
 
     override fun onCreate() {
@@ -50,7 +51,7 @@ class WhereApp : Application(), SingletonImageLoader.Factory {
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
 
             override fun onActivityDestroyed(activity: Activity) {
-                if (currentActivity == activity) {
+                if (currentActivity?.get() == activity) {
                     currentActivity = null
                 }
             }
@@ -59,8 +60,13 @@ class WhereApp : Application(), SingletonImageLoader.Factory {
 
 
     private fun updateCurrentActivity(activity: Activity) {
-        if (activity !is MapShareResultActivity && activity !is SchemeResultActivity) {
-            currentActivity = activity
+        val ignoredActivities = listOf(
+            MapShareResultActivity::class.java,
+            SchemeResultActivity::class.java
+        )
+
+        if (activity::class.java !in ignoredActivities) {
+            currentActivity = WeakReference(activity)
         }
     }
 

@@ -24,6 +24,7 @@ data class CommentSimple(
  * @param[commentId] 코멘트 식별 Id
  * @param[placeId] 장소 식별 id
  * @param[description] 코멘트 내용
+ * @param createdAt 생성일자
  */
 @Serializable
 data class CommentListItem(
@@ -31,8 +32,18 @@ data class CommentListItem(
     val commentId: Int,
     @SerialName("placeId")
     val placeId: Int,
-    val description: String
-)
+    val description: String,
+    val createdAt: String = ""
+) {
+    constructor(
+        commentSimple: CommentSimple,
+        placeId: Int,
+    ) : this(
+        commentSimple.commentId,
+        placeId,
+        commentSimple.description,
+    )
+}
 
 @Serializable
 sealed class CommentData {

@@ -32,7 +32,8 @@ data class PlaceWithUsers(
     @SerialName("placeStatus")
     val status: String,
     val together: Boolean,
-    val users: List<String?>?
+    val users: List<String?> = emptyList(),
+    val comments: Int = 0
 ) {
     constructor(place: Place) : this(
         place.id,
@@ -44,7 +45,6 @@ data class PlaceWithUsers(
         place.myLike,
         place.status,
         place.together,
-        null
     )
 
     fun toPlace(): Place =

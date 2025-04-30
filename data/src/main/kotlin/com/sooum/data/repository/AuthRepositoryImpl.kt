@@ -40,7 +40,7 @@ class AuthRepositoryImpl @Inject constructor(
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
-                    val accessToken = response.headers()["Authorization"]
+                    val accessToken = response.headers()["Authorization"]?.removePrefix("Bearer ")?.trim()
                     val refreshToken = response.headers()["Refresh-Token"]
 
                     accessToken?.let { appManageDataStore.saveAccessToken(it) }

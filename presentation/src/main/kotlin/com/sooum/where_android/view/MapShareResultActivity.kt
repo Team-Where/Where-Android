@@ -21,7 +21,9 @@ class MapShareResultActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (WhereApp.currentActivity is MyMeetActivity) {
+        val activity = WhereApp.currentActivity?.get()
+
+        if (activity is MyMeetActivity) {
             intent.parseMapShare()?.let { result ->
                 val shareResultText = Json.encodeToString(result)
                 startActivity(

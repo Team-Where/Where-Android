@@ -1,6 +1,10 @@
 package com.sooum.data.datasource
 
 import android.util.Log
+import com.sooum.data.network.comment.CommentApi
+import com.sooum.data.network.comment.request.AddCommentRequest
+import com.sooum.data.network.comment.request.DeleteCommentRequest
+import com.sooum.data.network.comment.request.EditCommentRequest
 import com.sooum.data.network.createPart
 import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.meet.request.AddMeetRequest
@@ -9,11 +13,8 @@ import com.sooum.data.network.meet.request.EditMeetRequest
 import com.sooum.data.network.meet.request.FinishMeetRequest
 import com.sooum.data.network.meet.request.InviteMeetRequest
 import com.sooum.data.network.place.PlaceApi
-import com.sooum.data.network.place.request.AddCommentRequest
 import com.sooum.data.network.place.request.AddPlaceRequest
-import com.sooum.data.network.place.request.DeleteCommentRequest
 import com.sooum.data.network.place.request.DeletePlaceRequest
-import com.sooum.data.network.place.request.EditCommentRequest
 import com.sooum.data.network.place.request.LikePlaceRequest
 import com.sooum.data.network.place.request.PickPlaceRequest
 import com.sooum.data.network.safeFlow
@@ -46,6 +47,7 @@ import javax.inject.Inject
 class MeetRemoteDataSourceImpl @Inject constructor(
     private val meetApi: MeetApi,
     private val placeApi: PlaceApi,
+    private val commentApi: CommentApi,
     private val scheduleApi: ScheduleApi
 ) : MeetRemoteDataSource {
 
@@ -164,16 +166,18 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         return safeFlow { placeApi.getPlaceList(meetId, userId) }
     }
 
-    override suspend fun deleteMeetPlace(placeId: Int): Flow<ApiResult<Any>> {
+    override suspend fun deleteMeetPlace(placeId: Int, userId: Int): Flow<ApiResult<Any>> {
         val request = DeletePlaceRequest(
-            placeId = placeId
+            placeId = placeId,
+            userId = userId
         )
         return safeFlow { placeApi.deletePlace(request) }
     }
 
-    override suspend fun pickPlace(placeId: Int): Flow<ApiResult<PlacePickStatus>> {
+    override suspend fun pickPlace(placeId: Int, userId: Int): Flow<ApiResult<PlacePickStatus>> {
         val request = PickPlaceRequest(
-            placeId
+            placeId = placeId,
+            userId = userId
         )
         return safeFlow { placeApi.pickPlace(request) }
     }
@@ -196,7 +200,7 @@ class MeetRemoteDataSourceImpl @Inject constructor(
             userId = userId,
             description = description
         )
-        return safeFlow { placeApi.addPlaceComment(request) }
+        return safeFlow { commentApi.addPlaceComment(request) }
     }
 
     override suspend fun editComment(
@@ -209,7 +213,7 @@ class MeetRemoteDataSourceImpl @Inject constructor(
             userId = userId,
             description = description
         )
-        return safeFlow { placeApi.editPlaceComment(request) }
+        return safeFlow { commentApi.editPlaceComment(request) }
     }
 
     override suspend fun deleteComment(commentId: Int, userId: Int): Flow<ApiResult<Any>> {
@@ -217,11 +221,11 @@ class MeetRemoteDataSourceImpl @Inject constructor(
             commentId = commentId,
             userId = userId,
         )
-        return safeFlow { placeApi.deletePlaceComment(request) }
+        return safeFlow { commentApi.deletePlaceComment(request) }
     }
 
     override suspend fun getPlaceCommentList(placeId: Int): Flow<ApiResult<List<CommentListItem>>> {
-        return safeFlow { placeApi.getPlaceCommentList(placeId) }
+        return safeFlow { commentApi.getPlaceCommentList(placeId) }
     }
 
 

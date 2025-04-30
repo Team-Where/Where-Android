@@ -6,15 +6,19 @@
 
     <fragment
         android:id="@+id/meetTabFragment"
-        android:name="com.sooum.where_android.view.main.myMeetDetail.MyMeetTabFragment"
+        android:name="com.sooum.where_android.view.main.myMeetDetail.fragment.MyMeetTabFragment"
         android:label="MeetTabFragment">
         <action
             android:id="@+id/action_tabFragment_to_ScheduleFragment"
-            app:destination="@id/scheduleFragment"></action>
+            app:destination="@id/scheduleFragment" />
 
         <action
             android:id="@+id/action_tabFragment_to_InviteFriendFragment"
-            app:destination="@id/inviteFriendFragment"></action>
+            app:destination="@id/inviteFriendFragment" />
+
+        <action
+            android:id="@+id/action_tabFragment_to_PlaceDetailFragment"
+            app:destination="@id/placeDetailFragment" />
     </fragment>
 
     <fragment
@@ -26,5 +30,10 @@
         android:id="@+id/inviteFriendFragment"
         android:name="com.sooum.where_android.view.main.myMeetDetail.modal.invite.InviteFriendFragment"
         android:label="InviteFriendFragment" />
+
+    <fragment
+        android:id="@+id/placeDetailFragment"
+        android:name="com.sooum.where_android.view.main.myMeetDetail.fragment.MyMeetPlaceDetailFragment"
+        android:label="PlaceDetailFragment" />
 
 </navigation>

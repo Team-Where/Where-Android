@@ -1,13 +1,9 @@
 package com.sooum.domain.repository
 
 import com.sooum.domain.model.ActionResult
-import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.NewMeetResult
-import com.sooum.domain.model.Place
-import com.sooum.domain.model.PlaceItem
-import com.sooum.domain.model.PlaceWithUsers
 import com.sooum.domain.model.Schedule
 import kotlinx.coroutines.flow.Flow
 import java.io.File
@@ -19,7 +15,6 @@ interface MeetDetailRepository {
     fun getMeetDetailList(): Flow<List<MeetDetail>>
 
     fun getMeetInviteList(): Flow<List<MeetInviteStatus>>
-    fun getMeetPlaceList(): Flow<List<PlaceItem>>
 
     fun getMeetDetailById(meetId: Int): Flow<MeetDetail?>
 
@@ -79,27 +74,18 @@ interface MeetDetailRepository {
         imageFile: File?
     ) : ActionResult<*>
 
-    //region 사용자
 
+    /**
+     * 특정 id 모임을 불러온 후 불러온 상세 데이터
+     */
     fun loadMeetDetailSubData(
         meetId: Int
     )
 
-    //endregion
 
-
-    //region 장소
-    suspend fun addMeetPlace(
-        meetId: Int,
-        userId: Int,
-        name: String,
-        address: String,
-    ): ActionResult<String>
-
-    //endregion
-
-
-    //region 일정
+    /**
+     * 일정을 추가합니다.
+     */
     suspend fun addSchedule(
         meetId: Int,
         userId: Int,
@@ -107,39 +93,40 @@ interface MeetDetailRepository {
         time: String
     ): ActionResult<Schedule>
 
+    /**
+     * 일정을 수정합니다.
+     */
     suspend fun editSchedule(
         meetId: Int,
         userId: Int,
         date: String?,
         time: String?
     ): ActionResult<Schedule>
-    //endregion
 
-    suspend fun likeToggle(
-        placeId :Int,
-        userId: Int,
-    ): ActionResult<*>
 
+    /**
+     * 해당 화면 탈출시
+     */
     suspend fun clearMeetDetail()
 
-    //fcm 관련 
-    
-    suspend fun addPlaceToMeeting(meetId: Int, newPlace: PlaceWithUsers)
+    //fcm 관련
 
-    suspend fun deletePlaceFromMeeting(id: Int)
+    /**
+     * fcm 일정 변경 수신
+     * - 201[com.sooum.domain.core.FcmConst.FCM_CODE_SCHEDULE_ADD] 수정
+     * - 202[com.sooum.domain.core.FcmConst.FCM_CODE_SCHEDULE_PUT] 추가
+     */
+    suspend fun updateScheduleFromFcm(meetId: Int, date: String, time: String)
 
-    suspend fun updatePlaceStatusToPicked(placeId: Int, newStatus: String)
+    /**
+     * fcm 일정 삭제 수신
+     * - 203[com.sooum.domain.core.FcmConst.FCM_CODE_SCHEDULE_DELETE] 삭제
+     */
+    suspend fun deleteScheduleFcm(meetId: Int)
 
-    suspend fun updatePlaceLike(placeId: Int, placeLike: Int)
-
-    suspend fun deleteSchedule(meetId: Int)
-
-    suspend fun updateSchedule(meetId: Int, date: String, time: String)
-
-    suspend fun addComment(placeId: Int, newComment:CommentListItem)
-
-    suspend fun updateComment(commentId: Int, description: String)
-
-    suspend fun deleteComment(commentId: Int)
-    
+    /**
+     * fcm 모임 수락 수신
+     * - 404[com.sooum.domain.core.FcmConst.FCM_CODE_MEET_ACCEPT] 수정
+     */
+    suspend fun updateMeetInviteStatus(userId: Int)
 }

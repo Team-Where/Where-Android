@@ -106,10 +106,10 @@
                     android:layout_width="80dp"
                     android:layout_height="37dp"
                     android:background="@drawable/toggle_button_selector"
-                    android:checked="true"
                     android:fontFamily="@font/pretend_medium"
                     android:padding="10dp"
                     android:stateListAnimator="@null"
+                    android:textColor="@color/toggle_text_color_selector"
                     android:textOff="전체보기"
                     android:textOn="전체보기"
                     android:textSize="12sp" />
@@ -123,7 +123,7 @@
                     android:fontFamily="@font/pretend_medium"
                     android:padding="10dp"
                     android:stateListAnimator="@null"
-                    android:textColor="#6B7280"
+                    android:textColor="@color/toggle_text_color_selector"
                     android:textOff="BEST 순위"
                     android:textOn="BEST 순위"
                     android:textSize="12sp" />
@@ -142,6 +142,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
+                    android:id="@+id/btn_place_share_icon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/icon_plus" />
@@ -166,6 +167,7 @@
             android:layout_marginBottom="10dp"
             android:nestedScrollingEnabled="false"
             android:overScrollMode="never"
+            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/place_filter_area" />
 
@@ -179,6 +181,21 @@
             android:overScrollMode="never"
             android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/place_filter_area" />
+
+        <TextView
+            android:id="@+id/place_item_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretend_regular"
+            android:text="아직 공유된 장소가 없어요"
+            android:textAlignment="center"
+            android:textColor="@color/gray_scale_700"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/place_filter_area" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

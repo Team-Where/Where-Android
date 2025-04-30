@@ -51,7 +51,7 @@ import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray500
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.widget.PrimaryButton
-import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 import kotlinx.datetime.LocalDate
 
 fun Schedule.toLocalDate(): LocalDate {

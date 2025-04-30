@@ -9,9 +9,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sooum.where_android.databinding.FragmentEditMyMeetDataBinding
-import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.view.common.modal.LoadingAlertProvider
-import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 
 class EditMyMeetDataFragment : BottomSheetDialogFragment() {
     private val myMeetDetailViewModel: MyMeetDetailViewModel by activityViewModels()

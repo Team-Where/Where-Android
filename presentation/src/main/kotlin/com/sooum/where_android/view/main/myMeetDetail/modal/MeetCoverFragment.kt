@@ -15,10 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,15 +26,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
-import com.sooum.domain.model.ImageAddType
-import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.theme.pretendard
-import com.sooum.where_android.view.common.modal.ImagePickerDialog
-import com.sooum.where_android.view.common.modal.LoadingAlert
-import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.view.widget.CoverImageView
-import com.sooum.where_android.viewmodel.MyMeetDetailViewModel
 
 /**
  * 모임 상세 화면에서 커버 이미지 클릭시 출력되는 alert
