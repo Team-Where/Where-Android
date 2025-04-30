@@ -3,6 +3,7 @@ package com.sooum.domain.model
 sealed class ApiResult<out T> {
     data class Success<out T>(val data: T) : ApiResult<T>()
     data object SuccessEmpty : ApiResult<Nothing>()
+    data object Loading : ApiResult<Nothing>()
 
     sealed class Fail : ApiResult<Nothing>() {
         data class Error(val code: Int, val message: String?) : Fail()

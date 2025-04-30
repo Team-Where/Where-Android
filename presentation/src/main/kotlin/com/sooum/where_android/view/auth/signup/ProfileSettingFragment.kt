@@ -36,7 +36,7 @@ class ProfileSettingFragment : AuthBaseFragment() {
 
         with(binding){
             nextBtn.setOnClickListener{
-                viewModel.setName(binding.editNickname.text.toString())
+                viewModel.setName(binding.editNickname.text.toString().trim())
                navigateTo(SignUpCompleteFragment())
             }
 

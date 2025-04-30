@@ -97,6 +97,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-messaging")
 
+    implementation ("com.google.code.gson:gson:2.10.1")
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil.compose)
