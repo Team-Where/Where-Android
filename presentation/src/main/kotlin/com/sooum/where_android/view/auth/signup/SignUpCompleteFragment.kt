@@ -9,12 +9,17 @@ import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentSignUpCompleteBinding
 import com.sooum.where_android.view.auth.AuthActivity
+import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SignUpCompleteFragment : AuthBaseFragment() {
     private lateinit var binding : FragmentSignUpCompleteBinding
+
+    private val loadingAlertProvider by lazy {
+        LoadingAlertProvider(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,13 +45,19 @@ class SignUpCompleteFragment : AuthBaseFragment() {
         lifecycleScope.launch {
             viewModel.signUpState.collect { result ->
                 when (result) {
+                    is ApiResult.Loading -> {
+                        loadingAlertProvider.startLoading()
+                    }
                     is ApiResult.Success -> {
+                        loadingAlertProvider.endLoading {
+                            requireActivity().finish()
+                        }
                         showToast("회원가입 완료!")
                         (requireActivity() as AuthActivity).nextActivity()
                     }
 
                     is ApiResult.Fail -> {
-                        showToast("회원가입 실패했습니다")
+                        loadingAlertProvider.endLoadingWithMessage("회원가입 실패")
                         Log.d("SignUpCompleteFragment", result.toString())
                         binding.nextBtn.isEnabled = true
                     }
