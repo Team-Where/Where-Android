@@ -5,6 +5,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
 import com.sooum.where_android.databinding.FragmentMyMeetTabBinding
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
+import com.sooum.where_android.view.main.myMeetDetail.modal.EditMyMeetDetailFragment
 import kotlinx.coroutines.launch
 
 /**
@@ -21,6 +22,11 @@ class MyMeetTabFragment : MyMeetBaseFragment<FragmentMyMeetTabBinding>(
         with(binding) {
             btnBack.setOnClickListener {
                 activity?.finish()
+            }
+
+            imageEdit.setOnClickListener {
+                val bottomSheet = EditMyMeetDetailFragment()
+                bottomSheet.show(parentFragmentManager, bottomSheet.tag)
             }
         }
         lifecycleScope.launch {
