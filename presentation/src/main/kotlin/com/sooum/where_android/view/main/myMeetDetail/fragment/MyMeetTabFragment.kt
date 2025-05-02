@@ -1,7 +1,9 @@
 package com.sooum.where_android.view.main.myMeetDetail.fragment
 
 import android.annotation.SuppressLint
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.tabs.TabLayout
 import com.sooum.where_android.databinding.FragmentMyMeetTabBinding
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
@@ -30,9 +32,13 @@ class MyMeetTabFragment : MyMeetBaseFragment<FragmentMyMeetTabBinding>(
             }
         }
         lifecycleScope.launch {
-            myMeetDetailViewModel.meetDetail.collect { meetDetail ->
-                binding.tvTitle.text = meetDetail?.title
-                binding.imageEdit.isEnabled = meetDetail?.finished != true
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myMeetDetailViewModel.meetDetail.collect { meetDetail ->
+                    with(binding) {
+                        tvTitle.text = meetDetail?.title
+                        imageEdit.isEnabled = meetDetail?.finished != true
+                    }
+                }
             }
         }
     }
