@@ -1,14 +1,18 @@
 package com.sooum.where_android.view.auth
 
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import com.kakao.sdk.common.util.Utility
+import com.kakao.sdk.user.UserApiClient
 import com.sooum.where_android.databinding.FragmentSocialLoginBinding
 import com.sooum.where_android.view.auth.signup.AgreementFragment
 import com.sooum.where_android.view.auth.signup.AuthBaseFragment
@@ -28,6 +32,12 @@ class SocialLoginFragment : AuthBaseFragment() {
 
         binding.btnSignUp.setOnClickListener {
             (activity as AuthActivity).navigateToFragment(AgreementFragment())
+        }
+
+        binding.imgKakao.setOnClickListener {
+            kakaoLogin(requireContext())
+            var keyHash = Utility.getKeyHash(requireContext())
+            Log.i("kjwTest", "keyHash: $keyHash")
         }
 
         checkNotificationPermission()
@@ -75,4 +85,23 @@ class SocialLoginFragment : AuthBaseFragment() {
             showToast("알림 권한이 거부되었습니다.")
         }
     }
+
+    private fun kakaoLogin(context: Context) {
+        UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
+            if (error != null) {
+                Log.w("SocialLoginFragment", "카카오톡 로그인 실패: ${error.message}")
+
+                UserApiClient.instance.loginWithKakaoAccount(context) { token, error ->
+                    if (error != null) {
+                        Log.e("SocialLoginFragment", "카카오계정 로그인 실패", error)
+                    } else if (token != null) {
+                        Log.i("SocialLoginFragment", "카카오계정 로그인 성공 ${token.accessToken}")
+                    }
+                }
+            } else if (token != null) {
+                Log.i("SocialLoginFragment", "카카오톡 로그인 성공 ${token.accessToken}")
+            }
+        }
+    }
+
 }
