@@ -8,7 +8,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sooum.domain.model.ImageAddType
-import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Schedule
 import com.sooum.where_android.R
@@ -17,7 +16,6 @@ import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
 import com.sooum.where_android.view.main.myMeetDetail.adapter.firend.InvitedFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.firend.WaitingFriendListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
-import com.sooum.where_android.view.main.myMeetDetail.modal.DeleteFriendFragment
 import com.sooum.where_android.view.main.myMeetDetail.modal.MeetCoverDialog
 import com.sooum.where_android.view.widget.CoverImageView
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +27,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MyMeetDetailFragment :
     MyMeetBaseFragment<FragmentMyMeetDetailBinding>(FragmentMyMeetDetailBinding::inflate),
-    InvitedFriendListAdapter.OnItemClickEventListener,
     MeetCoverDialog.CoverActionHandler,
     ImagePickerDialogFragment.ImageTypeHandler {
     private lateinit var invitedFriendAdapter: InvitedFriendListAdapter
@@ -124,9 +121,7 @@ class MyMeetDetailFragment :
     }
 
     private fun setupRecyclerView() {
-        invitedFriendAdapter = InvitedFriendListAdapter().apply {
-            setItemClickListener(this@MyMeetDetailFragment)
-        }
+        invitedFriendAdapter = InvitedFriendListAdapter()
         waitingFriendListAdapter = WaitingFriendListAdapter()
         with(binding) {
             invitedFriendList.apply {
@@ -173,23 +168,6 @@ class MyMeetDetailFragment :
             }
         }
     }
-
-    override fun clickedUserIcon(item: InvitedFriend) {
-        openDeleteFriendSheet(
-            friendId = item.id
-        )
-    }
-
-    private fun openDeleteFriendSheet(
-        friendId: Int
-    ) {
-        DeleteFriendFragment.getInstance(
-            friendId = friendId
-        ).show(
-            parentFragmentManager, DeleteFriendFragment.TAG
-        )
-    }
-
 
     override fun changeCover() {
         if (imagePickerDialog == null) {
