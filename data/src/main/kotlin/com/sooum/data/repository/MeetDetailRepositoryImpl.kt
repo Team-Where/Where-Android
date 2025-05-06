@@ -328,6 +328,25 @@ class MeetDetailRepositoryImpl @Inject constructor(
         }.first()
     }
 
+    override suspend fun inviteOkFromLink(userId: Int, link: String): ActionResult<*> {
+        return meetRemoteDataSource.inviteOkFromLink(
+            userId,
+            link,
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { meet ->
+                    val tempList = _meetDetailList.value.toMutableList()
+                    tempList.add(MeetDetail(meet))
+                    _meetDetailList.value = tempList
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
+                }
+            )
+        }.first()
+    }
+
     override suspend fun clearMeetDetail() {
         _meetInviteStatus.update {
             emptyList()

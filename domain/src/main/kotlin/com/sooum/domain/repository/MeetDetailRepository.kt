@@ -105,6 +105,14 @@ interface MeetDetailRepository {
 
 
     /**
+     * link로 들어온 모임을 수락합니다.
+     */
+    suspend fun inviteOkFromLink(
+        userId: Int,
+        link: String
+    ): ActionResult<*>
+
+    /**
      * 해당 화면 탈출시
      */
     suspend fun clearMeetDetail()

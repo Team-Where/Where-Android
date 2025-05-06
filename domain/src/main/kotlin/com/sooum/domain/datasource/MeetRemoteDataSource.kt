@@ -194,4 +194,10 @@ interface MeetRemoteDataSource {
     suspend fun deleteSchedule(
         meetId: Int,
     ): Flow<ApiResult<Any>>
+
+
+    suspend fun inviteOkFromLink(
+        userId: Int,
+        code: String
+    ): Flow<ApiResult<Meet>>
 }
