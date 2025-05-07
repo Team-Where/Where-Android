@@ -3,6 +3,7 @@ package com.sooum.core.notification.alarm
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.sooum.core.notification.NotificationUtil
 import com.sooum.core.notification.di.LocalTool
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,10 +21,14 @@ class AlarmReceiver : BroadcastReceiver() {
     lateinit var localNotificationUtil: NotificationUtil
 
     override fun onReceive(context: Context, intent: Intent?) {
-
+        Log.d("JWHa", "[AlarmReceiver] $intent")
         if (isAlarmMeet(intent)) {
+            Log.d("JWHa", "[AlarmReceiver] isAlarmMeet")
             val meetId = intent?.getIntExtra(MEET_ID, -1) ?: -1
             val alarmType = intent?.getIntExtra(ALARM_TYPE, -1) ?: -1
+            Log.d("JWHa", "[meetId] $meetId")
+            Log.d("JWHa", "[alarmType] $alarmType")
+
             if (meetId >= 0 && alarmType in (1..2)) {
                 val msg = if (alarmType == 1) {
                     "24시간 전 입니다."
@@ -35,6 +40,8 @@ class AlarmReceiver : BroadcastReceiver() {
                     setContentText("${meetId}가 $msg")
                 }
             }
+        } else {
+            Log.d("JWHa", "[AlarmReceiver] isNotAlarmMeet")
         }
     }
 
