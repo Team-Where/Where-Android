@@ -19,8 +19,8 @@ class LocalAlarmManager(
     private fun createPendingIntent(meetId: Int, alarmType: Int): PendingIntent {
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             action = "ALARM_${meetId}_$alarmType"
-            putExtra("meetId", meetId)
-            putExtra("alarm_type", alarmType)
+            putExtra(AlarmReceiver.MEET_ID, meetId)
+            putExtra(AlarmReceiver.ALARM_TYPE, alarmType)
         }
         val requestCode = meetId * 10 + alarmType
 
@@ -43,13 +43,15 @@ class LocalAlarmManager(
         )
 
         alarmTimes.forEachIndexed { index, time ->
-            val triggerMillis = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            Log.d("JWH", "\t[$meetId] add type $index")
+            Log.d("JWH", "\t[$meetId] will time = $time")
+            val triggerMillis = time.atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli()
+            Log.d("JWH", "\t[$meetId] will time = $triggerMillis")
             val nowMillis = System.currentTimeMillis()
 
             val alarmType = index + 1
             val pendingIntent = createPendingIntent(meetId, alarmType)
             alarmManager.cancel(pendingIntent)
-            Log.d("JWH", "\t[$meetId] add type $index")
 
             if (triggerMillis <= nowMillis) {
                 // 이미 지난 알람은 무시
@@ -58,20 +60,12 @@ class LocalAlarmManager(
             }
             Log.d("JWH", "\t\t[$meetId] add time to $triggerMillis")
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (alarmManager.canScheduleExactAlarms()) {
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        triggerMillis,
-                        pendingIntent
-                    )
-                } else {
-                    alarmManager.setAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        triggerMillis,
-                        pendingIntent
-                    )
-                }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
+                alarmManager.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerMillis,
+                    pendingIntent
+                )
             } else {
                 alarmManager.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,

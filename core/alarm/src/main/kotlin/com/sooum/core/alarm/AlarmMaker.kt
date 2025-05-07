@@ -14,5 +14,4 @@ interface AlarmMaker {
     )
 
     fun cancelAlarm(meetId: Int)
-
 }
