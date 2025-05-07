@@ -27,6 +27,8 @@ class AppManageDataStore @Inject constructor(
 
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
+        private val KAKAO_ACCESS_TOKEN = stringPreferencesKey("kakao_access_token")
+        private val KAKAO_REFRESH_TOKEN = stringPreferencesKey("kakao_refresh_token")
         private val FIRST_LAUNCH = booleanPreferencesKey("first_launch")
     }
 
@@ -54,6 +56,31 @@ class AppManageDataStore @Inject constructor(
             preferences[REFRESH_TOKEN]
         }
     }
+
+    suspend fun saveKakaoAccessToken(token: String) {
+        appDataStore.edit { preferences ->
+            preferences[KAKAO_ACCESS_TOKEN] = token
+        }
+    }
+
+    suspend fun saveKakaoRefreshToken(token: String) {
+        appDataStore.edit { preferences ->
+            preferences[KAKAO_REFRESH_TOKEN] = token
+        }
+    }
+
+    fun getKakaoAccessToken(): Flow<String?> {
+        return appDataStore.data.map { preferences ->
+            preferences[KAKAO_ACCESS_TOKEN]
+        }
+    }
+
+    fun getKakaoRefreshToken(): Flow<String?> {
+        return appDataStore.data.map { preferences ->
+            preferences[KAKAO_REFRESH_TOKEN]
+        }
+    }
+
 
     /**
      * 첫 실행인지 확인 한다. 값이 없으면 true로 준다

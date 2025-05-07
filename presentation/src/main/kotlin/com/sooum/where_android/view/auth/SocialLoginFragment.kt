@@ -11,14 +11,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
+import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.where_android.databinding.FragmentSocialLoginBinding
 import com.sooum.where_android.view.auth.signup.AgreementFragment
 import com.sooum.where_android.view.auth.signup.AuthBaseFragment
+import com.sooum.where_android.viewmodel.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SocialLoginFragment : AuthBaseFragment() {
     private lateinit var binding: FragmentSocialLoginBinding
+
+    @Inject
+    lateinit var  appManageDataStore: AppManageDataStore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,22 +39,21 @@ class SocialLoginFragment : AuthBaseFragment() {
     ): View {
         binding = FragmentSocialLoginBinding.inflate(inflater, container, false)
 
-        binding.textSignIn.setOnClickListener {
-            (activity as AuthActivity).navigateToFragment(SignInFragment())
-        }
-
-        binding.btnSignUp.setOnClickListener {
-            (activity as AuthActivity).navigateToFragment(AgreementFragment())
-        }
-
-        binding.imgKakao.setOnClickListener {
-            kakaoLogin(requireContext())
-            var keyHash = Utility.getKeyHash(requireContext())
-            Log.i("kjwTest", "keyHash: $keyHash")
+        with(binding){
+            textSignIn.setOnClickListener { (activity as AuthActivity).navigateToFragment(SignInFragment()) }
+            btnSignUp.setOnClickListener { (activity as AuthActivity).navigateToFragment(AgreementFragment()) }
+            imgKakao.setOnClickListener {
+                kakaoLogin(requireContext())
+              lifecycleScope.launch {
+                  viewModel.kakaoLogin(
+                      appManageDataStore.getKakaoAccessToken().first() ?: "",
+                      appManageDataStore.getKakaoRefreshToken().first() ?: ""
+                  )
+              }
+            }
         }
 
         checkNotificationPermission()
-
 
         return binding.root
     }
@@ -95,11 +107,17 @@ class SocialLoginFragment : AuthBaseFragment() {
                     if (error != null) {
                         Log.e("SocialLoginFragment", "카카오계정 로그인 실패", error)
                     } else if (token != null) {
-                        Log.i("SocialLoginFragment", "카카오계정 로그인 성공 ${token.accessToken}")
+                        Log.i("SocialLoginFragment", "어세스토큰 ${token.accessToken}")
+                        Log.i("SocialLoginFragment", "리프레시토큰 ${token.refreshToken}")
+                      lifecycleScope.launch(Dispatchers.Main) {
+                          appManageDataStore.saveKakaoAccessToken(token.accessToken)
+                          appManageDataStore.saveKakaoRefreshToken(token.refreshToken)
+                      }
                     }
                 }
             } else if (token != null) {
                 Log.i("SocialLoginFragment", "카카오톡 로그인 성공 ${token.accessToken}")
+                Log.i("SocialLoginFragment", "카카오톡 로그인 성공 ${token.refreshToken}")
             }
         }
     }

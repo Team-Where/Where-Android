@@ -2,9 +2,10 @@ package com.sooum.where_android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.SignUpResult
+import com.sooum.domain.usecase.auth.KakaoSignUpUseCase
 import com.sooum.domain.usecase.auth.LoginUseCase
 import com.sooum.domain.usecase.auth.SignUpUseCase
 import com.sooum.domain.usecase.auth.ValidatePasswordUseCase
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 class AuthViewModel @Inject constructor(
     private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val loginUseCase: LoginUseCase,
-    private val signUpUseCase: SignUpUseCase
+    private val signUpUseCase: SignUpUseCase,
+    private val kakaoSignUpUseCase: KakaoSignUpUseCase
 ) : ViewModel(){
 
     private val _loginState = MutableStateFlow<ApiResult<Any>>(ApiResult.SuccessEmpty)
@@ -27,6 +29,9 @@ class AuthViewModel @Inject constructor(
 
     private val _signUpState = MutableStateFlow<ApiResult<SignUpResult>>(ApiResult.SuccessEmpty)
     val signUpState: StateFlow<ApiResult<SignUpResult>> = _signUpState
+
+    private val _kakaoSignUpState = MutableStateFlow<ApiResult<KakaoSignUpResult>>(ApiResult.SuccessEmpty)
+    val kakaoSignUpState: StateFlow<ApiResult<KakaoSignUpResult>> = _kakaoSignUpState
 
     private val _password = MutableStateFlow("")
     val password: StateFlow<String> = _password.asStateFlow()
@@ -39,6 +44,12 @@ class AuthViewModel @Inject constructor(
 
     private val _name = MutableStateFlow("")
     val name: StateFlow<String> = _name.asStateFlow()
+
+    private val _accessToken = MutableStateFlow("")
+    val accessToken: StateFlow<String> = _accessToken.asStateFlow()
+
+    private val _refreshToken = MutableStateFlow("")
+    val refreshToken: StateFlow<String> = _refreshToken.asStateFlow()
 
     private val _profileImage = MutableStateFlow("")
     val profileImage: StateFlow<String> = _profileImage.asStateFlow()
@@ -68,6 +79,19 @@ class AuthViewModel @Inject constructor(
     }
 
     /**
+     * 카카오 회원가입 기능
+     */
+    fun kakaoLogin(authorization: String, refreshToken: String) {
+        viewModelScope.launch {
+           kakaoSignUpUseCase(
+               authorization ,refreshToken
+           ).collect{ result ->
+               _kakaoSignUpState.value = result
+           }
+        }
+    }
+
+    /**
      * 회원가입 기능
      */
     fun signUp(
@@ -80,7 +104,6 @@ class AuthViewModel @Inject constructor(
                 profileImage = _profileImage.value
             ).collect { result ->
                 _signUpState.value = result
-
             }
         }
     }
