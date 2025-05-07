@@ -56,7 +56,4 @@
     <!-- 친구 초대 -->
     <string name="invite_friend_header">초대된 친구 %d</string>
     <string name="invite_friend_header_waiting">대기중 %d</string>
-
-    <!--FCM-->
-    <string name="fcm_channel_id">fcm_default_channel</string>
 </resources>
