@@ -44,4 +44,6 @@ dependencies {
     //Hilt
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
+
+    implementation(project(":core:alarm"))
 }

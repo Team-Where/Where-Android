@@ -32,7 +32,7 @@ class NotificationUtil(
     }
 
 
-    private fun makeDefaultBuilder(
+    protected fun makeDefaultBuilder(
         otherSetting: NotificationCompat.Builder.() -> Unit
     ): NotificationCompat.Builder {
         val notificationBuilder = NotificationCompat.Builder(context, channelId)

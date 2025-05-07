@@ -1,9 +1,11 @@
 package com.sooum.core.notification.di
 
+import android.app.NotificationManager
 import android.content.Context
 import com.sooum.core.notification.NotificationConfig
 import com.sooum.core.notification.NotificationUtil
 import com.sooum.core.notification.R
+import com.sooum.core.notification.alarm.LocalAlarmManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,7 +54,14 @@ class UtilModule {
             channelId = "local_notification",
             channelName = "APP Notification",
             description = "앱에서 발생한 알림을 수신합니다.",
+            importance = NotificationManager.IMPORTANCE_HIGH,
             config = config
         )
     }
+
+    @Singleton
+    @Provides
+    fun provideLocalAlarmManager(
+        @ApplicationContext context: Context
+    ): LocalAlarmManager = LocalAlarmManager(context)
 }
