@@ -48,5 +48,4 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     api(libs.kotlinx.serialization.json)
-    implementation(project(":core:alarm"))
 }
