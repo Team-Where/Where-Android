@@ -138,14 +138,9 @@
             </intent-filter>
         </service>
 
-        <service
-            android:name="com.google.firebase.components.ComponentDiscoveryService"
-            android:exported="false">
-            <meta-data
-                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
-                android:value="com.google.firebase.components.ComponentRegistrar" />
-        </service>
-
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/fcm_channel_id" />
 
     </application>
 
