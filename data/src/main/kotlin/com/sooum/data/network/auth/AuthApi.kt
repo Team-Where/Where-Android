@@ -3,11 +3,12 @@ package com.sooum.data.network.auth
 import com.sooum.data.network.auth.request.CheckEmailRequest
 import com.sooum.data.network.auth.request.LoginRequest
 import com.sooum.data.network.auth.request.SignUpRequest
-import com.sooum.data.network.meet.request.InviteMeetRequest
+import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.LoginResult
 import com.sooum.domain.model.SignUpResult
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthApi {
@@ -25,4 +26,11 @@ interface AuthApi {
     suspend fun checkEmail(
         @Body data: CheckEmailRequest
     ): Response<Any>
+
+    @POST("api/user/kakao/login")
+    suspend fun kakaoLogin(
+        @Header("Authorization") authorization: String,
+        @Header("refreshToken") refreshToken: String
+    ): Response<KakaoSignUpResult>
+
 }

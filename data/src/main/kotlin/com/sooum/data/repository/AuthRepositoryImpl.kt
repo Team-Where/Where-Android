@@ -4,10 +4,9 @@ import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.data.network.auth.AuthApi
 import com.sooum.data.network.auth.request.LoginRequest
 import com.sooum.data.network.auth.request.SignUpRequest
-import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.safeFlow
-import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.LoginResult
 import com.sooum.domain.model.SignUpResult
 import com.sooum.domain.repository.AuthRepository
@@ -48,6 +47,18 @@ class AuthRepositoryImpl @Inject constructor(
                 }
             }
             response
+        }
+    }
+
+    override suspend fun kakaoLogin(
+        accessToken: String,
+        refreshToken: String
+    ): Flow<ApiResult<KakaoSignUpResult>> {
+        return safeFlow {
+            authApi.kakaoLogin(
+                authorization = accessToken,
+                refreshToken = refreshToken
+            )
         }
     }
 

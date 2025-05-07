@@ -1,10 +1,8 @@
 package com.sooum.domain.repository
 
-import android.app.Notification.Action
-import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.LoginResult
-import com.sooum.domain.model.SignUp
 import com.sooum.domain.model.SignUpResult
 import kotlinx.coroutines.flow.Flow
 
@@ -27,5 +25,13 @@ interface AuthRepository {
         email: String,
         password: String
     ): Flow<ApiResult<LoginResult>>
+
+    /**
+     * 로그인을 한다
+     */
+    suspend fun kakaoLogin(
+        accessToken: String,
+        refreshToken: String
+    ): Flow<ApiResult<KakaoSignUpResult>>
 
 }
