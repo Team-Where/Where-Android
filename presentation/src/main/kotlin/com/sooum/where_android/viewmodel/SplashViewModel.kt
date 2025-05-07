@@ -50,7 +50,7 @@ class SplashViewModel @Inject constructor(
                     OnBoardingActivity::class.java
                 } else {
                     //로그인 화면으로...
-                    AuthActivity::class.java
+                    OnBoardingActivity::class.java
                 }
             }
             complete(dest)

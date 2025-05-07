@@ -24,11 +24,4 @@
         android:layout_marginTop="103dp"
         android:src="@drawable/image_splash_3"/>
 
-    <ImageView
-        android:layout_width="62dp"
-        android:layout_height="10dp"
-        android:src="@drawable/image_onboarding_count_3"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"/>
-
 </LinearLayout>
