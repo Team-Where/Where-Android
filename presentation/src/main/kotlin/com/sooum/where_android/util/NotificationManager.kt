@@ -47,10 +47,13 @@ class NotificationUtil(
         return notificationBuilder
     }
 
+    private var notificationId = 0
+
     fun makeNotify(
-        id: Int = 0,
+        id: Int? = null,
         otherSetting: NotificationCompat.Builder.() -> Unit
     ) {
-        notificationManager.notify(id, makeDefaultBuilder(otherSetting).build())
+        val newId = id ?: notificationId++
+        notificationManager.notify(newId, makeDefaultBuilder(otherSetting).build())
     }
 }
