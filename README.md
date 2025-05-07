@@ -1,3 +1,23 @@
+# Module Graph
+
+```mermaid
+%%{
+  init: {
+    'theme': 'neutral'
+  }
+}%%
+graph LR
+    subgraph :core
+        :core:notification["notification"]
+        :core:alarm["alarm"]
+    end
+    :presentation --> :data
+    :presentation --> :domain
+    :presentation --> :core:notification
+    :core:notification --> :core:alarm
+    :data --> :domain
+    :data --> :core:alarm
+```
 # Where-and
 
 ## Compose 혼용 사용법
