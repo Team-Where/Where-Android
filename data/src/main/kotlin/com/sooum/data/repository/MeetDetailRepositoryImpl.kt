@@ -1,5 +1,6 @@
 package com.sooum.data.repository
 
+import android.util.Log
 import com.sooum.core.alarm.AlarmMaker
 import com.sooum.data.extension.covertApiResultToActionResultIfSuccess
 import com.sooum.data.extension.covertApiResultToActionResultIfSuccessEmpty
@@ -59,13 +60,13 @@ class MeetDetailRepositoryImpl @Inject constructor(
         val dateList = date?.split("-")?.mapNotNull { it.toIntOrNull() }
         val timeList = time?.split(":")?.mapNotNull { it.toIntOrNull() }
 
-        if (dateList?.size != 3 || timeList?.size != 2) return null
+        if (dateList?.size != 3 || timeList?.size != 3) return null
 
         val (year, month, day) = dateList
-        val (hour, minute) = timeList
+        val (hour, minute, second) = timeList
 
         return try {
-            LocalDateTime.of(year, month, day, hour, minute)
+            LocalDateTime.of(year, month, day, hour, minute, second)
         } catch (e: Exception) {
             null // 잘못된 날짜/시간 조합일 경우 (예: 2월 30일 등)
         }
@@ -75,11 +76,16 @@ class MeetDetailRepositoryImpl @Inject constructor(
     override suspend fun loadMeetDetailList(userId: UserId) {
         val meetDetails = meetRemoteDataSource.getMeetList(userId).first()
         meetDetails.forEach { meetDetail ->
-            makeStandardDate(meetDetail.date, meetDetail.time)?.let {
-                alarmMaker.makeAlarm(meetDetail.id, it)
+            Log.d("JWH", "load Data == $meetDetail")
+            val time = makeStandardDate(meetDetail.date, meetDetail.time)
+            Log.d("JWH", "Date == $time")
+            if (time != null) {
+                alarmMaker.makeAlarm(meetDetail.id, time)
             }
         }
-        _meetDetailList.value = meetDetails
+        _meetDetailList.update {
+            meetDetails
+        }
     }
 
     override fun getMeetDetailList(): Flow<List<MeetDetail>> = meetDetailList

@@ -11,12 +11,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class AlarmReceiver : BroadcastReceiver() {
 
-
     @Inject
     @LocalTool
     lateinit var localNotificationUtil: NotificationUtil
 
     override fun onReceive(context: Context, intent: Intent) {
+
         // 예시: 알림 표시
         localNotificationUtil.makeNotify {
             setContentTitle("Test1")

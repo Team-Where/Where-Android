@@ -10,7 +10,11 @@
             android:value="@string/fcm_channel_id" />
 
 
-        <receiver android:name=".alarm.AlarmReceiver"></receiver>
+        <receiver
+            android:name=".alarm.AlarmReceiver"
+            android:exported="false">
+
+        </receiver>
 
     </application>
 
