@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.sooum.domain.model.ShareResult
+import com.sooum.where_android.MyFirebaseMessagingService
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
 import com.sooum.where_android.view.MapShareResultActivity
 import com.sooum.where_android.view.checkInviteData
@@ -37,8 +38,8 @@ class MyMeetActivity : AppCompatActivity() {
 
     private val fcmReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val code = intent?.getStringExtra("code").orEmpty()
-            val data = intent?.getStringExtra("data").orEmpty()
+            val code = intent?.getStringExtra(MyFirebaseMessagingService.FCM_EXTRA_CODE).orEmpty()
+            val data = intent?.getStringExtra(MyFirebaseMessagingService.FCM_EXTRA_DATA).orEmpty()
 
             Log.d("MainActivity-FCM", "수신된 code: $code")
             Log.d("MainActivity-FCM", "수신된 payload: $data")
@@ -58,7 +59,7 @@ class MyMeetActivity : AppCompatActivity() {
             myMeetDetailPlaceWithCommentViewModel.loadData(id)
         }
 
-        val intentFilter = IntentFilter("FCM_DATA_RECEIVED")
+        val intentFilter = IntentFilter(MyFirebaseMessagingService.FCM_DATA_RECEIVED)
         registerReceiver(fcmReceiver, intentFilter, RECEIVER_EXPORTED)
     }
 
