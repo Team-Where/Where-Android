@@ -42,9 +42,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sooum.domain.model.Friend
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Schedule
-import com.sooum.domain.model.User
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray100
 import com.sooum.where_android.theme.Gray600
@@ -73,7 +73,7 @@ fun MeetDetailView(
 private fun MeetDetailContent(
     onBack: () -> Unit,
     navigationMeetDetail: (MeetDetail) -> Unit,
-    friend: User,
+    friend: Friend,
     meetDetailGroupList: Map<Int, List<MeetDetail>>,
 ) {
     Column {
@@ -144,7 +144,7 @@ private fun MeetDetailContent(
                                 .offset(x = xOffset)
                         ) {
                             MeetDetailProfileImage(
-                                profileUrl = friend.profileImage,
+                                profileUrl = friend.image ?: "",
                                 name = friend.name,
                                 useBorder = true
                             )
@@ -386,7 +386,7 @@ private fun MeetDetailContentPreview() {
             MeetDetailContent(
                 onBack = {},
                 navigationMeetDetail = {},
-                friend = User(0, "우리동네 먹짱방방"),
+                friend = Friend(0, "우리동네 먹짱방방"),
                 meetDetailGroupList = emptyMap()
             )
         }

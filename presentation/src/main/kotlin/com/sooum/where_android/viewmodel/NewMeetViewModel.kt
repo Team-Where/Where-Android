@@ -6,21 +6,19 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ActionResult
+import com.sooum.domain.model.Friend
 import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.NewMeet
 import com.sooum.domain.model.NewMeetResult
-import com.sooum.domain.model.User
-import com.sooum.domain.usecase.GetUserListUseCase
+import com.sooum.domain.usecase.friend.GetFriendListUseCase
 import com.sooum.domain.usecase.meet.AddMeetUseCase
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 sealed class NewMeetType(
@@ -39,7 +37,7 @@ sealed class NewMeetType(
  */
 @HiltViewModel
 class NewMeetViewModel @Inject constructor(
-    getUserListUseCase: GetUserListUseCase,
+    getFriendListUseCase: GetFriendListUseCase,
     private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
     private val addMeetUseCase: AddMeetUseCase
 ) : ViewModel() {
@@ -71,8 +69,8 @@ class NewMeetViewModel @Inject constructor(
         }
     }
 
-    val userList: StateFlow<List<User>> =
-        getUserListUseCase()
+    val friendList: StateFlow<List<Friend>> =
+        getFriendListUseCase()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000L),
@@ -106,9 +104,9 @@ class NewMeetViewModel @Inject constructor(
         newMeetData = newMeetData.copy(image = imageAddType)
     }
 
-    fun inviteFriend(user: User) {
+    fun inviteFriend(friend: Friend) {
         val temp = newMeetData.participants.toMutableList()
-        temp.add(user.id.toInt())
+        temp.add(friend.id)
         newMeetData = newMeetData.copy(participants = temp)
     }
 }

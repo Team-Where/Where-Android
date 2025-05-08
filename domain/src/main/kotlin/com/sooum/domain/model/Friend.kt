@@ -27,10 +27,21 @@ data class Friend(
         val description: String,
         val date: String
     )
+
+    constructor(
+        id: Int,
+        name: String
+    ) : this(id, name, null, true, emptyList())
+
+    constructor(
+        id: Int,
+        name: String,
+        favorite: Boolean
+    ) : this(id, name, null, favorite, emptyList())
 }
 
 /**
- * 사용자 목록을 나타내는 model
+ * 사용자 목록을 나타내는 축약형 모델
  */
 data class User(
     val id: Int,

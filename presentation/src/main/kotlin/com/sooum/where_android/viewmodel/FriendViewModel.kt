@@ -2,10 +2,10 @@ package com.sooum.where_android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sooum.domain.model.User
-import com.sooum.domain.usecase.DeleteUserUseCase
-import com.sooum.domain.usecase.GetUserListUseCase
-import com.sooum.domain.usecase.UpdateUserFavoriteUseCase
+import com.sooum.domain.model.Friend
+import com.sooum.domain.usecase.friend.DeleteFriendUseCase
+import com.sooum.domain.usecase.friend.GetFriendListUseCase
+import com.sooum.domain.usecase.friend.UpdateFriendFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,13 +14,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserViewModel @Inject constructor(
-    private val getUserUseCase: GetUserListUseCase,
-    private val deleteUserUseCase: DeleteUserUseCase,
-    private val updateUserFavoriteUseCase: UpdateUserFavoriteUseCase,
+class FriendViewModel @Inject constructor(
+    private val getUserUseCase: GetFriendListUseCase,
+    private val deleteUserUseCase: DeleteFriendUseCase,
+    private val updateUserFavoriteUseCase: UpdateFriendFavoriteUseCase,
 ) : ViewModel() {
 
-    val userList: StateFlow<List<User>> =
+    val userList: StateFlow<List<Friend>> =
         getUserUseCase()
             .stateIn(
                 scope = viewModelScope,
@@ -28,20 +28,20 @@ class UserViewModel @Inject constructor(
                 initialValue = emptyList()
             )
 
-    fun deleteUser(
-        userId: Int
+    fun deleteFriend(
+        friendId: Int
     ) {
         viewModelScope.launch {
-            deleteUserUseCase(userId)
+            deleteUserUseCase(friendId)
         }
     }
 
-    fun updateUserFavorite(
-        userId: Int,
+    fun updateFriendFavorite(
+        friendId: Int,
         favorite: Boolean
     ) {
         viewModelScope.launch {
-            updateUserFavoriteUseCase(userId, favorite)
+            updateUserFavoriteUseCase(friendId, favorite)
         }
     }
 }

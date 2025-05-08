@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.sooum.domain.usecase.GetUserUseCase
+import com.sooum.domain.usecase.friend.GetFriendByIdUseCase
 import com.sooum.domain.usecase.meet.GetMeetDetailListGroupByYearUseCase
 import com.sooum.where_android.model.ScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MeetDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getUserUseCase: GetUserUseCase,
+    private val getUserUseCase: GetFriendByIdUseCase,
     private val getMeetDetailListGroupByYearUseCase: GetMeetDetailListGroupByYearUseCase
 ) : ViewModel() {
 

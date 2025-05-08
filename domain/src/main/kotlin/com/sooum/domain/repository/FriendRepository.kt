@@ -1,30 +1,30 @@
 package com.sooum.domain.repository
 
-import com.sooum.domain.model.User
+import com.sooum.domain.model.Friend
 import kotlinx.coroutines.flow.Flow
 
 /**
  *  User관련 처리 를 가진 UserRepository 인터페이스
  */
-interface UserRepository {
+interface FriendRepository {
 
     /**
      * 모든 User 목록을 가져옵니다.
      */
-    fun getUserList(): Flow<List<User>>
+    fun getFriendList(): Flow<List<Friend>>
 
     /**
      * id에 해당하는 유저정보를 가져옵니다.
      */
-    fun getUserById(userId: Int): User?
+    fun getFriendById(friendId: Int): Friend?
 
     /**
      * 즐겨 찾기를 변경합니다.
      */
-    suspend fun updateUserFavorite(id: Int, favorite: Boolean)
+    suspend fun updateFriendFavorite(id: Int, favorite: Boolean)
 
     /**
      * 유저를 삭제합니다.
      */
-    suspend fun deleteUser(id: Int)
+    suspend fun deleteFriend(id: Int)
 }

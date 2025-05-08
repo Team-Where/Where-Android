@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sooum.domain.model.User
+import com.sooum.domain.model.Friend
 import com.sooum.where_android.view.main.myMeetDetail.modal.invite.InviteFriendContentView
 import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.view.widget.PrimaryButton
@@ -39,10 +39,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun NewMeetStep2View(
     modifier: Modifier = Modifier,
-    userList: List<User>,
-    recentUserList: List<User>,
+    userList: List<Friend>,
+    recentUserList: List<Friend>,
     nextViewType: () -> Unit,
-    inviteFriend: (User) -> Unit,
+    inviteFriend: (Friend) -> Unit,
     onClose: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
