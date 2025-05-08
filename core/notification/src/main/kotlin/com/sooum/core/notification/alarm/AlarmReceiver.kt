@@ -44,9 +44,12 @@ class AlarmReceiver : BroadcastReceiver() {
                 val pendingIntent: PendingIntent =
                     PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
                 localNotificationUtil.makeNotify {
-                    setContentTitle("Alarm")
+                    setContentTitle("모임 알림")
                     setContentText("$meetName $msg")
                     setContentIntent(pendingIntent)
+                    setAutoCancel(true)
+                    setGroup("WHERE_MEET_GROUP")
+                    setGroupSummary(true)
                 }
             }
         }
