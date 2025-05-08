@@ -39,6 +39,13 @@ interface MeetRemoteDataSource {
         imageFile: File?
     ): Flow<ApiResult<EditMeet>>
 
+    /**
+     * 기본 커버로 변경
+     */
+    suspend fun deleteCover(
+        id: Int,
+    ): Flow<ApiResult<String>>
+
 
     /**
      * meetId에서 userId를 삭제한다.

@@ -13,6 +13,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.Multipart
@@ -36,6 +37,11 @@ interface MeetApi {
         @Part("data") data: RequestBody,
         @Part imageFile: MultipartBody.Part
     ): Response<EditMeet>
+
+    @DELETE("api/meeting/image/{id}")
+    suspend fun deleteCover(
+        @Path("id") id: Int
+    ): Response<String>
 
     @HTTP(method = "DELETE", path = "api/meeting", hasBody = true)
     suspend fun deleteMeet(

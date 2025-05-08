@@ -8,6 +8,7 @@ import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.usecase.meet.detail.ClearMeetUseCase
+import com.sooum.domain.usecase.meet.detail.DeleteMeetCoverUseCase
 import com.sooum.domain.usecase.meet.detail.ExitMeetUseCase
 import com.sooum.domain.usecase.meet.detail.FinishMeetUseCase
 import com.sooum.domain.usecase.meet.detail.GetMeetDetailByIdUseCase
@@ -37,6 +38,7 @@ class MyMeetDetailViewModel @Inject constructor(
     private val updateMeetTitleUseCase: UpdateMeetTitleUseCase,
     private val updateMeetDescriptionUseCase: UpdateMeetDescriptionUseCase,
     private val updateMeetCoverUseCase: UpdateMeetCoverUseCase,
+    private val deleteMeetCoverUseCase: DeleteMeetCoverUseCase,
     private val clearMeetUseCase: ClearMeetUseCase,
     private val exitMeetUseCase: ExitMeetUseCase,
     private val finishMeetUseCase: FinishMeetUseCase,
@@ -240,17 +242,36 @@ class MyMeetDetailViewModel @Inject constructor(
         viewModelScope.launch {
             findMeetDetailOrFail(
                 doAction = { meetDetail ->
-                    val result = updateMeetCoverUseCase(
-                        id = meetDetail.id,
-                        imageFile = image
-                    )
-                    when (result) {
-                        is ActionResult.Success -> {
-                            onSuccess()
-                        }
+                    if (image is ImageAddType.Default) {
+                        if (meetDetail.image == null) {
+                            onFail("현재 기본 이미지 입니다.")
+                        } else {
+                            val result = deleteMeetCoverUseCase(
+                                meetId = meetDetail.id,
+                            )
+                            when (result) {
+                                is ActionResult.Success -> {
+                                    onSuccess()
+                                }
 
-                        is ActionResult.Fail -> {
-                            onFail(result.msg)
+                                is ActionResult.Fail -> {
+                                    onFail(result.msg)
+                                }
+                            }
+                        }
+                    } else {
+                        val result = updateMeetCoverUseCase(
+                            id = meetDetail.id,
+                            imageFile = image
+                        )
+                        when (result) {
+                            is ActionResult.Success -> {
+                                onSuccess()
+                            }
+
+                            is ActionResult.Fail -> {
+                                onFail(result.msg)
+                            }
                         }
                     }
                 },

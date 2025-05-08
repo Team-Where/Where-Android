@@ -291,6 +291,33 @@ class MeetDetailRepositoryImpl @Inject constructor(
         }.first()
     }
 
+    override suspend fun deleteImage(meetId: Int): ActionResult<*> {
+        return meetRemoteDataSource.deleteCover(
+            meetId
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccessEmpty(
+                onSuccess = {
+                    _meetDetailList.update { meetDetailList ->
+                        val index = meetDetailList.indexOfFirst { it.id == meetId }
+                        if (index >= 0) {
+                            val tempList = meetDetailList.toMutableList()
+                            var tempMeet: MeetDetail = tempList[index]
+                                .copy(image = null)
+                            tempList[index] = tempMeet
+                            tempList
+                        } else {
+                            meetDetailList
+                        }
+                    }
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
+                }
+            )
+        }.first()
+    }
+
     private val asyncScope = CoroutineScope(Dispatchers.IO)
 
     override fun loadMeetDetailSubData(meetId: Int) {

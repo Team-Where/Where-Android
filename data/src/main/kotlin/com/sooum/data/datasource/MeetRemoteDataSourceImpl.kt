@@ -96,6 +96,10 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         return safeFlow { meetApi.editMeet(dataPart, imageFile.createPart()) }
     }
 
+    override suspend fun deleteCover(id: Int): Flow<ApiResult<String>> {
+        return safeFlow { meetApi.deleteCover(id) }
+    }
+
     override suspend fun deleteMeet(
         meetId: Int,
         userId: Int

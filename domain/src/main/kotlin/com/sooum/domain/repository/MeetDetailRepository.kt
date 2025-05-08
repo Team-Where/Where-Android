@@ -74,6 +74,13 @@ interface MeetDetailRepository {
         imageFile: File?
     ) : ActionResult<*>
 
+    /**
+     * 모임 커버를 기본커버로 바꿉니다.
+     */
+    suspend fun deleteImage(
+        meetId: Int,
+    ): ActionResult<*>
+
 
     /**
      * 특정 id 모임을 불러온 후 불러온 상세 데이터
