@@ -72,3 +72,11 @@ fun Friend.toUser() = User(
     profileImage = this.image ?: "",
     isFavorite = isFavorite
 )
+
+@Serializable
+data class FriendBookMark(
+    val userId: Int,
+    val friendId: Int,
+    @SerialName("bookmark")
+    val isFavorite: Boolean
+)

@@ -1,5 +1,6 @@
 package com.sooum.domain.repository
 
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.Friend
 import kotlinx.coroutines.flow.Flow
 
@@ -23,7 +24,7 @@ interface FriendRepository {
     /**
      * 즐겨 찾기를 변경합니다.
      */
-    suspend fun updateFriendFavorite(id: Int, favorite: Boolean)
+    suspend fun updateFriendFavorite(friendId: Int, userId: Int): ActionResult<*>
 
     /**
      * 유저를 삭제합니다.

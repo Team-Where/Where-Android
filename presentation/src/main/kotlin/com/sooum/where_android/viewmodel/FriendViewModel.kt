@@ -2,6 +2,7 @@ package com.sooum.where_android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.Friend
 import com.sooum.domain.usecase.friend.DeleteFriendUseCase
 import com.sooum.domain.usecase.friend.GetFriendListUseCase
@@ -42,10 +43,19 @@ class FriendViewModel @Inject constructor(
 
     fun updateFriendFavorite(
         friendId: Int,
-        favorite: Boolean
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
     ) {
         viewModelScope.launch {
-            updateUserFavoriteUseCase(friendId, favorite)
+            when (val result = updateUserFavoriteUseCase(friendId)) {
+                is ActionResult.Success -> {
+                    onSuccess()
+                }
+
+                is ActionResult.Fail -> {
+                    onFail(result.msg)
+                }
+            }
         }
     }
 

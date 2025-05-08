@@ -45,7 +45,7 @@ fun ProfileDetailModal(
     friend: Friend,
     onDismiss: () -> Unit,
     navigationMeetDetail: () -> Unit,
-    updateFavorite: (id: Int, favorite: Boolean) -> Unit
+    updateFavorite: (id: Int) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -76,7 +76,7 @@ private fun ProfileDetailContent(
     friend: Friend,
     onClose: () -> Unit,
     navigationMeetDetail: () -> Unit,
-    updateFavorite: (id: Int, favorite: Boolean) -> Unit,
+    updateFavorite: (id: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -87,8 +87,7 @@ private fun ProfileDetailContent(
                 vertical = 8.dp,
                 horizontal = 10.dp
             )
-            .navigationBarsPadding()
-        ,
+            .navigationBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -107,7 +106,7 @@ private fun ProfileDetailContent(
             FavoriteIconButton(
                 isFavorite = friend.isFavorite,
                 toggleFavorite = {
-                    updateFavorite(friend.id, !friend.isFavorite)
+                    updateFavorite(friend.id)
                 }
             )
         }
@@ -117,7 +116,6 @@ private fun ProfileDetailContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(21.dp)
         ) {
-            //TODO profileImage 값으로 부터 가져오도록 수정필요
             CircleProfileView(
                 friend.image,
                 size = 120.dp
@@ -187,7 +185,7 @@ private fun ProfileDetailModalPreview() {
         friend = Friend(7, "냠냠쩝쩝", true),
         {},
         {},
-        { _, _ -> }
+        { _ -> }
     )
 }
 
@@ -199,6 +197,6 @@ private fun ProfileDetailContentPreview() {
         friend = Friend(7, "냠냠쩝쩝", true),
         {},
         {},
-        { _, _ -> }
+        { _ -> }
     )
 }

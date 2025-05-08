@@ -1,6 +1,8 @@
 package com.sooum.data.repository
 
+import com.sooum.data.extension.covertApiResultToActionResultIfSuccess
 import com.sooum.domain.datasource.FriendRemoteDataSource
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.Friend
 import com.sooum.domain.repository.FriendRepository
 import kotlinx.coroutines.CoroutineScope
@@ -11,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +23,7 @@ import javax.inject.Inject
  * @see[FriendRepository]
  */
 class FriendRepositoryImpl @Inject constructor(
-    private val friendRemoteDataSourceImpl: FriendRemoteDataSource
+    private val friendRemoteDataSource: FriendRemoteDataSource
 ) : FriendRepository {
 
     // 초기 더미 데이터
@@ -37,7 +40,7 @@ class FriendRepositoryImpl @Inject constructor(
 
     override fun loadFriend(userId: Int) {
         asyncScope.launch {
-            val friendList = friendRemoteDataSourceImpl.getFriendList(userId).first()
+            val friendList = friendRemoteDataSource.getFriendList(userId).first()
             _friendListFlow.update {
                 friendList
             }
@@ -48,20 +51,33 @@ class FriendRepositoryImpl @Inject constructor(
         .map { list -> list.find { it.id == friendId } }
 
 
-    override suspend fun updateFriendFavorite(id: Int, favorite: Boolean) {
-        _friendListFlow.update { friendList ->
-            val index = friendList.indexOfFirst { it.id == id }
-            if (index >= 0) {
-                val tempList = friendList.toMutableList()
-                val tempFriend = friendList[index].copy(
-                    isFavorite = favorite
-                )
-                tempList[index] = tempFriend
-                tempList
-            } else {
-                friendList
-            }
-        }
+    override suspend fun updateFriendFavorite(friendId: Int, userId: Int): ActionResult<*> {
+        return friendRemoteDataSource.toggleBookmark(
+            userId = userId,
+            friendId = friendId
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { bookmark ->
+                    _friendListFlow.update { friendList ->
+                        val index = friendList.indexOfFirst { it.id == friendId }
+                        if (index >= 0) {
+                            val tempList = friendList.toMutableList()
+                            val tempFriend = tempList[index].copy(
+                                isFavorite = bookmark.isFavorite
+                            )
+                            tempList[index] = tempFriend
+                            tempList
+                        } else {
+                            friendList
+                        }
+                    }
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
+                }
+            )
+        }.first()
     }
 
     override suspend fun deleteFriend(id: Int) {

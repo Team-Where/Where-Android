@@ -89,7 +89,17 @@ fun FriendListView(
         userList = friendList,
         navigationMeetDetail = navigationMeetDetail,
         deleteUser = userViewModel::deleteFriend,
-        updateFavorite = userViewModel::updateFriendFavorite,
+        updateFavorite = {
+            userViewModel.updateFriendFavorite(
+                friendId = it,
+                onSuccess = {
+
+                },
+                onFail = {
+
+                }
+            )
+        },
         modifier = modifier
     )
 }
@@ -99,7 +109,7 @@ private fun FriedListContent(
     userList: List<Friend>,
     navigationMeetDetail: (ScreenRoute.Home.FriendMeetDetail) -> Unit,
     deleteUser: (id: Int) -> Unit,
-    updateFavorite: (id: Int, favorite: Boolean) -> Unit,
+    updateFavorite: (id: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var viewType: FriendListViewType by remember {
@@ -261,7 +271,7 @@ private fun FriedListContent(
                                     selectedUserId = friend.id
                                 },
                                 iconClickAction = {
-                                    updateFavorite(friend.id, !friend.isFavorite)
+                                    updateFavorite(friend.id)
                                 }
                             )
                         }
@@ -369,7 +379,7 @@ private fun UserItemViewByListView(
     user: User,
     viewType: FriendListViewType,
     deleteUser: (id: Int) -> Unit,
-    updateFavorite: (id: Int, favorite: Boolean) -> Unit,
+    updateFavorite: (id: Int) -> Unit,
     userClickAction: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
@@ -386,7 +396,7 @@ private fun UserItemViewByListView(
         iconClickAction = {
             if (viewType == FriendListViewType.Default) {
                 //즐겨 찾기 업데이트
-                updateFavorite(user.id, !user.isFavorite)
+                updateFavorite(user.id)
             } else {
                 // 삭제 창
                 showDeleteUser = true
@@ -435,7 +445,7 @@ fun UserListViewPreview(
         userList = data,
         navigationMeetDetail = {},
         deleteUser = {},
-        updateFavorite = { _, _ -> },
+        updateFavorite = { _ -> },
         modifier = Modifier
             .safeDrawingPadding()
             .padding(12.dp)

@@ -2,8 +2,8 @@ package com.sooum.data.network.friend
 
 import com.sooum.data.network.comment.request.DeleteCommentRequest
 import com.sooum.data.network.friend.request.BookMarkFriendRequest
-import com.sooum.data.network.friend.response.BookMarkFriendResponse
 import com.sooum.domain.model.Friend
+import com.sooum.domain.model.FriendBookMark
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -23,8 +23,8 @@ interface FriendApi {
         @Body data: DeleteCommentRequest
     ): Response<String>
 
-    @PUT("api/friend")
+    @PUT("/api/friend/bookmark")
     suspend fun bookMarkFriend(
         @Body data: BookMarkFriendRequest
-    ): Response<BookMarkFriendResponse>
+    ): Response<FriendBookMark>
 }
