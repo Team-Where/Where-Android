@@ -9,9 +9,11 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.sooum.domain.model.ShareResult
+import com.sooum.where_android.MyFirebaseMessagingService
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
 import com.sooum.where_android.view.MapShareResultActivity
 import com.sooum.where_android.view.checkInviteData
+import com.sooum.where_android.view.getLocalAlarmProvider
 import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailFcmViewModel
@@ -37,8 +39,8 @@ class MyMeetActivity : AppCompatActivity() {
 
     private val fcmReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val code = intent?.getStringExtra("code").orEmpty()
-            val data = intent?.getStringExtra("data").orEmpty()
+            val code = intent?.getStringExtra(MyFirebaseMessagingService.FCM_EXTRA_CODE).orEmpty()
+            val data = intent?.getStringExtra(MyFirebaseMessagingService.FCM_EXTRA_DATA).orEmpty()
 
             Log.d("MainActivity-FCM", "수신된 code: $code")
             Log.d("MainActivity-FCM", "수신된 payload: $data")
@@ -58,7 +60,7 @@ class MyMeetActivity : AppCompatActivity() {
             myMeetDetailPlaceWithCommentViewModel.loadData(id)
         }
 
-        val intentFilter = IntentFilter("FCM_DATA_RECEIVED")
+        val intentFilter = IntentFilter(MyFirebaseMessagingService.FCM_DATA_RECEIVED)
         registerReceiver(fcmReceiver, intentFilter, RECEIVER_EXPORTED)
     }
 
@@ -77,6 +79,12 @@ class MyMeetActivity : AppCompatActivity() {
             myMeetDetailPlaceWithCommentViewModel.addPlace(shareResult) {
                 CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
             }
+        }
+
+        intent?.getLocalAlarmProvider()?.let {
+            val id = it.meetId
+            myMeetDetailViewModel.loadData(id)
+            myMeetDetailPlaceWithCommentViewModel.loadData(id)
         }
     }
 }

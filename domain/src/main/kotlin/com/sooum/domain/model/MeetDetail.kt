@@ -78,6 +78,9 @@ data class MeetDetail(
     val date
         get() = schedule?.date
 
+    val time
+        get() = schedule?.time
+
 }
 
 /**

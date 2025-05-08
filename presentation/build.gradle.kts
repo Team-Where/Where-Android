@@ -56,6 +56,7 @@ kotlin {
 dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
+    implementation(project(":core:notification"))
 
     //Hilt
     implementation(libs.hilt)

@@ -34,7 +34,7 @@ class SplashViewModel @Inject constructor(
             }
             val checkAppUpdate = async {
                 //TODO 환님 => 앱 버전 비교 하여 업데이트가 있는지 확인
-                true
+                false
             }
             val isFirstLaunch = async {
                 //최초 첫 실행 인지 확인

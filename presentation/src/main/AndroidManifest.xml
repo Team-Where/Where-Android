@@ -115,6 +115,13 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".view.LocalAlarmResultActivity"
+            android:exported="true"
+            android:launchMode="singleInstance">
+
+        </activity>
+
 
         <!-- Trigger Google Play services to install the backported photo picker module. -->
         <service
@@ -137,15 +144,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service
-            android:name="com.google.firebase.components.ComponentDiscoveryService"
-            android:exported="false">
-            <meta-data
-                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
-                android:value="com.google.firebase.components.ComponentRegistrar" />
-        </service>
-
 
     </application>
 

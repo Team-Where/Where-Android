@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -34,7 +33,7 @@ android {
         jvmTarget = "11"
     }
 
-    namespace = "com.sooum.data"
+    namespace = "com.sooum.core.alarm"
 }
 
 kotlin {
@@ -42,25 +41,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":domain"))
     //Hilt
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
-
-    //Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.serialization.converter)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.interceptor)
-    implementation(libs.kotlinx.serialization.json)
-
-    implementation(libs.datastore.preferences)
-
-    testImplementation(libs.kotlinx.serialization.json)
-    testImplementation(libs.retrofit.serialization.converter)
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
-    testImplementation(kotlin("test"))
-    implementation(project(":core:alarm"))
-
 }
