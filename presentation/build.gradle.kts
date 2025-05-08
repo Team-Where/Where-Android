@@ -107,7 +107,7 @@ dependencies {
 
     implementation("com.kakao.sdk:v2-share:2.21.0") // 카카오톡 공유 API 모듈
     implementation ("com.kakao.sdk:v2-user:2.21.0")
-
+    implementation ("com.tbuonomo:dotsindicator:5.0")
 
 
     implementation("com.github.skydoves:balloon:1.6.12")
