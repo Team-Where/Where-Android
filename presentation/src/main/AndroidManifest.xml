@@ -115,6 +115,13 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".view.LocalAlarmResultActivity"
+            android:exported="true"
+            android:launchMode="singleInstance">
+
+        </activity>
+
 
         <!-- Trigger Google Play services to install the backported photo picker module. -->
         <service

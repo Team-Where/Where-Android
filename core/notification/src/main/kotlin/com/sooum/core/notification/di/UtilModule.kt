@@ -1,6 +1,5 @@
 package com.sooum.core.notification.di
 
-import android.app.NotificationManager
 import android.content.Context
 import com.sooum.core.notification.NotificationConfig
 import com.sooum.core.notification.NotificationUtil
@@ -54,7 +53,6 @@ class UtilModule {
             channelId = "local_notification",
             channelName = "APP Notification",
             description = "앱에서 발생한 알림을 수신합니다.",
-            importance = NotificationManager.IMPORTANCE_HIGH,
             config = config
         )
     }

@@ -1,6 +1,5 @@
 package com.sooum.data.repository
 
-import android.util.Log
 import com.sooum.core.alarm.AlarmMaker
 import com.sooum.data.extension.covertApiResultToActionResultIfSuccess
 import com.sooum.data.extension.covertApiResultToActionResultIfSuccessEmpty
@@ -91,7 +90,7 @@ class MeetDetailRepositoryImpl @Inject constructor(
         meetDetails.forEach { meetDetail ->
             val time = makeStandardDate(meetDetail.date, meetDetail.time)
             if (time != null) {
-                alarmMaker.makeAlarm(meetDetail.id, time)
+                alarmMaker.makeAlarm(meetDetail.id, meetDetail.title, time)
             }
         }
         _meetDetailList.update {
@@ -146,10 +145,13 @@ class MeetDetailRepositoryImpl @Inject constructor(
                 onSuccess = {
                     _meetDetailList.update { meetDetailList ->
                         val tempList = meetDetailList.toMutableList()
-                        tempList.removeIf { it.id == meetId }
+                        val item = tempList.first { it.id == meetId }
+
+                        alarmMaker.cancelAlarm(meetId, item.title)
+                        tempList.remove(item)
+
                         tempList
                     }
-                    alarmMaker.cancelAlarm(meetId)
                     emit(ActionResult.Success(Unit))
                 },
                 onFail = {
@@ -205,6 +207,9 @@ class MeetDetailRepositoryImpl @Inject constructor(
                         if (index >= 0) {
                             val tempList = meetDetailList.toMutableList()
                             var tempMeet: MeetDetail = tempList[index].copy(title = title)
+                            makeStandardDate(tempMeet.date, tempMeet.time)?.let {
+                                alarmMaker.makeAlarm(meetId, tempMeet.title, it)
+                            }
                             tempList[index] = tempMeet
                             tempList
                         } else {
@@ -316,17 +321,15 @@ class MeetDetailRepositoryImpl @Inject constructor(
         ).transform { result ->
             result.covertApiResultToActionResultIfSuccess(
                 onSuccess = { schedule ->
-                    makeStandardDate(schedule.date, schedule.time).also {
-                        Log.d("JWH", "from add $it")
-                    }?.let {
-                        alarmMaker.makeAlarm(meetId, it)
-                    }
                     _meetDetailList.update { meetDetailList ->
                         val index = meetDetailList.indexOfFirst { it.id == meetId }
                         if (index >= 0) {
                             val tempList = meetDetailList.toMutableList()
                             var tempMeet: MeetDetail = tempList[index]
                                 .copy(schedule = schedule)
+                            makeStandardDate(schedule.date, schedule.time)?.let {
+                                alarmMaker.makeAlarm(meetId, tempMeet.title, it)
+                            }
                             tempList[index] = tempMeet
                             tempList
                         } else {
@@ -356,17 +359,15 @@ class MeetDetailRepositoryImpl @Inject constructor(
         ).transform { result ->
             result.covertApiResultToActionResultIfSuccess(
                 onSuccess = { schedule ->
-                    makeStandardDate(schedule.date, schedule.time).also {
-                        Log.d("JWH", "from edit $it")
-                    }?.let {
-                        alarmMaker.makeAlarm(meetId, it)
-                    }
                     _meetDetailList.update { meetDetailList ->
                         val index = meetDetailList.indexOfFirst { it.id == meetId }
                         if (index >= 0) {
                             val tempList = meetDetailList.toMutableList()
                             var tempMeet: MeetDetail = tempList[index]
                                 .copy(schedule = schedule)
+                            makeStandardDate(schedule.date, schedule.time)?.let {
+                                alarmMaker.makeAlarm(meetId, tempMeet.title, it)
+                            }
                             tempList[index] = tempMeet
                             tempList
                         } else {

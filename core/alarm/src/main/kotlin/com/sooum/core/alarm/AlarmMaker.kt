@@ -10,8 +10,15 @@ interface AlarmMaker {
      */
     fun makeAlarm(
         meetId: Int,
+        meetName: String,
         standardData: LocalDateTime
     )
 
-    fun cancelAlarm(meetId: Int)
+    /**
+     * 알림을 취소합니다.
+     */
+    fun cancelAlarm(
+        meetId: Int,
+        meetName: String
+    )
 }
