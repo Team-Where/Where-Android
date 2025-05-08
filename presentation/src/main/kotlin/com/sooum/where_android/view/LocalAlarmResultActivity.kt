@@ -9,13 +9,11 @@ import com.sooum.where_android.WhereApp
 import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
 import com.sooum.where_android.view.splash.SplashActivity
-import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable
 
 internal const val LOCAL_ALARM_PROVIDER = "localAlarmProvider"
 
 
-@AndroidEntryPoint
 class LocalAlarmResultActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
