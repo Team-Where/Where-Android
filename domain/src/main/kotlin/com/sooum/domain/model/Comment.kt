@@ -25,6 +25,7 @@ data class CommentSimple(
  * @param[placeId] 장소 식별 id
  * @param[description] 코멘트 내용
  * @param createdAt 생성일자
+ * @param isMine 내가 작성했는지 여부
  */
 @Serializable
 data class CommentListItem(
@@ -33,15 +34,18 @@ data class CommentListItem(
     @SerialName("placeId")
     val placeId: Int,
     val description: String,
-    val createdAt: String = ""
+    val createdAt: String = "",
+    val isMine: Boolean
 ) {
     constructor(
         commentSimple: CommentSimple,
         placeId: Int,
     ) : this(
-        commentSimple.commentId,
-        placeId,
-        commentSimple.description,
+        commentId = commentSimple.commentId,
+        placeId = placeId,
+        description = commentSimple.description,
+        createdAt = "",
+        isMine = true
     )
 }
 
