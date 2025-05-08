@@ -164,7 +164,8 @@ interface MeetRemoteDataSource {
      * 코멘트 목록 가져오기
      */
     suspend fun getPlaceCommentList(
-        placeId: Int
+        placeId: Int,
+        userId: Int
     ): Flow<ApiResult<List<CommentListItem>>>
 
 

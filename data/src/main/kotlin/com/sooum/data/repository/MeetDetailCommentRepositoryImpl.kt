@@ -7,6 +7,7 @@ import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.repository.MeetDetailCommentRepository
+import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MeetDetailCommentRepositoryImpl @Inject constructor(
-    private val meetRemoteDataSource: MeetRemoteDataSource
+    private val meetRemoteDataSource: MeetRemoteDataSource,
+    private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
 ) : MeetDetailCommentRepository {
 
     private val _commentList = MutableStateFlow(emptyList<CommentListItem>())
@@ -49,8 +51,9 @@ class MeetDetailCommentRepositoryImpl @Inject constructor(
             _commentList.update {
                 emptyList()
             }
+            val userId = getLoginUserIdUseCase()!!
             focusPlaceId = placeId
-            meetRemoteDataSource.getPlaceCommentList(placeId).first().let { result ->
+            meetRemoteDataSource.getPlaceCommentList(placeId, userId).first().let { result ->
                 if (result is ApiResult.Success) {
                     _commentList.update {
                         result.data

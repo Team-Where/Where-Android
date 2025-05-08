@@ -35,6 +35,7 @@ data class CommentListItem(
     val placeId: Int,
     val description: String,
     val createdAt: String = "",
+    @SerialName("mine")
     val isMine: Boolean
 ) {
     constructor(

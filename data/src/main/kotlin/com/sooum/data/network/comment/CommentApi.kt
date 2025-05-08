@@ -11,7 +11,7 @@ import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.PUT
-import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CommentApi {
 
@@ -30,8 +30,9 @@ interface CommentApi {
         @Body data: DeleteCommentRequest
     ): Response<String>
 
-    @GET("api/place/comment/{id}")
+    @GET("api/place/comment")
     suspend fun getPlaceCommentList(
-        @Path("id") placeId: Int
+        @Query("placeId") placeId: Int,
+        @Query("userId") userId: Int
     ): Response<List<CommentListItem>>
 }
