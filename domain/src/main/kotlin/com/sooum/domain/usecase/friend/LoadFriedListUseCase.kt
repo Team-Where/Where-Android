@@ -3,9 +3,10 @@ package com.sooum.domain.usecase.friend
 import com.sooum.domain.repository.FriendRepository
 import javax.inject.Inject
 
-class GetFriendByIdUseCase @Inject constructor(
+class LoadFriedListUseCase @Inject constructor(
     private val repository: FriendRepository
 ) {
-    operator fun invoke(id: Int) = repository.getFriendById(id)
-
+    suspend operator fun invoke(userId: Int) {
+        repository.loadFriend(userId)
+    }
 }

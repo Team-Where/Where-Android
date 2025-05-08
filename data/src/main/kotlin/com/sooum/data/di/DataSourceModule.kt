@@ -1,6 +1,8 @@
 package com.sooum.data.di
 
+import com.sooum.data.datasource.FriendRemoteDataSourceImpl
 import com.sooum.data.datasource.MeetRemoteDataSourceImpl
+import com.sooum.domain.datasource.FriendRemoteDataSource
 import com.sooum.domain.datasource.MeetRemoteDataSource
 import dagger.Binds
 import dagger.Module
@@ -18,5 +20,12 @@ abstract class DataSourceModule {
     abstract fun bindMeetRemoteSource(
         meetRemoteDataSource: MeetRemoteDataSourceImpl
     ): MeetRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindFriendRemoteSource(
+        friendRemoteDataSource: FriendRemoteDataSourceImpl
+    ): FriendRemoteDataSource
+
 
 }

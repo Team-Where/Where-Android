@@ -25,8 +25,24 @@ data class Friend(
         @SerialName("meetingName")
         val name: String,
         val description: String,
-        val date: String
+        val date: Date
     )
+
+    @JvmInline
+    @Serializable
+    value class Date(
+        val date: String //yyyy-MM-dd
+    ) {
+        val year: Int
+            get() = date.substring(0, 4).toInt()
+
+        val month: Int
+            get() = date.substring(5, 7).toInt()
+
+        val day: Int
+            get() = date.substring(8, 10).toInt()
+
+    }
 
     constructor(
         id: Int,

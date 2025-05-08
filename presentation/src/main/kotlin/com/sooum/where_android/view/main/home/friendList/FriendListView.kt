@@ -84,7 +84,7 @@ fun FriendListView(
     navigationMeetDetail: (ScreenRoute.Home.FriendMeetDetail) -> Unit,
     modifier: Modifier
 ) {
-    val friendList by userViewModel.userList.collectAsState()
+    val friendList by userViewModel.friendList.collectAsState()
     FriedListContent(
         userList = friendList,
         navigationMeetDetail = navigationMeetDetail,
@@ -297,13 +297,13 @@ private fun FriedListContent(
                 }
                 userList.find { it.id == selectedUserId }?.let { friend ->
                     ProfileDetailModal(
-                        user = friend.toUser(),
+                        friend = friend,
                         onDismiss = {
                             selectedUserId = null
                         },
                         navigationMeetDetail = {
                             selectedUserId = null
-                            navigationMeetDetail(ScreenRoute.Home.FriendMeetDetail(detailUserId = friend.id))
+                            navigationMeetDetail(ScreenRoute.Home.FriendMeetDetail(friendId = friend.id))
                         },
                         updateFavorite = updateFavorite
                     )

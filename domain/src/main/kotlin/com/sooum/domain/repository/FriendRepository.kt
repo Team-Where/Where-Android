@@ -13,10 +13,12 @@ interface FriendRepository {
      */
     fun getFriendList(): Flow<List<Friend>>
 
+    fun loadFriend(userId: Int)
+
     /**
      * id에 해당하는 유저정보를 가져옵니다.
      */
-    fun getFriendById(friendId: Int): Friend?
+    fun getFriendById(friendId: Int): Flow<Friend?>
 
     /**
      * 즐겨 찾기를 변경합니다.

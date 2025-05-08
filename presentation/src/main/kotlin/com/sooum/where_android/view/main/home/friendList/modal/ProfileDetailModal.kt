@@ -31,7 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sooum.domain.model.User
+import com.sooum.domain.model.Friend
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileDetailModal(
-    user: User,
+    friend: Friend,
     onDismiss: () -> Unit,
     navigationMeetDetail: () -> Unit,
     updateFavorite: (id: Int, favorite: Boolean) -> Unit
@@ -58,7 +58,7 @@ fun ProfileDetailModal(
         sheetState = sheetState
     ) {
         ProfileDetailContent(
-            user = user,
+            friend = friend,
             onClose = {
                 scope.launch {
                     sheetState.hide()
@@ -73,7 +73,7 @@ fun ProfileDetailModal(
 
 @Composable
 private fun ProfileDetailContent(
-    user: User,
+    friend: Friend,
     onClose: () -> Unit,
     navigationMeetDetail: () -> Unit,
     updateFavorite: (id: Int, favorite: Boolean) -> Unit,
@@ -105,9 +105,9 @@ private fun ProfileDetailContent(
                 )
             }
             FavoriteIconButton(
-                isFavorite = user.isFavorite,
+                isFavorite = friend.isFavorite,
                 toggleFavorite = {
-                    updateFavorite(user.id, !user.isFavorite)
+                    updateFavorite(friend.id, !friend.isFavorite)
                 }
             )
         }
@@ -119,7 +119,7 @@ private fun ProfileDetailContent(
         ) {
             //TODO profileImage 값으로 부터 가져오도록 수정필요
             CircleProfileView(
-                user.profileImage,
+                friend.image,
                 size = 120.dp
             )
 
@@ -138,7 +138,7 @@ private fun ProfileDetailContent(
                 ) {
                     Text(
                         text = stringResource(
-                            R.string.friend_list_detail_meet_count, 3
+                            R.string.friend_list_detail_meet_count, friend.meetList.size
                         ),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
@@ -147,7 +147,7 @@ private fun ProfileDetailContent(
                     )
                 }
                 Text(
-                    text = user.name,
+                    text = friend.name,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     fontFamily = pretendard,
@@ -184,7 +184,7 @@ private fun ProfileDetailContent(
 @Composable
 private fun ProfileDetailModalPreview() {
     ProfileDetailModal(
-        user = User(7, "냠냠쩝쩝", "", true),
+        friend = Friend(7, "냠냠쩝쩝", true),
         {},
         {},
         { _, _ -> }
@@ -196,7 +196,7 @@ private fun ProfileDetailModalPreview() {
 @Composable
 private fun ProfileDetailContentPreview() {
     ProfileDetailContent(
-        user = User(7, "냠냠쩝쩝", "", true),
+        friend = Friend(7, "냠냠쩝쩝", true),
         {},
         {},
         { _, _ -> }

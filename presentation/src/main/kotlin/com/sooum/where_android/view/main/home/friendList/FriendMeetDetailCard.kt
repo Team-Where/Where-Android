@@ -1,4 +1,4 @@
-package com.sooum.where_android.view.main.meetDetail
+package com.sooum.where_android.view.main.home.friendList
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -26,8 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sooum.domain.model.MeetDetail
-import com.sooum.domain.model.Schedule
+import com.sooum.domain.model.Friend
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray300
 import com.sooum.where_android.theme.Gray500
@@ -36,8 +33,8 @@ import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.widget.CoverImageView
 
 @Composable
-fun MeetDetailCard(
-    meetDetail: MeetDetail,
+fun FriendMeetDetailCard(
+    meetDetail: Friend.FriendMeet,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -70,14 +67,21 @@ fun MeetDetailCard(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = meetDetail.schedule?.date ?: "",
+                    text = with(meetDetail.date) {
+                        stringResource(
+                            R.string.friend_meet_detail_card_date,
+                            year,
+                            month,
+                            day
+                        )
+                    },
                     fontFamily = pretendard,
                     fontWeight = FontWeight.Normal,
                     fontSize = 12.sp,
                     color = Gray500
                 )
                 Text(
-                    text = meetDetail.title,
+                    text = meetDetail.name,
                     fontFamily = pretendard,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
@@ -116,12 +120,13 @@ fun MeetDetailCard(
 @Composable
 @Preview
 fun MeetDetailCardPreview() {
-    MeetDetailCard(
-        MeetDetail(
+    FriendMeetDetailCard(
+        Friend.FriendMeet(
             1,
+            null,
             "2024 연말파티\uD83E\uDD42",
             "벌써 연말이다 신나게 놀아보장~~",
-            Schedule(1,"2025-01-29","14:00")
+            Friend.Date("2025-01-29")
         ),
         modifier = Modifier.fillMaxWidth(),
         onClick = {}

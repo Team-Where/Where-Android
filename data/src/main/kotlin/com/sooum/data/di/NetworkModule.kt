@@ -3,6 +3,7 @@ package com.sooum.data.di
 import com.sooum.data.network.NullOnEmptyConverterFactory
 import com.sooum.data.network.auth.AuthApi
 import com.sooum.data.network.comment.CommentApi
+import com.sooum.data.network.friend.FriendApi
 import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.place.PlaceApi
 import com.sooum.data.network.schedule.ScheduleApi
@@ -57,6 +58,14 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideFriendApi(
+        @WhereRetrofit retrofit: Retrofit
+    ): FriendApi {
+        return retrofit.create(FriendApi::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideMeetApi(
         @WhereRetrofit retrofit: Retrofit
     ): MeetApi {
@@ -70,7 +79,6 @@ object NetworkModule {
     ): PlaceApi {
         return retrofit.create(PlaceApi::class.java)
     }
-
 
     @Provides
     @Singleton

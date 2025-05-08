@@ -41,13 +41,14 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.sooum.domain.model.Friend
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.NewMeetResult
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.main.home.HomeScreenView
+import com.sooum.where_android.view.main.home.friendList.FriendMeetDetailView
 import com.sooum.where_android.view.main.home.myMeet.MyMeetGuideView
 import com.sooum.where_android.view.main.home.newMeet.NewMeetResultView
-import com.sooum.where_android.view.main.meetDetail.MeetDetailView
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
 import kotlinx.coroutines.launch
 
@@ -174,7 +175,13 @@ fun MainScreenView(
                                             }
                                         }
                                     },
-                                    navigationMeetDetail = navController::navigateMeetDetail
+                                    navigationMeetDetail = navController::navigateMeetDetail,
+                                    navigationFriendDetail = navController::navigateFriendDetail,
+                                    navigationGuide = {
+                                        navController.navigate(ScreenRoute.Home.MeetGuide) {
+                                            launchSingleTop = true
+                                        }
+                                    }
                                 )
                             }
                             composable<ScreenRoute.Home.MeetGuide>() {
@@ -183,7 +190,7 @@ fun MainScreenView(
                                 )
                             }
                             composable<ScreenRoute.Home.FriendMeetDetail>() {
-                                MeetDetailView(
+                                FriendMeetDetailView(
                                     onBack = navController::popBackStack,
                                     navigationMeetDetail = navController::navigateMeetDetail
                                 )
@@ -215,6 +222,15 @@ fun MainScreenView(
 
 private fun NavHostController.navigateMeetDetail(meetDetail: MeetDetail) {
     navigateMeetDetailById(meetDetail.id)
+}
+private fun NavHostController.navigateMeetDetail(meetDetail: Friend.FriendMeet) {
+    navigateMeetDetailById(meetDetail.meetId)
+}
+
+private fun NavHostController.navigateFriendDetail(route: ScreenRoute.Home.FriendMeetDetail) {
+    navigate(route) {
+        launchSingleTop = true
+    }
 }
 
 private fun NavHostController.navigateMeetDetailById(id:Int) {
