@@ -41,11 +41,12 @@ data class CommentListItem(
     constructor(
         commentSimple: CommentSimple,
         placeId: Int,
+        createdAt: String,
     ) : this(
         commentId = commentSimple.commentId,
         placeId = placeId,
         description = commentSimple.description,
-        createdAt = "",
+        createdAt = createdAt,
         isMine = true
     )
 }

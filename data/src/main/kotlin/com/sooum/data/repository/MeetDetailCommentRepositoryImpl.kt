@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class MeetDetailCommentRepositoryImpl @Inject constructor(
@@ -82,7 +83,17 @@ class MeetDetailCommentRepositoryImpl @Inject constructor(
                 onSuccess = { commentSimple ->
                     _commentList.update { commentList ->
                         val tempList = commentList.toMutableList()
-                        tempList.add(CommentListItem(commentSimple, placeId))
+
+                        //현재 수신된 시간 임시 설정
+                        val now: String = LocalDateTime.now().toString()
+
+                        tempList.add(
+                            CommentListItem(
+                                commentSimple = commentSimple,
+                                placeId = placeId,
+                                createdAt = now
+                            )
+                        )
                         tempList
                     }
                     emit(ActionResult.Success(Unit))
@@ -156,19 +167,19 @@ class MeetDetailCommentRepositoryImpl @Inject constructor(
 
     override suspend fun addCommentFromFcm(placeId: Int, newComment: CommentListItem) {
         if (focusPlaceId == placeId) {
-           _commentList.update { currentList->
-               currentList + newComment
-           }
+            _commentList.update { currentList ->
+                currentList + newComment
+            }
         }
 
     }
 
     override suspend fun updateCommentFromFcm(commentId: Int, description: String) {
-        _commentList.update { currentList->
-            currentList.map { comment->
-                if(comment.commentId == commentId){
+        _commentList.update { currentList ->
+            currentList.map { comment ->
+                if (comment.commentId == commentId) {
                     comment.copy(description = description)
-                }else{
+                } else {
                     comment
                 }
             }
@@ -176,8 +187,8 @@ class MeetDetailCommentRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteCommentFromFcm(commentId: Int) {
-        _commentList.update { currentList->
-           currentList.filter { it.commentId != commentId }
+        _commentList.update { currentList ->
+            currentList.filter { it.commentId != commentId }
         }
     }
 }
