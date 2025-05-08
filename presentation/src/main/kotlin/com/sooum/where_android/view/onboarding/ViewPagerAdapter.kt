@@ -10,9 +10,9 @@ class ViewPagerAdapter(
 ) : FragmentStateAdapter(fragmentActivity) {
 
     private val pages = listOf(
-        OnBoardingFirstFragment.newInstance(R.string.onboarding_logo1, R.drawable.image_splash_1),
-        OnBoardingFirstFragment.newInstance(R.string.onboarding_logo2, R.drawable.image_splash_2),
-        OnBoardingFirstFragment.newInstance(R.string.onboarding_logo3, R.drawable.image_splash_3),
+        OnBoardingFragment.newInstance(R.string.onboarding_logo1, R.drawable.image_splash_1),
+        OnBoardingFragment.newInstance(R.string.onboarding_logo2, R.drawable.image_splash_2),
+        OnBoardingFragment.newInstance(R.string.onboarding_logo3, R.drawable.image_splash_3),
     )
 
     override fun getItemCount(): Int {
