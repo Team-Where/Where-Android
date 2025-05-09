@@ -96,6 +96,10 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         return safeFlow { meetApi.editMeet(dataPart, imageFile.createPart()) }
     }
 
+    override suspend fun deleteCover(id: Int): Flow<ApiResult<String>> {
+        return safeFlow { meetApi.deleteCover(id) }
+    }
+
     override suspend fun deleteMeet(
         meetId: Int,
         userId: Int
@@ -225,8 +229,11 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         return safeFlow { commentApi.deletePlaceComment(request) }
     }
 
-    override suspend fun getPlaceCommentList(placeId: Int): Flow<ApiResult<List<CommentListItem>>> {
-        return safeFlow { commentApi.getPlaceCommentList(placeId) }
+    override suspend fun getPlaceCommentList(
+        placeId: Int,
+        userId: Int
+    ): Flow<ApiResult<List<CommentListItem>>> {
+        return safeFlow { commentApi.getPlaceCommentList(placeId, userId) }
     }
 
 

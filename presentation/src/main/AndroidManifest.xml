@@ -93,6 +93,7 @@
 
         <activity
             android:name=".view.MapShareResultActivity"
+            android:theme="@style/Theme.Transparent"
             android:exported="true"
             android:launchMode="singleInstance">
             <intent-filter>
@@ -113,6 +114,14 @@
                     android:host="kakaolink"
                     android:scheme="kakao7e44ff67eb385fa512ec1019d33a0f1b" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".view.LocalAlarmResultActivity"
+            android:theme="@style/Theme.Transparent"
+            android:exported="true"
+            android:launchMode="singleInstance">
+
         </activity>
 
 
@@ -137,15 +146,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service
-            android:name="com.google.firebase.components.ComponentDiscoveryService"
-            android:exported="false">
-            <meta-data
-                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
-                android:value="com.google.firebase.components.ComponentRegistrar" />
-        </service>
-
 
     </application>
 

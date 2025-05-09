@@ -28,9 +28,15 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         lifecycleScope.launch {
-            splashViewModel.checkSplash { dest ->
-                nextActivity(dest)
-            }
+            splashViewModel.checkSplash(
+                needUpdate = {
+                    //TODO 환님 => 업데이트 알럿 출력
+                    //알럿으로 더이상 스플래시에서 진행되지 않고 마켓으로 다운로드 유도
+                },
+                complete = { dest ->
+                    nextActivity(dest)
+                }
+            )
         }
     }
 
