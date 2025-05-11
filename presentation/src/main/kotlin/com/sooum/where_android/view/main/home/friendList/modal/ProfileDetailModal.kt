@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +36,8 @@ import com.sooum.domain.model.Friend
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.view.common.modal.LoadingScreenProvider
+import com.sooum.where_android.view.common.modal.LoadingView
 import com.sooum.where_android.view.widget.CircleProfileView
 import com.sooum.where_android.view.widget.FavoriteIconButton
 import kotlinx.coroutines.launch
@@ -45,29 +48,62 @@ fun ProfileDetailModal(
     friend: Friend,
     onDismiss: () -> Unit,
     navigationMeetDetail: () -> Unit,
-    updateFavorite: (id: Int) -> Unit
+    updateFavorite: (
+        id: Int,
+        success: () -> Unit,
+        fail: (msg: String) -> Unit
+    ) -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
+
     val scope = rememberCoroutineScope()
+    val loadingScreenProvider = remember {
+        LoadingScreenProvider(scope)
+    }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+        confirmValueChange = {
+            !loadingScreenProvider.showLoading
+        }
+    )
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         dragHandle = null,
         containerColor = Color.White,
         sheetState = sheetState
     ) {
-        ProfileDetailContent(
-            friend = friend,
-            onClose = {
-                scope.launch {
-                    sheetState.hide()
-                    onDismiss()
+        Box {
+            ProfileDetailContent(
+                friend = friend,
+                onClose = {
+                    scope.launch {
+                        sheetState.hide()
+                        onDismiss()
+                    }
+                },
+                navigationMeetDetail = navigationMeetDetail,
+                updateFavorite = {
+                    loadingScreenProvider.startLoading()
+                    updateFavorite(
+                        it,
+                        {
+                            loadingScreenProvider.stopLoading()
+                        },
+                        {
+                            loadingScreenProvider.stopLoading()
+                        }
+                    )
                 }
-            },
-            navigationMeetDetail = navigationMeetDetail,
-            updateFavorite = updateFavorite
-        )
+            )
+            if (loadingScreenProvider.showLoading) {
+                LoadingView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(402.dp)
+                        .background(Color.Gray.copy(alpha = 0.5f)),
+                    msg = null
+                )
+            }
+        }
     }
 }
 
@@ -185,7 +221,7 @@ private fun ProfileDetailModalPreview() {
         friend = Friend(7, "냠냠쩝쩝", true),
         {},
         {},
-        { _ -> }
+        { _, _, _ -> }
     )
 }
 

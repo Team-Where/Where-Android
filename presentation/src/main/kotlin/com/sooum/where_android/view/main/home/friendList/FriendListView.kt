@@ -52,6 +52,7 @@ import com.sooum.where_android.theme.GrayScale600
 import com.sooum.where_android.theme.GrayScale700
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.view.main.LocalLoadingProvider
 import com.sooum.where_android.view.main.home.friendList.modal.DeleteUserModal
 import com.sooum.where_android.view.main.home.friendList.modal.ProfileDetailModal
 import com.sooum.where_android.view.widget.SearchField
@@ -89,17 +90,7 @@ fun FriendListView(
         userList = friendList,
         navigationMeetDetail = navigationMeetDetail,
         deleteUser = userViewModel::deleteFriend,
-        updateFavorite = {
-            userViewModel.updateFriendFavorite(
-                friendId = it,
-                onSuccess = {
-
-                },
-                onFail = {
-
-                }
-            )
-        },
+        updateFavorite = userViewModel::updateFriendFavorite,
         modifier = modifier
     )
 }
@@ -109,11 +100,29 @@ private fun FriedListContent(
     userList: List<Friend>,
     navigationMeetDetail: (ScreenRoute.Home.FriendMeetDetail) -> Unit,
     deleteUser: (id: Int) -> Unit,
-    updateFavorite: (id: Int) -> Unit,
+    updateFavorite: (
+        friendId: Int,
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
+    ) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var viewType: FriendListViewType by remember {
         mutableStateOf(FriendListViewType.Default)
+    }
+    val loadingScreenProvider = LocalLoadingProvider.current
+
+    val updateFavoriteInMain = { id: Int ->
+        loadingScreenProvider.startLoading()
+        updateFavorite(
+            id,
+            {
+                loadingScreenProvider.stopLoading()
+            },
+            {
+                loadingScreenProvider.stopLoading()
+            }
+        )
     }
 
     Column(
@@ -271,7 +280,7 @@ private fun FriedListContent(
                                     selectedUserId = friend.id
                                 },
                                 iconClickAction = {
-                                    updateFavorite(friend.id)
+                                    updateFavoriteInMain(friend.id)
                                 }
                             )
                         }
@@ -294,7 +303,7 @@ private fun FriedListContent(
                             user = friend.toUser(),
                             viewType = viewType,
                             deleteUser = deleteUser,
-                            updateFavorite = updateFavorite,
+                            updateFavorite = updateFavoriteInMain,
                             userClickAction = if (viewType == FriendListViewType.Default) {
                                 {
                                     selectedUserId = friend.id
@@ -346,7 +355,7 @@ private fun FriedListContent(
                                 user = friend.toUser(),
                                 viewType = viewType,
                                 deleteUser = deleteUser,
-                                updateFavorite = updateFavorite,
+                                updateFavorite = updateFavoriteInMain,
                             )
                         }
                     }
@@ -445,7 +454,7 @@ fun UserListViewPreview(
         userList = data,
         navigationMeetDetail = {},
         deleteUser = {},
-        updateFavorite = { _ -> },
+        updateFavorite = { _, _, _ -> },
         modifier = Modifier
             .safeDrawingPadding()
             .padding(12.dp)
