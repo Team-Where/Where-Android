@@ -1,5 +1,7 @@
 package com.sooum.where_android.view.main.myMeetDetail.fragment
 
+import android.content.Context
+import android.view.View
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,16 +12,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.sooum.domain.model.PLACE_STATE_NOT_PICK
 import com.sooum.domain.model.PLACE_STATE_PICK
 import com.sooum.where_android.databinding.FragmentComposeBinding
+import com.sooum.where_android.view.balloon.PlacePickBalloonFactory
 import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailCommentViewModel
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailPlaceViewModel
+import java.sql.Ref
 
 /**
  * 장소를 눌렀을때 이동되는 화면
