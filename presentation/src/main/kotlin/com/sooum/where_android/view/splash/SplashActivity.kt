@@ -10,9 +10,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.ActivitySplashBinding
 import com.sooum.where_android.nextActivity
 import com.sooum.where_android.view.getInviteData
+import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.viewmodel.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -31,8 +33,8 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         lifecycleScope.launch {
-            initVersionCode()
-
+            initVersionCheck()
+            observeSignInResult()
             splashViewModel.checkSplash(
                 needUpdate = {
                     showForceUpdateDialog()
@@ -49,9 +51,9 @@ class SplashActivity : AppCompatActivity() {
         setIntent(intent)
     }
 
-    private fun initVersionCode() {
-        val versionCode = packageManager.getPackageInfo(packageName, 0).versionCode
-        splashViewModel.setCurrentVersionCode(versionCode)
+    private fun initVersionCheck() {
+        val versionCode = packageManager.getPackageInfo(packageName, 0).versionName
+        splashViewModel.versionCheck("android",versionCode)
     }
 
     private fun showForceUpdateDialog() {
@@ -71,6 +73,24 @@ class SplashActivity : AppCompatActivity() {
         val dialog = builder.create()
         dialog.setCanceledOnTouchOutside(false)
         dialog.show()
+    }
+
+    private fun observeSignInResult() {
+        lifecycleScope.launch {
+            splashViewModel.versionCheckState.collect { result ->
+                when (result) {
+                    is ApiResult.Success -> {
+                        Log.d("SplashActivity", "${result.data}")
+                        splashViewModel.setBooleanState(result.data)
+                    }
+
+                    is ApiResult.Fail -> {
+                        Log.d("SplashActivity", "실패")
+                    }
+                    else -> {}
+                }
+            }
+        }
     }
 
 }
