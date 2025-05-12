@@ -4,31 +4,35 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.sooum.domain.usecase.GetUserUseCase
-import com.sooum.domain.usecase.meet.GetMeetDetailListGroupByYearUseCase
+import com.sooum.domain.model.Friend
+import com.sooum.domain.usecase.friend.GetFriendByIdUseCase
 import com.sooum.where_android.model.ScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MeetDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getUserUseCase: GetUserUseCase,
-    private val getMeetDetailListGroupByYearUseCase: GetMeetDetailListGroupByYearUseCase
+    private val getFriendByIdUseCase: GetFriendByIdUseCase,
 ) : ViewModel() {
 
     private val route = savedStateHandle.toRoute<ScreenRoute.Home.FriendMeetDetail>()
 
-    private val findUserId = route.detailUserId
+    private val findUserId = route.friendId
 
-    fun getUserData() = getUserUseCase(findUserId)
+    private var _friend = MutableStateFlow<Friend?>(null)
 
-    val meetDetailGroupList = getMeetDetailListGroupByYearUseCase()
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
-            emptyMap()
-        )
+    val friend
+        get() = _friend.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            getFriendByIdUseCase(findUserId).collect {
+                _friend.value = it
+            }
+        }
+    }
 }

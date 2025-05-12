@@ -66,8 +66,9 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import com.sooum.domain.model.Friend
 import com.sooum.domain.model.InvitedFriend
-import com.sooum.domain.model.User
+import com.sooum.domain.model.toUser
 import com.sooum.domain.usecase.user.GetLoginUserUseCase
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray100
@@ -91,10 +92,10 @@ fun InviteFriendView(
     modifier: Modifier = Modifier,
     inviteFriendList: List<InvitedFriend>,
     waitingFriendList: List<InvitedFriend>,
-    userList: List<User>,
-    recentUserList: List<User>,
+    userList: List<Friend>,
+    recentUserList: List<Friend>,
     inviteByKaKao: () -> Unit,
-    inviteFriend: (User) -> Unit,
+    inviteFriend: (Friend) -> Unit,
     onBack: () -> Unit
 ) {
     Scaffold(
@@ -224,9 +225,9 @@ fun InviteFriendView(
                                 key = {
                                     "df_f" + it.id
                                 }
-                            ) { user ->
+                            ) { friend ->
                                 UserItemView(
-                                    user = user,
+                                    user = friend.toUser(),
                                     type = UserViewType.Invite,
                                 )
                             }

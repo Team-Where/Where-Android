@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,7 +20,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,13 +44,16 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.sooum.domain.model.Friend
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.NewMeetResult
 import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.common.modal.LoadingScreenProvider
+import com.sooum.where_android.view.common.modal.LoadingView
 import com.sooum.where_android.view.main.home.HomeScreenView
+import com.sooum.where_android.view.main.home.friendList.FriendMeetDetailView
 import com.sooum.where_android.view.main.home.myMeet.MyMeetGuideView
 import com.sooum.where_android.view.main.home.newMeet.NewMeetResultView
-import com.sooum.where_android.view.main.meetDetail.MeetDetailView
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
 import kotlinx.coroutines.launch
 
@@ -61,6 +67,11 @@ fun NavBackStackEntry?.notShowBottom(): Boolean {
     } == true)
 }
 
+val LocalLoadingProvider = compositionLocalOf<LoadingScreenProvider> {
+    error("CompositionLocal LocalLoadingProvider not present")
+}
+
+
 @Composable
 fun MainScreenView(
     modifier: Modifier = Modifier
@@ -71,6 +82,10 @@ fun MainScreenView(
     val bottomNavBackStackEntry by bottomNavController.currentBackStackEntryAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    val loadingScreenProvider = remember {
+        LoadingScreenProvider(scope)
+    }
     Scaffold(
         modifier = modifier,
         bottomBar = {
@@ -121,7 +136,10 @@ fun MainScreenView(
         containerColor = Color.White,
     ) { innerPadding ->
         CompositionLocalProvider(
-            LocalLayoutDirection provides LayoutDirection.Rtl
+            values = arrayOf(
+                LocalLayoutDirection provides LayoutDirection.Rtl,
+                LocalLoadingProvider provides loadingScreenProvider
+            )
         ) {
             ModalNavigationDrawer(
                 drawerState = drawerState,
@@ -174,7 +192,13 @@ fun MainScreenView(
                                             }
                                         }
                                     },
-                                    navigationMeetDetail = navController::navigateMeetDetail
+                                    navigationMeetDetail = navController::navigateMeetDetail,
+                                    navigationFriendDetail = navController::navigateFriendDetail,
+                                    navigationGuide = {
+                                        navController.navigate(ScreenRoute.Home.MeetGuide) {
+                                            launchSingleTop = true
+                                        }
+                                    }
                                 )
                             }
                             composable<ScreenRoute.Home.MeetGuide>() {
@@ -183,7 +207,7 @@ fun MainScreenView(
                                 )
                             }
                             composable<ScreenRoute.Home.FriendMeetDetail>() {
-                                MeetDetailView(
+                                FriendMeetDetailView(
                                     onBack = navController::popBackStack,
                                     navigationMeetDetail = navController::navigateMeetDetail
                                 )
@@ -209,12 +233,29 @@ fun MainScreenView(
                 }
             }
         }
+        if (loadingScreenProvider.showLoading) {
+            LoadingView(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable { },
+                msg = null
+            )
+        }
     }
 }
 
 
 private fun NavHostController.navigateMeetDetail(meetDetail: MeetDetail) {
     navigateMeetDetailById(meetDetail.id)
+}
+private fun NavHostController.navigateMeetDetail(meetDetail: Friend.FriendMeet) {
+    navigateMeetDetailById(meetDetail.meetId)
+}
+
+private fun NavHostController.navigateFriendDetail(route: ScreenRoute.Home.FriendMeetDetail) {
+    navigate(route) {
+        launchSingleTop = true
+    }
 }
 
 private fun NavHostController.navigateMeetDetailById(id:Int) {

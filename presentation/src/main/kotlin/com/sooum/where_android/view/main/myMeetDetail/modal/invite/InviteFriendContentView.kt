@@ -24,7 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sooum.domain.model.User
+import com.sooum.domain.model.Friend
+import com.sooum.domain.model.toUser
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.widget.UserItemView
@@ -32,11 +33,11 @@ import com.sooum.where_android.view.widget.UserViewType
 
 @Composable
 fun InviteFriendContentView(
-    recentUserList: List<User>,
-    userList: List<User>,
-    inviteFriend: (User) -> Unit,
+    recentUserList: List<Friend>,
+    userList: List<Friend>,
+    inviteFriend: (Friend) -> Unit,
     headerColor: Color = Color(0xff374151),
-    kakaoClickAction : (() -> Unit) ? = null,
+    kakaoClickAction: (() -> Unit)? = null,
 ) {
     Column(
         modifier = Modifier
@@ -46,7 +47,7 @@ fun InviteFriendContentView(
                 bottom = 20.dp
             )
     ) {
-        kakaoClickAction?.let {action ->
+        kakaoClickAction?.let { action ->
             Button(
                 onClick = action,
                 modifier = Modifier
@@ -98,12 +99,12 @@ fun InviteFriendContentView(
                 key = {
                     "rc" + it.id
                 }
-            ) { user ->
+            ) { friend ->
                 UserItemView(
-                    user = user,
+                    user = friend.toUser(),
                     type = UserViewType.Invite,
                     iconClickAction = {
-                        inviteFriend(user)
+                        inviteFriend(friend)
                     }
                 )
             }
@@ -122,12 +123,12 @@ fun InviteFriendContentView(
                 key = {
                     "d" + it.id
                 }
-            ) { user ->
+            ) { friend ->
                 UserItemView(
-                    user = user,
+                    user = friend.toUser(),
                     type = UserViewType.Invite,
                     iconClickAction = {
-                        inviteFriend(user)
+                        inviteFriend(friend)
                     }
                 )
             }
@@ -141,10 +142,10 @@ private fun InviteFriendViewPreview() {
     InviteFriendContentView(
         recentUserList =
             listOf(
-                User(1, "냠냠")
+                Friend(1, "냠냠")
             ),
         userList = listOf(
-            User(2, "냠냠")
+            Friend(2, "냠냠")
         ),
         inviteFriend = {}
     )

@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
@@ -96,6 +99,56 @@ fun LoadingView(
     }
 }
 
+private const val debounceThreshold = 300L                     // 300ms 이하의 짧은 로딩은 무시
+private const val minDisplayTime = 500L                        // 로딩이 표시되면 최소 500ms는 유지
+
+class LoadingScreenProvider(
+    private val scope: CoroutineScope
+) {
+    var showLoading by mutableStateOf(false)
+        private set
+
+    private var showJob: Job? = null
+    private var loadingStartTime: Long = 0
+
+    fun startLoading() {
+        showJob?.cancel()
+        showLoading = false
+        loadingStartTime = System.currentTimeMillis()
+
+        showJob = scope.launch {
+            delay(debounceThreshold)
+            loadingStartTime = System.currentTimeMillis()
+            showLoading = true
+        }
+    }
+
+    fun stopLoading(
+        withAction: () -> Unit = {}
+    ) {
+        scope.launch {
+            // 대기 중이던 로딩 예약이 있다면 취소
+            showJob?.cancel()
+
+            if (!showLoading) {
+                // 로딩이 아예 표시되지 않았던 경우 (300ms 이내 종료)
+                withAction()
+                return@launch
+            }
+
+            // 표시된 경우에는 최소 유지 시간(minDisplayTime)을 만족시킴
+            val elapsed = System.currentTimeMillis() - loadingStartTime
+            val remaining = minDisplayTime - elapsed
+
+            if (remaining > 0) delay(remaining)
+
+            showLoading = false
+
+            withAction()
+        }
+    }
+}
+
 class LoadingAlertProvider(
     private val context: Context,
     private val fragmentManager: FragmentManager,
@@ -120,9 +173,6 @@ class LoadingAlertProvider(
     private var loadingStartTime: Long = 0                   // 실제 로딩이 표시된 시점 (ms)
     private var isShowing = false                            // 로딩 다이얼로그 표시 여부
     private var showJob: Job? = null                         // 디바운스 딜레이 작업
-
-    private val debounceThreshold = 300L                     // 300ms 이하의 짧은 로딩은 무시
-    private val minDisplayTime = 500L                        // 로딩이 표시되면 최소 500ms는 유지
 
     /**
      * 로딩을 시작합니다 (기본 메시지 없음).
