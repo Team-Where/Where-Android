@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.main.home.friendList
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -25,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -113,6 +116,11 @@ private fun FriedListContent(
 ) {
     var viewType: FriendListViewType by remember {
         mutableStateOf(FriendListViewType.Default)
+    }
+    BackHandler(
+        enabled = viewType == FriendListViewType.Edit
+    ) {
+        viewType = FriendListViewType.Default
     }
     val loadingScreenProvider = LocalLoadingProvider.current
 
@@ -209,7 +217,7 @@ private fun FriedListContent(
             }
         }
         SearchField(
-            searchValue,
+            searchValue = searchValue,
             onValueChange = {
                 searchValue = it
             },
@@ -248,8 +256,16 @@ private fun FriedListContent(
             }
         } else {
 
-            //검색 값을 가져옴
-            val filterValue = searchValue.trim()
+            val focusManager = LocalFocusManager.current
+            val filterValue by remember {
+                derivedStateOf {
+                    searchValue.trim()
+                }
+            }
+            BackHandler(filterValue.isNotEmpty()) {
+                searchValue = ""
+                focusManager.clearFocus()
+            }
 
             if (filterValue.isEmpty()) {
                 //검색값이 없는 경우
