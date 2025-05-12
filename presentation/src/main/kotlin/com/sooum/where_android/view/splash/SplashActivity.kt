@@ -2,9 +2,12 @@ package com.sooum.where_android.view.splash
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.sooum.where_android.databinding.ActivitySplashBinding
@@ -28,10 +31,11 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         lifecycleScope.launch {
+            initVersionCode()
+
             splashViewModel.checkSplash(
                 needUpdate = {
-                    //TODO 환님 => 업데이트 알럿 출력
-                    //알럿으로 더이상 스플래시에서 진행되지 않고 마켓으로 다운로드 유도
+                    showForceUpdateDialog()
                 },
                 complete = { dest ->
                     nextActivity(dest)
@@ -44,4 +48,29 @@ class SplashActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
     }
+
+    private fun initVersionCode() {
+        val versionCode = packageManager.getPackageInfo(packageName, 0).versionCode
+        splashViewModel.setCurrentVersionCode(versionCode)
+    }
+
+    private fun showForceUpdateDialog() {
+        val builder = AlertDialog.Builder(this)
+            .setTitle("업데이트 필요")
+            .setMessage("새로운 버전이 출시되었습니다.\n최신 버전으로 업데이트 후 이용해 주세요.")
+            .setCancelable(false)
+            .setPositiveButton("업데이트") { _, _ ->
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse("market://details?id=$packageName")
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                startActivity(intent)
+                finish()
+            }
+
+        val dialog = builder.create()
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
+    }
+
 }
