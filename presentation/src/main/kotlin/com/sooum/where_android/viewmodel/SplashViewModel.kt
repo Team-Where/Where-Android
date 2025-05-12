@@ -2,8 +2,12 @@ package com.sooum.where_android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.datatransport.BuildConfig
 import com.sooum.data.datastore.AppManageDataStore
+import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.SignUpResult
+import com.sooum.domain.usecase.auth.VersionCheckUseCase
 import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.view.onboarding.OnBoardingActivity
@@ -20,21 +24,30 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val appManageDataStore: AppManageDataStore
+    private val appManageDataStore: AppManageDataStore,
+    private val versionCheckUseCase: VersionCheckUseCase
 ) : ViewModel() {
 
-    private val _currentVersionCode = MutableStateFlow(0)
-    private val currentVersionCode: StateFlow<Int> = _currentVersionCode.asStateFlow()
+    private val _versionCheckState = MutableStateFlow<ApiResult<Boolean>>(ApiResult.SuccessEmpty)
+    val versionCheckState: StateFlow<ApiResult<Boolean>> = _versionCheckState
 
-    private val _serverVersionCode = MutableStateFlow(0)
-    private val serverVersionCode: StateFlow<Int> = _serverVersionCode.asStateFlow()
+    private val _versionBooleanState = MutableStateFlow(true)
+    val versionBooleanState: StateFlow<Boolean> = _versionBooleanState
 
-    fun setCurrentVersionCode(value: Int) {
-        _currentVersionCode.value = value
+    /**
+     * 버전 체크
+     */
+    fun versionCheck(type: String, version: String){
+        viewModelScope.launch {
+            _versionCheckState.value = ApiResult.Loading
+            versionCheckUseCase(type, version).collect{ result ->
+                _versionCheckState.value = result
+            }
+        }
     }
 
-    fun setServerVersionCode(value: Int) {
-        _serverVersionCode.value = value
+    fun setBooleanState(value: Boolean) {
+        _versionBooleanState.value = value
     }
 
     fun checkSplash(
@@ -51,9 +64,7 @@ class SplashViewModel @Inject constructor(
                 true
             }
             val checkAppUpdate = async {
-                val currentVersionCode = currentVersionCode.value
-                val latestVersionCodeFromServer = 1
-                currentVersionCode < latestVersionCodeFromServer
+                _versionBooleanState.value
             }
             val isFirstLaunch = async {
                 //최초 첫 실행 인지 확인
@@ -61,7 +72,7 @@ class SplashViewModel @Inject constructor(
             }
             joinAll(timeJob, checkLogin, checkAppUpdate, isFirstLaunch)
             val isNewVersion = checkAppUpdate.await()
-            if (isNewVersion) {
+            if (!isNewVersion) {
                 needUpdate()
             } else {
                 val result = checkLogin.await()

@@ -62,4 +62,16 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun checkVersion(
+        type: String,
+        version: String
+    ): Flow<ApiResult<Boolean>> {
+       return safeFlow {
+           authApi.versionCheck(
+               type = type,
+               version = version
+           )
+       }
+    }
+
 }

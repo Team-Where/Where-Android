@@ -61,7 +61,6 @@ dependencies {
     //Hilt
     implementation(libs.hilt)
     implementation(libs.firebase.messaging)
-    implementation(libs.transport.api)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
