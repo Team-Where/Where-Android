@@ -1,6 +1,7 @@
 package com.sooum.where_android.view.auth
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Paint
 import android.os.Build
@@ -9,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -16,9 +18,12 @@ import androidx.lifecycle.lifecycleScope
 import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.sooum.data.datastore.AppManageDataStore
+import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentSocialLoginBinding
 import com.sooum.where_android.view.auth.signup.AgreementFragment
 import com.sooum.where_android.view.auth.signup.AuthBaseFragment
+import com.sooum.where_android.view.common.modal.LoadingAlertProvider
+import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
@@ -29,6 +34,9 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SocialLoginFragment : AuthBaseFragment() {
     private lateinit var binding: FragmentSocialLoginBinding
+    private val loadingAlertProvider by lazy {
+        LoadingAlertProvider(this)
+    }
 
     @Inject
     lateinit var  appManageDataStore: AppManageDataStore
@@ -39,20 +47,6 @@ class SocialLoginFragment : AuthBaseFragment() {
     ): View {
         binding = FragmentSocialLoginBinding.inflate(inflater, container, false)
 
-        with(binding){
-            textSignIn.setOnClickListener { (activity as AuthActivity).navigateToFragment(SignInFragment()) }
-            btnSignUp.setOnClickListener { (activity as AuthActivity).navigateToFragment(AgreementFragment()) }
-            imgKakao.setOnClickListener {
-                kakaoLogin(requireContext())
-              lifecycleScope.launch {
-                  viewModel.kakaoLogin(
-                      appManageDataStore.getKakaoAccessToken().first() ?: "",
-                      appManageDataStore.getKakaoRefreshToken().first() ?: ""
-                  )
-              }
-            }
-        }
-
         checkNotificationPermission()
 
         return binding.root
@@ -62,7 +56,22 @@ class SocialLoginFragment : AuthBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
             textSignIn.paintFlags = textSignIn.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+            textSignIn.setOnClickListener { (activity as AuthActivity).navigateToFragment(SignInFragment()) }
+
+            btnSignUp.setOnClickListener { (activity as AuthActivity).navigateToFragment(AgreementFragment()) }
+
+            imgKakao.setOnClickListener {
+                kakaoLogin(requireContext())
+                lifecycleScope.launch {
+                    viewModel.kakaoLogin(
+                        appManageDataStore.getKakaoAccessToken().first() ?: "",
+                        appManageDataStore.getKakaoRefreshToken().first() ?: ""
+                    )
+                }
+            }
         }
+        observeKakaoLoginResult()
+
     }
 
     private fun checkNotificationPermission() {
@@ -118,6 +127,34 @@ class SocialLoginFragment : AuthBaseFragment() {
             } else if (token != null) {
                 Log.i("SocialLoginFragment", "카카오톡 로그인 성공 ${token.accessToken}")
                 Log.i("SocialLoginFragment", "카카오톡 로그인 성공 ${token.refreshToken}")
+            }
+        }
+    }
+
+    private fun observeKakaoLoginResult() {
+        lifecycleScope.launch {
+            viewModel.kakaoSignUpState.collect { result ->
+                when (result) {
+                    is ApiResult.Loading -> {
+                        loadingAlertProvider.startLoading()
+                    }
+                    is ApiResult.Success -> {
+                        loadingAlertProvider.endLoading()
+                        val data = result.data
+                        if (data.signUp) {
+
+                        } else {
+                            showToast("카카오 로그인 성공")
+                            navigateActivity(MainActivity())
+                            requireActivity().finish()
+                        }
+                    }
+
+                    is ApiResult.Fail -> {
+                        loadingAlertProvider.endLoadingWithMessage("카카오 로그인 실패")
+                    }
+                    else -> {}
+                }
             }
         }
     }
