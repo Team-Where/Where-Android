@@ -15,4 +15,9 @@ interface FriendRemoteDataSource {
         userId: Int,
         friendId: Int
     ): Flow<ApiResult<FriendBookMark>>
+
+    suspend fun deleteFriend(
+        userId: Int,
+        friendId: Int
+    ): Flow<ApiResult<*>>
 }

@@ -2,6 +2,7 @@ package com.sooum.data.datasource
 
 import com.sooum.data.network.friend.FriendApi
 import com.sooum.data.network.friend.request.BookMarkFriendRequest
+import com.sooum.data.network.friend.request.DeleteFriendRequest
 import com.sooum.data.network.safeFlow
 import com.sooum.domain.datasource.FriendRemoteDataSource
 import com.sooum.domain.model.ApiResult
@@ -34,5 +35,13 @@ class FriendRemoteDataSourceImpl @Inject constructor(
             friendId = friendId
         )
         return safeFlow { friendApi.bookMarkFriend(request) }
+    }
+
+    override suspend fun deleteFriend(userId: Int, friendId: Int): Flow<ApiResult<*>> {
+        val request = DeleteFriendRequest(
+            userId = userId,
+            friendId = friendId
+        )
+        return safeFlow { friendApi.deleteFriend(request) }
     }
 }

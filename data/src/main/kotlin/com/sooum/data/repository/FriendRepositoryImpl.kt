@@ -1,6 +1,7 @@
 package com.sooum.data.repository
 
 import com.sooum.data.extension.covertApiResultToActionResultIfSuccess
+import com.sooum.data.extension.covertApiResultToActionResultIfSuccessEmpty
 import com.sooum.domain.datasource.FriendRemoteDataSource
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.Friend
@@ -80,12 +81,32 @@ class FriendRepositoryImpl @Inject constructor(
         }.first()
     }
 
-    override suspend fun deleteFriend(id: Int) {
-        _friendListFlow.update { friendList ->
-            val items = friendList.toMutableList()
-            items.removeIf { it.id == id }
-            items
-        }
+    override suspend fun deleteFriend(friendId: Int, userId: Int): ActionResult<*> {
+        return friendRemoteDataSource.deleteFriend(
+            userId = userId,
+            friendId = friendId
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccessEmpty(
+                onSuccess = {
+                    _friendListFlow.update { friendList ->
+                        val index = friendList.indexOfFirst { it.id == friendId }
+
+                        if (index >= 0) {
+                            val tempList = friendList.toMutableList()
+                            tempList.removeIf { it.id == friendId }
+                            tempList
+                        } else {
+                            friendList
+                        }
+                    }
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
+                }
+            )
+        }.first()
+
     }
 
 }

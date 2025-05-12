@@ -89,7 +89,7 @@ fun FriendListView(
     FriedListContent(
         userList = friendList,
         navigationMeetDetail = navigationMeetDetail,
-        deleteUser = userViewModel::deleteFriend,
+        deleteFriend = userViewModel::deleteFriend,
         updateFavorite = userViewModel::updateFriendFavorite,
         modifier = modifier
     )
@@ -99,7 +99,11 @@ fun FriendListView(
 private fun FriedListContent(
     userList: List<Friend>,
     navigationMeetDetail: (ScreenRoute.Home.FriendMeetDetail) -> Unit,
-    deleteUser: (id: Int) -> Unit,
+    deleteFriend: (
+        id: Int,
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
+    ) -> Unit,
     updateFavorite: (
         friendId: Int,
         onSuccess: () -> Unit,
@@ -115,6 +119,19 @@ private fun FriedListContent(
     val updateFavoriteInMain = { id: Int ->
         loadingScreenProvider.startLoading()
         updateFavorite(
+            id,
+            {
+                loadingScreenProvider.stopLoading()
+            },
+            {
+                loadingScreenProvider.stopLoading()
+            }
+        )
+    }
+
+    val deleteFriendInMain = { id: Int ->
+        loadingScreenProvider.startLoading()
+        deleteFriend(
             id,
             {
                 loadingScreenProvider.stopLoading()
@@ -302,7 +319,7 @@ private fun FriedListContent(
                         UserItemViewByListView(
                             user = friend.toUser(),
                             viewType = viewType,
-                            deleteUser = deleteUser,
+                            deleteUser = deleteFriendInMain,
                             updateFavorite = updateFavoriteInMain,
                             userClickAction = if (viewType == FriendListViewType.Default) {
                                 {
@@ -354,7 +371,7 @@ private fun FriedListContent(
                             UserItemViewByListView(
                                 user = friend.toUser(),
                                 viewType = viewType,
-                                deleteUser = deleteUser,
+                                deleteUser = deleteFriendInMain,
                                 updateFavorite = updateFavoriteInMain,
                             )
                         }
@@ -453,7 +470,7 @@ fun UserListViewPreview(
     FriedListContent(
         userList = data,
         navigationMeetDetail = {},
-        deleteUser = {},
+        deleteFriend = { _, _, _ -> },
         updateFavorite = { _, _, _ -> },
         modifier = Modifier
             .safeDrawingPadding()

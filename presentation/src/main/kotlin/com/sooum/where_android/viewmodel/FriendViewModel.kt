@@ -34,10 +34,20 @@ class FriendViewModel @Inject constructor(
             )
 
     fun deleteFriend(
-        friendId: Int
+        friendId: Int,
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
     ) {
         viewModelScope.launch {
-            deleteUserUseCase(friendId)
+            when (val result = deleteUserUseCase(friendId)) {
+                is ActionResult.Success -> {
+                    onSuccess()
+                }
+
+                is ActionResult.Fail -> {
+                    onFail(result.msg)
+                }
+            }
         }
     }
 

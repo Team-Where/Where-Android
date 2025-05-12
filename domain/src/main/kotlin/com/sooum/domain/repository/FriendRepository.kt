@@ -29,5 +29,5 @@ interface FriendRepository {
     /**
      * 유저를 삭제합니다.
      */
-    suspend fun deleteFriend(id: Int)
+    suspend fun deleteFriend(friendId: Int, userId: Int): ActionResult<*>
 }
