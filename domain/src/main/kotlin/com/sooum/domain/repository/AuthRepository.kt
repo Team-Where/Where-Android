@@ -34,4 +34,9 @@ interface AuthRepository {
         refreshToken: String
     ): Flow<ApiResult<KakaoSignUpResult>>
 
+    suspend fun checkVersion(
+        type: String,
+        version: String
+    ): Flow<ApiResult<Boolean>>
+
 }

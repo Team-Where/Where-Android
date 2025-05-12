@@ -8,8 +8,10 @@ import com.sooum.domain.model.LoginResult
 import com.sooum.domain.model.SignUpResult
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface AuthApi {
     @POST("api/user/signup")
@@ -32,5 +34,11 @@ interface AuthApi {
         @Header("Authorization") authorization: String,
         @Header("refreshToken") refreshToken: String
     ): Response<KakaoSignUpResult>
+
+    @GET("api/version")
+    suspend fun versionCheck(
+        @Query("type") type: String,
+        @Query("version") version: String
+    ): Response<Boolean>
 
 }

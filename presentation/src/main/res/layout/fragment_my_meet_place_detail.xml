@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_arrow_back"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:padding="15dp"
+            />
+
+        <TextView
+            android:id="@+id/textDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="삭제"
+            android:textSize="16sp"
+            android:fontFamily="@font/pretend_medium"
+            android:textColor="#4F46E5"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="15dp"/>
+
+        <ImageView
+            android:id="@+id/imagePlace"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/image_where_logo_gray"
+            android:background="@drawable/shape_image_radius"
+            android:scaleType="centerInside"
+            android:layout_marginTop="80dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/textPlaceName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="무드서울"
+            android:textColor="#1F2937"
+            android:textSize="24sp"
+            android:fontFamily="@font/pretend_semibold"
+            android:layout_marginTop="13dp"
+            app:layout_constraintTop_toBottomOf="@id/imagePlace"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/textPlaceDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/pretend_medium"
+            android:text="서울 용산구 한강대로21길 18 1층"
+            android:textColor="#4B5563"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textPlaceName" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/comment_heart_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textPlaceDetail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:id="@+id/comment_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/iconBalloon"
+                    android:layout_width="18sp"
+                    android:layout_height="18sp"
+                    android:src="@drawable/icon_balloon" />
+
+                <TextView
+                    android:id="@+id/textComment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:fontFamily="@font/pretend_medium"
+                    android:text="코멘트"
+                    android:textColor="@color/gray_600"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/textCommentNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:fontFamily="@font/pretend_medium"
+                    android:minWidth="20dp"
+                    android:text="0"
+                    android:textColor="@color/gray_600"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/heart_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toEndOf="@id/comment_area"
+                app:layout_constraintTop_toTopOf="@id/comment_area">
+
+                <ImageView
+                    android:id="@+id/icon_heart"
+                    android:layout_width="18sp"
+                    android:layout_height="18sp"
+                    android:src="@drawable/icon_heart_selector"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/textLike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:fontFamily="@font/pretend_medium"
+                    android:minWidth="20dp"
+                    android:text="좋아요"
+                    android:textColor="@color/text_color_selector"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/textLikeNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:fontFamily="@font/pretend_medium"
+                    android:text="0"
+                    android:textColor="@color/text_color_selector"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/map_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/comment_heart_container"
+            app:layout_constraintVertical_bias="1"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnNaverMap"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/shape_rounded_radius_24"
+                android:drawableStart="@drawable/icon_map_naver"
+                android:fontFamily="@font/pretend_regular"
+                android:paddingLeft="25dp"
+                android:paddingEnd="20dp"
+                android:stateListAnimator="@null"
+                android:text="네이버 지도"
+                android:textSize="12sp"
+                app:iconSize="16dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnKakaoMap"
+                app:iconSize="16dp"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/shape_rounded_radius_24"
+                android:drawableStart="@drawable/icon_map_kakao"
+                android:fontFamily="@font/pretend_regular"
+                android:paddingStart="25dp"
+                android:paddingEnd="20dp"
+                android:stateListAnimator="@null"
+                android:text="카카오맵"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/place_text_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintTop_toBottomOf="@id/map_container"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_this_place"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="이 장소로"
+                android:textColor="#1F2937"
+                android:textSize="16sp"
+                android:fontFamily="@font/pretend_medium" />
+
+            <TextView
+                android:id="@+id/text_pick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text=" Pick"
+                android:textColor="@color/main_color"
+                android:textSize="16sp"
+                android:fontFamily="@font/pretend_medium"
+                app:layout_constraintStart_toEndOf="@id/text_this_place"
+                app:layout_constraintTop_toTopOf="@id/text_this_place"/>
+
+            <TextView
+                android:id="@+id/text_ask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="할까요?"
+                android:textColor="#1F2937"
+                android:textSize="16sp"
+                android:fontFamily="@font/pretend_medium"
+                app:layout_constraintStart_toEndOf="@id/text_pick"
+                app:layout_constraintTop_toTopOf="@id/text_pick"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:id="@+id/image_check"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/icon_circle_check_gray"
+                app:layout_constraintStart_toEndOf="@id/text_ask"
+                app:layout_constraintTop_toTopOf="@id/text_ask"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="코멘트"
+            android:textColor="#212529"
+            android:textSize="16sp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/place_text_container"/>
+
+        <TextView
+            android:id="@+id/text_comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 0"
+            android:textColor="#212529"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/text_comment"
+            app:layout_constraintBottom_toBottomOf="@id/text_comment" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_comment_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:overScrollMode="never"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/text_comment" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

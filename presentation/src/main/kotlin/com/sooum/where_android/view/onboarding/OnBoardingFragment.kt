@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.sooum.where_android.databinding.FragmentOnBoardingFirstBinding
 
-class OnBoardingFirstFragment : Fragment() {
+class OnBoardingFragment : Fragment() {
     private lateinit var binding : FragmentOnBoardingFirstBinding
 
     companion object {
         private const val TEXT_RES = "textRes"
         private const val IMAGE_RES = "imageRes"
 
-        fun newInstance(textResId: Int, imageResId: Int): OnBoardingFirstFragment {
-            val fragment = OnBoardingFirstFragment()
+        fun newInstance(textResId: Int, imageResId: Int): OnBoardingFragment {
+            val fragment = OnBoardingFragment()
             fragment.arguments = Bundle().apply {
                 putInt(TEXT_RES, textResId)
                 putInt(IMAGE_RES, imageResId)
