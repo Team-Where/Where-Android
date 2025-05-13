@@ -8,6 +8,7 @@ import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.SignUpResult
 import com.sooum.domain.usecase.auth.VersionCheckUseCase
+import com.sooum.domain.util.AppVersionProvider
 import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.view.onboarding.OnBoardingActivity
@@ -26,9 +27,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val appManageDataStore: AppManageDataStore,
-    private val versionCheckUseCase: VersionCheckUseCase
+    private val versionCheckUseCase: VersionCheckUseCase,
+    private val appVersionProvider: AppVersionProvider
 ) : ViewModel() {
 
     fun checkSplash(
@@ -46,8 +47,7 @@ class SplashViewModel @Inject constructor(
                 true
             }
             val checkAppUpdate = async {
-                val info: PackageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-                val version = info.versionName
+                val version = appVersionProvider.getVersionName()
 
                 when (val versionResult = versionCheckUseCase(version).firstOrNull()) {
                     is ApiResult.Success -> versionResult.data
@@ -71,7 +71,7 @@ class SplashViewModel @Inject constructor(
                 val isFirst = isFirstLaunch.await()
                 val dest = if (result) {
                     //이미 로그인 되어있다면 Main으로 바로 가기
-                    AuthActivity::class.java
+                    MainActivity::class.java
                 } else {
                     //로그인 되어있지 않다면
                     if (isFirst) {

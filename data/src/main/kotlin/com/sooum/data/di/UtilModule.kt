@@ -2,6 +2,8 @@ package com.sooum.data.di
 
 import android.content.Context
 import com.sooum.data.util.UriConverterImpl
+import com.sooum.domain.usecase.auth.DefaultAppVersionProvider
+import com.sooum.domain.util.AppVersionProvider
 import com.sooum.domain.util.UriConverter
 import dagger.Binds
 import dagger.Module
@@ -21,4 +23,9 @@ abstract class UtilModule {
     abstract fun bindUriConverter(
         uriConverterImpl: UriConverterImpl
     ): UriConverter
+
+    @Binds
+    abstract fun bindAppVersionProvider(
+        impl: DefaultAppVersionProvider
+    ): AppVersionProvider
 }
