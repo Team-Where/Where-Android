@@ -1,6 +1,7 @@
 package com.sooum.domain.repository
 
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.EmailVerifyResult
 import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.LoginResult
 import com.sooum.domain.model.SignUpResult
@@ -27,16 +28,34 @@ interface AuthRepository {
     ): Flow<ApiResult<LoginResult>>
 
     /**
-     * 로그인을 한다
+     * 카카오 로그인을 한다
      */
     suspend fun kakaoLogin(
         accessToken: String,
         refreshToken: String
     ): Flow<ApiResult<KakaoSignUpResult>>
 
+    /**
+     * 버전을 체크 한다
+     */
     suspend fun checkVersion(
         type: String,
         version: String
     ): Flow<ApiResult<Boolean>>
+
+    /**
+     *  이메일 인증을 요청 한다
+     */
+    suspend fun getEmail(
+        email: String
+    ): Flow<ApiResult<Unit>>
+
+    /**
+     *  이메일 인증을 검증한다
+     */
+    suspend fun postEmailVerify(
+        email: String,
+        code: String
+    ): Flow<ApiResult<String>>
 
 }

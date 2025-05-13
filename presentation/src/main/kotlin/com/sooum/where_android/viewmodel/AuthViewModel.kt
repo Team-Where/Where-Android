@@ -1,12 +1,16 @@
 package com.sooum.where_android.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.EmailVerifyResult
 import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.SignUpResult
+import com.sooum.domain.usecase.auth.EmailVerifyUseCase
 import com.sooum.domain.usecase.auth.KakaoSignUpUseCase
 import com.sooum.domain.usecase.auth.LoginUseCase
+import com.sooum.domain.usecase.auth.RequestEmailAuthUseCase
 import com.sooum.domain.usecase.auth.SignUpUseCase
 import com.sooum.domain.usecase.auth.ValidatePasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,11 +25,19 @@ class AuthViewModel @Inject constructor(
     private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val loginUseCase: LoginUseCase,
     private val signUpUseCase: SignUpUseCase,
-    private val kakaoSignUpUseCase: KakaoSignUpUseCase
+    private val kakaoSignUpUseCase: KakaoSignUpUseCase,
+    private val getRequestEmailAuthUseCase: RequestEmailAuthUseCase,
+    private val emailVerifyUseCase: EmailVerifyUseCase
 ) : ViewModel(){
 
     private val _loginState = MutableStateFlow<ApiResult<Any>>(ApiResult.SuccessEmpty)
     val loginState: StateFlow<ApiResult<Any>> = _loginState.asStateFlow()
+
+    private val _emailRequestState = MutableStateFlow<ApiResult<Unit>>(ApiResult.SuccessEmpty)
+    val emailRequestState: StateFlow<ApiResult<Unit>> = _emailRequestState.asStateFlow()
+
+    private val _emailVerifyState = MutableStateFlow<ApiResult<String>>(ApiResult.SuccessEmpty)
+    val emailVerifyState: StateFlow<ApiResult<String>> = _emailVerifyState.asStateFlow()
 
     private val _signUpState = MutableStateFlow<ApiResult<SignUpResult>>(ApiResult.SuccessEmpty)
     val signUpState: StateFlow<ApiResult<SignUpResult>> = _signUpState
@@ -66,6 +78,12 @@ class AuthViewModel @Inject constructor(
     private val _isNextButtonEnabled = MutableStateFlow(false)
     val isNextButtonEnabled: StateFlow<Boolean> = _isNextButtonEnabled.asStateFlow()
 
+    private val _emailCode = MutableStateFlow("")
+    val emailCode: StateFlow<String> = _emailCode.asStateFlow()
+
+    private val _isEmailVerifyNextEnabled = MutableStateFlow(false)
+    val isEmailVerifyNextEnabled: StateFlow<Boolean> = _isEmailVerifyNextEnabled.asStateFlow()
+
     /**
      * 로그인 기능
      */
@@ -104,6 +122,33 @@ class AuthViewModel @Inject constructor(
                 profileImage = _profileImage.value
             ).collect { result ->
                 _signUpState.value = result
+            }
+        }
+    }
+
+    /**
+     * 이메일 검증 코드를 요청
+     */
+    fun getEmailAuth(email: String){
+        viewModelScope.launch {
+            getRequestEmailAuthUseCase(
+                email = email
+            ).collect{ result ->
+               _emailRequestState.value = result
+            }
+        }
+    }
+
+    /**
+     * 이메일 검증 코드를 확인
+     */
+    fun verifyEmailCode(email: String, code: String){
+        viewModelScope.launch {
+            emailVerifyUseCase(
+                email = email,
+                code = code
+            ).collect{ result ->
+                _emailVerifyState.value = result
             }
         }
     }
@@ -165,5 +210,10 @@ class AuthViewModel @Inject constructor(
         _isNextButtonEnabled.value = isName == true
     }
 
+    fun onEmailVerifyInputChanged(email: String, code: String) {
+        _email.value = email
+        _emailCode.value = code
+        _isEmailVerifyNextEnabled.value = email.isNotBlank() && code.isNotBlank()
+    }
 
 }
