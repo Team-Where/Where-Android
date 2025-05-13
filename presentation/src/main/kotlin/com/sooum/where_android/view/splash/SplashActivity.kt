@@ -33,15 +33,17 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         lifecycleScope.launch {
-            initVersionCheck()
-            observeSignInResult()
             splashViewModel.checkSplash(
                 needUpdate = {
                     showForceUpdateDialog()
                 },
                 complete = { dest ->
                     nextActivity(dest)
+                },
+                onVersionCheckFailed = {
+                    finishAffinity()
                 }
+
             )
         }
     }
@@ -49,11 +51,6 @@ class SplashActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
-    }
-
-    private fun initVersionCheck() {
-        val versionCode = packageManager.getPackageInfo(packageName, 0).versionName
-        splashViewModel.versionCheck("android",versionCode)
     }
 
     private fun showForceUpdateDialog() {
@@ -75,22 +72,5 @@ class SplashActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun observeSignInResult() {
-        lifecycleScope.launch {
-            splashViewModel.versionCheckState.collect { result ->
-                when (result) {
-                    is ApiResult.Success -> {
-                        Log.d("SplashActivity", "${result.data}")
-                        splashViewModel.setBooleanState(result.data)
-                    }
-
-                    is ApiResult.Fail -> {
-                        Log.d("SplashActivity", "실패")
-                    }
-                    else -> {}
-                }
-            }
-        }
-    }
 
 }

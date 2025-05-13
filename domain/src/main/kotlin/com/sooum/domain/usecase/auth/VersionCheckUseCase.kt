@@ -8,7 +8,8 @@ import kotlinx.coroutines.flow.Flow
 class VersionCheckUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    suspend operator fun invoke(type: String, version: String):Flow<ApiResult<Boolean>>{
+    suspend operator fun invoke(version: String):Flow<ApiResult<Boolean>>{
+        val type = "android"
         return authRepository.checkVersion(type, version)
     }
 }
