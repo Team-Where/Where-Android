@@ -33,6 +33,11 @@ class PlaceCommentListAdapter : ListAdapter<CommentListItem, RecyclerView.ViewHo
         }
     }
 
+    fun submitListWithMineFirst(list: List<CommentListItem>) {
+        val sortedList = list.sortedWith(compareByDescending { it.isMine })
+        submitList(sortedList)
+    }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
         when (holder) {
