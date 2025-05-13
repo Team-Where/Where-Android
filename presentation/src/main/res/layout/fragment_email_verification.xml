@@ -57,6 +57,7 @@
         app:layout_constraintTop_toBottomOf="@id/text_email" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_email"
         android:layout_width="84dp"
         android:layout_height="28dp"
         android:background="@drawable/shape_rounded_black"
@@ -82,7 +83,7 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
-        android:id="@+id/edit_text_password"
+        android:id="@+id/edit_text_code"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:hint="코드 6자리 입력해주세요"

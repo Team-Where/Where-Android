@@ -71,7 +71,7 @@ class SplashViewModel @Inject constructor(
                 val isFirst = isFirstLaunch.await()
                 val dest = if (result) {
                     //이미 로그인 되어있다면 Main으로 바로 가기
-                    MainActivity::class.java
+                    AuthActivity::class.java
                 } else {
                     //로그인 되어있지 않다면
                     if (isFirst) {
