@@ -93,7 +93,7 @@ class MyMeetPlaceDetailFragment :
                 startNaverMapUri(placeItem.place.naverLink)
             }
             btnKakaoMap.setOnClickListener {
-                startKakaoMapUri(placeItem.place.naverLink)
+                startKakaoMapUri(placeItem.place.kakaoLink)
             }
             placeTextContainer.setOnClickListener {
                 loadingAlertProvider.startLoading()
