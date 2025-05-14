@@ -5,11 +5,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.skydoves.balloon.balloon
 import com.sooum.domain.model.PLACE_STATE_NOT_PICK
 import com.sooum.domain.model.PLACE_STATE_PICK
 import com.sooum.domain.model.PlaceItem
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceDetailBinding
 import com.sooum.where_android.startMapUriOrMarket
+import com.sooum.where_android.view.balloon.PlacePickBalloonFactory
 import com.sooum.where_android.view.main.myMeetDetail.adapter.comment.PlaceCommentListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.PlaceDetailClickCallBack
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startKakaoMapUri
@@ -69,11 +71,32 @@ class MyMeetPlaceDetailFragment :
             layoutManager = LinearLayoutManager(requireContext())
         }
     }
+    private var showOnlyOneBalloon: Boolean = false
+    private val placePickBalloon by balloon<PlacePickBalloonFactory>()
 
     private fun bindPlaceItem(
         placeItem: PlaceItem?
     ) {
         placeItem ?: return
+
+        if (!showOnlyOneBalloon) {
+            when (placeItem.place.status) {
+                PLACE_STATE_PICK -> {
+                    showOnlyOneBalloon = true
+                }
+
+                PLACE_STATE_NOT_PICK -> {
+                    placePickBalloon.showAlignBottom(
+                        binding.imageCheck
+                    )
+                    showOnlyOneBalloon = true
+                }
+
+                else -> {
+
+                }
+            }
+        }
 
         with(binding) {
             textPlaceName.text = placeItem.place.name
@@ -109,6 +132,9 @@ class MyMeetPlaceDetailFragment :
             }
             when (placeItem.place.status) {
                 PLACE_STATE_PICK -> {
+                    if (placePickBalloon.isShowing) {
+                        placePickBalloon.dismiss()
+                    }
                     imageCheck.isSelected = true
                 }
 
