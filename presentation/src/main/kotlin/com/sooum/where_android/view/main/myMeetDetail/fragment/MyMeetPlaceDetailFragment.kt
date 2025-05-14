@@ -1,23 +1,28 @@
 package com.sooum.where_android.view.main.myMeetDetail.fragment
 
+import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.skydoves.balloon.balloon
 import com.sooum.domain.model.PLACE_STATE_NOT_PICK
 import com.sooum.domain.model.PLACE_STATE_PICK
 import com.sooum.domain.model.PlaceItem
+import com.sooum.domain.model.ProfileImage
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceDetailBinding
 import com.sooum.where_android.startMapUriOrMarket
 import com.sooum.where_android.view.balloon.PlacePickBalloonFactory
 import com.sooum.where_android.view.main.myMeetDetail.adapter.comment.PlaceCommentListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.image.ImageListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.PlaceDetailClickCallBack
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startKakaoMapUri
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startNaverMapUri
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import kotlinx.coroutines.launch
+
 
 /**
  * 장소를 눌렀을때 이동되는 화면
@@ -27,6 +32,17 @@ class MyMeetPlaceDetailFragment :
     PlaceDetailClickCallBack {
 
     private val placeCommentAdapter = PlaceCommentListAdapter()
+    private val imageListAdapter = ImageListAdapter()
+
+    val dummyProfiles = listOf(
+        ProfileImage("https://randomuser.me/api/portraits/men/1.jpg"),
+        ProfileImage("https://randomuser.me/api/portraits/women/2.jpg"),
+        ProfileImage("https://randomuser.me/api/portraits/men/3.jpg"),
+        ProfileImage("https://randomuser.me/api/portraits/women/4.jpg"),
+        ProfileImage("https://randomuser.me/api/portraits/men/5.jpg"),
+        ProfileImage("https://randomuser.me/api/portraits/men/1.jpg"),
+        ProfileImage("https://randomuser.me/api/portraits/men/1.jpg")
+    )
 
     companion object {
         const val PLACE_ID = "placeId"
@@ -40,6 +56,7 @@ class MyMeetPlaceDetailFragment :
             myMeetDetailCommentViewModel.loadData(placeId)
         }
         setCommentRecyclerView()
+        setProfileImageRecyclerView()
 
         binding.imageBack.setOnClickListener {
             findNavController().popBackStack()
@@ -71,6 +88,25 @@ class MyMeetPlaceDetailFragment :
             layoutManager = LinearLayoutManager(requireContext())
         }
     }
+
+    private fun setProfileImageRecyclerView() {
+        with(binding.imageRecyclerView) {
+            adapter = imageListAdapter
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            addItemDecoration(OverlapDecoration(overlapWidth = 40))
+        }
+        imageListAdapter.submitList(dummyProfiles)
+    }
+
+    class OverlapDecoration(private val overlapWidth: Int) : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(outRect: android.graphics.Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            val position = parent.getChildAdapterPosition(view)
+            if (position != 0) {
+                outRect.set(-overlapWidth, 0, 0, 0)
+            }
+        }
+    }
+
     private var showOnlyOneBalloon: Boolean = false
     private val placePickBalloon by balloon<PlacePickBalloonFactory>()
 
