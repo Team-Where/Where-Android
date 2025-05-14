@@ -3,7 +3,6 @@ package com.sooum.where_android.viewmodel.meetdetail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ActionResult
-import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.PlaceItem
 import com.sooum.domain.usecase.comment.AddCommentUseCase
 import com.sooum.domain.usecase.comment.ClearCommentUseCase
