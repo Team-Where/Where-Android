@@ -17,6 +17,7 @@ import com.sooum.where_android.startMapUriOrMarket
 import com.sooum.where_android.view.balloon.PlacePickBalloonFactory
 import com.sooum.where_android.view.main.myMeetDetail.adapter.comment.PlaceCommentListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.image.ImageListAdapter
+import com.sooum.where_android.view.main.myMeetDetail.adapter.place.OverlapDecoration
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.PlaceDetailClickCallBack
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startKakaoMapUri
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startNaverMapUri
@@ -33,16 +34,6 @@ class MyMeetPlaceDetailFragment :
 
     private val placeCommentAdapter = PlaceCommentListAdapter()
     private val imageListAdapter = ImageListAdapter()
-
-    val dummyProfiles = listOf(
-        ProfileImage("https://randomuser.me/api/portraits/men/1.jpg"),
-        ProfileImage("https://randomuser.me/api/portraits/women/2.jpg"),
-        ProfileImage("https://randomuser.me/api/portraits/men/3.jpg"),
-        ProfileImage("https://randomuser.me/api/portraits/women/4.jpg"),
-        ProfileImage("https://randomuser.me/api/portraits/men/5.jpg"),
-        ProfileImage("https://randomuser.me/api/portraits/men/1.jpg"),
-        ProfileImage("https://randomuser.me/api/portraits/men/1.jpg")
-    )
 
     companion object {
         const val PLACE_ID = "placeId"
@@ -94,16 +85,6 @@ class MyMeetPlaceDetailFragment :
             adapter = imageListAdapter
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             addItemDecoration(OverlapDecoration(overlapWidth = 40))
-        }
-        imageListAdapter.submitList(dummyProfiles)
-    }
-
-    class OverlapDecoration(private val overlapWidth: Int) : RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(outRect: android.graphics.Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-            val position = parent.getChildAdapterPosition(view)
-            if (position != 0) {
-                outRect.set(-overlapWidth, 0, 0, 0)
-            }
         }
     }
 
