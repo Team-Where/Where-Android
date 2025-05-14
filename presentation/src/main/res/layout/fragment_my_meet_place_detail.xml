@@ -250,7 +250,7 @@
                 android:id="@+id/image_check"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/icon_circle_check_gray"
+                android:src="@drawable/icon_check_circle"
                 app:layout_constraintStart_toEndOf="@id/text_ask"
                 app:layout_constraintTop_toTopOf="@id/text_ask"
                 app:layout_constraintEnd_toEndOf="parent"/>

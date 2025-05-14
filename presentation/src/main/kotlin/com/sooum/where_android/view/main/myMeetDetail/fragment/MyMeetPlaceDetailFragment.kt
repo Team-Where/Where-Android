@@ -3,7 +3,10 @@ package com.sooum.where_android.view.main.myMeetDetail.fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sooum.domain.model.PLACE_STATE_NOT_PICK
+import com.sooum.domain.model.PLACE_STATE_PICK
 import com.sooum.domain.model.PlaceItem
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceDetailBinding
 import com.sooum.where_android.startMapUriOrMarket
@@ -35,6 +38,10 @@ class MyMeetPlaceDetailFragment :
             myMeetDetailCommentViewModel.loadData(placeId)
         }
         setCommentRecyclerView()
+
+        binding.imageBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -87,6 +94,31 @@ class MyMeetPlaceDetailFragment :
             }
             btnKakaoMap.setOnClickListener {
                 startKakaoMapUri(placeItem.place.naverLink)
+            }
+            placeTextContainer.setOnClickListener {
+                loadingAlertProvider.startLoading()
+                myMeetDetailPlaceViewModel.updatePick(
+                    placeId = placeItem.placeId,
+                    onSuccess = {
+                        loadingAlertProvider.endLoading()
+                    },
+                    onFail = { msg ->
+                        loadingAlertProvider.endLoadingWithMessage(msg)
+                    }
+                )
+            }
+            when (placeItem.place.status) {
+                PLACE_STATE_PICK -> {
+                    imageCheck.isSelected = true
+                }
+
+                PLACE_STATE_NOT_PICK -> {
+                    imageCheck.isSelected = false
+                }
+
+                else -> {
+
+                }
             }
         }
     }
