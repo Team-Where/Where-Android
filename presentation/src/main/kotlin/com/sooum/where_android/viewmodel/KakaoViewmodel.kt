@@ -3,6 +3,7 @@ package com.sooum.where_android.viewmodel
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.usecase.kakao.KakaoSignUpUseCase
@@ -20,6 +21,7 @@ class KakaoViewmodel @Inject constructor(
     private val kakaoSignUpUseCase: KakaoSignUpUseCase,
     private val nickNameUpdateUseCase: NickNameUpdateUseCase,
     private val profileUpdateUseCase: ProfileUpdateUseCase,
+    private val appManageDataStore: AppManageDataStore
 ) : ViewModel() {
 
     private val _kakaoSignUpState = MutableStateFlow<ApiResult<KakaoSignUpResult>>(ApiResult.SuccessEmpty)
@@ -64,6 +66,13 @@ class KakaoViewmodel @Inject constructor(
             ).collect{ result ->
 
             }
+        }
+    }
+
+    fun saveKakaoTokens(accessToken: String, refreshToken: String) {
+        viewModelScope.launch {
+            appManageDataStore.saveKakaoAccessToken(accessToken)
+            appManageDataStore.saveKakaoRefreshToken(refreshToken)
         }
     }
 }

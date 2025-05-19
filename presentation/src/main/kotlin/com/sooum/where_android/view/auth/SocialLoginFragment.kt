@@ -107,9 +107,7 @@ class SocialLoginFragment : AuthBaseFragment() {
 
     private fun handleKakaoToken(accessToken: String, refreshToken: String) {
         lifecycleScope.launch {
-            appManageDataStore.saveKakaoAccessToken(accessToken)
-            appManageDataStore.saveKakaoRefreshToken(refreshToken)
-
+            kakaoViewModel.saveKakaoTokens(accessToken, refreshToken)
             kakaoViewModel.kakaoLogin(accessToken, refreshToken)
         }
     }
