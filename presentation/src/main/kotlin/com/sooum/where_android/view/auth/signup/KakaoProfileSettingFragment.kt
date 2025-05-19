@@ -11,7 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.ImageAddType
 import com.sooum.where_android.R
-import com.sooum.where_android.databinding.FragmentKakaoProfileSettingBinding
+import com.sooum.where_android.databinding.FragmentProfileSettingBinding
+import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
 import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.view.main.MainActivity
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class KakaoProfileSettingFragment : AuthBaseFragment() {
-    private lateinit var binding : FragmentKakaoProfileSettingBinding
+    private lateinit var binding : FragmentProfileSettingBinding
     private var selectedImageFile: File? = null
     private val userId: Int by lazy {
         requireArguments().getInt("userId")
@@ -29,7 +30,7 @@ class KakaoProfileSettingFragment : AuthBaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentKakaoProfileSettingBinding.inflate(inflater, container, false)
+        binding = FragmentProfileSettingBinding.inflate(inflater, container, false)
 
         binding.imageCamera.setOnClickListener {
             val dialog = ImagePickerDialogFragment.getInstance(
@@ -55,7 +56,7 @@ class KakaoProfileSettingFragment : AuthBaseFragment() {
             dialog.show(parentFragmentManager, ImagePickerDialogFragment.TAG)
         }
 
-        binding.btnComplete.setOnClickListener {
+        binding.nextBtn.setOnClickListener {
             viewModel.putNickName(userId, binding.editNickname.text.toString())
             viewModel.updateProfile(userId, selectedImageFile)
         }
@@ -88,7 +89,7 @@ class KakaoProfileSettingFragment : AuthBaseFragment() {
                     is ApiResult.Success -> {
                         loadingAlertProvider.endLoading()
                         showToast("프로필 업데이트 성공.")
-                        navigateActivity(MainActivity())
+                        (activity as AuthActivity).nextActivity()
                     }
 
                     is ApiResult.Fail -> {

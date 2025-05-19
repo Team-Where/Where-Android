@@ -60,12 +60,6 @@ class SocialLoginFragment : AuthBaseFragment() {
 
             imgKakao.setOnClickListener {
                 kakaoLogin(requireContext())
-                lifecycleScope.launch {
-                    viewModel.kakaoLogin(
-                        appManageDataStore.getKakaoAccessToken().first() ?: "",
-                        appManageDataStore.getKakaoRefreshToken().first() ?: ""
-                    )
-                }
             }
         }
         observeKakaoLoginResult()
@@ -108,27 +102,28 @@ class SocialLoginFragment : AuthBaseFragment() {
     private fun kakaoLogin(context: Context) {
         UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
             if (error != null) {
-                Log.w("SocialLoginFragment", "카카오톡 로그인 실패: ${error.message}")
-
                 UserApiClient.instance.loginWithKakaoAccount(context) { token, error ->
-                    if (error != null) {
+                    if (token != null) {
+                        handleKakaoToken(token.accessToken, token.refreshToken)
+                    } else {
                         Log.e("SocialLoginFragment", "카카오계정 로그인 실패", error)
-                    } else if (token != null) {
-                        Log.i("SocialLoginFragment","$token")
-                        Log.i("SocialLoginFragment", "어세스토큰 ${token.accessToken}")
-                        Log.i("SocialLoginFragment", "리프레시토큰 ${token.refreshToken}")
-                      lifecycleScope.launch(Dispatchers.Main) {
-                          appManageDataStore.saveKakaoAccessToken(token.accessToken)
-                          appManageDataStore.saveKakaoRefreshToken(token.refreshToken)
-                      }
                     }
                 }
             } else if (token != null) {
-                Log.i("SocialLoginFragment", "카카오톡 로그인 성공 ${token.accessToken}")
-                Log.i("SocialLoginFragment", "카카오톡 로그인 성공 ${token.refreshToken}")
+                handleKakaoToken(token.accessToken, token.refreshToken)
             }
         }
     }
+
+    private fun handleKakaoToken(accessToken: String, refreshToken: String) {
+        lifecycleScope.launch {
+            appManageDataStore.saveKakaoAccessToken(accessToken)
+            appManageDataStore.saveKakaoRefreshToken(refreshToken)
+
+            viewModel.kakaoLogin(accessToken, refreshToken)
+        }
+    }
+
 
     private fun observeKakaoLoginResult() {
         lifecycleScope.launch {
