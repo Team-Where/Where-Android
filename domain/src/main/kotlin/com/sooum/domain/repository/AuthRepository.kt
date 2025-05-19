@@ -4,8 +4,10 @@ import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.EmailVerifyResult
 import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.LoginResult
+import com.sooum.domain.model.PostProfileResult
 import com.sooum.domain.model.SignUpResult
 import kotlinx.coroutines.flow.Flow
+import java.io.File
 
 interface AuthRepository {
 
@@ -36,6 +38,22 @@ interface AuthRepository {
     ): Flow<ApiResult<KakaoSignUpResult>>
 
     /**
+
+     * 닉네임을 변경한다
+     */
+    suspend fun putNickName(
+        userId: Int,
+        nickName: String
+    ): Flow<ApiResult<Unit>>
+
+    /**
+     * 프로필을 엡데이트 한다
+     */
+    suspend fun postProfileImage(
+        userId: Int,
+        imageFile: File?
+    ): Flow<ApiResult<PostProfileResult>>
+
      * 버전을 체크 한다
      */
     suspend fun checkVersion(
