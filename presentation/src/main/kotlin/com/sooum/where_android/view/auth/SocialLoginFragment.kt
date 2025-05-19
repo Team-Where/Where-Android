@@ -145,7 +145,7 @@ class SocialLoginFragment : AuthBaseFragment() {
                             navigateTo(fragment)
                         } else {
                             showToast("카카오 로그인 성공")
-                            navigateActivity(MainActivity())
+                            (activity as AuthActivity).nextActivity()
                             requireActivity().finish()
                         }
                     }
