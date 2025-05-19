@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class KakaoSignUpResult (
     val userId: Int,
     val signUp: Boolean,
-    val profileImage: String
+    val profileImage: String?
 )

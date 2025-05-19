@@ -2,11 +2,14 @@ package com.sooum.where_android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.SignUpResult
 import com.sooum.domain.usecase.auth.KakaoSignUpUseCase
 import com.sooum.domain.usecase.auth.LoginUseCase
+import com.sooum.domain.usecase.auth.NickNameUpdateUseCase
+import com.sooum.domain.usecase.auth.ProfileUpdateUseCase
 import com.sooum.domain.usecase.auth.SignUpUseCase
 import com.sooum.domain.usecase.auth.ValidatePasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,17 +18,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.File
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val loginUseCase: LoginUseCase,
     private val signUpUseCase: SignUpUseCase,
-    private val kakaoSignUpUseCase: KakaoSignUpUseCase
+    private val kakaoSignUpUseCase: KakaoSignUpUseCase,
+    private val nickNameUpdateUseCase: NickNameUpdateUseCase,
+    private val profileUpdateUseCase: ProfileUpdateUseCase
 ) : ViewModel(){
 
     private val _loginState = MutableStateFlow<ApiResult<Any>>(ApiResult.SuccessEmpty)
     val loginState: StateFlow<ApiResult<Any>> = _loginState.asStateFlow()
+
+    private val _updateNicknameState = MutableStateFlow<ApiResult<Unit>>(ApiResult.SuccessEmpty)
+    val updateNicknameState: StateFlow<ApiResult<Unit>> = _updateNicknameState
 
     private val _signUpState = MutableStateFlow<ApiResult<SignUpResult>>(ApiResult.SuccessEmpty)
     val signUpState: StateFlow<ApiResult<SignUpResult>> = _signUpState
@@ -104,6 +113,32 @@ class AuthViewModel @Inject constructor(
                 profileImage = _profileImage.value
             ).collect { result ->
                 _signUpState.value = result
+            }
+        }
+    }
+
+    /**
+     * 닉네임 수정 기능
+     */
+    fun putNickName(userId: Int, nickName: String){
+        viewModelScope.launch {
+            nickNameUpdateUseCase(
+                userId, nickName
+            ).collect{ result->
+                _updateNicknameState.value = result
+            }
+        }
+    }
+
+    /**
+     * 프로필 업데이트 기능
+     */
+    fun updateProfile(userId: Int,imageFile: File?){
+        viewModelScope.launch {
+            profileUpdateUseCase(
+                userId, imageFile
+            ).collect{ result ->
+
             }
         }
     }

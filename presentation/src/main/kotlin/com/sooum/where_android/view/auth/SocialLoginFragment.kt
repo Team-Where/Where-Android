@@ -22,6 +22,7 @@ import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentSocialLoginBinding
 import com.sooum.where_android.view.auth.signup.AgreementFragment
 import com.sooum.where_android.view.auth.signup.AuthBaseFragment
+import com.sooum.where_android.view.auth.signup.KakaoProfileSettingFragment
 import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.viewmodel.AuthViewModel
@@ -116,6 +117,7 @@ class SocialLoginFragment : AuthBaseFragment() {
                     if (error != null) {
                         Log.e("SocialLoginFragment", "카카오계정 로그인 실패", error)
                     } else if (token != null) {
+                        Log.i("SocialLoginFragment","$token")
                         Log.i("SocialLoginFragment", "어세스토큰 ${token.accessToken}")
                         Log.i("SocialLoginFragment", "리프레시토큰 ${token.refreshToken}")
                       lifecycleScope.launch(Dispatchers.Main) {
@@ -142,7 +144,13 @@ class SocialLoginFragment : AuthBaseFragment() {
                         loadingAlertProvider.endLoading()
                         val data = result.data
                         if (data.signUp) {
-
+                            val bundle = Bundle().apply {
+                                putInt("userId", data.userId)
+                            }
+                            val fragment = KakaoProfileSettingFragment().apply {
+                                arguments = bundle
+                            }
+                            navigateTo(fragment)
                         } else {
                             showToast("카카오 로그인 성공")
                             navigateActivity(MainActivity())

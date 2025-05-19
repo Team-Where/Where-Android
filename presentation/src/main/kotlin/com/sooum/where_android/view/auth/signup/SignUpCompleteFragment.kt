@@ -17,10 +17,6 @@ import kotlinx.coroutines.launch
 class SignUpCompleteFragment : AuthBaseFragment() {
     private lateinit var binding : FragmentSignUpCompleteBinding
 
-    private val loadingAlertProvider by lazy {
-        LoadingAlertProvider(this)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
