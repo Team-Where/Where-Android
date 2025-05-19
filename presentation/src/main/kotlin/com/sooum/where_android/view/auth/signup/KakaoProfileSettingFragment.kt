@@ -2,7 +2,6 @@ package com.sooum.where_android.view.auth.signup
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,6 @@ import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentProfileSettingBinding
 import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
-import com.sooum.where_android.view.common.modal.LoadingAlertProvider
-import com.sooum.where_android.view.main.MainActivity
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -57,8 +54,8 @@ class KakaoProfileSettingFragment : AuthBaseFragment() {
         }
 
         binding.nextBtn.setOnClickListener {
-            viewModel.putNickName(userId, binding.editNickname.text.toString())
-            viewModel.updateProfile(userId, selectedImageFile)
+            kakaoViewModel.putNickName(userId, binding.editNickname.text.toString())
+            kakaoViewModel.updateProfile(userId, selectedImageFile)
         }
 
         observePutNicknameResult()
@@ -81,7 +78,7 @@ class KakaoProfileSettingFragment : AuthBaseFragment() {
 
     private fun observePutNicknameResult() {
         lifecycleScope.launch {
-            viewModel.updateNicknameState.collect { result ->
+            kakaoViewModel.updateNicknameState.collect { result ->
                 when (result) {
                     is ApiResult.Loading -> {
                         loadingAlertProvider.startLoading()

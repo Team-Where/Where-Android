@@ -1,4 +1,4 @@
-package com.sooum.data.network.auth.request
+package com.sooum.data.network.kakao.request
 
 import kotlinx.serialization.Serializable
 

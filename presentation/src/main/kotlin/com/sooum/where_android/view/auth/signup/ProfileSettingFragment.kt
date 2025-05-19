@@ -36,7 +36,7 @@ class ProfileSettingFragment : AuthBaseFragment() {
 
         with(binding){
             nextBtn.setOnClickListener{
-                viewModel.setName(binding.editNickname.text.toString().trim())
+                authViewModel.setName(binding.editNickname.text.toString().trim())
                navigateTo(SignUpCompleteFragment())
             }
 
@@ -56,7 +56,7 @@ class ProfileSettingFragment : AuthBaseFragment() {
                                 // 앨범에서 선택한 이미지 적용
                                 binding.imageProfile.setImageURI(imageType.uri)
                                 binding.imageProfile.scaleType = ImageView.ScaleType.CENTER_CROP
-                                viewModel.setProfileImage(imageType.uri.toString())
+                                authViewModel.setProfileImage(imageType.uri.toString())
                             }
                             else -> {}
                         }
@@ -70,7 +70,7 @@ class ProfileSettingFragment : AuthBaseFragment() {
 
     private fun setUpObservers(){
         lifecycleScope.launch {
-            viewModel.isNextButtonEnabled.collectLatest { isEnabled ->
+            authViewModel.isNextButtonEnabled.collectLatest { isEnabled ->
                 binding.nextBtn.isEnabled = isEnabled
                 binding.nextBtn.setBackgroundResource(
                     if (isEnabled) R.drawable.shape_rounded_button_main_color
@@ -81,6 +81,6 @@ class ProfileSettingFragment : AuthBaseFragment() {
     }
 
     private fun setupListeners() {
-        binding.editNickname.addTextChangedListener { viewModel.onNameChanged(it.toString()) }
+        binding.editNickname.addTextChangedListener { authViewModel.onNameChanged(it.toString()) }
     }
 }

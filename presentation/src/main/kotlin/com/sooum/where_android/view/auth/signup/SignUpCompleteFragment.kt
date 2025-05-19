@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentSignUpCompleteBinding
 import com.sooum.where_android.view.auth.AuthActivity
-import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -28,7 +27,7 @@ class SignUpCompleteFragment : AuthBaseFragment() {
         }
 
         binding.nextBtn.setOnClickListener {
-           viewModel.signUp()
+           authViewModel.signUp()
         }
 
         observeSignUpResult()
@@ -39,7 +38,7 @@ class SignUpCompleteFragment : AuthBaseFragment() {
 
     private fun observeSignUpResult() {
         lifecycleScope.launch {
-            viewModel.signUpState.collect { result ->
+            authViewModel.signUpState.collect { result ->
                 when (result) {
                     is ApiResult.Loading -> {
                         loadingAlertProvider.startLoading()

@@ -59,48 +59,6 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun kakaoLogin(
-        accessToken: String,
-        refreshToken: String
-    ): Flow<ApiResult<KakaoSignUpResult>> {
-        return safeFlow {
-            authApi.kakaoLogin(
-                authorization = accessToken,
-                refreshToken = refreshToken
-            )
-        }
-    }
-
-
-    override suspend fun putNickName(userId: Int, nickName: String): Flow<ApiResult<Unit>> {
-        val request = NameOnlyRequest(nickName)
-        return safeFlow {
-            authApi.putNickName(
-                userId = userId,
-                request
-            )
-        }
-    }
-
-    override suspend fun postProfileImage(userId: Int, imageFile: File?) : Flow<ApiResult<PostProfileResult>> {
-        return if (imageFile != null){
-            safeFlow {
-                val requestFile = imageFile
-                    .asRequestBody("image/*".toMediaTypeOrNull())
-
-                val multipartBody = MultipartBody.Part.createFormData(
-                    name = "file",
-                    filename = imageFile.name,
-                    body = requestFile
-                )
-
-                authApi.postProfileImage(userId, multipartBody)
-            }
-        } else {
-            flowOf(ApiResult.Success(PostProfileResult("")))
-        }
-    }
-
     override suspend fun checkVersion(
         type: String,
         version: String

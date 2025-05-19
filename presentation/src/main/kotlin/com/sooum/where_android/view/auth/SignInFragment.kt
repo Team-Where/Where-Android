@@ -1,7 +1,6 @@
 package com.sooum.where_android.view.auth
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +8,6 @@ import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentSignInBinding
 import com.sooum.where_android.view.auth.signup.AuthBaseFragment
-import com.sooum.where_android.view.common.modal.LoadingAlertProvider
-import com.sooum.where_android.view.main.MainActivity
 import kotlinx.coroutines.launch
 
 class SignInFragment : AuthBaseFragment() {
@@ -28,7 +25,7 @@ class SignInFragment : AuthBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
             btnLogin.setOnClickListener {
-                viewModel.login(
+                authViewModel.login(
                     binding.editTextEmail.text.toString().trim(),
                     binding.editTextPassword.text.toString().trim()
                 )
@@ -42,7 +39,7 @@ class SignInFragment : AuthBaseFragment() {
 
     private fun observeSignInResult() {
         lifecycleScope.launch {
-            viewModel.loginState.collect { result ->
+            authViewModel.loginState.collect { result ->
                 when (result) {
                     is ApiResult.Loading -> {
                         loadingAlertProvider.startLoading()
