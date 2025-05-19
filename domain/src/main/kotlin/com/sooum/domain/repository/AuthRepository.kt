@@ -30,31 +30,6 @@ interface AuthRepository {
     ): Flow<ApiResult<LoginResult>>
 
     /**
-     * 카카오 로그인을 한다
-     */
-    suspend fun kakaoLogin(
-        accessToken: String,
-        refreshToken: String
-    ): Flow<ApiResult<KakaoSignUpResult>>
-
-    /**
-
-     * 닉네임을 변경한다
-     */
-    suspend fun putNickName(
-        userId: Int,
-        nickName: String
-    ): Flow<ApiResult<Unit>>
-
-    /**
-     * 프로필을 엡데이트 한다
-     */
-    suspend fun postProfileImage(
-        userId: Int,
-        imageFile: File?
-    ): Flow<ApiResult<PostProfileResult>>
-
-    /**
      * 버전을 체크 한다
      */
     suspend fun checkVersion(

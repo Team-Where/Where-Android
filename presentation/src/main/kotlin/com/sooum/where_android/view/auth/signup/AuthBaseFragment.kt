@@ -9,9 +9,11 @@ import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.viewmodel.AuthViewModel
+import com.sooum.where_android.viewmodel.KakaoViewmodel
 
 abstract class AuthBaseFragment : Fragment() {
-    protected val viewModel: AuthViewModel by activityViewModels()
+    protected val authViewModel: AuthViewModel by activityViewModels()
+    protected val kakaoViewModel: KakaoViewmodel by activityViewModels()
 
     protected fun showToast(message: String) = showSimpleToast(message)
 

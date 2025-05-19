@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentEmailVerificationBinding
-import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import androidx.core.widget.doAfterTextChanged
@@ -31,7 +30,7 @@ class EmailVerificationFragment : AuthBaseFragment() {
 
         with(binding){
             nextBtn.setOnClickListener {
-               viewModel.verifyEmailCode(
+               authViewModel.verifyEmailCode(
                    binding.editTextEmail.text.toString().trim(),
                    binding.editTextCode.text.toString().trim()
                )
@@ -40,17 +39,17 @@ class EmailVerificationFragment : AuthBaseFragment() {
                 popBackStack()
             }
             btnEmail.setOnClickListener {
-                viewModel.getEmailAuth(binding.editTextEmail.text.toString().trim())
+                authViewModel.getEmailAuth(binding.editTextEmail.text.toString().trim())
             }
             editTextEmail.doAfterTextChanged { email ->
-                viewModel.onEmailVerifyInputChanged(
+                authViewModel.onEmailVerifyInputChanged(
                     email = email.toString(),
                     code = editTextCode.text.toString()
                 )
             }
 
             editTextCode.doAfterTextChanged { code ->
-                viewModel.onEmailVerifyInputChanged(
+                authViewModel.onEmailVerifyInputChanged(
                     email = editTextEmail.text.toString(),
                     code = code.toString()
                 )
@@ -64,7 +63,7 @@ class EmailVerificationFragment : AuthBaseFragment() {
 
     private fun observeEmailRequestResult() {
         lifecycleScope.launch {
-            viewModel.emailRequestState.collect { result ->
+            authViewModel.emailRequestState.collect { result ->
                 when (result) {
                     is ApiResult.Loading -> {
                         loadingAlertProvider.startLoading()
@@ -84,7 +83,7 @@ class EmailVerificationFragment : AuthBaseFragment() {
 
     private fun observeEmailVerificationResult() {
         lifecycleScope.launch {
-            viewModel.emailVerifyState.collect { result ->
+            authViewModel.emailVerifyState.collect { result ->
                 when (result) {
                     is ApiResult.Loading -> {
                         loadingAlertProvider.startLoading()
@@ -110,7 +109,7 @@ class EmailVerificationFragment : AuthBaseFragment() {
 
     private fun setUpBtnObserver(){
         lifecycleScope.launch {
-            viewModel.isEmailVerifyNextEnabled.collectLatest { isEnabled ->
+            authViewModel.isEmailVerifyNextEnabled.collectLatest { isEnabled ->
                 binding.nextBtn.isEnabled = isEnabled
                 binding.nextBtn.setBackgroundResource(
                     if (isEnabled) R.drawable.shape_rounded_button_main_color

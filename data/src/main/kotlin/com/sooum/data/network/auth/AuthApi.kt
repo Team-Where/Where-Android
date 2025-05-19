@@ -34,26 +34,6 @@ interface AuthApi {
         @Body data: LoginRequest
     ): Response<LoginResult>
 
-    @POST("api/user/kakao/login")
-    suspend fun kakaoLogin(
-        @Header("Authorization") authorization: String,
-        @Header("refreshToken") refreshToken: String
-    ): Response<KakaoSignUpResult>
-
-
-    @PUT("api/user/{userId}/nickname")
-    suspend fun putNickName(
-        @Path("userId") userId: Int,
-        @Body data: NameOnlyRequest
-    ) : Response<Unit>
-
-    @Multipart
-    @POST("api/user/{userId}/upload")
-    suspend fun postProfileImage(
-        @Path("userId") userId: Int,
-        @Part file: MultipartBody.Part?
-    ): Response<PostProfileResult>
-
     @GET("api/version")
     suspend fun versionCheck(
         @Query("type") type: String,

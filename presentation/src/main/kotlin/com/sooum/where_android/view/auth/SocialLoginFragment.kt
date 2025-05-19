@@ -1,7 +1,6 @@
 package com.sooum.where_android.view.auth
 
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Paint
 import android.os.Build
@@ -10,12 +9,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.domain.model.ApiResult
@@ -23,13 +19,8 @@ import com.sooum.where_android.databinding.FragmentSocialLoginBinding
 import com.sooum.where_android.view.auth.signup.AgreementFragment
 import com.sooum.where_android.view.auth.signup.AuthBaseFragment
 import com.sooum.where_android.view.auth.signup.KakaoProfileSettingFragment
-import com.sooum.where_android.view.common.modal.LoadingAlertProvider
-import com.sooum.where_android.view.main.MainActivity
-import com.sooum.where_android.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -69,7 +60,6 @@ class SocialLoginFragment : AuthBaseFragment() {
     private fun checkNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permission = android.Manifest.permission.POST_NOTIFICATIONS
-
             when {
                 ContextCompat.checkSelfPermission(
                     requireContext(),
@@ -117,17 +107,15 @@ class SocialLoginFragment : AuthBaseFragment() {
 
     private fun handleKakaoToken(accessToken: String, refreshToken: String) {
         lifecycleScope.launch {
-            appManageDataStore.saveKakaoAccessToken(accessToken)
-            appManageDataStore.saveKakaoRefreshToken(refreshToken)
-
-            viewModel.kakaoLogin(accessToken, refreshToken)
+            kakaoViewModel.saveKakaoTokens(accessToken, refreshToken)
+            kakaoViewModel.kakaoLogin(accessToken, refreshToken)
         }
     }
 
 
     private fun observeKakaoLoginResult() {
         lifecycleScope.launch {
-            viewModel.kakaoSignUpState.collect { result ->
+            kakaoViewModel.kakaoSignUpState.collect { result ->
                 when (result) {
                     is ApiResult.Loading -> {
                         loadingAlertProvider.startLoading()

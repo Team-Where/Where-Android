@@ -30,8 +30,8 @@ class PasswordFragment : AuthBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.nextBtn.setOnClickListener {
-            viewModel.setPassword(binding.editTextPassword.text.toString().trim())
-            viewModel.setEmail(binding.editTextEmail.text.toString().trim())
+            authViewModel.setPassword(binding.editTextPassword.text.toString().trim())
+            authViewModel.setEmail(binding.editTextEmail.text.toString().trim())
 
            navigateTo(ProfileSettingFragment())
         }
@@ -46,7 +46,7 @@ class PasswordFragment : AuthBaseFragment() {
 
     private fun setupObservers() {
         lifecycleScope.launch {
-            viewModel.isValidPassword.collectLatest { isValid ->
+            authViewModel.isValidPassword.collectLatest { isValid ->
                 if (binding.editTextPassword.text.isNullOrEmpty()) {
                     binding.textPasswordVerification.text = "영문+숫자+특수문자(!,~,@) 조합 8~32자"
                 } else if (isValid == false) {
@@ -59,7 +59,7 @@ class PasswordFragment : AuthBaseFragment() {
         }
 
         lifecycleScope.launch {
-            viewModel.isPasswordMatch.collectLatest { isMatch ->
+            authViewModel.isPasswordMatch.collectLatest { isMatch ->
                 if (binding.editTextPasswordRecheck.text.isNullOrEmpty()) {
                     binding.textPasswordRepeat.text = "비밀번호를 한 번 더 입력해주세요."
                 } else if (isMatch == false) {
@@ -72,7 +72,7 @@ class PasswordFragment : AuthBaseFragment() {
         }
 
         lifecycleScope.launch {
-            viewModel.isNextButtonEnabled.collectLatest { isEnabled ->
+            authViewModel.isNextButtonEnabled.collectLatest { isEnabled ->
                 binding.nextBtn.isEnabled = isEnabled
                 binding.nextBtn.setBackgroundResource(
                     if (isEnabled) R.drawable.shape_rounded_button_main_color
@@ -84,8 +84,8 @@ class PasswordFragment : AuthBaseFragment() {
 
 
     private fun setupListeners() {
-        binding.editTextPassword.addTextChangedListener { viewModel.onPasswordChanged(it.toString()) }
-        binding.editTextPasswordRecheck.addTextChangedListener { viewModel.onRePasswordChanged(it.toString()) }
-        binding.editTextEmail.addTextChangedListener { viewModel.onEmailChanged(it.toString()) }
+        binding.editTextPassword.addTextChangedListener { authViewModel.onPasswordChanged(it.toString()) }
+        binding.editTextPasswordRecheck.addTextChangedListener { authViewModel.onRePasswordChanged(it.toString()) }
+        binding.editTextEmail.addTextChangedListener { authViewModel.onEmailChanged(it.toString()) }
     }
 }
