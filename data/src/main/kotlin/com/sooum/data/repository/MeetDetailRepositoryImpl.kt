@@ -1,5 +1,6 @@
 package com.sooum.data.repository
 
+import com.sooum.core.alarm.AlarmMaker
 import com.sooum.data.extension.covertApiResultToActionResultIfSuccess
 import com.sooum.data.extension.covertApiResultToActionResultIfSuccessEmpty
 import com.sooum.domain.datasource.MeetRemoteDataSource
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 typealias UserId = Int
@@ -31,6 +33,7 @@ typealias PlaceId = Int
 class MeetDetailRepositoryImpl @Inject constructor(
     private val meetRemoteDataSource: MeetRemoteDataSource,
     private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
+    private val alarmMaker: AlarmMaker
 ) : MeetDetailRepository {
 
     /**
@@ -49,10 +52,50 @@ class MeetDetailRepositoryImpl @Inject constructor(
     private val meetInviteStatus
         get() = _meetInviteStatus.asStateFlow()
 
+    private fun makeStandardDate(
+        date: String?,
+        time: String?
+    ): LocalDateTime? {
+        val dateList = date?.split("-")?.mapNotNull { it.toIntOrNull() }
+        val timeList = time?.split(":")?.mapNotNull { it.toIntOrNull() }
+
+        if (dateList?.size != 3) return null
+
+        val (year, month, day) = dateList
+
+        return try {
+            when (timeList?.size) {
+                3 -> {
+                    val (hour, minute, second) = timeList
+                    LocalDateTime.of(year, month, day, hour, minute, second)
+                }
+
+                2 -> {
+                    val (hour, minute) = timeList
+                    LocalDateTime.of(year, month, day, hour, minute)
+                }
+
+                else -> {
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            null // 잘못된 날짜/시간 조합일 경우 (예: 2월 30일 등)
+        }
+    }
+
 
     override suspend fun loadMeetDetailList(userId: UserId) {
         val meetDetails = meetRemoteDataSource.getMeetList(userId).first()
-        _meetDetailList.value = meetDetails
+        meetDetails.forEach { meetDetail ->
+            val time = makeStandardDate(meetDetail.date, meetDetail.time)
+            if (time != null) {
+                alarmMaker.makeAlarm(meetDetail.id, meetDetail.title, time)
+            }
+        }
+        _meetDetailList.update {
+            meetDetails
+        }
     }
 
     override fun getMeetDetailList(): Flow<List<MeetDetail>> = meetDetailList
@@ -61,7 +104,6 @@ class MeetDetailRepositoryImpl @Inject constructor(
 
     override fun getMeetDetailById(meetId: Int): Flow<MeetDetail?> = meetDetailList
         .map { list -> list.find { it.id == meetId } }
-
 
 
     override suspend fun addMeet(
@@ -103,7 +145,11 @@ class MeetDetailRepositoryImpl @Inject constructor(
                 onSuccess = {
                     _meetDetailList.update { meetDetailList ->
                         val tempList = meetDetailList.toMutableList()
-                        tempList.removeIf { it.id == meetId }
+                        val item = tempList.first { it.id == meetId }
+
+                        alarmMaker.cancelAlarm(meetId, item.title)
+                        tempList.remove(item)
+
                         tempList
                     }
                     emit(ActionResult.Success(Unit))
@@ -161,6 +207,9 @@ class MeetDetailRepositoryImpl @Inject constructor(
                         if (index >= 0) {
                             val tempList = meetDetailList.toMutableList()
                             var tempMeet: MeetDetail = tempList[index].copy(title = title)
+                            makeStandardDate(tempMeet.date, tempMeet.time)?.let {
+                                alarmMaker.makeAlarm(meetId, tempMeet.title, it)
+                            }
                             tempList[index] = tempMeet
                             tempList
                         } else {
@@ -242,6 +291,33 @@ class MeetDetailRepositoryImpl @Inject constructor(
         }.first()
     }
 
+    override suspend fun deleteImage(meetId: Int): ActionResult<*> {
+        return meetRemoteDataSource.deleteCover(
+            meetId
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccessEmpty(
+                onSuccess = {
+                    _meetDetailList.update { meetDetailList ->
+                        val index = meetDetailList.indexOfFirst { it.id == meetId }
+                        if (index >= 0) {
+                            val tempList = meetDetailList.toMutableList()
+                            var tempMeet: MeetDetail = tempList[index]
+                                .copy(image = null)
+                            tempList[index] = tempMeet
+                            tempList
+                        } else {
+                            meetDetailList
+                        }
+                    }
+                    emit(ActionResult.Success(Unit))
+                },
+                onFail = { msg ->
+                    emit(ActionResult.Fail(msg))
+                }
+            )
+        }.first()
+    }
+
     private val asyncScope = CoroutineScope(Dispatchers.IO)
 
     override fun loadMeetDetailSubData(meetId: Int) {
@@ -278,6 +354,9 @@ class MeetDetailRepositoryImpl @Inject constructor(
                             val tempList = meetDetailList.toMutableList()
                             var tempMeet: MeetDetail = tempList[index]
                                 .copy(schedule = schedule)
+                            makeStandardDate(schedule.date, schedule.time)?.let {
+                                alarmMaker.makeAlarm(meetId, tempMeet.title, it)
+                            }
                             tempList[index] = tempMeet
                             tempList
                         } else {
@@ -313,6 +392,9 @@ class MeetDetailRepositoryImpl @Inject constructor(
                             val tempList = meetDetailList.toMutableList()
                             var tempMeet: MeetDetail = tempList[index]
                                 .copy(schedule = schedule)
+                            makeStandardDate(schedule.date, schedule.time)?.let {
+                                alarmMaker.makeAlarm(meetId, tempMeet.title, it)
+                            }
                             tempList[index] = tempMeet
                             tempList
                         } else {
@@ -320,6 +402,25 @@ class MeetDetailRepositoryImpl @Inject constructor(
                         }
                     }
                     emit(ActionResult.Success(schedule))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
+                }
+            )
+        }.first()
+    }
+
+    override suspend fun inviteOkFromLink(userId: Int, link: String): ActionResult<*> {
+        return meetRemoteDataSource.inviteOkFromLink(
+            userId,
+            link,
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccess(
+                onSuccess = { meet ->
+                    val tempList = _meetDetailList.value.toMutableList()
+                    tempList.add(MeetDetail(meet))
+                    _meetDetailList.value = tempList
+                    emit(ActionResult.Success(Unit))
                 },
                 onFail = {
                     emit(ActionResult.Fail(it))
@@ -360,9 +461,9 @@ class MeetDetailRepositoryImpl @Inject constructor(
 
     override suspend fun updateMeetInviteStatus(userId: Int) {
         val updateList = _meetInviteStatus.value.map { meetInviteStatus ->
-            if(meetInviteStatus.toId == userId){
+            if (meetInviteStatus.toId == userId) {
                 meetInviteStatus.copy(status = true)
-            }else {
+            } else {
                 meetInviteStatus
             }
         }

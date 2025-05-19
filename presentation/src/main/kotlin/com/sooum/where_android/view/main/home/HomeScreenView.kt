@@ -16,7 +16,9 @@ import com.sooum.where_android.view.main.home.myMeet.MyMeetView
 fun HomeScreenView(
     navController: NavHostController,
     openDrawer: () -> Unit,
-    navigationMeetDetail: (MeetDetail) -> Unit
+    navigationMeetDetail: (MeetDetail) -> Unit,
+    navigationFriendDetail: (ScreenRoute.Home.FriendMeetDetail) -> Unit,
+    navigationGuide: () -> Unit,
 ) {
     NavHost(
         navController = navController,
@@ -28,22 +30,14 @@ fun HomeScreenView(
         composable<ScreenRoute.BottomNavigation.MeetList>() {
             MyMeetView(
                 openDrawer = openDrawer,
-                navigationGuide = {
-                    navController.navigate(ScreenRoute.Home.MeetGuide) {
-                        launchSingleTop = true
-                    }
-                },
+                navigationGuide = navigationGuide,
                 navigationMeetDetail = navigationMeetDetail,
                 modifier = Modifier
             )
         }
         composable<ScreenRoute.BottomNavigation.FriendsList>() {
             FriendListView(
-                navigationMeetDetail = { meetDetail ->
-                    navController.navigate(meetDetail) {
-                        launchSingleTop = true
-                    }
-                },
+                navigationMeetDetail = navigationFriendDetail,
                 modifier = Modifier
             )
         }

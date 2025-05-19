@@ -10,15 +10,27 @@
         android:label="MeetTabFragment">
         <action
             android:id="@+id/action_tabFragment_to_ScheduleFragment"
-            app:destination="@id/scheduleFragment" />
+            app:destination="@id/scheduleFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
 
         <action
             android:id="@+id/action_tabFragment_to_InviteFriendFragment"
-            app:destination="@id/inviteFriendFragment" />
+            app:destination="@id/inviteFriendFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
 
         <action
             android:id="@+id/action_tabFragment_to_PlaceDetailFragment"
-            app:destination="@id/placeDetailFragment" />
+            app:destination="@id/placeDetailFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
     </fragment>
 
     <fragment

@@ -60,6 +60,8 @@ class OnBoardingActivity : AppCompatActivity() {
                 goNextActivity()
             }
 
+            dotsIndicator.setViewPager2(container)
+
             imageBack.setOnClickListener {
                 val prevItem = container.currentItem - 1
                 if (prevItem >= 0) {

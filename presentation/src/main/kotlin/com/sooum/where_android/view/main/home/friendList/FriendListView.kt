@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.main.home.friendList
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -25,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,7 +44,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sooum.domain.model.Friend
 import com.sooum.domain.model.User
+import com.sooum.domain.model.toUser
 import com.sooum.where_android.R
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.theme.Gray700
@@ -50,12 +55,13 @@ import com.sooum.where_android.theme.GrayScale600
 import com.sooum.where_android.theme.GrayScale700
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.view.main.LocalLoadingProvider
 import com.sooum.where_android.view.main.home.friendList.modal.DeleteUserModal
 import com.sooum.where_android.view.main.home.friendList.modal.ProfileDetailModal
 import com.sooum.where_android.view.widget.SearchField
 import com.sooum.where_android.view.widget.UserItemView
 import com.sooum.where_android.view.widget.UserViewType
-import com.sooum.where_android.viewmodel.UserViewModel
+import com.sooum.where_android.viewmodel.FriendViewModel
 
 
 sealed class FriendListViewType(
@@ -78,30 +84,70 @@ sealed class FriendListViewType(
 
 @Composable
 fun FriendListView(
-    userViewModel: UserViewModel = hiltViewModel(),
+    userViewModel: FriendViewModel = hiltViewModel(),
     navigationMeetDetail: (ScreenRoute.Home.FriendMeetDetail) -> Unit,
     modifier: Modifier
 ) {
-    val userList by userViewModel.userList.collectAsState()
+    val friendList by userViewModel.friendList.collectAsState()
     FriedListContent(
-        userList = userList,
+        userList = friendList,
         navigationMeetDetail = navigationMeetDetail,
-        deleteUser = userViewModel::deleteUser,
-        updateFavorite = userViewModel::updateUserFavorite,
+        deleteFriend = userViewModel::deleteFriend,
+        updateFavorite = userViewModel::updateFriendFavorite,
         modifier = modifier
     )
 }
 
 @Composable
 private fun FriedListContent(
-    userList: List<User>,
+    userList: List<Friend>,
     navigationMeetDetail: (ScreenRoute.Home.FriendMeetDetail) -> Unit,
-    deleteUser: (id: Int) -> Unit,
-    updateFavorite: (id: Int, favorite: Boolean) -> Unit,
+    deleteFriend: (
+        id: Int,
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
+    ) -> Unit,
+    updateFavorite: (
+        friendId: Int,
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
+    ) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var viewType: FriendListViewType by remember {
         mutableStateOf(FriendListViewType.Default)
+    }
+    BackHandler(
+        enabled = viewType == FriendListViewType.Edit
+    ) {
+        viewType = FriendListViewType.Default
+    }
+    val loadingScreenProvider = LocalLoadingProvider.current
+
+    val updateFavoriteInMain = { id: Int ->
+        loadingScreenProvider.startLoading()
+        updateFavorite(
+            id,
+            {
+                loadingScreenProvider.stopLoading()
+            },
+            {
+                loadingScreenProvider.stopLoading()
+            }
+        )
+    }
+
+    val deleteFriendInMain = { id: Int ->
+        loadingScreenProvider.startLoading()
+        deleteFriend(
+            id,
+            {
+                loadingScreenProvider.stopLoading()
+            },
+            {
+                loadingScreenProvider.stopLoading()
+            }
+        )
     }
 
     Column(
@@ -171,11 +217,11 @@ private fun FriedListContent(
             }
         }
         SearchField(
-            searchValue,
+            searchValue = searchValue,
             onValueChange = {
                 searchValue = it
             },
-            modifier =  Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             placeHolder = stringResource(R.string.friend_list_search_placeholder)
         )
         Spacer(
@@ -210,8 +256,16 @@ private fun FriedListContent(
             }
         } else {
 
-            //검색 값을 가져옴
-            val filterValue = searchValue.trim()
+            val focusManager = LocalFocusManager.current
+            val filterValue by remember {
+                derivedStateOf {
+                    searchValue.trim()
+                }
+            }
+            BackHandler(filterValue.isNotEmpty()) {
+                searchValue = ""
+                focusManager.clearFocus()
+            }
 
             if (filterValue.isEmpty()) {
                 //검색값이 없는 경우
@@ -234,7 +288,10 @@ private fun FriedListContent(
                             exit = favoriteExit
                         ) {
                             UserListHeader(
-                                title = stringResource(R.string.friend_list_item_header_favorite_friend, favoriteUserList.size)
+                                title = stringResource(
+                                    R.string.friend_list_item_header_favorite_friend,
+                                    favoriteUserList.size
+                                )
                             )
                         }
                     }
@@ -243,27 +300,30 @@ private fun FriedListContent(
                         key = {
                             "fv" + it.id
                         }
-                    ) { user ->
+                    ) { friend ->
                         androidx.compose.animation.AnimatedVisibility(
                             visible = viewType == FriendListViewType.Default,
                             enter = favoriteEnter,
                             exit = favoriteExit
                         ) {
                             UserItemView(
-                                user = user,
-                                type = UserViewType.Favorite(user.isFavorite),
+                                user = friend.toUser(),
+                                type = UserViewType.Favorite(friend.isFavorite),
                                 userClickAction = {
-                                    selectedUserId = user.id
+                                    selectedUserId = friend.id
                                 },
                                 iconClickAction = {
-                                    updateFavorite(user.id, !user.isFavorite)
+                                    updateFavoriteInMain(friend.id)
                                 }
                             )
                         }
                     }
                     item {
                         UserListHeader(
-                            title = stringResource(R.string.friend_list_item_header_friend, userList.size)
+                            title = stringResource(
+                                R.string.friend_list_item_header_friend,
+                                userList.size
+                            )
                         )
                     }
                     items(
@@ -271,15 +331,15 @@ private fun FriedListContent(
                         key = {
                             "df" + it.id
                         }
-                    ) { user ->
+                    ) { friend ->
                         UserItemViewByListView(
-                            user = user,
+                            user = friend.toUser(),
                             viewType = viewType,
-                            deleteUser = deleteUser,
-                            updateFavorite = updateFavorite,
+                            deleteUser = deleteFriendInMain,
+                            updateFavorite = updateFavoriteInMain,
                             userClickAction = if (viewType == FriendListViewType.Default) {
                                 {
-                                    selectedUserId = user.id
+                                    selectedUserId = friend.id
                                 }
                             } else {
                                 null
@@ -287,15 +347,15 @@ private fun FriedListContent(
                         )
                     }
                 }
-                userList.find { it.id == selectedUserId }?.let { user ->
+                userList.find { it.id == selectedUserId }?.let { friend ->
                     ProfileDetailModal(
-                        user = user,
+                        friend = friend,
                         onDismiss = {
                             selectedUserId = null
                         },
                         navigationMeetDetail = {
                             selectedUserId = null
-                            navigationMeetDetail(ScreenRoute.Home.FriendMeetDetail(detailUserId = user.id))
+                            navigationMeetDetail(ScreenRoute.Home.FriendMeetDetail(friendId = friend.id))
                         },
                         updateFavorite = updateFavorite
                     )
@@ -323,12 +383,12 @@ private fun FriedListContent(
                             key = {
                                 "df_f" + it.id
                             }
-                        ) { user ->
+                        ) { friend ->
                             UserItemViewByListView(
-                                user = user,
+                                user = friend.toUser(),
                                 viewType = viewType,
-                                deleteUser = deleteUser,
-                                updateFavorite = updateFavorite,
+                                deleteUser = deleteFriendInMain,
+                                updateFavorite = updateFavoriteInMain,
                             )
                         }
                     }
@@ -361,7 +421,7 @@ private fun UserItemViewByListView(
     user: User,
     viewType: FriendListViewType,
     deleteUser: (id: Int) -> Unit,
-    updateFavorite: (id: Int, favorite: Boolean) -> Unit,
+    updateFavorite: (id: Int) -> Unit,
     userClickAction: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
@@ -378,7 +438,7 @@ private fun UserItemViewByListView(
         iconClickAction = {
             if (viewType == FriendListViewType.Default) {
                 //즐겨 찾기 업데이트
-                updateFavorite(user.id, !user.isFavorite)
+                updateFavorite(user.id)
             } else {
                 // 삭제 창
                 showDeleteUser = true
@@ -399,20 +459,20 @@ private fun UserItemViewByListView(
     }
 }
 
-internal class UserPreviewParameterProvider() : PreviewParameterProvider<List<User>> {
-    override val values: Sequence<List<User>>
+internal class UserPreviewParameterProvider() : PreviewParameterProvider<List<Friend>> {
+    override val values: Sequence<List<Friend>>
         get() = sequenceOf(
             listOf(
-                User(1, "C_tester1"),
-                User(2, "A_tester2"),
-                User(3, "B_tester3"),
+                Friend(1, "C_tester1"),
+                Friend(2, "A_tester2"),
+                Friend(3, "B_tester3"),
             ).sortedBy { it.name },
             listOf(
-                User(1, "C_tester1"),
-                User(2, "A_tester2"),
-                User(3, "B_tester3", "", true),
-                User(4, "E_tester4", "", false),
-                User(5, "D_tester5", "", true),
+                Friend(1, "C_tester1"),
+                Friend(2, "A_tester2"),
+                Friend(3, "B_tester3", true),
+                Friend(4, "E_tester4", false),
+                Friend(5, "D_tester5", true),
             ).sortedBy { it.name },
             emptyList()
         )
@@ -421,13 +481,13 @@ internal class UserPreviewParameterProvider() : PreviewParameterProvider<List<Us
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
 fun UserListViewPreview(
-    @PreviewParameter(UserPreviewParameterProvider::class) data: List<User>
+    @PreviewParameter(UserPreviewParameterProvider::class) data: List<Friend>
 ) {
     FriedListContent(
         userList = data,
         navigationMeetDetail = {},
-        deleteUser = {},
-        updateFavorite = { _, _ -> },
+        deleteFriend = { _, _, _ -> },
+        updateFavorite = { _, _, _ -> },
         modifier = Modifier
             .safeDrawingPadding()
             .padding(12.dp)

@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/textTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/onboarding_logo1"
@@ -19,17 +20,11 @@
         tools:ignore="MissingConstraints" />
 
     <ImageView
+        android:id="@+id/imageOnBoarding"
         android:layout_width="277dp"
         android:layout_height="277dp"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
         android:src="@drawable/image_splash_1" />
-
-    <ImageView
-        android:layout_width="62dp"
-        android:layout_height="10dp"
-        android:src="@drawable/image_onboarding_count_1"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"/>
 
 </LinearLayout>

@@ -6,21 +6,19 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.model.SimpleMeet
-import com.sooum.domain.usecase.meet.invite.GetMeetInviteLinkUseCase
 import com.sooum.where_android.WhereApp
 import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.view.invite.InviteBySchemeView
 import com.sooum.where_android.view.splash.SplashActivity
+import com.sooum.where_android.viewmodel.invite.InviteLinkViewModel
+import com.sooum.where_android.viewmodel.invite.SchemeResultViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import java.io.Serializable
-import javax.inject.Inject
 
 internal const val INVITE_DATA = "inviteData"
 
@@ -30,10 +28,12 @@ internal const val INVITE_DATA = "inviteData"
 @AndroidEntryPoint
 class SchemeResultActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var getMeetInviteLinkUseCase: GetMeetInviteLinkUseCase
+    private val schemeResultViewModel: SchemeResultViewModel by viewModels()
+
+    private val inviteLinkViewModel: InviteLinkViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         val inviteData = intent.getInviteData()
         if (inviteData != null) {
@@ -44,7 +44,7 @@ class SchemeResultActivity : AppCompatActivity() {
                         finish()
                     },
                     onClick = {
-
+                        inviteLinkViewModel.acceptLinkCode(inviteData.code)
                     }
                 )
             }
@@ -55,46 +55,28 @@ class SchemeResultActivity : AppCompatActivity() {
             val code = intent.data?.pathSegments?.lastOrNull()
             Log.d("JWH", intent.data.toString())
 
-            if (name == null || code == null || code.length != 10) {
-                clearActivity()
-            } else {
-                lifecycleScope.launch {
-                    val result = getMeetInviteLinkUseCase(code).first()
-                    Log.d("JWH", result.toString())
-                    when (result) {
-
-                        is ApiResult.Success -> {
-                            val simpleMeet = result.data
-
-                            val intent = if (activity == null) {
-                                Intent(this@SchemeResultActivity, SplashActivity::class.java)
-                            } else {
-                                Intent(this@SchemeResultActivity, activity::class.java)
-                            }
-                            intent.apply {
-                                addInviteScheme(simpleMeet, name)
-                            }
-                            finish()
-                            startActivity(intent)
-                        }
-
-                        is ApiResult.Fail.Error -> {
-                            showSimpleToast(result.message ?: "error")
-                            clearActivity()
-                        }
-
-                        is ApiResult.Fail.Exception -> {
-                            showSimpleToast(result.e.localizedMessage ?: "error")
-                            clearActivity()
-                        }
-
-                        else -> {
-                            showSimpleToast("잘못된 접근 입니다.")
-                            clearActivity()
-                        }
+            schemeResultViewModel.parseSchemeData(
+                name = name,
+                code = code,
+                onSuccess = { simpleMeet ->
+                    val intent = if (activity == null) {
+                        Intent(this@SchemeResultActivity, SplashActivity::class.java)
+                    } else {
+                        Intent(this@SchemeResultActivity, activity::class.java)
                     }
+                    intent.apply {
+                        addInviteScheme(simpleMeet, name!!, code!!)
+                    }
+                    finish()
+                    startActivity(intent)
+                },
+                onFail = { msg ->
+                    if (msg.isNotEmpty()) {
+                        showSimpleToast(msg)
+                    }
+                    clearActivity()
                 }
-            }
+            )
         }
     }
 
@@ -115,16 +97,18 @@ data class InviteData(
     val image: String?,
     val date: String?,
     val time: String?,
-    val name: String
+    val name: String,
+    val code: String
 ) : Serializable {
 
-    constructor(simpleMeet: SimpleMeet, name: String) : this(
+    constructor(simpleMeet: SimpleMeet, name: String, code: String) : this(
         simpleMeet.id,
         simpleMeet.title,
         simpleMeet.image,
         simpleMeet.date,
         simpleMeet.time,
-        name
+        name,
+        code
     )
 
     val schedule: Schedule?
@@ -137,11 +121,12 @@ data class InviteData(
 
 fun Intent.addInviteScheme(
     simpleMeet: SimpleMeet,
-    name: String
+    name: String,
+    code: String,
 ) {
     this.putExtras(
         Bundle().apply {
-            putSerializable(INVITE_DATA, InviteData(simpleMeet, name))
+            putSerializable(INVITE_DATA, InviteData(simpleMeet, name, code))
         }
     )
 }

@@ -2,11 +2,13 @@ package com.sooum.data.repository
 
 import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.data.network.auth.AuthApi
+import com.sooum.data.network.auth.request.EmailVerifyRequest
 import com.sooum.data.network.auth.request.LoginRequest
 import com.sooum.data.network.auth.request.NameOnlyRequest
 import com.sooum.data.network.auth.request.SignUpRequest
 import com.sooum.data.network.safeFlow
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.EmailVerifyResult
 import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.LoginResult
 import com.sooum.domain.model.PostProfileResult
@@ -69,6 +71,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+
     override suspend fun putNickName(userId: Int, nickName: String): Flow<ApiResult<Unit>> {
         val request = NameOnlyRequest(nickName)
         return safeFlow {
@@ -96,6 +99,35 @@ class AuthRepositoryImpl @Inject constructor(
         } else {
             flowOf(ApiResult.Success(PostProfileResult("")))
         }
+    }
+
+    override suspend fun checkVersion(
+        type: String,
+        version: String
+    ): Flow<ApiResult<Boolean>> {
+       return safeFlow {
+           authApi.versionCheck(
+               type = type,
+               version = version
+           )
+       }
+    }
+
+    override suspend fun getEmail(email: String): Flow<ApiResult<Unit>> {
+        return safeFlow {
+            authApi.requestEmailAuth(
+                email = email
+            )
+        }
+    }
+
+    override suspend fun postEmailVerify(
+        email: String,
+        code: String
+    ): Flow<ApiResult<String>> {
+        val request = EmailVerifyRequest(email, code)
+        return safeFlow { authApi.emailVerify(request)}
+
     }
 
 }

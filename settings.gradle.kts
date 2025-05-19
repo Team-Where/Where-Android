@@ -19,3 +19,5 @@ rootProject.name = "Where-Android"
 include(":data")
 include(":domain")
 include(":presentation")
+include(":core:notification")
+include(":core:alarm")

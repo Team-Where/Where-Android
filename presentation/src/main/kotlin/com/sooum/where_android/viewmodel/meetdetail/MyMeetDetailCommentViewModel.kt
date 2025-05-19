@@ -43,7 +43,6 @@ class MyMeetDetailCommentViewModel @Inject constructor(
             emptyList()
         )
 
-
     fun loadData(
         placeId: Int
     ) {

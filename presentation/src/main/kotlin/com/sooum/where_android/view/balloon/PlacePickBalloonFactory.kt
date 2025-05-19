@@ -29,8 +29,7 @@ class PlacePickBalloonFactory : Balloon.Factory() {
             setArrowOrientation(ArrowOrientation.TOP)
             setArrowPosition(0.92f)
 
-            //TODO 여기 마진을 조정해주세요
-            setMarginRight(7)
+            setMarginRight(40)
             setPaddingVertical(8)
             setPaddingHorizontal(10)
 

@@ -1,0 +1,4 @@
+<resources>
+    <!--FCM-->
+    <string name="fcm_channel_id">fcm_default_channel</string>
+</resources>

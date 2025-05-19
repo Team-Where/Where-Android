@@ -11,6 +11,7 @@ import com.sooum.data.network.meet.request.AddMeetRequest
 import com.sooum.data.network.meet.request.DeleteMeetRequest
 import com.sooum.data.network.meet.request.EditMeetRequest
 import com.sooum.data.network.meet.request.FinishMeetRequest
+import com.sooum.data.network.meet.request.InviteMeetOkLinkRequest
 import com.sooum.data.network.meet.request.InviteMeetRequest
 import com.sooum.data.network.place.PlaceApi
 import com.sooum.data.network.place.request.AddPlaceRequest
@@ -93,6 +94,10 @@ class MeetRemoteDataSourceImpl @Inject constructor(
             json.encodeToString(request).toRequestBody("application/json".toMediaTypeOrNull())
 
         return safeFlow { meetApi.editMeet(dataPart, imageFile.createPart()) }
+    }
+
+    override suspend fun deleteCover(id: Int): Flow<ApiResult<String>> {
+        return safeFlow { meetApi.deleteCover(id) }
     }
 
     override suspend fun deleteMeet(
@@ -224,8 +229,11 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         return safeFlow { commentApi.deletePlaceComment(request) }
     }
 
-    override suspend fun getPlaceCommentList(placeId: Int): Flow<ApiResult<List<CommentListItem>>> {
-        return safeFlow { commentApi.getPlaceCommentList(placeId) }
+    override suspend fun getPlaceCommentList(
+        placeId: Int,
+        userId: Int
+    ): Flow<ApiResult<List<CommentListItem>>> {
+        return safeFlow { commentApi.getPlaceCommentList(placeId, userId) }
     }
 
 
@@ -271,5 +279,13 @@ class MeetRemoteDataSourceImpl @Inject constructor(
             meetId = meetId
         )
         return safeFlow { scheduleApi.deleteSchedule(request) }
+    }
+
+    override suspend fun inviteOkFromLink(userId: Int, code: String): Flow<ApiResult<Meet>> {
+        val request = InviteMeetOkLinkRequest(
+            userId = userId,
+            link = code
+        )
+        return safeFlow { meetApi.inviteMeetOkLink(request) }
     }
 }

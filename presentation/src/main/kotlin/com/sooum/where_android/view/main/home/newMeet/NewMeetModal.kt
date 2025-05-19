@@ -26,9 +26,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sooum.domain.model.ActionResult
+import com.sooum.domain.model.Friend
 import com.sooum.domain.model.ImageAddType
 import com.sooum.domain.model.NewMeetResult
-import com.sooum.domain.model.User
 import com.sooum.where_android.view.common.modal.LoadingView
 import com.sooum.where_android.viewmodel.NewMeetType
 import com.sooum.where_android.viewmodel.NewMeetViewModel
@@ -55,7 +55,7 @@ fun NewMeetModal(
     )
     val scope = rememberCoroutineScope()
     val viewType by newMeetViewModel.viewType.collectAsState()
-    val userList by newMeetViewModel.userList.collectAsState()
+    val friendList by newMeetViewModel.friendList.collectAsState()
     var showLoading by remember {
         mutableStateOf(false)
     }
@@ -80,7 +80,7 @@ fun NewMeetModal(
                 description = newMeetViewModel.newMeetData.description,
                 updateDescription = newMeetViewModel::updateDescription,
                 type = newMeetViewModel.newMeetData.image,
-                userList = userList,
+                friendList = friendList,
                 updateImageType = newMeetViewModel::updateImage,
                 viewType = viewType,
                 goStep2 = newMeetViewModel::goStep2,
@@ -130,13 +130,13 @@ private fun NewMeetContent(
     updateTitle: (String) -> Unit,
     description: String,
     updateDescription: (String) -> Unit,
-    userList: List<User>,
+    friendList: List<Friend>,
     viewType: NewMeetType,
     goStep2: () -> Unit,
     goStepResult: () -> Unit,
     type: ImageAddType?,
     updateImageType: (ImageAddType) -> Unit,
-    inviteFriend: (User) -> Unit,
+    inviteFriend: (Friend) -> Unit,
     onClose: () -> Unit
 ) {
 
@@ -158,8 +158,8 @@ private fun NewMeetContent(
         is NewMeetType.Friend -> {
             NewMeetStep2View(
                 modifier = modifier,
-                userList = userList,
-                recentUserList = userList,
+                userList = friendList,
+                recentUserList = friendList,
                 nextViewType = goStepResult,
                 inviteFriend = inviteFriend,
                 onClose = onClose
@@ -190,7 +190,7 @@ private fun NewMeetContentPreview(
         viewType = type,
         goStep2 = {},
         goStepResult = {},
-        userList = emptyList(),
+        friendList = emptyList(),
         inviteFriend = {},
         onClose = {},
         description = "",
