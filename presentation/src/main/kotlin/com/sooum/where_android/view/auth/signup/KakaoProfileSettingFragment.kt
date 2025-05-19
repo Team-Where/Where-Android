@@ -18,7 +18,7 @@ import java.io.File
 
 class KakaoProfileSettingFragment : AuthBaseFragment() {
     private lateinit var binding : FragmentProfileSettingBinding
-    private var selectedImageFile: File? = null
+    private lateinit var selectedImageUri: Uri
     private val userId: Int by lazy {
         requireArguments().getInt("userId")
     }
@@ -42,7 +42,7 @@ class KakaoProfileSettingFragment : AuthBaseFragment() {
                                 // 앨범에서 선택한 이미지 적용
                                 binding.imageProfile.setImageURI(imageType.uri)
                                 binding.imageProfile.scaleType = ImageView.ScaleType.CENTER_CROP
-                                selectedImageFile = uriToFile(imageType.uri)
+                                selectedImageUri = imageType.uri
                             }
                             else -> {}
                         }
@@ -55,25 +55,12 @@ class KakaoProfileSettingFragment : AuthBaseFragment() {
 
         binding.nextBtn.setOnClickListener {
             kakaoViewModel.putNickName(userId, binding.editNickname.text.toString())
-            kakaoViewModel.updateProfile(userId, selectedImageFile)
+            kakaoViewModel.updateProfile(userId, selectedImageUri)
         }
 
         observePutNicknameResult()
 
         return binding.root
-    }
-
-    private fun uriToFile(uri: Uri): File? {
-        val context = requireContext()
-        val inputStream = context.contentResolver.openInputStream(uri) ?: return null
-        val file = File.createTempFile("temp_image", ".jpg", context.cacheDir)
-
-        inputStream.use { input ->
-            file.outputStream().use { output ->
-                input.copyTo(output)
-            }
-        }
-        return file
     }
 
     private fun observePutNicknameResult() {

@@ -1,5 +1,6 @@
 package com.sooum.where_android.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ApiResult
@@ -8,7 +9,7 @@ import com.sooum.domain.usecase.kakao.KakaoSignUpUseCase
 import com.sooum.domain.usecase.kakao.NickNameUpdateUseCase
 import com.sooum.domain.usecase.kakao.ProfileUpdateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -26,8 +27,6 @@ class KakaoViewmodel @Inject constructor(
 
     private val _updateNicknameState = MutableStateFlow<ApiResult<Unit>>(ApiResult.SuccessEmpty)
     val updateNicknameState: StateFlow<ApiResult<Unit>> = _updateNicknameState
-
-
 
     /**
      * 카카오 회원가입 기능
@@ -58,7 +57,7 @@ class KakaoViewmodel @Inject constructor(
     /**
      * 프로필 업데이트 기능
      */
-    fun updateProfile(userId: Int,imageFile: File?){
+    fun updateProfile(userId: Int,imageFile: Uri){
         viewModelScope.launch {
             profileUpdateUseCase(
                 userId, imageFile
