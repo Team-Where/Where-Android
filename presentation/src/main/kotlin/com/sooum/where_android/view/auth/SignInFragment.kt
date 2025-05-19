@@ -52,7 +52,7 @@ class SignInFragment : AuthBaseFragment() {
                             requireActivity().finish()
                         }
                         showToast("로그인 성공")
-                        navigateActivity(MainActivity())
+                        (activity as AuthActivity).nextActivity()
                     }
 
                     is ApiResult.Fail -> {

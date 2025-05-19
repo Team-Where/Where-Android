@@ -54,6 +54,7 @@ interface AuthRepository {
         imageFile: File?
     ): Flow<ApiResult<PostProfileResult>>
 
+    /**
      * 버전을 체크 한다
      */
     suspend fun checkVersion(
