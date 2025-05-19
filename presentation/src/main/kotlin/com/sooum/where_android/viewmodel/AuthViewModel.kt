@@ -12,6 +12,7 @@ import com.sooum.domain.usecase.auth.EmailVerifyUseCase
 import com.sooum.domain.usecase.auth.KakaoSignUpUseCase
 import com.sooum.domain.usecase.auth.LoginUseCase
 import com.sooum.domain.usecase.auth.NickNameUpdateUseCase
+import com.sooum.domain.usecase.auth.ProfileUpdateUseCase
 import com.sooum.domain.usecase.auth.RequestEmailAuthUseCase
 import com.sooum.domain.usecase.auth.SignUpUseCase
 import com.sooum.domain.usecase.auth.ValidatePasswordUseCase
@@ -30,7 +31,7 @@ class AuthViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
     private val kakaoSignUpUseCase: KakaoSignUpUseCase,
     private val nickNameUpdateUseCase: NickNameUpdateUseCase,
-    private val profileUpdateUseCase: ProfileUpdateUseCase
+    private val profileUpdateUseCase: ProfileUpdateUseCase,
     private val getRequestEmailAuthUseCase: RequestEmailAuthUseCase,
     private val emailVerifyUseCase: EmailVerifyUseCase
 ) : ViewModel(){

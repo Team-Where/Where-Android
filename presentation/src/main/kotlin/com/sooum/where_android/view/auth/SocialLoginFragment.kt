@@ -35,9 +35,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SocialLoginFragment : AuthBaseFragment() {
     private lateinit var binding: FragmentSocialLoginBinding
-    private val loadingAlertProvider by lazy {
-        LoadingAlertProvider(this)
-    }
 
     @Inject
     lateinit var  appManageDataStore: AppManageDataStore

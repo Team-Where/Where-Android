@@ -17,9 +17,6 @@ import kotlinx.coroutines.flow.collectLatest
 @AndroidEntryPoint
 class EmailVerificationFragment : AuthBaseFragment() {
     private lateinit var binding : FragmentEmailVerificationBinding
-    private val loadingAlertProvider by lazy {
-        LoadingAlertProvider(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
