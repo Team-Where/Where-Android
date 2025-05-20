@@ -24,6 +24,7 @@ import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.Pla
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startKakaoMapUri
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startNaverMapUri
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
+import com.sooum.where_android.view.main.myMeetDetail.modal.EditCommentFragment
 import com.sooum.where_android.view.main.myMeetDetail.modal.EditMyMeetDataFragment
 import kotlinx.coroutines.launch
 
@@ -38,6 +39,7 @@ class MyMeetPlaceDetailFragment :
     private val placeCommentAdapter = PlaceCommentListAdapter { commentItem ->
         onCommentClicked(commentItem)
     }
+
     private val imageListAdapter = ImageListAdapter()
 
     companion object {
@@ -89,12 +91,7 @@ class MyMeetPlaceDetailFragment :
     }
 
     private fun onCommentClicked(commentItem: CommentListItem) {
-        showBottomSheet(
-            EditMyMeetDataFragment.newInstance(
-                type = EditMyMeetDataFragment.TYPE_EDIT_COMMENT,
-                prevData = commentItem.description,
-            )
-        )
+        showBottomSheet(EditCommentFragment())
     }
 
     private fun setCommentRecyclerView() {
