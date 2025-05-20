@@ -9,9 +9,10 @@ import com.sooum.where_android.databinding.ItemPlaceCommentFalseBinding
 import com.sooum.where_android.databinding.ItemPlaceCommentTrueBinding
 import com.sooum.where_android.util.CommentDiffUtil
 
-class PlaceCommentListAdapter : ListAdapter<CommentListItem, RecyclerView.ViewHolder>(
-    CommentDiffUtil
-) {
+class PlaceCommentListAdapter(
+    private val onCommentClick: (CommentListItem) -> Unit
+) : ListAdapter<CommentListItem, RecyclerView.ViewHolder>(CommentDiffUtil) {
+
 
     companion object {
         private const val VIEW_TYPE_MINE = 1
@@ -26,10 +27,10 @@ class PlaceCommentListAdapter : ListAdapter<CommentListItem, RecyclerView.ViewHo
         val inflater = LayoutInflater.from(parent.context)
         return if (viewType == VIEW_TYPE_MINE) {
             val binding = ItemPlaceCommentTrueBinding.inflate(inflater, parent, false)
-            MineViewHolder(binding)
+            MineViewHolder(binding, onCommentClick)
         } else {
             val binding = ItemPlaceCommentFalseBinding.inflate(inflater, parent, false)
-            OtherViewHolder(binding)
+            OtherViewHolder(binding, onCommentClick)
         }
     }
 
@@ -46,15 +47,25 @@ class PlaceCommentListAdapter : ListAdapter<CommentListItem, RecyclerView.ViewHo
         }
     }
 
-    class MineViewHolder(private val binding: ItemPlaceCommentTrueBinding) : RecyclerView.ViewHolder(binding.root) {
+    class MineViewHolder(
+        private val binding: ItemPlaceCommentTrueBinding,
+        private val onClick: (CommentListItem) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(item: CommentListItem) {
             binding.textDescription.text = item.description
+            binding.root.setOnClickListener { onClick(item) }
         }
     }
 
-    class OtherViewHolder(private val binding: ItemPlaceCommentFalseBinding) : RecyclerView.ViewHolder(binding.root) {
+    class OtherViewHolder(
+        private val binding: ItemPlaceCommentFalseBinding,
+        private val onClick: (CommentListItem) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(item: CommentListItem) {
             binding.textDescription.text = item.description
+            binding.root.setOnClickListener { onClick(item) }
         }
     }
 }

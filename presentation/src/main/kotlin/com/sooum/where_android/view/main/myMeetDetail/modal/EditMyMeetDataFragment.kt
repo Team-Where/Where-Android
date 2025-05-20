@@ -12,29 +12,32 @@ import com.sooum.where_android.databinding.FragmentEditMyMeetDataBinding
 import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 
-class EditMyMeetDataFragment : BottomSheetDialogFragment() {
+class EditMyMeetDataFragment() : BottomSheetDialogFragment() {
     private val myMeetDetailViewModel: MyMeetDetailViewModel by activityViewModels()
     private lateinit var binding: FragmentEditMyMeetDataBinding
 
     companion object {
         const val TYPE_TITLE = 1
         const val TYPE_MEMO = 2
+        const val TYPE_ADD_COMMENT = 3
+        const val TYPE_EDIT_COMMENT = 4
 
         private const val EDIT_TYPE = "myMeetEditType"
         private const val PREV_DATA_KEY = "myMeetPrevData"
 
-        fun getInstance(
-            @IntRange(from = 1, to = 2) type: Int,
-            prevData: String
+        fun newInstance(
+            @IntRange(from = 1, to = 4) type: Int,
+            prevData: String,
         ): EditMyMeetDataFragment {
             return EditMyMeetDataFragment().apply {
                 arguments = bundleOf(
                     EDIT_TYPE to type,
-                    PREV_DATA_KEY to prevData
+                    PREV_DATA_KEY to prevData,
                 )
             }
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,6 +58,10 @@ class EditMyMeetDataFragment : BottomSheetDialogFragment() {
                 textMeetName.text = "모임 이름"
             } else if (type == TYPE_MEMO) {
                 textMeetName.text = "메모"
+            } else if (type == TYPE_ADD_COMMENT) {
+                textMeetName.text = "코멘트 남기기"
+            } else if (type == TYPE_EDIT_COMMENT) {
+                textMeetName.text = "코멘트 수정"
             }
             editMyMeetMemo.setText(prevTitle)
 
