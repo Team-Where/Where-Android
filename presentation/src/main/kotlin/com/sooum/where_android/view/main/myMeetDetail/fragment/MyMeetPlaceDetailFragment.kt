@@ -7,7 +7,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.skydoves.balloon.balloon
+import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.PLACE_STATE_NOT_PICK
 import com.sooum.domain.model.PLACE_STATE_PICK
 import com.sooum.domain.model.PlaceItem
@@ -22,6 +24,8 @@ import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.Pla
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startKakaoMapUri
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.startNaverMapUri
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
+import com.sooum.where_android.view.main.myMeetDetail.modal.EditCommentFragment
+import com.sooum.where_android.view.main.myMeetDetail.modal.EditMyMeetDataFragment
 import kotlinx.coroutines.launch
 
 
@@ -32,7 +36,10 @@ class MyMeetPlaceDetailFragment :
     MyMeetBaseFragment<FragmentMyMeetPlaceDetailBinding>(FragmentMyMeetPlaceDetailBinding::inflate),
     PlaceDetailClickCallBack {
 
-    private val placeCommentAdapter = PlaceCommentListAdapter()
+    private val placeCommentAdapter = PlaceCommentListAdapter { commentItem ->
+        onCommentClicked(commentItem)
+    }
+
     private val imageListAdapter = ImageListAdapter()
 
     companion object {
@@ -47,10 +54,20 @@ class MyMeetPlaceDetailFragment :
             myMeetDetailCommentViewModel.loadData(placeId)
         }
         setCommentRecyclerView()
+
         setProfileImageRecyclerView()
 
-        binding.imageBack.setOnClickListener {
-            findNavController().popBackStack()
+        with(binding) {
+            imageBack.setOnClickListener { findNavController().popBackStack() }
+            btnAddComment.setOnClickListener {
+                showBottomSheet(
+                    EditMyMeetDataFragment.newInstance(
+                        type =   EditMyMeetDataFragment.TYPE_ADD_COMMENT,
+                        prevData = "친구들이 볼 수 있도록 코멘트르 달아보세요.(0/50)"
+                    )
+                )
+            }
+
         }
 
         lifecycleScope.launch {
@@ -71,6 +88,10 @@ class MyMeetPlaceDetailFragment :
                 }
             }
         }
+    }
+
+    private fun onCommentClicked(commentItem: CommentListItem) {
+        showBottomSheet(EditCommentFragment())
     }
 
     private fun setCommentRecyclerView() {
@@ -186,6 +207,10 @@ class MyMeetPlaceDetailFragment :
 
     override fun startMapUri(uriString: String, marketPackage: String) {
         context?.startMapUriOrMarket(uriString, marketPackage)
+    }
+
+    private fun showBottomSheet(fragment: BottomSheetDialogFragment) {
+        fragment.show(parentFragmentManager, fragment::class.java.simpleName)
     }
 
 }

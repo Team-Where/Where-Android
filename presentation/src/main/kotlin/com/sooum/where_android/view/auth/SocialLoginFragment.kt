@@ -27,9 +27,6 @@ import kotlinx.coroutines.launch
 class SocialLoginFragment : AuthBaseFragment() {
     private lateinit var binding: FragmentSocialLoginBinding
 
-    @Inject
-    lateinit var  appManageDataStore: AppManageDataStore
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
