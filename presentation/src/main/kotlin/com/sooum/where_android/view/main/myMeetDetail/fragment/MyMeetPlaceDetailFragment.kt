@@ -1,22 +1,20 @@
 package com.sooum.where_android.view.main.myMeetDetail.fragment
 
-import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.skydoves.balloon.balloon
 import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.PLACE_STATE_NOT_PICK
 import com.sooum.domain.model.PLACE_STATE_PICK
 import com.sooum.domain.model.PlaceItem
-import com.sooum.domain.model.ProfileImage
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceDetailBinding
 import com.sooum.where_android.startMapUriOrMarket
 import com.sooum.where_android.view.balloon.PlacePickBalloonFactory
+import com.sooum.where_android.view.common.modal.DeleteModalFragment
 import com.sooum.where_android.view.main.myMeetDetail.adapter.comment.PlaceCommentListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.image.ImageListAdapter
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.OverlapDecoration
@@ -34,7 +32,8 @@ import kotlinx.coroutines.launch
  */
 class MyMeetPlaceDetailFragment :
     MyMeetBaseFragment<FragmentMyMeetPlaceDetailBinding>(FragmentMyMeetPlaceDetailBinding::inflate),
-    PlaceDetailClickCallBack {
+    PlaceDetailClickCallBack,
+    DeleteModalFragment.DeleteModalAction {
 
     private val placeCommentAdapter = PlaceCommentListAdapter { commentItem ->
         onCommentClicked(commentItem)
@@ -59,10 +58,19 @@ class MyMeetPlaceDetailFragment :
 
         with(binding) {
             imageBack.setOnClickListener { findNavController().popBackStack() }
+            textDelete.setOnClickListener {
+                showBottomSheet(
+                    DeleteModalFragment.getInstance(
+                        buttonText = "장소 삭제",
+                        action = this@MyMeetPlaceDetailFragment
+                    ),
+                    DeleteModalFragment.TAG
+                )
+            }
             btnAddComment.setOnClickListener {
                 showBottomSheet(
                     EditMyMeetDataFragment.newInstance(
-                        type =   EditMyMeetDataFragment.TYPE_ADD_COMMENT,
+                        type = EditMyMeetDataFragment.TYPE_ADD_COMMENT,
                         prevData = "친구들이 볼 수 있도록 코멘트르 달아보세요.(0/50)"
                     )
                 )
@@ -104,7 +112,8 @@ class MyMeetPlaceDetailFragment :
     private fun setProfileImageRecyclerView() {
         with(binding.imageRecyclerView) {
             adapter = imageListAdapter
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             addItemDecoration(OverlapDecoration(overlapWidth = 40))
         }
     }
@@ -209,8 +218,11 @@ class MyMeetPlaceDetailFragment :
         context?.startMapUriOrMarket(uriString, marketPackage)
     }
 
-    private fun showBottomSheet(fragment: BottomSheetDialogFragment) {
-        fragment.show(parentFragmentManager, fragment::class.java.simpleName)
+    private fun showBottomSheet(fragment: BottomSheetDialogFragment, tag: String? = null) {
+        fragment.show(parentFragmentManager, tag ?: fragment::class.java.simpleName)
     }
 
+    override fun onDelete() {
+        //TODO 환님 모임 삭제 눌렀을때 액션 정의
+    }
 }
