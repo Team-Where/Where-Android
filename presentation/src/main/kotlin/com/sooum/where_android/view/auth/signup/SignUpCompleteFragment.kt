@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ApiResult
+import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentSignUpCompleteBinding
 import com.sooum.where_android.view.auth.AuthActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +26,9 @@ class SignUpCompleteFragment : AuthBaseFragment() {
         binding.imageBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
+
+        binding.tvTitle.text =
+            String.format(getString(R.string.signup_complete), authViewModel.name.value)
 
         binding.nextBtn.setOnClickListener {
            authViewModel.signUp()

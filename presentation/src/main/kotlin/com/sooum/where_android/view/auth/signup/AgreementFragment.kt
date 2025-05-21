@@ -5,15 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentAgreementBinding
-import com.sooum.where_android.databinding.FragmentSignInBinding
-import com.sooum.where_android.view.auth.AuthActivity
-import com.sooum.where_android.view.auth.SignInFragment
-import com.sooum.where_android.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -47,7 +40,7 @@ class AgreementFragment : AuthBaseFragment() {
         }
 
         setupCheckboxListeners()
-
+        updateNextButtonBackground()
         return binding.root
     }
 
@@ -82,7 +75,6 @@ class AgreementFragment : AuthBaseFragment() {
 
     private fun updateNextButtonBackground() {
         val allChecked = binding.checkboxAgreeAll.isChecked
-        val backgroundRes = if (allChecked) R.drawable.shape_rounded_button_main_color else R.drawable.shape_rounded_button_gray_scale_300
-        binding.nextBtn.setBackgroundResource(backgroundRes)
+        binding.nextBtn.isEnabled = allChecked
     }
 }

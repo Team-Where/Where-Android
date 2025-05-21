@@ -11,6 +11,9 @@
     소셜로그인 엑티비티
     <string name="social_login_logo">약속을 새롭게 정의하다</string>
 
+    <!-- 회원가입 -->
+    <string name="signup_complete">%s님,\n회원가입을 축하합니다.</string>
+
 
     <!--Home - 내 모임-->
     <string name="my_meet_no_meet">아직 모임이 없어요</string>

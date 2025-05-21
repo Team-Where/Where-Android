@@ -13,14 +13,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.kakao.sdk.user.UserApiClient
-import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentSocialLoginBinding
 import com.sooum.where_android.view.auth.signup.AgreementFragment
 import com.sooum.where_android.view.auth.signup.AuthBaseFragment
 import com.sooum.where_android.view.auth.signup.KakaoProfileSettingFragment
 import dagger.hilt.android.AndroidEntryPoint
-import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -103,10 +101,7 @@ class SocialLoginFragment : AuthBaseFragment() {
     }
 
     private fun handleKakaoToken(accessToken: String, refreshToken: String) {
-        lifecycleScope.launch {
-            kakaoViewModel.saveKakaoTokens(accessToken, refreshToken)
-            kakaoViewModel.kakaoLogin(accessToken, refreshToken)
-        }
+        kakaoViewModel.kakaoLogin(accessToken, refreshToken)
     }
 
 
@@ -131,7 +126,6 @@ class SocialLoginFragment : AuthBaseFragment() {
                         } else {
                             showToast("카카오 로그인 성공")
                             (activity as AuthActivity).nextActivity()
-                            requireActivity().finish()
                         }
                     }
 

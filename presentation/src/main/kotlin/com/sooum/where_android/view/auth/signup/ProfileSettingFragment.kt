@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.sooum.domain.model.ImageAddType
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentProfileSettingBinding
@@ -17,7 +19,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileSettingFragment : AuthBaseFragment() {
-    private lateinit var binding : FragmentProfileSettingBinding
+    private lateinit var binding: FragmentProfileSettingBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,13 +36,13 @@ class ProfileSettingFragment : AuthBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding){
-            nextBtn.setOnClickListener{
+        with(binding) {
+            nextBtn.setOnClickListener {
                 authViewModel.setName(binding.editNickname.text.toString().trim())
-               navigateTo(SignUpCompleteFragment())
+                navigateTo(SignUpCompleteFragment())
             }
 
-            imageBack.setOnClickListener { popBackStack()}
+            imageBack.setOnClickListener { popBackStack() }
         }
 
         binding.imageCamera.setOnClickListener {
@@ -52,12 +54,14 @@ class ProfileSettingFragment : AuthBaseFragment() {
                                 // 기본 이미지 적용
                                 binding.imageProfile.setImageResource(R.drawable.image_profile_default_cover)
                             }
+
                             is ImageAddType.Content -> {
                                 // 앨범에서 선택한 이미지 적용
                                 binding.imageProfile.setImageURI(imageType.uri)
                                 binding.imageProfile.scaleType = ImageView.ScaleType.CENTER_CROP
                                 authViewModel.setProfileImage(imageType.uri.toString())
                             }
+
                             else -> {}
                         }
                     }
@@ -68,14 +72,12 @@ class ProfileSettingFragment : AuthBaseFragment() {
         }
     }
 
-    private fun setUpObservers(){
+    private fun setUpObservers() {
         lifecycleScope.launch {
-            authViewModel.isNextButtonEnabled.collectLatest { isEnabled ->
-                binding.nextBtn.isEnabled = isEnabled
-                binding.nextBtn.setBackgroundResource(
-                    if (isEnabled) R.drawable.shape_rounded_button_main_color
-                    else R.drawable.shape_rounded_button_gray_scale_300
-                )
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                authViewModel.isNextButtonEnabled.collectLatest { isEnabled ->
+                    binding.nextBtn.isEnabled = isEnabled
+                }
             }
         }
     }

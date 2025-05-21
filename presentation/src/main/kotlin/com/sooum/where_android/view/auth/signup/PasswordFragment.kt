@@ -6,8 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import com.sooum.where_android.R
+import androidx.lifecycle.repeatOnLifecycle
 import com.sooum.where_android.databinding.FragmentPasswordBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PasswordFragment : AuthBaseFragment() {
-    private lateinit var binding : FragmentPasswordBinding
+    private lateinit var binding: FragmentPasswordBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,14 +32,13 @@ class PasswordFragment : AuthBaseFragment() {
 
         binding.nextBtn.setOnClickListener {
             authViewModel.setPassword(binding.editTextPassword.text.toString().trim())
-            authViewModel.setEmail(binding.editTextEmail.text.toString().trim())
-
-           navigateTo(ProfileSettingFragment())
+            navigateTo(ProfileSettingFragment())
         }
 
         binding.imageBack.setOnClickListener {
             popBackStack()
         }
+        binding.editTextEmail.setText(authViewModel.email.value)
 
         setupListeners()
         setupObservers()
@@ -72,12 +72,10 @@ class PasswordFragment : AuthBaseFragment() {
         }
 
         lifecycleScope.launch {
-            authViewModel.isNextButtonEnabled.collectLatest { isEnabled ->
-                binding.nextBtn.isEnabled = isEnabled
-                binding.nextBtn.setBackgroundResource(
-                    if (isEnabled) R.drawable.shape_rounded_button_main_color
-                    else R.drawable.shape_rounded_button_gray_scale_300
-                )
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                authViewModel.isNextButtonEnabled.collectLatest { isEnabled ->
+                    binding.nextBtn.isEnabled = isEnabled
+                }
             }
         }
     }
@@ -85,7 +83,11 @@ class PasswordFragment : AuthBaseFragment() {
 
     private fun setupListeners() {
         binding.editTextPassword.addTextChangedListener { authViewModel.onPasswordChanged(it.toString()) }
-        binding.editTextPasswordRecheck.addTextChangedListener { authViewModel.onRePasswordChanged(it.toString()) }
+        binding.editTextPasswordRecheck.addTextChangedListener {
+            authViewModel.onRePasswordChanged(
+                it.toString()
+            )
+        }
         binding.editTextEmail.addTextChangedListener { authViewModel.onEmailChanged(it.toString()) }
     }
 }

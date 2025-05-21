@@ -1,24 +1,17 @@
 package com.sooum.where_android.viewmodel
 
-import android.content.Context
-import android.content.pm.PackageInfo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.model.SignUpResult
 import com.sooum.domain.usecase.auth.VersionCheckUseCase
 import com.sooum.domain.util.AppVersionProvider
 import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.view.onboarding.OnBoardingActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.joinAll
@@ -44,7 +37,7 @@ class SplashViewModel @Inject constructor(
             }
             val checkLogin = async {
                 //TODO 환님 => 로그인 되어있는지 확인(토큰 확인 등)
-                true
+                false
             }
             val checkAppUpdate = async {
                 val version = appVersionProvider.getVersionName()

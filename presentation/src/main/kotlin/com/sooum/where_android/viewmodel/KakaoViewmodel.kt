@@ -10,11 +10,10 @@ import com.sooum.domain.usecase.kakao.KakaoSignUpUseCase
 import com.sooum.domain.usecase.kakao.NickNameUpdateUseCase
 import com.sooum.domain.usecase.kakao.ProfileUpdateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.io.File
+import javax.inject.Inject
 
 @HiltViewModel
 class KakaoViewmodel @Inject constructor(
@@ -33,12 +32,18 @@ class KakaoViewmodel @Inject constructor(
     /**
      * 카카오 회원가입 기능
      */
-    fun kakaoLogin(authorization: String, refreshToken: String) {
+    fun kakaoLogin(accessToken: String, refreshToken: String) {
         viewModelScope.launch {
-            kakaoSignUpUseCase(
-                authorization ,refreshToken
-            ).collect{ result ->
-                _kakaoSignUpState.value = result
+            launch {
+                appManageDataStore.saveKakaoAccessToken(accessToken)
+                appManageDataStore.saveKakaoRefreshToken(refreshToken)
+            }
+            launch {
+                kakaoSignUpUseCase(
+                    accessToken, refreshToken
+                ).collect { result ->
+                    _kakaoSignUpState.value = result
+                }
             }
         }
     }
@@ -66,13 +71,6 @@ class KakaoViewmodel @Inject constructor(
             ).collect{ result ->
 
             }
-        }
-    }
-
-    fun saveKakaoTokens(accessToken: String, refreshToken: String) {
-        viewModelScope.launch {
-            appManageDataStore.saveKakaoAccessToken(accessToken)
-            appManageDataStore.saveKakaoRefreshToken(refreshToken)
         }
     }
 }
