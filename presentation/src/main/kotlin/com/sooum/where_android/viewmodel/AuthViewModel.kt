@@ -50,12 +50,6 @@ class AuthViewModel @Inject constructor(
     private val _name = MutableStateFlow("")
     val name: StateFlow<String> = _name.asStateFlow()
 
-    private val _accessToken = MutableStateFlow("")
-    val accessToken: StateFlow<String> = _accessToken.asStateFlow()
-
-    private val _refreshToken = MutableStateFlow("")
-    val refreshToken: StateFlow<String> = _refreshToken.asStateFlow()
-
     private val _profileImage = MutableStateFlow("")
     val profileImage: StateFlow<String> = _profileImage.asStateFlow()
 

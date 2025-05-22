@@ -61,6 +61,7 @@ dependencies {
     //Hilt
     implementation(libs.hilt)
     implementation(libs.firebase.messaging)
+    implementation(files("oauth-5.10.0.aar"))
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
@@ -111,4 +112,6 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.12.0")
 
     implementation("com.github.skydoves:balloon:1.6.12")
+    implementation("com.airbnb.android:lottie:6.3.0")
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }

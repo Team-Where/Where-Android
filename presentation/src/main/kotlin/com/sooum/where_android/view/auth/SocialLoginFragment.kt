@@ -1,6 +1,9 @@
 package com.sooum.where_android.view.auth
 
+import android.app.Activity.RESULT_CANCELED
+import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Paint
 import android.os.Build
@@ -9,10 +12,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.kakao.sdk.user.UserApiClient
+import com.navercorp.nid.NaverIdLoginSDK
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentSocialLoginBinding
 import com.sooum.where_android.view.auth.signup.AgreementFragment
@@ -24,6 +29,22 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SocialLoginFragment : AuthBaseFragment() {
     private lateinit var binding: FragmentSocialLoginBinding
+
+    private val launcher = registerForActivityResult<Intent, ActivityResult>(ActivityResultContracts.StartActivityForResult()) { result ->
+        when(result.resultCode) {
+            RESULT_OK -> {
+               Log.d("SocialLoginFragment",NaverIdLoginSDK.getAccessToken().toString())
+            }
+            RESULT_CANCELED -> {
+                // 실패 or 에러
+                val errorCode = NaverIdLoginSDK.getLastErrorCode().code
+                val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
+            }
+        }
+    }
+
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +67,9 @@ class SocialLoginFragment : AuthBaseFragment() {
 
             imgKakao.setOnClickListener {
                 kakaoLogin(requireContext())
+            }
+            imageNaver.setOnClickListener {
+                NaverIdLoginSDK.authenticate(requireContext(), launcher)
             }
         }
         observeKakaoLoginResult()

@@ -10,6 +10,7 @@ import coil3.memory.MemoryCache
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
 import com.kakao.sdk.common.KakaoSdk
+import com.navercorp.nid.NaverIdLoginSDK
 import com.sooum.where_android.view.LocalAlarmResultActivity
 import com.sooum.where_android.view.MapShareResultActivity
 import com.sooum.where_android.view.SchemeResultActivity
@@ -27,6 +28,12 @@ class WhereApp : Application(), SingletonImageLoader.Factory {
     override fun onCreate() {
         super.onCreate()
         KakaoSdk.init(this, "7e44ff67eb385fa512ec1019d33a0f1b")
+        NaverIdLoginSDK.initialize(
+            this,
+            "YOUR_CLIENT_ID",        // 네이버 개발자 센터에서 발급
+            "YOUR_CLIENT_SECRET",    // 네이버 개발자 센터에서 발급
+            "YOUR_APP_NAME"          // 사용자에게 보여질 앱 이름
+        )
 
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
