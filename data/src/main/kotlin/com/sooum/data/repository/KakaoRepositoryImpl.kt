@@ -26,12 +26,52 @@ class KakaoRepositoryImpl @Inject constructor(
         refreshToken: String
     ): Flow<ApiResult<KakaoSignUpResult>> {
         return safeFlow {
-            kakaoApi.kakaoLogin(
+            val response = kakaoApi.kakaoLogin(
                 authorization = accessToken,
                 refreshToken = refreshToken
             )
+
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    val access = response.headers()["Authorization"]?.removePrefix("Bearer ")?.trim()
+                    val refresh = response.headers()["Refresh-Token"]
+
+                    access?.let { appManageDataStore.saveAccessToken(it) }
+                    refresh?.let { appManageDataStore.saveRefreshToken(it) }
+                }
+            }
+
+            response
         }
     }
+
+
+    override suspend fun naverLogin(
+        accessToken: String,
+        refreshToken: String
+    ): Flow<ApiResult<KakaoSignUpResult>> {
+        return safeFlow {
+            val response = kakaoApi.naverLogin(
+                authorization = accessToken,
+                refreshToken = refreshToken
+            )
+
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    val access = response.headers()["Authorization"]?.removePrefix("Bearer ")?.trim()
+                    val refresh = response.headers()["Refresh-Token"]
+
+                    access?.let { appManageDataStore.saveAccessToken(it) }
+                    refresh?.let { appManageDataStore.saveRefreshToken(it) }
+                }
+            }
+
+            response
+        }
+    }
+
 
     override suspend fun putNickName(userId: Int, nickName: String): Flow<ApiResult<Unit>> {
         val request = NameOnlyRequest(nickName)

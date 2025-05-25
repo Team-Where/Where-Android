@@ -34,6 +34,8 @@ class SocialLoginFragment : AuthBaseFragment() {
         when(result.resultCode) {
             RESULT_OK -> {
                Log.d("SocialLoginFragment",NaverIdLoginSDK.getAccessToken().toString())
+                Log.d("SocialLoginFragment",NaverIdLoginSDK.getRefreshToken().toString())
+                handleNaverToken(NaverIdLoginSDK.getAccessToken().toString(), NaverIdLoginSDK.getRefreshToken().toString())
             }
             RESULT_CANCELED -> {
                 // 실패 or 에러
@@ -42,9 +44,6 @@ class SocialLoginFragment : AuthBaseFragment() {
             }
         }
     }
-
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,6 +73,7 @@ class SocialLoginFragment : AuthBaseFragment() {
         }
         observeKakaoLoginResult()
 
+        observeNaverLoginResult()
     }
 
     private fun checkNotificationPermission() {
@@ -128,6 +128,10 @@ class SocialLoginFragment : AuthBaseFragment() {
         kakaoViewModel.kakaoLogin(accessToken, refreshToken)
     }
 
+    private fun handleNaverToken(accessToken: String, refreshToken: String) {
+        kakaoViewModel.naverLogin(accessToken, refreshToken)
+    }
+
 
     private fun observeKakaoLoginResult() {
         lifecycleScope.launch {
@@ -155,6 +159,39 @@ class SocialLoginFragment : AuthBaseFragment() {
 
                     is ApiResult.Fail -> {
                         loadingAlertProvider.endLoadingWithMessage("카카오 로그인 실패")
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun observeNaverLoginResult() {
+        lifecycleScope.launch {
+            kakaoViewModel.naverSignUpState.collect { result ->
+                when (result) {
+                    is ApiResult.Loading -> {
+                        loadingAlertProvider.startLoading()
+                    }
+                    is ApiResult.Success -> {
+                        loadingAlertProvider.endLoading()
+                        val data = result.data
+                        if (data.signUp) {
+                            val bundle = Bundle().apply {
+                                putInt("userId", data.userId)
+                            }
+                            val fragment = KakaoProfileSettingFragment().apply {
+                                arguments = bundle
+                            }
+                            navigateTo(fragment)
+                        } else {
+                            showToast("네이버 로그인 성공")
+                            (activity as AuthActivity).nextActivity()
+                        }
+                    }
+
+                    is ApiResult.Fail -> {
+                        loadingAlertProvider.endLoadingWithMessage("네이버 로그인 실패")
                     }
                     else -> {}
                 }

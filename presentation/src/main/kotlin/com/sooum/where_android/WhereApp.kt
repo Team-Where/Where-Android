@@ -30,9 +30,9 @@ class WhereApp : Application(), SingletonImageLoader.Factory {
         KakaoSdk.init(this, "7e44ff67eb385fa512ec1019d33a0f1b")
         NaverIdLoginSDK.initialize(
             this,
-            "YOUR_CLIENT_ID",        // 네이버 개발자 센터에서 발급
-            "YOUR_CLIENT_SECRET",    // 네이버 개발자 센터에서 발급
-            "YOUR_APP_NAME"          // 사용자에게 보여질 앱 이름
+            "SGZLJ93ZEb9rltMykhEO",        // 네이버 개발자 센터에서 발급
+            "OmeoWcwqWz",    // 네이버 개발자 센터에서 발급
+            "어디"          // 사용자에게 보여질 앱 이름
         )
 
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {

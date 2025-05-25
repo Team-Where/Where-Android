@@ -20,6 +20,12 @@ interface KakaoApi {
         @Header("refreshToken") refreshToken: String
     ): Response<KakaoSignUpResult>
 
+    @POST("api/user/naver/login")
+    suspend fun naverLogin(
+        @Header("Authorization") authorization: String,
+        @Header("refreshToken") refreshToken: String
+    ): Response<KakaoSignUpResult>
+
     @PUT("api/user/{userId}/nickname")
     suspend fun putNickName(
         @Path("userId") userId: Int,
