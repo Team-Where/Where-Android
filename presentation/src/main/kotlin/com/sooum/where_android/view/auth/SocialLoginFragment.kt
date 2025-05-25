@@ -1,6 +1,9 @@
 package com.sooum.where_android.view.auth
 
+import android.app.Activity.RESULT_CANCELED
+import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Paint
 import android.os.Build
@@ -9,10 +12,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.kakao.sdk.user.UserApiClient
+import com.navercorp.nid.NaverIdLoginSDK
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentSocialLoginBinding
 import com.sooum.where_android.view.auth.signup.AgreementFragment
@@ -24,6 +29,21 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SocialLoginFragment : AuthBaseFragment() {
     private lateinit var binding: FragmentSocialLoginBinding
+
+    private val launcher = registerForActivityResult<Intent, ActivityResult>(ActivityResultContracts.StartActivityForResult()) { result ->
+        when(result.resultCode) {
+            RESULT_OK -> {
+               Log.d("SocialLoginFragment",NaverIdLoginSDK.getAccessToken().toString())
+                Log.d("SocialLoginFragment",NaverIdLoginSDK.getRefreshToken().toString())
+                handleNaverToken(NaverIdLoginSDK.getAccessToken().toString(), NaverIdLoginSDK.getRefreshToken().toString())
+            }
+            RESULT_CANCELED -> {
+                // 실패 or 에러
+                val errorCode = NaverIdLoginSDK.getLastErrorCode().code
+                val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,9 +67,13 @@ class SocialLoginFragment : AuthBaseFragment() {
             imgKakao.setOnClickListener {
                 kakaoLogin(requireContext())
             }
+            imageNaver.setOnClickListener {
+                NaverIdLoginSDK.authenticate(requireContext(), launcher)
+            }
         }
         observeKakaoLoginResult()
 
+        observeNaverLoginResult()
     }
 
     private fun checkNotificationPermission() {
@@ -104,6 +128,10 @@ class SocialLoginFragment : AuthBaseFragment() {
         kakaoViewModel.kakaoLogin(accessToken, refreshToken)
     }
 
+    private fun handleNaverToken(accessToken: String, refreshToken: String) {
+        kakaoViewModel.naverLogin(accessToken, refreshToken)
+    }
+
 
     private fun observeKakaoLoginResult() {
         lifecycleScope.launch {
@@ -131,6 +159,39 @@ class SocialLoginFragment : AuthBaseFragment() {
 
                     is ApiResult.Fail -> {
                         loadingAlertProvider.endLoadingWithMessage("카카오 로그인 실패")
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun observeNaverLoginResult() {
+        lifecycleScope.launch {
+            kakaoViewModel.naverSignUpState.collect { result ->
+                when (result) {
+                    is ApiResult.Loading -> {
+                        loadingAlertProvider.startLoading()
+                    }
+                    is ApiResult.Success -> {
+                        loadingAlertProvider.endLoading()
+                        val data = result.data
+                        if (data.signUp) {
+                            val bundle = Bundle().apply {
+                                putInt("userId", data.userId)
+                            }
+                            val fragment = KakaoProfileSettingFragment().apply {
+                                arguments = bundle
+                            }
+                            navigateTo(fragment)
+                        } else {
+                            showToast("네이버 로그인 성공")
+                            (activity as AuthActivity).nextActivity()
+                        }
+                    }
+
+                    is ApiResult.Fail -> {
+                        loadingAlertProvider.endLoadingWithMessage("네이버 로그인 실패")
                     }
                     else -> {}
                 }
