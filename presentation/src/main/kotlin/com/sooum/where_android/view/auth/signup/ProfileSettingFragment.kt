@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.auth.signup
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -53,6 +54,8 @@ class ProfileSettingFragment : AuthBaseFragment() {
                             is ImageAddType.Default -> {
                                 // 기본 이미지 적용
                                 binding.imageProfile.setImageResource(R.drawable.image_profile_default_cover)
+                                val defaultImageUri = Uri.parse("android.resource://${requireContext().packageName}/${R.drawable.image_profile_default_cover}")
+                                authViewModel.setProfileImage(defaultImageUri.toString())
                             }
 
                             is ImageAddType.Content -> {
