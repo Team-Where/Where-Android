@@ -1,14 +1,17 @@
 package com.sooum.where_android.view.auth.signup
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.sooum.domain.model.ApiResult
+import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentEmailVerificationBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -17,6 +20,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class EmailVerificationFragment : AuthBaseFragment() {
     private lateinit var binding: FragmentEmailVerificationBinding
+    private var countDownTimer: CountDownTimer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,14 +43,23 @@ class EmailVerificationFragment : AuthBaseFragment() {
             imageBack.setOnClickListener {
                 popBackStack()
             }
-            btnEmail.setOnClickListener {
+            btnEmailCode.setOnClickListener {
                 authViewModel.getEmailAuth(binding.editTextEmail.text.toString().trim())
+                startTimer()
             }
+
             editTextEmail.doAfterTextChanged { email ->
+                val input = email.toString()
                 authViewModel.onEmailVerifyInputChanged(
-                    email = email.toString(),
+                    email = input,
                     code = editTextCode.text.toString()
                 )
+
+                if (input.isNotEmpty() && !isValidEmail(input)) {
+                    binding.textEmailWrong.visibility = View.VISIBLE
+                } else {
+                    binding.textEmailWrong.visibility = View.INVISIBLE
+                }
             }
 
             editTextCode.doAfterTextChanged { code ->
@@ -60,6 +73,11 @@ class EmailVerificationFragment : AuthBaseFragment() {
         observeEmailRequestResult()
         observeEmailVerificationResult()
         setUpBtnObserver()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        countDownTimer?.cancel()
     }
 
     private fun observeEmailRequestResult() {
@@ -126,4 +144,26 @@ class EmailVerificationFragment : AuthBaseFragment() {
             }
         }
     }
+
+    private fun startTimer(durationMillis: Long = 10 * 60 * 1000L) {
+        countDownTimer?.cancel()
+        countDownTimer = object : CountDownTimer(durationMillis, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val minutes = (millisUntilFinished / 1000) / 60
+                val seconds = (millisUntilFinished / 1000) % 60
+                binding.textTimer.text = String.format("%02d:%02d", minutes, seconds)
+            }
+
+            override fun onFinish() {
+                binding.textTimer.text = "00:00"
+                binding.textTimeOver.visibility = View.VISIBLE
+                binding.textTimer.setTextColor(ContextCompat.getColor(requireContext(), R.color.red_scale_700))
+            }
+        }.start()
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
 }

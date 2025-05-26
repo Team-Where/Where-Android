@@ -56,8 +56,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_email" />
 
+    <TextView
+        android:id="@+id/text_email_wrong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#EF4444"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:text="잘못된 이메일 형식입니다."
+        android:fontFamily="@font/pretend_regular"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_email"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"/>
+
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_email"
+        android:id="@+id/btn_email_code"
         android:layout_width="84dp"
         android:layout_height="28dp"
         android:background="@drawable/shape_rounded_black"
@@ -79,7 +92,7 @@
         android:textColor="#374151"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_text_email"
+        app:layout_constraintTop_toBottomOf="@id/text_email_wrong"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
@@ -95,6 +108,31 @@
         android:layout_marginTop="10dp"
         android:padding="16dp"
         android:layout_marginEnd="15dp"/>
+
+    <TextView
+        android:id="@+id/text_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="03:00"
+        android:textSize="16sp"
+        android:textColor="@color/main_color"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_password" />
+
+    <TextView
+        android:id="@+id/text_time_over"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#EF4444"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:text="인증 시간이 만료되었습니다."
+        android:fontFamily="@font/pretend_regular"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_code"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/nextBtn"
@@ -113,5 +151,7 @@
         android:layout_marginEnd="15dp"
         tools:ignore="HardcodedText"
         android:layout_marginBottom="40dp" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
