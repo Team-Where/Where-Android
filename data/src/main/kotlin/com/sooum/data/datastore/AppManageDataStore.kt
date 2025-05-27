@@ -29,6 +29,8 @@ class AppManageDataStore @Inject constructor(
         private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         private val KAKAO_ACCESS_TOKEN = stringPreferencesKey("kakao_access_token")
         private val KAKAO_REFRESH_TOKEN = stringPreferencesKey("kakao_refresh_token")
+        private val NAVER_ACCESS_TOKEN = stringPreferencesKey("naver_access_token")
+        private val NAVER_REFRESH_TOKEN = stringPreferencesKey("naver_refresh_token")
         private val FIRST_LAUNCH = booleanPreferencesKey("first_launch")
     }
 
@@ -63,21 +65,21 @@ class AppManageDataStore @Inject constructor(
         }
     }
 
-    suspend fun saveKakaoRefreshToken(token: String) {
+    suspend fun saveNaverRefreshToken(token: String) {
         appDataStore.edit { preferences ->
             preferences[KAKAO_REFRESH_TOKEN] = token
         }
     }
 
-    fun getKakaoAccessToken(): Flow<String?> {
-        return appDataStore.data.map { preferences ->
-            preferences[KAKAO_ACCESS_TOKEN]
+    suspend fun saveNaverAccessToken(token: String) {
+        appDataStore.edit { preferences ->
+            preferences[NAVER_ACCESS_TOKEN] = token
         }
     }
 
-    fun getKakaoRefreshToken(): Flow<String?> {
-        return appDataStore.data.map { preferences ->
-            preferences[KAKAO_REFRESH_TOKEN]
+    suspend fun saveKakaoRefreshToken(token: String) {
+        appDataStore.edit { preferences ->
+            preferences[NAVER_REFRESH_TOKEN] = token
         }
     }
 

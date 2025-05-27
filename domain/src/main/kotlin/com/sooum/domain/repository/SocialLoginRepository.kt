@@ -17,6 +17,14 @@ interface SocialLoginRepository {
     ): Flow<ApiResult<KakaoSignUpResult>>
 
     /**
+     * 카카오 로그인을 한다
+     */
+    suspend fun naverLogin(
+        accessToken: String,
+        refreshToken: String
+    ): Flow<ApiResult<KakaoSignUpResult>>
+
+    /**
      * 닉네임을 변경한다
      */
     suspend fun putNickName(

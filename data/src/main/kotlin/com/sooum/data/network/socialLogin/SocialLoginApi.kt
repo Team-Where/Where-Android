@@ -14,8 +14,15 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface SocialLoginApi {
+
     @POST("api/user/kakao/login")
     suspend fun kakaoLogin(
+        @Header("Authorization") authorization: String,
+        @Header("refreshToken") refreshToken: String
+    ): Response<KakaoSignUpResult>
+
+    @POST("api/user/naver/login")
+    suspend fun naverLogin(
         @Header("Authorization") authorization: String,
         @Header("refreshToken") refreshToken: String
     ): Response<KakaoSignUpResult>
