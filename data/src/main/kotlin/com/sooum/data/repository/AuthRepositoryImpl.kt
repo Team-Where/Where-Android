@@ -12,6 +12,7 @@ import com.sooum.domain.model.EmailVerifyResult
 import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.LoginResult
 import com.sooum.domain.model.PostProfileResult
+import com.sooum.domain.model.PostRefreshTokenResult
 import com.sooum.domain.model.SignUpResult
 import com.sooum.domain.repository.AuthRepository
 import jakarta.inject.Inject
@@ -86,6 +87,14 @@ class AuthRepositoryImpl @Inject constructor(
         val request = EmailVerifyRequest(email, code)
         return safeFlow { authApi.emailVerify(request)}
 
+    }
+
+    override suspend fun postRefreshToken(
+        refreshToken: String
+    ): Flow<ApiResult<PostRefreshTokenResult>> {
+       return safeFlow {
+         authApi.refreshToken(refreshToken = refreshToken)
+       }
     }
 
 }

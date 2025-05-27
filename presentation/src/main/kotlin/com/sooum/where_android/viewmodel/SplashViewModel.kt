@@ -36,7 +36,7 @@ class SplashViewModel @Inject constructor(
                 delay(3000L)
             }
             val checkLogin = async {
-                //TODO 환님 => 로그인 되어있는지 확인(토큰 확인 등)
+
                 false
             }
             val checkAppUpdate = async {

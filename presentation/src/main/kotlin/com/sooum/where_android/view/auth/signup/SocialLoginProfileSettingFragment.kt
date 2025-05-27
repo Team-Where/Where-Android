@@ -10,14 +10,13 @@ import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.ImageAddType
 import com.sooum.where_android.R
-import com.sooum.where_android.databinding.FragmentProfileSettingBinding
+import com.sooum.where_android.databinding.FragmentSocialLoginProfileSettingBinding
 import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
 import kotlinx.coroutines.launch
-import java.io.File
 
-class KakaoProfileSettingFragment : AuthBaseFragment() {
-    private lateinit var binding : FragmentProfileSettingBinding
+class SocialLoginProfileSettingFragment : AuthBaseFragment() {
+    private lateinit var binding : FragmentSocialLoginProfileSettingBinding
     private lateinit var selectedImageUri: Uri
     private val userId: Int by lazy {
         requireArguments().getInt("userId")
@@ -27,7 +26,7 @@ class KakaoProfileSettingFragment : AuthBaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentProfileSettingBinding.inflate(inflater, container, false)
+        binding = FragmentSocialLoginProfileSettingBinding.inflate(inflater, container, false)
 
         binding.imageCamera.setOnClickListener {
             val dialog = ImagePickerDialogFragment.getInstance(
@@ -53,7 +52,7 @@ class KakaoProfileSettingFragment : AuthBaseFragment() {
             dialog.show(parentFragmentManager, ImagePickerDialogFragment.TAG)
         }
 
-        binding.nextBtn.setOnClickListener {
+        binding.btnComplete.setOnClickListener {
             kakaoViewModel.putNickName(userId, binding.editNickname.text.toString())
             kakaoViewModel.updateProfile(userId, selectedImageUri)
         }

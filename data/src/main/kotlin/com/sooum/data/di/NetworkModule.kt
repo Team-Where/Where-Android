@@ -4,7 +4,7 @@ import com.sooum.data.network.NullOnEmptyConverterFactory
 import com.sooum.data.network.auth.AuthApi
 import com.sooum.data.network.comment.CommentApi
 import com.sooum.data.network.friend.FriendApi
-import com.sooum.data.network.kakao.KakaoApi
+import com.sooum.data.network.socialLogin.SocialLoginApi
 import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.place.PlaceApi
 import com.sooum.data.network.schedule.ScheduleApi
@@ -25,6 +25,10 @@ import javax.inject.Singleton
 @Retention(AnnotationRetention.BINARY)
 annotation class WhereRetrofit
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class NoAuthRetrofit
+
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -40,9 +44,30 @@ object NetworkModule {
             .build()
     }
 
+    @WhereRetrofit
+    @Provides
+    fun provideAuthRetrofit(
+        tokenAuthenticator: TokenAuthenticator
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://audiwhere.shop")
+            .client(
+                OkHttpClient.Builder()
+                    .authenticator(tokenAuthenticator)
+                    .build()
+            )
+            .addConverterFactory(
+                NullOnEmptyConverterFactory()
+            )
+            .addConverterFactory(
+                Json.asConverterFactory("application/json; charset=UTF8".toMediaType())
+            )
+            .build()
+    }
+
     @Provides
     @Singleton
-    @WhereRetrofit
+    @NoAuthRetrofit
     fun provideRetrofit(
         okHttpClient: OkHttpClient
     ): Retrofit =
@@ -100,7 +125,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideAuthApi(
-        @WhereRetrofit retrofit: Retrofit
+        @NoAuthRetrofit retrofit: Retrofit
     ): AuthApi {
         return retrofit.create(AuthApi::class.java)
     }
@@ -108,8 +133,8 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideKakaoApi(
-        @WhereRetrofit retrofit: Retrofit
-    ): KakaoApi {
-        return retrofit.create(KakaoApi::class.java)
+        @NoAuthRetrofit retrofit: Retrofit
+    ): SocialLoginApi {
+        return retrofit.create(SocialLoginApi::class.java)
     }
 }
