@@ -1,4 +1,4 @@
-package com.sooum.data.network.kakao
+package com.sooum.data.network.socialLogin
 
 import com.sooum.data.network.auth.request.NameOnlyRequest
 import com.sooum.domain.model.KakaoSignUpResult
@@ -13,7 +13,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 
-interface KakaoApi {
+interface SocialLoginApi {
     @POST("api/user/kakao/login")
     suspend fun kakaoLogin(
         @Header("Authorization") authorization: String,

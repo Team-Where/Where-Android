@@ -17,7 +17,7 @@ import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentSocialLoginBinding
 import com.sooum.where_android.view.auth.signup.AgreementFragment
 import com.sooum.where_android.view.auth.signup.AuthBaseFragment
-import com.sooum.where_android.view.auth.signup.KakaoProfileSettingFragment
+import com.sooum.where_android.view.auth.signup.SocialLoginProfileSettingFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -119,7 +119,7 @@ class SocialLoginFragment : AuthBaseFragment() {
                             val bundle = Bundle().apply {
                                 putInt("userId", data.userId)
                             }
-                            val fragment = KakaoProfileSettingFragment().apply {
+                            val fragment = SocialLoginProfileSettingFragment().apply {
                                 arguments = bundle
                             }
                             navigateTo(fragment)

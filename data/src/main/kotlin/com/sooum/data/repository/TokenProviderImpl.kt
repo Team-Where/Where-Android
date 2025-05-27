@@ -1,7 +1,7 @@
 package com.sooum.data.repository
 
 import com.sooum.data.datastore.AppManageDataStore
-import com.sooum.data.datastore.TokenProvider
+import com.sooum.data.network.TokenProvider
 import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.flow.firstOrNull

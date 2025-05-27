@@ -1,6 +1,6 @@
 package com.sooum.data.di
 
-import com.sooum.data.datastore.TokenProvider
+import com.sooum.data.network.TokenProvider
 import com.sooum.data.network.auth.AuthApi
 import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking

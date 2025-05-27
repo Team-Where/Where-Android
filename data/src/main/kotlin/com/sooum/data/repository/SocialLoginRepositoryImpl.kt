@@ -2,12 +2,12 @@ package com.sooum.data.repository
 
 import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.data.network.auth.request.NameOnlyRequest
-import com.sooum.data.network.kakao.KakaoApi
+import com.sooum.data.network.socialLogin.SocialLoginApi
 import com.sooum.data.network.safeFlow
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.PostProfileResult
-import com.sooum.domain.repository.KakaoRepository
+import com.sooum.domain.repository.SocialLoginRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -16,17 +16,17 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
-class KakaoRepositoryImpl @Inject constructor(
-    private val kakaoApi: KakaoApi,
+class SocialLoginRepositoryImpl @Inject constructor(
+    private val socialLoginApi: SocialLoginApi,
     private val appManageDataStore: AppManageDataStore
-) : KakaoRepository {
+) : SocialLoginRepository {
 
     override suspend fun kakaoLogin(
         accessToken: String,
         refreshToken: String
     ): Flow<ApiResult<KakaoSignUpResult>> {
         return safeFlow {
-            kakaoApi.kakaoLogin(
+            socialLoginApi.kakaoLogin(
                 authorization = accessToken,
                 refreshToken = refreshToken
             )
@@ -36,7 +36,7 @@ class KakaoRepositoryImpl @Inject constructor(
     override suspend fun putNickName(userId: Int, nickName: String): Flow<ApiResult<Unit>> {
         val request = NameOnlyRequest(nickName)
         return safeFlow {
-            kakaoApi.putNickName(
+            socialLoginApi.putNickName(
                 userId = userId,
                 request
             )
@@ -55,7 +55,7 @@ class KakaoRepositoryImpl @Inject constructor(
                     body = requestFile
                 )
 
-                kakaoApi.postProfileImage(userId, multipartBody)
+                socialLoginApi.postProfileImage(userId, multipartBody)
             }
         } else {
             flowOf(ApiResult.Success(PostProfileResult("")))

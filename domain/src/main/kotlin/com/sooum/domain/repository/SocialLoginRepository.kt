@@ -6,7 +6,7 @@ import com.sooum.domain.model.PostProfileResult
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
-interface KakaoRepository {
+interface SocialLoginRepository {
 
     /**
      * 카카오 로그인을 한다

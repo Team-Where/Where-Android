@@ -100,9 +100,3 @@ class AppManageDataStore @Inject constructor(
         }
     }
 }
-
-interface TokenProvider {
-    fun getAccessToken(): String?
-    fun getRefreshToken(): String?
-    fun saveAccessToken(token: String)
-}

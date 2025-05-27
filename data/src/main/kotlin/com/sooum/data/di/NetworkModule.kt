@@ -4,7 +4,7 @@ import com.sooum.data.network.NullOnEmptyConverterFactory
 import com.sooum.data.network.auth.AuthApi
 import com.sooum.data.network.comment.CommentApi
 import com.sooum.data.network.friend.FriendApi
-import com.sooum.data.network.kakao.KakaoApi
+import com.sooum.data.network.socialLogin.SocialLoginApi
 import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.place.PlaceApi
 import com.sooum.data.network.schedule.ScheduleApi
@@ -134,7 +134,7 @@ object NetworkModule {
     @Singleton
     fun provideKakaoApi(
         @NoAuthRetrofit retrofit: Retrofit
-    ): KakaoApi {
-        return retrofit.create(KakaoApi::class.java)
+    ): SocialLoginApi {
+        return retrofit.create(SocialLoginApi::class.java)
     }
 }
