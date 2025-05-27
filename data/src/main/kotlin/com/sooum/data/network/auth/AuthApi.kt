@@ -9,6 +9,7 @@ import com.sooum.domain.model.EmailVerifyResult
 import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.LoginResult
 import com.sooum.domain.model.PostProfileResult
+import com.sooum.domain.model.PostRefreshTokenResult
 import com.sooum.domain.model.SignUpResult
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -49,5 +50,10 @@ interface AuthApi {
     suspend fun emailVerify(
         @Body data: EmailVerifyRequest
     ): Response<String>
+
+    @POST("api/token/refresh")
+    suspend fun refreshToken(
+        @Query("refreshToken") refreshToken: String
+    ) : Response<PostRefreshTokenResult>
 
 }

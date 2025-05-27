@@ -1,11 +1,13 @@
 package com.sooum.data.di
 
+import com.sooum.data.datastore.TokenProvider
 import com.sooum.data.repository.AuthRepositoryImpl
 import com.sooum.data.repository.FriendRepositoryImpl
 import com.sooum.data.repository.KakaoRepositoryImpl
 import com.sooum.data.repository.MeetDetailCommentRepositoryImpl
 import com.sooum.data.repository.MeetDetailPlaceRepositoryImpl
 import com.sooum.data.repository.MeetDetailRepositoryImpl
+import com.sooum.data.repository.TokenProviderImpl
 import com.sooum.domain.repository.AuthRepository
 import com.sooum.domain.repository.FriendRepository
 import com.sooum.domain.repository.KakaoRepository
@@ -58,4 +60,10 @@ abstract class RepositoryModule {
     abstract fun bindKakaoRepository(
         impl: KakaoRepositoryImpl
     ): KakaoRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTokenProvider(
+        impl: TokenProviderImpl
+    ): TokenProvider
 }
