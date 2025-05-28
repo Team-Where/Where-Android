@@ -38,56 +38,56 @@ class PasswordFragment : AuthBaseFragment() {
         binding.imageBack.setOnClickListener {
             popBackStack()
         }
-        binding.editTextEmail.setText(authViewModel.email.value)
+        binding.editTextEmail.setText(authViewModel.email)
 
-        setupListeners()
-        setupObservers()
+//        setupListeners()
+//        setupObservers()
     }
 
-    private fun setupObservers() {
-        lifecycleScope.launch {
-            authViewModel.isValidPassword.collectLatest { isValid ->
-                if (binding.editTextPassword.text.isNullOrEmpty()) {
-                    binding.textPasswordVerification.text = "영문+숫자+특수문자(!,~,@) 조합 8~32자"
-                } else if (isValid == false) {
-                    binding.textPasswordVerification.text = "조건에 부합하지 않습니다."
-                    binding.textPasswordVerification.setTextColor(Color.RED)
-                } else {
-                    binding.textPasswordVerification.text = ""
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            authViewModel.isPasswordMatch.collectLatest { isMatch ->
-                if (binding.editTextPasswordRecheck.text.isNullOrEmpty()) {
-                    binding.textPasswordRepeat.text = "비밀번호를 한 번 더 입력해주세요."
-                } else if (isMatch == false) {
-                    binding.textPasswordRepeat.text = "비밀번호가 일치하지 않습니다."
-                    binding.textPasswordRepeat.setTextColor(Color.RED)
-                } else {
-                    binding.textPasswordRepeat.text = ""
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.isNextButtonEnabled.collectLatest { isEnabled ->
-                    binding.nextBtn.isEnabled = isEnabled
-                }
-            }
-        }
-    }
-
-
-    private fun setupListeners() {
-        binding.editTextPassword.addTextChangedListener { authViewModel.onPasswordChanged(it.toString()) }
-        binding.editTextPasswordRecheck.addTextChangedListener {
-            authViewModel.onRePasswordChanged(
-                it.toString()
-            )
-        }
-        binding.editTextEmail.addTextChangedListener { authViewModel.onEmailChanged(it.toString()) }
-    }
+//    private fun setupObservers() {
+//        lifecycleScope.launch {
+//            authViewModel.isValidPassword.collectLatest { isValid ->
+//                if (binding.editTextPassword.text.isNullOrEmpty()) {
+//                    binding.textPasswordVerification.text = "영문+숫자+특수문자(!,~,@) 조합 8~32자"
+//                } else if (isValid == false) {
+//                    binding.textPasswordVerification.text = "조건에 부합하지 않습니다."
+//                    binding.textPasswordVerification.setTextColor(Color.RED)
+//                } else {
+//                    binding.textPasswordVerification.text = ""
+//                }
+//            }
+//        }
+//
+//        lifecycleScope.launch {
+//            authViewModel.isPasswordMatch.collectLatest { isMatch ->
+//                if (binding.editTextPasswordRecheck.text.isNullOrEmpty()) {
+//                    binding.textPasswordRepeat.text = "비밀번호를 한 번 더 입력해주세요."
+//                } else if (isMatch == false) {
+//                    binding.textPasswordRepeat.text = "비밀번호가 일치하지 않습니다."
+//                    binding.textPasswordRepeat.setTextColor(Color.RED)
+//                } else {
+//                    binding.textPasswordRepeat.text = ""
+//                }
+//            }
+//        }
+//
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                authViewModel.isNextButtonEnabled.collectLatest { isEnabled ->
+//                    binding.nextBtn.isEnabled = isEnabled
+//                }
+//            }
+//        }
+//    }
+//
+//
+//    private fun setupListeners() {
+//        binding.editTextPassword.addTextChangedListener { authViewModel.onPasswordChanged(it.toString()) }
+//        binding.editTextPasswordRecheck.addTextChangedListener {
+//            authViewModel.onRePasswordChanged(
+//                it.toString()
+//            )
+//        }
+//        binding.editTextEmail.addTextChangedListener { authViewModel.onEmailChanged(it.toString()) }
+//    }
 }

@@ -28,8 +28,8 @@ class ProfileSettingFragment : AuthBaseFragment() {
     ): View? {
         binding = FragmentProfileSettingBinding.inflate(inflater, container, false)
 
-        setupListeners()
-        setUpObservers()
+//        setupListeners()
+//        setUpObservers()
 
         return binding.root
     }
@@ -75,17 +75,17 @@ class ProfileSettingFragment : AuthBaseFragment() {
         }
     }
 
-    private fun setUpObservers() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.isNextButtonEnabled.collectLatest { isEnabled ->
-                    binding.nextBtn.isEnabled = isEnabled
-                }
-            }
-        }
-    }
-
-    private fun setupListeners() {
-        binding.editNickname.addTextChangedListener { authViewModel.onNameChanged(it.toString()) }
-    }
+//    private fun setUpObservers() {
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                authViewModel.isNextButtonEnabled.collectLatest { isEnabled ->
+//                    binding.nextBtn.isEnabled = isEnabled
+//                }
+//            }
+//        }
+//    }
+//
+//    private fun setupListeners() {
+//        binding.editNickname.addTextChangedListener { authViewModel.onNameChanged(it.toString()) }
+//    }
 }

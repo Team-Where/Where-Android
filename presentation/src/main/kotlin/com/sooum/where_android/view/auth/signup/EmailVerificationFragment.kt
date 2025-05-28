@@ -51,8 +51,7 @@ class EmailVerificationFragment : AuthBaseFragment() {
             editTextEmail.doAfterTextChanged { email ->
                 val input = email.toString()
                 authViewModel.onEmailVerifyInputChanged(
-                    email = input,
-                    code = editTextCode.text.toString()
+                    input, editTextCode.text.toString()
                 )
 
                 if (input.isNotEmpty() && !isValidEmail(input)) {
@@ -64,15 +63,14 @@ class EmailVerificationFragment : AuthBaseFragment() {
 
             editTextCode.doAfterTextChanged { code ->
                 authViewModel.onEmailVerifyInputChanged(
-                    email = editTextEmail.text.toString(),
-                    code = code.toString()
+                   editTextEmail.text.toString(), code.toString()
                 )
             }
         }
 
         observeEmailRequestResult()
         observeEmailVerificationResult()
-        setUpBtnObserver()
+        setUpNextButtonStateObserver()
     }
 
     override fun onDestroyView() {
@@ -135,16 +133,6 @@ class EmailVerificationFragment : AuthBaseFragment() {
         }
     }
 
-    private fun setUpBtnObserver() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.isEmailVerifyNextEnabled.collectLatest { isEnabled ->
-                    binding.nextBtn.isEnabled = isEnabled
-                }
-            }
-        }
-    }
-
     private fun startTimer(durationMillis: Long = 10 * 60 * 1000L) {
         countDownTimer?.cancel()
         countDownTimer = object : CountDownTimer(durationMillis, 1000) {
@@ -164,6 +152,19 @@ class EmailVerificationFragment : AuthBaseFragment() {
 
     private fun isValidEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    private fun setUpNextButtonStateObserver() {
+        with(binding) {
+            val updateNextButtonState = {
+                val email = editTextEmail.text.toString().trim()
+                val code = editTextCode.text.toString().trim()
+                nextBtn.isEnabled = isValidEmail(email) && code.isNotEmpty()
+            }
+
+            editTextEmail.doAfterTextChanged { updateNextButtonState() }
+            editTextCode.doAfterTextChanged { updateNextButtonState() }
+        }
     }
 
 }

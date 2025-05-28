@@ -28,7 +28,7 @@ class SignUpCompleteFragment : AuthBaseFragment() {
         }
 
         binding.tvTitle.text =
-            String.format(getString(R.string.signup_complete), authViewModel.name.value)
+            String.format(getString(R.string.signup_complete), authViewModel.name)
 
         binding.nextBtn.setOnClickListener {
            authViewModel.signUp()
