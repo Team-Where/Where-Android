@@ -74,7 +74,7 @@ class AgreementFragment : AuthBaseFragment() {
     }
 
     private fun updateNextButtonBackground() {
-        val allChecked = binding.checkboxAgreeAll.isChecked
-        binding.nextBtn.isEnabled = allChecked
+        val isRequiredChecked = isRequiredChecked()
+        binding.nextBtn.isEnabled = isRequiredChecked
     }
 }

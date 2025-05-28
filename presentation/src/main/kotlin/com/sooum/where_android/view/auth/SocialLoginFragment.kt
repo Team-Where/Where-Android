@@ -180,7 +180,7 @@ class SocialLoginFragment : AuthBaseFragment() {
                             val bundle = Bundle().apply {
                                 putInt("userId", data.userId)
                             }
-                            val fragment = KakaoProfileSettingFragment().apply {
+                            val fragment = SocialLoginProfileSettingFragment().apply {
                                 arguments = bundle
                             }
                             navigateTo(fragment)
