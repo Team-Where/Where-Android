@@ -28,9 +28,6 @@ class ProfileSettingFragment : AuthBaseFragment() {
     ): View? {
         binding = FragmentProfileSettingBinding.inflate(inflater, container, false)
 
-//        setupListeners()
-//        setUpObservers()
-
         return binding.root
     }
 
@@ -38,9 +35,15 @@ class ProfileSettingFragment : AuthBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
+            nextBtn.isEnabled = !editNickname.text.isNullOrBlank()
+
             nextBtn.setOnClickListener {
                 authViewModel.setName(binding.editNickname.text.toString().trim())
                 navigateTo(SignUpCompleteFragment())
+            }
+
+            editNickname.addTextChangedListener { editable ->
+                nextBtn.isEnabled = !editable.isNullOrBlank()
             }
 
             imageBack.setOnClickListener { popBackStack() }
@@ -75,17 +78,4 @@ class ProfileSettingFragment : AuthBaseFragment() {
         }
     }
 
-//    private fun setUpObservers() {
-//        lifecycleScope.launch {
-//            repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                authViewModel.isNextButtonEnabled.collectLatest { isEnabled ->
-//                    binding.nextBtn.isEnabled = isEnabled
-//                }
-//            }
-//        }
-//    }
-//
-//    private fun setupListeners() {
-//        binding.editNickname.addTextChangedListener { authViewModel.onNameChanged(it.toString()) }
-//    }
 }
