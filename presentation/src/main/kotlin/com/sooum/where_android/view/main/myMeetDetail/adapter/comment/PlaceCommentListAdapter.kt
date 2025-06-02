@@ -30,7 +30,7 @@ class PlaceCommentListAdapter(
             MineViewHolder(binding, onCommentClick)
         } else {
             val binding = ItemPlaceCommentFalseBinding.inflate(inflater, parent, false)
-            OtherViewHolder(binding, onCommentClick)
+            OtherViewHolder(binding)
         }
     }
 
@@ -60,12 +60,11 @@ class PlaceCommentListAdapter(
 
     class OtherViewHolder(
         private val binding: ItemPlaceCommentFalseBinding,
-        private val onClick: (CommentListItem) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: CommentListItem) {
             binding.textDescription.text = item.description
-            binding.root.setOnClickListener { onClick(item) }
+            //남의 코멘트는 눌러도 동작이 없음
         }
     }
 }

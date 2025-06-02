@@ -99,7 +99,9 @@ class MyMeetPlaceDetailFragment :
     }
 
     private fun onCommentClicked(commentItem: CommentListItem) {
-        showBottomSheet(EditCommentFragment())
+        showBottomSheet(
+            EditCommentFragment.getInstance(prevComment = commentItem.description)
+        )
     }
 
     private fun setCommentRecyclerView() {
