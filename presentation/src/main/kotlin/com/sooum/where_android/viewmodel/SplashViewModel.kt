@@ -37,7 +37,7 @@ class SplashViewModel @Inject constructor(
             }
             val checkLogin = async {
 
-                false
+                true
             }
             val checkAppUpdate = async {
                 val version = appVersionProvider.getVersionName()

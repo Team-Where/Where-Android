@@ -6,35 +6,69 @@ import android.text.InputFilter.LengthFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.IntRange
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sooum.where_android.databinding.FragmentEditMyMeetDataBinding
 import com.sooum.where_android.view.common.modal.LoadingAlertProvider
+import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailCommentViewModel
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 
 
 class EditMyMeetDataFragment() : BottomSheetDialogFragment() {
     private val myMeetDetailViewModel: MyMeetDetailViewModel by activityViewModels()
+    private val myMeetDetailCommentViewModel: MyMeetDetailCommentViewModel by activityViewModels()
     private lateinit var binding: FragmentEditMyMeetDataBinding
 
     companion object {
-        const val TYPE_TITLE = 1
-        const val TYPE_MEMO = 2
-        const val TYPE_ADD_COMMENT = 3
-        const val TYPE_EDIT_COMMENT = 4
+        private const val TYPE_TITLE = 1
+        private const val TYPE_MEMO = 2
+        private const val TYPE_ADD_COMMENT = 3
+        private const val TYPE_EDIT_COMMENT = 4
 
         private const val EDIT_TYPE = "myMeetEditType"
         private const val PREV_DATA_KEY = "myMeetPrevData"
+        private const val COMMENT_ID_DATA_KEY = "commentIdData"
 
-        fun newInstance(
-            @IntRange(from = 1, to = 4) type: Int,
+
+        fun titleEdit(
             prevData: String,
         ): EditMyMeetDataFragment {
             return EditMyMeetDataFragment().apply {
                 arguments = bundleOf(
-                    EDIT_TYPE to type,
+                    EDIT_TYPE to TYPE_TITLE,
+                    PREV_DATA_KEY to prevData,
+                )
+            }
+        }
+
+        fun memoEdit(
+            prevData: String,
+        ): EditMyMeetDataFragment {
+            return EditMyMeetDataFragment().apply {
+                arguments = bundleOf(
+                    EDIT_TYPE to TYPE_MEMO,
+                    PREV_DATA_KEY to prevData,
+                )
+            }
+        }
+
+        fun commentAdd(): EditMyMeetDataFragment {
+            return EditMyMeetDataFragment().apply {
+                arguments = bundleOf(
+                    EDIT_TYPE to TYPE_ADD_COMMENT,
+                )
+            }
+        }
+
+        fun commentEdit(
+            commentId: Int,
+            prevData: String,
+        ): EditMyMeetDataFragment {
+            return EditMyMeetDataFragment().apply {
+                arguments = bundleOf(
+                    EDIT_TYPE to TYPE_EDIT_COMMENT,
+                    COMMENT_ID_DATA_KEY to commentId,
                     PREV_DATA_KEY to prevData,
                 )
             }
@@ -61,20 +95,26 @@ class EditMyMeetDataFragment() : BottomSheetDialogFragment() {
             when (type) {
                 TYPE_TITLE -> {
                     textMeetName.text = "모임 이름"
+                    editMyMeetMemo.hint = "모임 이름을 입력해주세요."
                     editMyMeetMemo.setFilters(arrayOf<InputFilter>(LengthFilter(16)))
                 }
 
                 TYPE_MEMO -> {
                     textMeetName.text = "메모"
+                    editMyMeetMemo.hint = "모임에 대한 간단한 소개를 입력해주세요."
                     editMyMeetMemo.setFilters(arrayOf<InputFilter>(LengthFilter(30)))
                 }
 
                 TYPE_ADD_COMMENT -> {
                     textMeetName.text = "코멘트 남기기"
+                    editMyMeetMemo.hint = "친구들이 볼 수 있도록 코멘트를 달아보세요.(0/50)"
+                    editMyMeetMemo.setFilters(arrayOf<InputFilter>(LengthFilter(50)))
                 }
 
                 TYPE_EDIT_COMMENT -> {
                     textMeetName.text = "코멘트 수정"
+                    editMyMeetMemo.hint = "친구들이 볼 수 있도록 코멘트를 달아보세요.(0/50)"
+                    editMyMeetMemo.setFilters(arrayOf<InputFilter>(LengthFilter(50)))
                 }
             }
 
@@ -88,30 +128,49 @@ class EditMyMeetDataFragment() : BottomSheetDialogFragment() {
             }
             btnOk.setOnClickListener {
                 loadingAlertProvider.startLoading()
-                if (type == TYPE_TITLE) {
-                    myMeetDetailViewModel.updateTitle(
-                        newTitle = getEditText(),
-                        onSuccess = {
-                            loadingAlertProvider.endLoading {
-                                dismiss()
-                            }
-                        },
-                        onFail = { msg ->
-                            loadingAlertProvider.endLoadingWithMessage(msg)
-                        }
-                    )
-                } else if (type == TYPE_MEMO) {
-                    myMeetDetailViewModel.updateDescription(
-                        newDescription = getEditText(),
-                        onSuccess = {
-                            loadingAlertProvider.endLoading {
-                                dismiss()
-                            }
-                        },
-                        onFail = { msg ->
-                            loadingAlertProvider.endLoadingWithMessage(msg)
-                        }
-                    )
+
+                val successAction = {
+                    loadingAlertProvider.endLoading {
+                        dismiss()
+                    }
+                }
+                val failAction = { msg: String ->
+                    loadingAlertProvider.endLoadingWithMessage(msg)
+                }
+                when (type) {
+                    TYPE_TITLE -> {
+                        myMeetDetailViewModel.updateTitle(
+                            newTitle = getEditText(),
+                            onSuccess = successAction,
+                            onFail = failAction
+                        )
+                    }
+
+                    TYPE_MEMO -> {
+                        myMeetDetailViewModel.updateDescription(
+                            newDescription = getEditText(),
+                            onSuccess = successAction,
+                            onFail = failAction
+                        )
+                    }
+
+                    TYPE_ADD_COMMENT -> {
+                        myMeetDetailCommentViewModel.addComment(
+                            comment = getEditText(),
+                            onSuccess = successAction,
+                            onFail = failAction
+                        )
+                    }
+
+                    TYPE_EDIT_COMMENT -> {
+                        val id = requireArguments().getInt(COMMENT_ID_DATA_KEY)
+                        myMeetDetailCommentViewModel.editComment(
+                            commentId = id,
+                            comment = getEditText(),
+                            onSuccess = successAction,
+                            onFail = failAction
+                        )
+                    }
                 }
 
             }

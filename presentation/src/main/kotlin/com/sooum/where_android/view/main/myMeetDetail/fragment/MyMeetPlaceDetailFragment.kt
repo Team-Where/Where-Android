@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.main.myMeetDetail.fragment
 
+import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -69,10 +70,7 @@ class MyMeetPlaceDetailFragment :
             }
             btnAddComment.setOnClickListener {
                 showBottomSheet(
-                    EditMyMeetDataFragment.newInstance(
-                        type = EditMyMeetDataFragment.TYPE_ADD_COMMENT,
-                        prevData = "친구들이 볼 수 있도록 코멘트르 달아보세요.(0/50)"
-                    )
+                    EditMyMeetDataFragment.commentAdd()
                 )
             }
 
@@ -82,6 +80,16 @@ class MyMeetPlaceDetailFragment :
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 myMeetDetailCommentViewModel.commentList.collect { commentList ->
                     placeCommentAdapter.submitListWithMineFirst(commentList)
+
+                    //내 코멘트가 있는지 확인
+                    if (commentList.any { it.isMine }) {
+                        //있다면 숨김
+                        binding.btnAddComment.visibility = View.GONE
+                    } else {
+                        //없으면 보여줌
+                        binding.btnAddComment.visibility = View.VISIBLE
+                    }
+
                     myMeetDetailPlaceViewModel.updateCommentCountLocally(
                         placeId = placeId,
                         commentCount = commentList.size
@@ -100,7 +108,9 @@ class MyMeetPlaceDetailFragment :
 
     private fun onCommentClicked(commentItem: CommentListItem) {
         showBottomSheet(
-            EditCommentFragment.getInstance(prevComment = commentItem.description)
+            EditCommentFragment.getInstance(
+                id = commentItem.commentId,
+            )
         )
     }
 

@@ -57,8 +57,7 @@ class EditMyMeetDetailFragment : BottomSheetDialogFragment() {
         iconEditMeetName.setOnClickListener {
             myMeetDetailViewModel.meetDetail.value?.let {
                 showBottomSheet(
-                    EditMyMeetDataFragment.newInstance(
-                        type = EditMyMeetDataFragment.TYPE_TITLE,
+                    EditMyMeetDataFragment.titleEdit(
                         prevData = it.title
                     )
                 )
@@ -67,8 +66,7 @@ class EditMyMeetDetailFragment : BottomSheetDialogFragment() {
         iconEditMeetMemo.setOnClickListener {
             myMeetDetailViewModel.meetDetail.value?.let {
                 showBottomSheet(
-                    EditMyMeetDataFragment.newInstance(
-                        type = EditMyMeetDataFragment.TYPE_MEMO,
+                    EditMyMeetDataFragment.memoEdit(
                         prevData = it.description
                     )
                 )

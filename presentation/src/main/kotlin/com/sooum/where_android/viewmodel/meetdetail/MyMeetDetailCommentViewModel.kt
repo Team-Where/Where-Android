@@ -61,11 +61,11 @@ class MyMeetDetailCommentViewModel @Inject constructor(
     }
 
     fun addComment(
-        placeId: Int?,
         comment: String,
         onSuccess: () -> Unit,
         onFail: (msg: String) -> Unit
     ) {
+        val placeId = placeItem.value?.placeId
         if (placeId == null) {
             onFail("not Match placeId")
         } else {

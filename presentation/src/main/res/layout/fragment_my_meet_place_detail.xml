@@ -313,6 +313,7 @@
             android:background="@drawable/shape_rounded_blue_radius_16"
             android:fontFamily="@font/pretend_medium"
             android:stateListAnimator="@null"
+            android:visibility="gone"
             android:text="코멘트 남기기"
             android:textColor="#4F46E5"
             android:textSize="16sp"
