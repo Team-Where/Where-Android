@@ -57,7 +57,7 @@ class PasswordFragment : AuthBaseFragment<FragmentPasswordBinding>(
                 }
 
                 !isValidPassword(password) -> {
-                    textPasswordVerification.text = "조건에 부합하지 않습니다."
+                    textPasswordVerification.text = "영문+숫자+특수문자(1,@) 조합 8-32자에 부합하지 않습니다."
                     textPasswordVerification.setTextColor(Color.RED)
                 }
 
@@ -79,7 +79,7 @@ class PasswordFragment : AuthBaseFragment<FragmentPasswordBinding>(
                 }
 
                 password != rePassword -> {
-                    textPasswordRepeat.text = "비밀번호가 일치하지 않습니다."
+                    textPasswordRepeat.text = "비밀번호가 올바르지 않습니다."
                     textPasswordRepeat.setTextColor(Color.RED)
                 }
 
