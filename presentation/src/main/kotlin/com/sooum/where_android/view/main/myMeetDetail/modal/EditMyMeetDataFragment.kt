@@ -1,6 +1,8 @@
 package com.sooum.where_android.view.main.myMeetDetail.modal
 
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.InputFilter.LengthFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sooum.where_android.databinding.FragmentEditMyMeetDataBinding
 import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
+
 
 class EditMyMeetDataFragment() : BottomSheetDialogFragment() {
     private val myMeetDetailViewModel: MyMeetDetailViewModel by activityViewModels()
@@ -54,15 +57,27 @@ class EditMyMeetDataFragment() : BottomSheetDialogFragment() {
         val prevTitle = requireArguments().getString(PREV_DATA_KEY)
 
         with(binding) {
-            if (type == TYPE_TITLE) {
-                textMeetName.text = "모임 이름"
-            } else if (type == TYPE_MEMO) {
-                textMeetName.text = "메모"
-            } else if (type == TYPE_ADD_COMMENT) {
-                textMeetName.text = "코멘트 남기기"
-            } else if (type == TYPE_EDIT_COMMENT) {
-                textMeetName.text = "코멘트 수정"
+
+            when (type) {
+                TYPE_TITLE -> {
+                    textMeetName.text = "모임 이름"
+                    editMyMeetMemo.setFilters(arrayOf<InputFilter>(LengthFilter(16)))
+                }
+
+                TYPE_MEMO -> {
+                    textMeetName.text = "메모"
+                    editMyMeetMemo.setFilters(arrayOf<InputFilter>(LengthFilter(30)))
+                }
+
+                TYPE_ADD_COMMENT -> {
+                    textMeetName.text = "코멘트 남기기"
+                }
+
+                TYPE_EDIT_COMMENT -> {
+                    textMeetName.text = "코멘트 수정"
+                }
             }
+
             editMyMeetMemo.setText(prevTitle)
 
             imageClose.setOnClickListener {
