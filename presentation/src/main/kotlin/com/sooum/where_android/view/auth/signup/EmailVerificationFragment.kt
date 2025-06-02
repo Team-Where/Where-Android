@@ -18,52 +18,46 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class EmailVerificationFragment : AuthBaseFragment() {
-    private lateinit var binding: FragmentEmailVerificationBinding
+class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBinding>(
+    FragmentEmailVerificationBinding::inflate
+) {
     private var countDownTimer: CountDownTimer? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentEmailVerificationBinding.inflate(inflater, container, false)
-
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
+            nextBtn.isEnabled = false
+
             nextBtn.setOnClickListener {
                 authViewModel.verifyEmailCode(
-                    binding.editTextEmail.text.toString().trim(),
-                    binding.editTextCode.text.toString().trim()
+                    editTextEmail.text.toString().trim(),
+                    editTextCode.text.toString().trim()
                 )
             }
+
             imageBack.setOnClickListener {
                 popBackStack()
             }
+
             btnEmailCode.setOnClickListener {
-                authViewModel.getEmailAuth(binding.editTextEmail.text.toString().trim())
+                authViewModel.getEmailAuth(editTextEmail.text.toString().trim())
+                btnEmailCode.text = "재전송"
                 startTimer()
             }
 
             editTextEmail.doAfterTextChanged { email ->
                 val input = email.toString()
-                authViewModel.onEmailVerifyInputChanged(
-                    input, editTextCode.text.toString()
-                )
+                authViewModel.onEmailVerifyInputChanged(input, editTextCode.text.toString())
 
-                if (input.isNotEmpty() && !isValidEmail(input)) {
-                    binding.textEmailWrong.visibility = View.VISIBLE
-                } else {
-                    binding.textEmailWrong.visibility = View.INVISIBLE
-                }
+                textEmailWrong.visibility =
+                    if (input.isNotEmpty() && !isValidEmail(input)) View.VISIBLE else View.INVISIBLE
             }
 
             editTextCode.doAfterTextChanged { code ->
                 authViewModel.onEmailVerifyInputChanged(
-                   editTextEmail.text.toString(), code.toString()
+                    editTextEmail.text.toString(),
+                    code.toString()
                 )
             }
         }
@@ -78,14 +72,15 @@ class EmailVerificationFragment : AuthBaseFragment() {
         countDownTimer?.cancel()
     }
 
+    override fun initView() {
+
+    }
+
     private fun observeEmailRequestResult() {
         lifecycleScope.launch {
             authViewModel.emailRequestState.collect { result ->
                 when (result) {
-                    is ApiResult.Loading -> {
-                        loadingAlertProvider.startLoading()
-                    }
-
+                    is ApiResult.Loading -> loadingAlertProvider.startLoading()
                     is ApiResult.Success -> {
                         loadingAlertProvider.endLoading()
                         showToast("인증코드가 전송되었습니다.")
@@ -105,10 +100,7 @@ class EmailVerificationFragment : AuthBaseFragment() {
         lifecycleScope.launch {
             authViewModel.emailVerifyState.collect { result ->
                 when (result) {
-                    is ApiResult.Loading -> {
-                        loadingAlertProvider.startLoading()
-                    }
-
+                    is ApiResult.Loading -> loadingAlertProvider.startLoading()
                     is ApiResult.Success -> {
                         loadingAlertProvider.endLoading()
                         when (result.data) {
@@ -116,6 +108,7 @@ class EmailVerificationFragment : AuthBaseFragment() {
                                 authViewModel.setEmail(binding.editTextEmail.text.toString().trim())
                                 navigateTo(PasswordFragment())
                             }
+
                             "Expired" -> showToast("인증번호가 만료되었습니다.")
                             "NotVerified" -> showToast("인증번호가 일치하지 않습니다.")
                             "NotSend" -> showToast("인증요청을 먼저 해주세요.")
@@ -166,5 +159,4 @@ class EmailVerificationFragment : AuthBaseFragment() {
             editTextCode.doAfterTextChanged { updateNextButtonState() }
         }
     }
-
 }

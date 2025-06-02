@@ -15,51 +15,54 @@ import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
 import kotlinx.coroutines.launch
 
-class SocialLoginProfileSettingFragment : AuthBaseFragment() {
-    private lateinit var binding : FragmentSocialLoginProfileSettingBinding
+class SocialLoginProfileSettingFragment : AuthBaseFragment<FragmentSocialLoginProfileSettingBinding>(
+    FragmentSocialLoginProfileSettingBinding::inflate
+) {
     private lateinit var selectedImageUri: Uri
+
     private val userId: Int by lazy {
         requireArguments().getInt("userId")
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentSocialLoginProfileSettingBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding.imageCamera.setOnClickListener {
-            val dialog = ImagePickerDialogFragment.getInstance(
-                handler = object : ImagePickerDialogFragment.ImageTypeHandler {
-                    override fun receiveImageType(imageType: ImageAddType) {
-                        when (imageType) {
-                            is ImageAddType.Default -> {
-                                // 기본 이미지 적용
-                                binding.imageProfile.setImageResource(R.drawable.image_profile_default_cover)
+        with(binding) {
+            imageCamera.setOnClickListener {
+                val dialog = ImagePickerDialogFragment.getInstance(
+                    handler = object : ImagePickerDialogFragment.ImageTypeHandler {
+                        override fun receiveImageType(imageType: ImageAddType) {
+                            when (imageType) {
+                                is ImageAddType.Default -> {
+                                    imageProfile.setImageResource(R.drawable.image_profile_default_cover)
+                                }
+
+                                is ImageAddType.Content -> {
+                                    imageProfile.setImageURI(imageType.uri)
+                                    imageProfile.scaleType = ImageView.ScaleType.CENTER_CROP
+                                    selectedImageUri = imageType.uri
+                                }
+
+                                else -> {}
                             }
-                            is ImageAddType.Content -> {
-                                // 앨범에서 선택한 이미지 적용
-                                binding.imageProfile.setImageURI(imageType.uri)
-                                binding.imageProfile.scaleType = ImageView.ScaleType.CENTER_CROP
-                                selectedImageUri = imageType.uri
-                            }
-                            else -> {}
                         }
-                    }
-                },
-                maxImage = 1
-            )
-            dialog.show(parentFragmentManager, ImagePickerDialogFragment.TAG)
-        }
+                    },
+                    maxImage = 1
+                )
+                dialog.show(parentFragmentManager, ImagePickerDialogFragment.TAG)
+            }
 
-        binding.btnComplete.setOnClickListener {
-            kakaoViewModel.putNickName(userId, binding.editNickname.text.toString())
-            kakaoViewModel.updateProfile(userId, selectedImageUri)
+            btnComplete.setOnClickListener {
+                kakaoViewModel.putNickName(userId, editNickname.text.toString())
+                kakaoViewModel.updateProfile(userId, selectedImageUri)
+            }
         }
 
         observePutNicknameResult()
+    }
 
-        return binding.root
+    override fun initView() {
+
     }
 
     private fun observePutNicknameResult() {
@@ -69,6 +72,7 @@ class SocialLoginProfileSettingFragment : AuthBaseFragment() {
                     is ApiResult.Loading -> {
                         loadingAlertProvider.startLoading()
                     }
+
                     is ApiResult.Success -> {
                         loadingAlertProvider.endLoading()
                         showToast("프로필 업데이트 성공.")
@@ -78,6 +82,7 @@ class SocialLoginProfileSettingFragment : AuthBaseFragment() {
                     is ApiResult.Fail -> {
                         loadingAlertProvider.endLoadingWithMessage("프로필 업데이트 실패")
                     }
+
                     else -> {}
                 }
             }

@@ -19,18 +19,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ProfileSettingFragment : AuthBaseFragment() {
-    private lateinit var binding: FragmentProfileSettingBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentProfileSettingBinding.inflate(inflater, container, false)
-
-        return binding.root
-    }
-
+class ProfileSettingFragment : AuthBaseFragment<FragmentProfileSettingBinding>(
+    FragmentProfileSettingBinding::inflate
+) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -38,7 +29,7 @@ class ProfileSettingFragment : AuthBaseFragment() {
             nextBtn.isEnabled = !editNickname.text.isNullOrBlank()
 
             nextBtn.setOnClickListener {
-                authViewModel.setName(binding.editNickname.text.toString().trim())
+                authViewModel.setName(editNickname.text.toString().trim())
                 navigateTo(SignUpCompleteFragment())
             }
 
@@ -47,35 +38,36 @@ class ProfileSettingFragment : AuthBaseFragment() {
             }
 
             imageBack.setOnClickListener { popBackStack() }
-        }
 
-        binding.imageCamera.setOnClickListener {
-            val dialog = ImagePickerDialogFragment.getInstance(
-                handler = object : ImagePickerDialogFragment.ImageTypeHandler {
-                    override fun receiveImageType(imageType: ImageAddType) {
-                        when (imageType) {
-                            is ImageAddType.Default -> {
-                                // 기본 이미지 적용
-                                binding.imageProfile.setImageResource(R.drawable.image_profile_default_cover)
-                                val defaultImageUri = Uri.parse("android.resource://${requireContext().packageName}/${R.drawable.image_profile_default_cover}")
-                                authViewModel.setProfileImage(defaultImageUri.toString())
+            imageCamera.setOnClickListener {
+                val dialog = ImagePickerDialogFragment.getInstance(
+                    handler = object : ImagePickerDialogFragment.ImageTypeHandler {
+                        override fun receiveImageType(imageType: ImageAddType) {
+                            when (imageType) {
+                                is ImageAddType.Default -> {
+                                    imageProfile.setImageResource(R.drawable.image_profile_default_cover)
+                                    val defaultImageUri = Uri.parse("android.resource://${requireContext().packageName}/${R.drawable.image_profile_default_cover}")
+                                    authViewModel.setProfileImage(defaultImageUri.toString())
+                                }
+
+                                is ImageAddType.Content -> {
+                                    imageProfile.setImageURI(imageType.uri)
+                                    imageProfile.scaleType = ImageView.ScaleType.CENTER_CROP
+                                    authViewModel.setProfileImage(imageType.uri.toString())
+                                }
+
+                                else -> {}
                             }
-
-                            is ImageAddType.Content -> {
-                                // 앨범에서 선택한 이미지 적용
-                                binding.imageProfile.setImageURI(imageType.uri)
-                                binding.imageProfile.scaleType = ImageView.ScaleType.CENTER_CROP
-                                authViewModel.setProfileImage(imageType.uri.toString())
-                            }
-
-                            else -> {}
                         }
-                    }
-                },
-                maxImage = 1
-            )
-            dialog.show(parentFragmentManager, ImagePickerDialogFragment.TAG)
+                    },
+                    maxImage = 1
+                )
+                dialog.show(parentFragmentManager, ImagePickerDialogFragment.TAG)
+            }
         }
     }
 
+    override fun initView() {
+
+    }
 }

@@ -14,30 +14,30 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SignUpCompleteFragment : AuthBaseFragment() {
-    private lateinit var binding : FragmentSignUpCompleteBinding
+class SignUpCompleteFragment : AuthBaseFragment<FragmentSignUpCompleteBinding>(
+    FragmentSignUpCompleteBinding::inflate
+) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentSignUpCompleteBinding.inflate(inflater, container, false)
+        with(binding) {
+            imageBack.setOnClickListener {
+                parentFragmentManager.popBackStack()
+            }
 
-        binding.imageBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
+            tvTitle.text = getString(R.string.signup_complete, authViewModel.name)
 
-        binding.tvTitle.text =
-            String.format(getString(R.string.signup_complete), authViewModel.name)
-
-        binding.nextBtn.setOnClickListener {
-           authViewModel.signUp()
+            nextBtn.setOnClickListener {
+                nextBtn.isEnabled = false
+                authViewModel.signUp()
+            }
         }
 
         observeSignUpResult()
+    }
 
+    override fun initView() {
 
-        return binding.root
     }
 
     private fun observeSignUpResult() {
@@ -47,6 +47,7 @@ class SignUpCompleteFragment : AuthBaseFragment() {
                     is ApiResult.Loading -> {
                         loadingAlertProvider.startLoading()
                     }
+
                     is ApiResult.Success -> {
                         loadingAlertProvider.endLoading {
                             requireActivity().finish()
@@ -60,6 +61,7 @@ class SignUpCompleteFragment : AuthBaseFragment() {
                         Log.d("SignUpCompleteFragment", result.toString())
                         binding.nextBtn.isEnabled = true
                     }
+
                     else -> {}
                 }
             }

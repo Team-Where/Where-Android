@@ -111,6 +111,10 @@ class AuthViewModel @Inject constructor(
                 email = email
             ).collect{ result ->
                _emailRequestState.value = result
+
+                if (result is ApiResult.Success || result is ApiResult.Fail) {
+                    _emailRequestState.value = ApiResult.SuccessEmpty
+                }
             }
         }
     }
@@ -125,6 +129,10 @@ class AuthViewModel @Inject constructor(
                 code = code
             ).collect{ result ->
                 _emailVerifyState.value = result
+
+                if (result is ApiResult.Success || result is ApiResult.Fail) {
+                    _emailRequestState.value = ApiResult.SuccessEmpty
+                }
             }
         }
     }

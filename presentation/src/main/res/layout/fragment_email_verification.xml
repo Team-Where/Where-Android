@@ -70,7 +70,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_email_code"
-        android:layout_width="84dp"
+        android:layout_width="70dp"
         android:layout_height="28dp"
         android:background="@drawable/shape_rounded_black"
         android:text="인증코드 전송"

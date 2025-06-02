@@ -44,7 +44,7 @@ class AuthActivity : AppCompatActivity() {
         setIntent(intent)
     }
 
-    fun navigateToFragment(fragment: Fragment, addToBackStack: Boolean = true) {
+    fun navigateToFragment(fragment: Fragment, addToBackStack: Boolean = true ) {
         val transaction = supportFragmentManager.beginTransaction()
 
         transaction.replace(R.id.flame, fragment)
