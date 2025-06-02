@@ -10,15 +10,13 @@ import com.sooum.where_android.databinding.FragmentAgreementBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AgreementFragment : AuthBaseFragment() {
-    private lateinit var binding : FragmentAgreementBinding
+class AgreementFragment : AuthBaseFragment<FragmentAgreementBinding>(
+    FragmentAgreementBinding::inflate
+) {
     private lateinit var allCheckboxes: List<CheckBox>
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentAgreementBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         allCheckboxes = listOf(
             binding.checkboxRequiredAge,
@@ -29,19 +27,22 @@ class AgreementFragment : AuthBaseFragment() {
 
         binding.nextBtn.setOnClickListener {
             if (!isRequiredChecked()) {
-             showToast("체크박스를 확인해주세요.")
+                showToast("체크박스를 확인해주세요.")
                 return@setOnClickListener
             }
             navigateTo(EmailVerificationFragment())
         }
 
         binding.imageBack.setOnClickListener {
-           popBackStack()
+            popBackStack()
         }
 
         setupCheckboxListeners()
         updateNextButtonBackground()
-        return binding.root
+    }
+
+    override fun initView() {
+
     }
 
     private fun setupCheckboxListeners() {
@@ -57,7 +58,15 @@ class AgreementFragment : AuthBaseFragment() {
             checkbox.setOnCheckedChangeListener { _, _ ->
                 updateCheckboxDrawable(checkbox, checkbox.isChecked)
                 val allChecked = allCheckboxes.all { it.isChecked }
+                binding.checkboxAgreeAll.setOnCheckedChangeListener(null)
                 binding.checkboxAgreeAll.isChecked = allChecked
+                binding.checkboxAgreeAll.setOnCheckedChangeListener { _, isChecked ->
+                    allCheckboxes.forEach { cb ->
+                        cb.isChecked = isChecked
+                        updateCheckboxDrawable(cb, isChecked)
+                    }
+                    updateNextButtonBackground()
+                }
                 updateCheckboxDrawable(binding.checkboxAgreeAll, allChecked)
                 updateNextButtonBackground()
             }

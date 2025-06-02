@@ -37,39 +37,41 @@ class AuthViewModel @Inject constructor(
     private val _signUpState = MutableStateFlow<ApiResult<SignUpResult>>(ApiResult.SuccessEmpty)
     val signUpState: StateFlow<ApiResult<SignUpResult>> = _signUpState
 
+    var email: String = ""
+        private set
 
-    private val _password = MutableStateFlow("")
-    val password: StateFlow<String> = _password.asStateFlow()
+    var password: String = ""
+        private set
 
-    private val _rePassword = MutableStateFlow("")
-    val rePassword: StateFlow<String> = _rePassword.asStateFlow()
+    var name: String = ""
+        private set
 
-    private val _email = MutableStateFlow("")
-    val email: StateFlow<String> = _email.asStateFlow()
+    var profileImage: String = ""
+        private set
 
-    private val _name = MutableStateFlow("")
-    val name: StateFlow<String> = _name.asStateFlow()
+    var emailCode: String = ""
+        private set
 
-    private val _profileImage = MutableStateFlow("")
-    val profileImage: StateFlow<String> = _profileImage.asStateFlow()
+    fun setEmail(value: String) {
+        email = value
+    }
 
-    private var _isValidName = MutableStateFlow<Boolean?>(null)
-    val isValidName: StateFlow<Boolean?> = _isValidName.asStateFlow()
+    fun setPassword(value: String) {
+        password = value
+    }
 
-    private val _isValidPassword = MutableStateFlow<Boolean?>(null)
-    val isValidPassword: StateFlow<Boolean?> = _isValidPassword.asStateFlow()
+    fun setName(value: String) {
+        name = value
+    }
 
-    private val _isPasswordMatch = MutableStateFlow<Boolean?>(null)
-    val isPasswordMatch: StateFlow<Boolean?> = _isPasswordMatch.asStateFlow()
+    fun setProfileImage(value: String) {
+        profileImage = value
+    }
 
-    private val _isNextButtonEnabled = MutableStateFlow(false)
-    val isNextButtonEnabled: StateFlow<Boolean> = _isNextButtonEnabled.asStateFlow()
-
-    private val _emailCode = MutableStateFlow("")
-    val emailCode: StateFlow<String> = _emailCode.asStateFlow()
-
-    private val _isEmailVerifyNextEnabled = MutableStateFlow(false)
-    val isEmailVerifyNextEnabled: StateFlow<Boolean> = _isEmailVerifyNextEnabled.asStateFlow()
+    fun onEmailVerifyInputChanged(emailValue: String, codeValue: String) {
+        email = emailValue
+        emailCode = codeValue
+    }
 
     /**
      * 로그인 기능
@@ -90,10 +92,10 @@ class AuthViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             signUpUseCase(
-                email = _email.value,
-                password = _password.value,
-                name = _name.value,
-                profileImage = _profileImage.value
+                email = email,
+                password = password,
+                name = name,
+                profileImage = profileImage
             ).collect { result ->
                 _signUpState.value = result
             }
@@ -109,6 +111,10 @@ class AuthViewModel @Inject constructor(
                 email = email
             ).collect{ result ->
                _emailRequestState.value = result
+
+                if (result is ApiResult.Success || result is ApiResult.Fail) {
+                    _emailRequestState.value = ApiResult.SuccessEmpty
+                }
             }
         }
     }
@@ -123,71 +129,11 @@ class AuthViewModel @Inject constructor(
                 code = code
             ).collect{ result ->
                 _emailVerifyState.value = result
+
+                if (result is ApiResult.Success || result is ApiResult.Fail) {
+                    _emailRequestState.value = ApiResult.SuccessEmpty
+                }
             }
         }
     }
-
-    fun setEmail(value: String) {
-        _email.value = value
-    }
-
-    fun setPassword(value: String) {
-        _password.value = value
-    }
-
-    fun setName(value: String) {
-        _name.value = value
-    }
-
-    fun setProfileImage(uri: String) {
-        _profileImage.value = uri
-    }
-
-    fun onPasswordChanged(password: String) {
-        _password.value = password
-        validateInputs()
-    }
-
-    fun onRePasswordChanged(rePassword: String) {
-        _rePassword.value = rePassword
-        validateInputs()
-    }
-
-    fun onEmailChanged(email: String) {
-        _email.value = email
-        validateInputs()
-    }
-
-    fun onNameChanged(name: String){
-        _name.value = name
-        validateName()
-    }
-
-    private fun validateInputs() {
-        val passwordValue = _password.value
-        val rePasswordValue = _rePassword.value
-        val emailValue = _email.value
-
-        val isPasswordValid = if (passwordValue.isEmpty()) null else validatePasswordUseCase(passwordValue)
-        val isMatch = if (passwordValue.isEmpty() || rePasswordValue.isEmpty()) null else (passwordValue == rePasswordValue)
-        val isEmailNotEmpty = emailValue.isNotEmpty()
-
-        _isValidPassword.value = isPasswordValid
-        _isPasswordMatch.value = isMatch
-        _isNextButtonEnabled.value = isMatch == true && isPasswordValid == true && isEmailNotEmpty
-    }
-
-    private fun validateName() {
-        val nameValue = _name.value
-
-        val isName = nameValue.isNotEmpty()
-        _isNextButtonEnabled.value = isName == true
-    }
-
-    fun onEmailVerifyInputChanged(email: String, code: String) {
-        _email.value = email
-        _emailCode.value = code
-        _isEmailVerifyNextEnabled.value = email.isNotBlank() && code.isNotBlank()
-    }
-
 }
