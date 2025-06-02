@@ -2,6 +2,8 @@ package com.sooum.where_android.view.auth.signup
 
 import android.app.Activity
 import android.content.Intent
+import android.text.InputFilter
+import android.text.Spanned
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -43,5 +45,27 @@ abstract class AuthBaseFragment<VB : ViewBinding>(
     fun navigateActivity(activity: Activity) {
         val intent = Intent(requireContext(), activity::class.java)
         startActivity(intent)
+    }
+
+    protected fun getNicknameInputFilters(
+        maxLength: Int = 8
+    ): Array<InputFilter> {
+        return arrayOf(
+            InputFilter.LengthFilter(maxLength),
+            object : InputFilter {
+                override fun filter(
+                    source: CharSequence,
+                    start: Int,
+                    end: Int,
+                    dest: Spanned,
+                    dstart: Int,
+                    dend: Int
+                ): CharSequence? {
+                    val allowedRegex = Regex("^[가-힣a-zA-Z0-9]+$")
+                    val filtered = source.filter { it.toString().matches(allowedRegex) }
+                    return if (filtered.length == source.length) null else filtered
+                }
+            }
+        )
     }
 }

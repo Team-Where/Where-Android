@@ -28,6 +28,8 @@ class ProfileSettingFragment : AuthBaseFragment<FragmentProfileSettingBinding>(
         with(binding) {
             nextBtn.isEnabled = !editNickname.text.isNullOrBlank()
 
+            editNickname.filters = getNicknameInputFilters()
+
             nextBtn.setOnClickListener {
                 authViewModel.setName(editNickname.text.toString().trim())
                 navigateTo(SignUpCompleteFragment())
