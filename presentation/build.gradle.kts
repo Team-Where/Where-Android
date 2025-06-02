@@ -60,10 +60,9 @@ dependencies {
 
     //Hilt
     implementation(libs.hilt)
-    implementation(libs.firebase.messaging)
-    implementation(files("oauth-5.10.0.aar"))
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+
 
     //Compose
     val composeBom = "androidx.compose:compose-bom:2025.02.00"
@@ -72,7 +71,6 @@ dependencies {
 
     implementation("androidx.fragment:fragment-compose:1.8.5")
     implementation("androidx.compose.ui:ui-viewbinding:1.7.8")
-
 
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.navigation:navigation-compose:2.8.7")
@@ -88,7 +86,7 @@ dependencies {
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.8.8")
     implementation("androidx.navigation:navigation-ui-ktx:2.8.8")
-    
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -96,22 +94,33 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
 
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-messaging")
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.messaging)
 
-    implementation ("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.10.1")
 
     implementation(libs.kotlinx.serialization.json)
+
+    //이미지 라이브러리
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    ksp("com.github.bumptech.glide:ksp:4.16.0")
+
+    //날짜 관련
     implementation(libs.kotlinx.datetime)
 
+    //KaKao APi
     implementation("com.kakao.sdk:v2-share:2.21.0") // 카카오톡 공유 API 모듈
-    implementation ("com.kakao.sdk:v2-user:2.21.0")
-    implementation ("com.tbuonomo:dotsindicator:5.0")
-    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation("com.kakao.sdk:v2-user:2.21.0")
 
+
+    //Dot 라이브러리
+    implementation("com.tbuonomo:dotsindicator:5.0")
+
+    //툴팁 라이브러리
     implementation("com.github.skydoves:balloon:1.6.12")
-    implementation("com.airbnb.android:lottie:6.3.0")
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
+    // 네아로
+    implementation("com.navercorp.nid:oauth:5.10.0")
 }
