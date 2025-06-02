@@ -123,4 +123,8 @@ dependencies {
 
     // 네아로
     implementation("com.navercorp.nid:oauth:5.10.0")
+
+
+    // Chrome Tab
+    implementation("androidx.browser:browser:1.5.0")
 }
