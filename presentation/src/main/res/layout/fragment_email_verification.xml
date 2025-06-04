@@ -62,7 +62,7 @@
         android:textColor="#EF4444"
         android:layout_marginStart="15dp"
         android:layout_marginTop="5dp"
-        android:text="잘못된 이메일 형식입니다."
+        android:text="잘못된 이메일 입니다."
         android:fontFamily="@font/pretend_regular"
         app:layout_constraintTop_toBottomOf="@id/edit_text_email"
         app:layout_constraintStart_toStartOf="parent"

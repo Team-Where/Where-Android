@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
@@ -41,17 +42,27 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
             }
 
             btnEmailCode.setOnClickListener {
-                authViewModel.getEmailAuth(editTextEmail.text.toString().trim())
-                btnEmailCode.text = "재전송"
-                startTimer()
+                val email = editTextEmail.text.toString().trim()
+                if (email.isNotEmpty() && isValidEmail(email)) {
+                    authViewModel.getEmailAuth(email)
+                    btnEmailCode.text = "재전송"
+                } else {
+                    showToast("이메일을 확인해주세요")
+                }
             }
 
             editTextEmail.doAfterTextChanged { email ->
                 val input = email.toString()
                 authViewModel.onEmailVerifyInputChanged(input, editTextCode.text.toString())
+                updateEditTextBackground(editTextEmail, isValidEmail(input))
 
                 textEmailWrong.visibility =
                     if (input.isNotEmpty() && !isValidEmail(input)) View.VISIBLE else View.INVISIBLE
+            }
+
+            editTextEmail.setOnFocusChangeListener { _, _ ->
+                val email = editTextEmail.text.toString().trim()
+                updateEditTextBackground(editTextEmail, isValidEmail(email))
             }
 
             editTextCode.doAfterTextChanged { code ->
@@ -59,7 +70,9 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                     editTextEmail.text.toString(),
                     code.toString()
                 )
+                editTextCode.setBackgroundResource(R.drawable.shape_rounded_purple_radius_12)
             }
+
         }
 
         observeEmailRequestResult()
@@ -83,6 +96,7 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                     is ApiResult.Loading -> loadingAlertProvider.startLoading()
                     is ApiResult.Success -> {
                         loadingAlertProvider.endLoading()
+                        startTimer()
                         showToast("인증코드가 전송되었습니다.")
                     }
 
@@ -139,6 +153,7 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                 binding.textTimer.text = "00:00"
                 binding.textTimeOver.visibility = View.VISIBLE
                 binding.textTimer.setTextColor(ContextCompat.getColor(requireContext(), R.color.red_scale_700))
+                binding.editTextCode.setBackgroundResource(R.drawable.shape_rounded_red_radius_12)
             }
         }.start()
     }
@@ -158,5 +173,15 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
             editTextEmail.doAfterTextChanged { updateNextButtonState() }
             editTextCode.doAfterTextChanged { updateNextButtonState() }
         }
+    }
+
+    private fun updateEditTextBackground(
+        editText: EditText,
+        isValid: Boolean,
+        validBackgroundRes: Int = R.drawable.shape_rounded_purple_radius_12,
+        invalidBackgroundRes: Int = R.drawable.shape_rounded_red_radius_12
+    ) {
+        val resId = if (isValid) validBackgroundRes else invalidBackgroundRes
+        editText.setBackgroundResource(resId)
     }
 }
