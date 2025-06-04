@@ -55,11 +55,15 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
 
             editTextEmail.doAfterTextChanged { email ->
                 val input = email.toString()
+                val isValid = isValidEmail(input)
+
                 authViewModel.onEmailVerifyInputChanged(input, editTextCode.text.toString())
                 updateEditTextBackground(editTextEmail, isValidEmail(input))
 
-                textEmailWrong.visibility =
-                    if (input.isNotEmpty() && !isValidEmail(input)) View.VISIBLE else View.INVISIBLE
+                textEmailWrong.visibility = if (input.isNotEmpty() && !isValidEmail(input)) View.VISIBLE else View.INVISIBLE
+
+                val backgroundRes = if (isValid) R.drawable.shape_rounded_black else R.drawable.shape_rounded_gray_500
+                btnEmailCode.setBackgroundResource(backgroundRes)
             }
 
             editTextEmail.setOnFocusChangeListener { _, _ ->
