@@ -14,6 +14,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentEmailVerificationBinding
+import com.sooum.where_android.view.widget.CustomSnackBar
+import com.sooum.where_android.view.widget.IconType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -97,7 +99,7 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                     is ApiResult.Success -> {
                         loadingAlertProvider.endLoading()
                         startTimer()
-                        showToast("인증코드가 전송되었습니다.")
+                        CustomSnackBar.make(requireView(), "인증 코드가 전송되었습니다.", IconType.Check).show()
                     }
 
                     is ApiResult.Fail -> {
@@ -122,11 +124,7 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                                 authViewModel.setEmail(binding.editTextEmail.text.toString().trim())
                                 navigateTo(PasswordFragment())
                             }
-
-                            "Expired" -> showToast("인증번호가 만료되었습니다.")
-                            "NotVerified" -> showToast("인증번호가 일치하지 않습니다.")
-                            "NotSend" -> showToast("인증요청을 먼저 해주세요.")
-                            else -> showToast("알 수 없는 응답입니다: ${result.data}")
+                            else -> showVerificationResultSnackBar(result.data)
                         }
                     }
 
@@ -183,5 +181,17 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
     ) {
         val resId = if (isValid) validBackgroundRes else invalidBackgroundRes
         editText.setBackgroundResource(resId)
+    }
+
+    private fun showVerificationResultSnackBar(result: String) {
+        val (message, iconType) = when (result) {
+            "Verified" -> return
+            "Expired" -> "인증번호가 만료되었습니다." to IconType.Error
+            "NotVerified" -> "인증번호가 일치하지 않습니다." to IconType.Error
+            "NotSend" -> "인증요청을 먼저 해주세요." to IconType.Error
+            else -> "알 수 없는 응답입니다" to IconType.Error
+        }
+
+        CustomSnackBar.make(requireView(), message, iconType).show()
     }
 }
