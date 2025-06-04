@@ -1,5 +1,6 @@
 package com.sooum.data.repository
 
+import android.util.Log
 import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.data.network.auth.AuthApi
 import com.sooum.data.network.auth.request.EmailVerifyRequest
@@ -37,7 +38,16 @@ class AuthRepositoryImpl @Inject constructor(
         val request = SignUpRequest(
             email, password, name, profileImage
         )
-       return safeFlow { authApi.signUp(request) }
+       return safeFlow {
+          val response =  authApi.signUp(request)
+           if (response.isSuccessful) {
+              val body = response.body()
+              if (body != null){
+                  appManageDataStore.saveUserId(body.id)
+              }
+           }
+           response
+       }
     }
 
     override suspend fun login(email: String, password: String): Flow<ApiResult<LoginResult>> {
@@ -46,12 +56,15 @@ class AuthRepositoryImpl @Inject constructor(
         return safeFlow {
             val response = authApi.login(request)
 
+            Log.d("AuthRepositoryImpl", response.body().toString())
+
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
                     val accessToken = response.headers()["Authorization"]?.removePrefix("Bearer ")?.trim()
                     val refreshToken = response.headers()["Refresh-Token"]
 
+                    appManageDataStore.saveUserId(body.userId)
                     accessToken?.let { appManageDataStore.saveAccessToken(it) }
                     refreshToken?.let { appManageDataStore.saveRefreshToken(it) }
                 }

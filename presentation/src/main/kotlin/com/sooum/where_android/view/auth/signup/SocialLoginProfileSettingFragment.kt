@@ -28,6 +28,8 @@ class SocialLoginProfileSettingFragment : AuthBaseFragment<FragmentSocialLoginPr
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
+            editNickname.filters = getNicknameInputFilters()
+
             imageCamera.setOnClickListener {
                 val dialog = ImagePickerDialogFragment.getInstance(
                     handler = object : ImagePickerDialogFragment.ImageTypeHandler {

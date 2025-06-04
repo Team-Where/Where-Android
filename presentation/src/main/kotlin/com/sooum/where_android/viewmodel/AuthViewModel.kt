@@ -10,8 +10,10 @@ import com.sooum.domain.usecase.auth.RequestEmailAuthUseCase
 import com.sooum.domain.usecase.auth.SignUpUseCase
 import com.sooum.domain.usecase.auth.ValidatePasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -31,8 +33,8 @@ class AuthViewModel @Inject constructor(
     private val _emailRequestState = MutableStateFlow<ApiResult<Unit>>(ApiResult.SuccessEmpty)
     val emailRequestState: StateFlow<ApiResult<Unit>> = _emailRequestState.asStateFlow()
 
-    private val _emailVerifyState = MutableStateFlow<ApiResult<String>>(ApiResult.SuccessEmpty)
-    val emailVerifyState: StateFlow<ApiResult<String>> = _emailVerifyState.asStateFlow()
+    private val _emailVerifyState = MutableSharedFlow<ApiResult<String>>(replay = 0)
+    val emailVerifyState: SharedFlow<ApiResult<String>> = _emailVerifyState
 
     private val _signUpState = MutableStateFlow<ApiResult<SignUpResult>>(ApiResult.SuccessEmpty)
     val signUpState: StateFlow<ApiResult<SignUpResult>> = _signUpState
@@ -128,7 +130,7 @@ class AuthViewModel @Inject constructor(
                 email = email,
                 code = code
             ).collect{ result ->
-                _emailVerifyState.value = result
+                _emailVerifyState.emit(result)
 
                 if (result is ApiResult.Success || result is ApiResult.Fail) {
                     _emailRequestState.value = ApiResult.SuccessEmpty

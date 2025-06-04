@@ -73,6 +73,7 @@
         android:layout_height="56dp"
         android:hint="비밀번호를 입력해주세요"
         android:textSize="18sp"
+        android:inputType="textPassword"
         android:background="@drawable/shape_rounded_gray_radius_12"
         app:layout_constraintTop_toBottomOf="@id/text_password"
         app:layout_constraintStart_toStartOf="parent"
