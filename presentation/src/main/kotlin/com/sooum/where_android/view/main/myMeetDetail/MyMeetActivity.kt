@@ -11,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.sooum.domain.model.ShareResult
 import com.sooum.where_android.MyFirebaseMessagingService
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
-import com.sooum.where_android.view.MapShareResultActivity
 import com.sooum.where_android.view.checkInviteData
 import com.sooum.where_android.view.getLocalAlarmProvider
+import com.sooum.where_android.view.share.MapShareResultActivity
 import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailFcmViewModel

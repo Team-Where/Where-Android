@@ -92,7 +92,7 @@
         </activity>
 
         <activity
-            android:name=".view.MapShareResultActivity"
+            android:name=".view.share.MapShareResultActivity"
             android:theme="@style/Theme.Transparent"
             android:exported="true"
             android:launchMode="singleInstance">

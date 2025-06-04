@@ -1,4 +1,4 @@
-package com.sooum.where_android.view
+package com.sooum.where_android.view.share
 
 import android.app.Activity
 import android.content.Intent

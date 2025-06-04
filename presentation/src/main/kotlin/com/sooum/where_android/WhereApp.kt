@@ -12,8 +12,8 @@ import coil3.request.crossfade
 import com.kakao.sdk.common.KakaoSdk
 import com.navercorp.nid.NaverIdLoginSDK
 import com.sooum.where_android.view.LocalAlarmResultActivity
-import com.sooum.where_android.view.MapShareResultActivity
 import com.sooum.where_android.view.SchemeResultActivity
+import com.sooum.where_android.view.share.MapShareResultActivity
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
 import java.lang.ref.WeakReference
