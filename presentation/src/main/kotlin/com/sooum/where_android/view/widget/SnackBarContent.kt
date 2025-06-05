@@ -159,6 +159,14 @@ class CustomSnackBar(
         }
     }
 
+    // 특정 뷰 위로 출력되도록 고정합니다.
+    fun showWithAnchor(
+        view: View
+    ) {
+        snackBar.setAnchorView(view)
+        show()
+    }
+
     fun show() {
         snackBar.show()
     }
