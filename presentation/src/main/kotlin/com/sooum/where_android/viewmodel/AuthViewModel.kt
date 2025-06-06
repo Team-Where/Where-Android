@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val loginUseCase: LoginUseCase,
     private val signUpUseCase: SignUpUseCase,
     private val getRequestEmailAuthUseCase: RequestEmailAuthUseCase,

@@ -48,6 +48,7 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                 if (email.isNotEmpty() && isValidEmail(email)) {
                     authViewModel.getEmailAuth(email)
                     btnEmailCode.text = "재전송"
+                    editTextEmail.isEnabled = false
                 } else {
                     showToast("이메일을 확인해주세요")
                 }
@@ -103,7 +104,8 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                     is ApiResult.Success -> {
                         loadingAlertProvider.endLoading()
                         startTimer()
-                        CustomSnackBar.make(requireView(), "인증 코드가 전송되었습니다.", IconType.Check).show()
+                        val snackBar = CustomSnackBar.make(requireView(), "인증 코드가 전송되었습니다.", IconType.Check)
+                        snackBar.showWithAnchor(binding.nextBtn)
                     }
 
                     is ApiResult.Fail -> {
@@ -195,7 +197,7 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
             "NotSend" -> "인증요청을 먼저 해주세요." to IconType.Error
             else -> "알 수 없는 응답입니다" to IconType.Error
         }
-
-        CustomSnackBar.make(requireView(), message, iconType).show()
+        val snackBar = CustomSnackBar.make(requireView(), message, iconType)
+        snackBar.showWithAnchor(binding.nextBtn)
     }
 }
