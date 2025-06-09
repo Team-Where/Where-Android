@@ -92,9 +92,7 @@ class KakaoViewmodel @Inject constructor(
         viewModelScope.launch {
             profileUpdateUseCase(
                 userId, imageFile
-            ).collect{ result ->
-
-            }
+            )
         }
     }
 }

@@ -1,29 +1,39 @@
 package com.sooum.where_android.viewmodel
 
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.CheckEmail
 import com.sooum.domain.model.SignUpResult
+import com.sooum.domain.usecase.auth.CheckEmailUseCase
 import com.sooum.domain.usecase.auth.EmailVerifyUseCase
 import com.sooum.domain.usecase.auth.LoginUseCase
 import com.sooum.domain.usecase.auth.RequestEmailAuthUseCase
 import com.sooum.domain.usecase.auth.SignUpUseCase
 import com.sooum.domain.usecase.auth.ValidatePasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val signUpUseCase: SignUpUseCase,
     private val getRequestEmailAuthUseCase: RequestEmailAuthUseCase,
-    private val emailVerifyUseCase: EmailVerifyUseCase
+    private val emailVerifyUseCase: EmailVerifyUseCase,
+    private val checkEmailUseCase: CheckEmailUseCase
 ) : ViewModel(){
 
     private val _loginState = MutableStateFlow<ApiResult<Any>>(ApiResult.SuccessEmpty)
@@ -37,6 +47,16 @@ class AuthViewModel @Inject constructor(
 
     private val _signUpState = MutableStateFlow<ApiResult<SignUpResult>>(ApiResult.SuccessEmpty)
     val signUpState: StateFlow<ApiResult<SignUpResult>> = _signUpState
+
+    private val _checkEmailState = MutableSharedFlow<ApiResult<Unit>>(replay = 0)
+    val checkEmailState: SharedFlow<ApiResult<Unit>> = _checkEmailState
+
+    private val _emailInput = MutableStateFlow("")
+    val emailInput: StateFlow<String> = _emailInput
+
+    fun onEmailInputChanged(input: String) {
+        _emailInput.value = input
+    }
 
     var email: String = ""
         private set
@@ -104,6 +124,19 @@ class AuthViewModel @Inject constructor(
     }
 
     /**
+     * 이메일 중복 확인 기능
+     */
+    fun checkEmail(email: String) {
+      viewModelScope.launch {
+          checkEmailUseCase(
+              email = email
+          ).collect{ result ->
+              _checkEmailState.emit(result)
+          }
+      }
+    }
+
+    /**
      * 이메일 검증 코드를 요청
      */
     fun getEmailAuth(email: String){
@@ -135,6 +168,18 @@ class AuthViewModel @Inject constructor(
                     _emailRequestState.value = ApiResult.SuccessEmpty
                 }
             }
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            _emailInput
+                .debounce(300) // 입력 후 300ms 동안 정지하면 실행
+                .filter { it.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(it).matches() }
+                .distinctUntilChanged()
+                .collectLatest { email ->
+                    checkEmail(email)
+                }
         }
     }
 }
