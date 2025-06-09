@@ -48,23 +48,23 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                 if (email.isNotEmpty() && isValidEmail(email)) {
                     authViewModel.getEmailAuth(email)
                     btnEmailCode.text = "재전송"
+                    editTextEmail.isEnabled = false
                 } else {
                     showToast("이메일을 확인해주세요")
                 }
             }
 
-            editTextEmail.doAfterTextChanged { email ->
-                val input = email.toString()
-                val isValid = isValidEmail(input)
+            editTextEmail.doAfterTextChanged {
+                authViewModel.onEmailInputChanged(it.toString())
 
-                authViewModel.onEmailVerifyInputChanged(input, editTextCode.text.toString())
-                updateEditTextBackground(editTextEmail, isValidEmail(input))
-
-                textEmailWrong.visibility = if (input.isNotEmpty() && !isValidEmail(input)) View.VISIBLE else View.INVISIBLE
-
-                val backgroundRes = if (isValid) R.drawable.shape_rounded_black else R.drawable.shape_rounded_gray_500
-                btnEmailCode.setBackgroundResource(backgroundRes)
+                val isValid = isValidEmail(it.toString())
+                updateEditTextBackground(editTextEmail, isValid)
+                textEmailWrong.visibility = if (it.toString().isNotEmpty() && !isValid) View.VISIBLE else View.INVISIBLE
+                btnEmailCode.setBackgroundResource(
+                    if (isValid) R.drawable.shape_rounded_black else R.drawable.shape_rounded_gray_500
+                )
             }
+
 
             editTextEmail.setOnFocusChangeListener { _, _ ->
                 val email = editTextEmail.text.toString().trim()
@@ -84,6 +84,7 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
         observeEmailRequestResult()
         observeEmailVerificationResult()
         setUpNextButtonStateObserver()
+        observeCheckEmail()
     }
 
     override fun onDestroyView() {
@@ -103,11 +104,32 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                     is ApiResult.Success -> {
                         loadingAlertProvider.endLoading()
                         startTimer()
-                        CustomSnackBar.make(requireView(), "인증 코드가 전송되었습니다.", IconType.Check).show()
+                        val snackBar = CustomSnackBar.make(requireView(), "인증 코드가 전송되었습니다.", IconType.Check)
+                        snackBar.showWithAnchor(binding.nextBtn)
                     }
 
                     is ApiResult.Fail -> {
                         loadingAlertProvider.endLoadingWithMessage("인증코드 전송에 실패하였습니다.")
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    // 이부분 수정해줘야함 그리고 실패뜨면 인증코드 전송 버튼도 비활성화
+    private fun observeCheckEmail() {
+        lifecycleScope.launch {
+            authViewModel.checkEmailState.collect { result ->
+                when (result) {
+                    is ApiResult.Loading -> loadingAlertProvider.startLoading()
+                    is ApiResult.Success -> {
+                        loadingAlertProvider.endLoading()
+                    }
+
+                    is ApiResult.Fail -> {
+                        binding.textEmailWrong.text = "이미 가입된 이메일입니다"
                     }
 
                     else -> {}
@@ -195,7 +217,7 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
             "NotSend" -> "인증요청을 먼저 해주세요." to IconType.Error
             else -> "알 수 없는 응답입니다" to IconType.Error
         }
-
-        CustomSnackBar.make(requireView(), message, iconType).show()
+        val snackBar = CustomSnackBar.make(requireView(), message, iconType)
+        snackBar.showWithAnchor(binding.nextBtn)
     }
 }

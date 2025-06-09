@@ -9,6 +9,7 @@ import com.sooum.data.network.auth.request.NameOnlyRequest
 import com.sooum.data.network.auth.request.SignUpRequest
 import com.sooum.data.network.safeFlow
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.CheckEmail
 import com.sooum.domain.model.EmailVerifyResult
 import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.LoginResult
@@ -108,6 +109,13 @@ class AuthRepositoryImpl @Inject constructor(
        return safeFlow {
          authApi.refreshToken(refreshToken = refreshToken)
        }
+    }
+
+    override suspend fun checkEmail(email: String): Flow<ApiResult<Unit>> {
+        return safeFlow {
+            val request = CheckEmail(email)
+            authApi.checkEmail(request)
+        }
     }
 
 }

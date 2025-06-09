@@ -17,6 +17,10 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import android.util.Base64
+import org.json.JSONObject
+import java.nio.charset.Charset
+import java.util.Date
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
@@ -36,8 +40,14 @@ class SplashViewModel @Inject constructor(
                 delay(3000L)
             }
             val checkLogin = async {
-
-                true
+                val refreshToken = appManageDataStore.getRefreshToken().firstOrNull()
+                if (refreshToken.isNullOrBlank()) {
+                    false
+                } else {
+                    val exp = getJwtExpiration(refreshToken)
+                    val now = System.currentTimeMillis() / 1000
+                    exp != null && exp > now
+                }
             }
             val checkAppUpdate = async {
                 val version = appVersionProvider.getVersionName()
@@ -78,5 +88,20 @@ class SplashViewModel @Inject constructor(
                 complete(dest)
             }
         }
+    }
+}
+
+private fun getJwtExpiration(token: String): Long? {
+    return try {
+        val parts = token.split(".")
+        if (parts.size < 2) return null
+
+        val payload = parts[1]
+        val decodedBytes = Base64.decode(payload, Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP)
+        val json = JSONObject(String(decodedBytes, Charset.forName("UTF-8")))
+
+        json.getLong("exp")
+    } catch (e: Exception) {
+        null
     }
 }

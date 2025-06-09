@@ -5,6 +5,7 @@ import com.sooum.data.network.auth.request.EmailVerifyRequest
 import com.sooum.data.network.auth.request.LoginRequest
 import com.sooum.data.network.auth.request.NameOnlyRequest
 import com.sooum.data.network.auth.request.SignUpRequest
+import com.sooum.domain.model.CheckEmail
 import com.sooum.domain.model.EmailVerifyResult
 import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.LoginResult
@@ -55,5 +56,10 @@ interface AuthApi {
     suspend fun refreshToken(
         @Query("refreshToken") refreshToken: String
     ) : Response<PostRefreshTokenResult>
+
+    @POST("api/user/checkEmail")
+    suspend fun checkEmail(
+        @Body data : CheckEmail
+    ): Response<Unit>
 
 }
