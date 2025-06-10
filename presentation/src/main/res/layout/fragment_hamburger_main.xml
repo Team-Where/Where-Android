@@ -29,6 +29,7 @@
         tools:ignore="MissingConstraints" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_edit_profile"
         android:layout_width="120dp"
         android:layout_height="35dp"
         android:text="프로필 수정"
