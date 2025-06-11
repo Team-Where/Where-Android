@@ -99,7 +99,7 @@ class SocialLoginFragment : AuthBaseFragment<FragmentSocialLoginBinding>(
                 if (isSignUp) {
                     navHostController.navigateSocialProfile(userId)
                 } else {
-                    showToast("카카오 로그인 성공")
+                    showToast("네이버 로그인 성공")
                     navHostController.navigateHome()
                 }
             },
