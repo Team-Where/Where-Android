@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.usecase.auth.VersionCheckUseCase
+import com.sooum.domain.usecase.user.CheckUserTokenExpiredUseCase
 import com.sooum.domain.util.AppVersionProvider
 import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.main.MainActivity
@@ -17,16 +18,13 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import android.util.Base64
-import org.json.JSONObject
-import java.nio.charset.Charset
-import java.util.Date
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val appManageDataStore: AppManageDataStore,
     private val versionCheckUseCase: VersionCheckUseCase,
-    private val appVersionProvider: AppVersionProvider
+    private val appVersionProvider: AppVersionProvider,
+    private val checkUserTokenExpiredUseCase: CheckUserTokenExpiredUseCase,
 ) : ViewModel() {
 
     fun checkSplash(
@@ -40,14 +38,7 @@ class SplashViewModel @Inject constructor(
                 delay(3000L)
             }
             val checkLogin = async {
-                val refreshToken = appManageDataStore.getRefreshToken().firstOrNull()
-                if (refreshToken.isNullOrBlank()) {
-                    false
-                } else {
-                    val exp = getJwtExpiration(refreshToken)
-                    val now = System.currentTimeMillis() / 1000
-                    exp != null && exp > now
-                }
+                checkUserTokenExpiredUseCase()
             }
             val checkAppUpdate = async {
                 val version = appVersionProvider.getVersionName()
@@ -88,20 +79,5 @@ class SplashViewModel @Inject constructor(
                 complete(dest)
             }
         }
-    }
-}
-
-private fun getJwtExpiration(token: String): Long? {
-    return try {
-        val parts = token.split(".")
-        if (parts.size < 2) return null
-
-        val payload = parts[1]
-        val decodedBytes = Base64.decode(payload, Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP)
-        val json = JSONObject(String(decodedBytes, Charset.forName("UTF-8")))
-
-        json.getLong("exp")
-    } catch (e: Exception) {
-        null
     }
 }
