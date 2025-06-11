@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
+import com.sooum.where_android.checkAppScheme
 import com.sooum.where_android.model.ScreenRoute
 
 fun NavGraphBuilder.registerSplashRoute(
@@ -33,26 +34,10 @@ fun NavGraphBuilder.registerSplashRoute(
                         Log.d("JWH", intent.toString())
 
                         //스킴으로 실행된 경우 체크
-                        Log.d("JWH", intent.data.toString())
-                        val scheme = intent.data?.scheme
-                        val host = intent.data?.host
-                        val paths = intent.data?.pathSegments
-                        val name = intent.data?.getQueryParameter("name")
-                        if (name != null) {
-                            if (scheme == "https" && host == "audiwhere.shop" && paths?.size == 2) {
-                                val code = paths.last()
-                                mainNavController.navigateInviteScreen(name, code)
-                                return@SplashView
-                            }
-
-                            if (scheme == "audiwhere" && host == "invite" && paths?.size == 1) {
-                                val code = paths.last()
-                                mainNavController.navigateInviteScreen(name, code)
-                                return@SplashView
-                            }
+                        intent.checkAppScheme()?.let {
+                            mainNavController.navigateNext(it)
+                            return@SplashView
                         }
-
-                        Log.d("JWH", "$scheme $host $paths")
 
                         //어떤 조건도 걸리지 않은 경우 그냥 진행 한다.
                         mainNavController.navigateNext(route)
@@ -71,18 +56,6 @@ fun NavGraphBuilder.registerSplashRoute(
 
         dialog<ScreenRoute.SplashRoute.ErrorAlert>() {
 
-        }
-    }
-}
-
-internal fun NavHostController.navigateInviteScreen(
-    name: String,
-    code: String
-) {
-    navigate(ScreenRoute.HomeRoute.InviteByCode(name, code)) {
-        launchSingleTop = true
-        popUpTo<ScreenRoute.SplashRoute>() {
-            inclusive = true
         }
     }
 }

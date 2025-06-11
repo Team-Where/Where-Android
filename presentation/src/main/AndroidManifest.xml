@@ -100,7 +100,6 @@
 
         </activity>
 
-
         <!-- Trigger Google Play services to install the backported photo picker module. -->
         <service
             android:name="com.google.android.gms.metadata.ModuleDependencies"

@@ -8,12 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.core.util.Consumer
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.sooum.where_android.checkAppScheme
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.LocalAlarmProvider
 import com.sooum.where_android.view.auth.registerAuthRoute
@@ -50,6 +53,17 @@ class MainActivity : AppCompatActivity() {
 
             val loadingScreenProvider = remember {
                 LoadingScreenProvider(scope)
+            }
+            DisposableEffect(this@MainActivity, mainNavController) {
+                val onNewIntentConsumer = Consumer<Intent> {
+                    it.checkAppScheme()?.let {
+                        mainNavController.navigate(it)
+                    }
+                }
+
+                this@MainActivity.addOnNewIntentListener(onNewIntentConsumer)
+
+                onDispose { this@MainActivity.removeOnNewIntentListener(onNewIntentConsumer) }
             }
             CompositionLocalProvider(
                 LocalActivity provides this@MainActivity,
