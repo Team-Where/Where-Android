@@ -43,7 +43,7 @@ import com.sooum.where_android.view.main.home.newMeet.NewMeetModal
 @Composable
 fun BottomNavigation(
     navBackStackEntry: NavBackStackEntry?,
-    navigation: (ScreenRoute.Home.BottomNavigation) -> Unit = {},
+    navigation: (ScreenRoute.HomeRoute.Main.BottomNavigation) -> Unit = {},
     navigationResult: (NewMeetResult) -> Unit = {}
 ) {
     val currentDestination = navBackStackEntry?.destination
@@ -76,9 +76,9 @@ fun BottomNavigation(
                     icon = R.drawable.icon_bottom_group,
                     title = "내 모임",
                     onClick = {
-                        navigation(ScreenRoute.Home.BottomNavigation.MeetList)
+                        navigation(ScreenRoute.HomeRoute.Main.BottomNavigation.MeetList)
                     },
-                    isSelected = currentDestination?.route == ScreenRoute.Home.BottomNavigation.MeetList::class.qualifiedName
+                    isSelected = currentDestination?.route == ScreenRoute.HomeRoute.Main.BottomNavigation.MeetList::class.qualifiedName
                 )
             }
             Row(
@@ -110,9 +110,9 @@ fun BottomNavigation(
                     icon = R.drawable.icon_bottom_friend,
                     title = "친구목록",
                     onClick = {
-                        navigation(ScreenRoute.Home.BottomNavigation.FriendsList)
+                        navigation(ScreenRoute.HomeRoute.Main.BottomNavigation.FriendsList)
                     },
-                    isSelected = currentDestination?.route == ScreenRoute.Home.BottomNavigation.FriendsList::class.qualifiedName
+                    isSelected = currentDestination?.route == ScreenRoute.HomeRoute.Main.BottomNavigation.FriendsList::class.qualifiedName
                 )
             }
         }

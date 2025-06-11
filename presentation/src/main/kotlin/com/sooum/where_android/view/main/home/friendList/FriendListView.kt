@@ -85,13 +85,13 @@ sealed class FriendListViewType(
 @Composable
 fun FriendListView(
     userViewModel: FriendViewModel = hiltViewModel(),
-    navigationMeetDetail: (ScreenRoute.Home.FriendMeetDetail) -> Unit,
+    navigationFriendDetail: (ScreenRoute.HomeRoute.Main.BottomNavigation) -> Unit,
     modifier: Modifier
 ) {
     val friendList by userViewModel.friendList.collectAsState()
     FriedListContent(
         userList = friendList,
-        navigationMeetDetail = navigationMeetDetail,
+        navigationFriendDetail = navigationFriendDetail,
         deleteFriend = userViewModel::deleteFriend,
         updateFavorite = userViewModel::updateFriendFavorite,
         modifier = modifier
@@ -101,7 +101,7 @@ fun FriendListView(
 @Composable
 private fun FriedListContent(
     userList: List<Friend>,
-    navigationMeetDetail: (ScreenRoute.Home.FriendMeetDetail) -> Unit,
+    navigationFriendDetail: (ScreenRoute.HomeRoute.Main.BottomNavigation) -> Unit,
     deleteFriend: (
         id: Int,
         onSuccess: () -> Unit,
@@ -355,7 +355,11 @@ private fun FriedListContent(
                         },
                         navigationMeetDetail = {
                             selectedUserId = null
-                            navigationMeetDetail(ScreenRoute.Home.FriendMeetDetail(friendId = friend.id))
+                            navigationFriendDetail(
+                                ScreenRoute.HomeRoute.Main.BottomNavigation.FriendMeetDetail(
+                                    friendId = friend.id
+                                )
+                            )
                         },
                         updateFavorite = updateFavorite
                     )
@@ -485,7 +489,7 @@ fun UserListViewPreview(
 ) {
     FriedListContent(
         userList = data,
-        navigationMeetDetail = {},
+        navigationFriendDetail = {},
         deleteFriend = { _, _, _ -> },
         updateFavorite = { _, _, _ -> },
         modifier = Modifier

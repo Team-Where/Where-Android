@@ -162,7 +162,7 @@ internal fun NavHostController.navigateComplete() {
 }
 
 internal fun NavHostController.navigateHome() {
-    navigate(ScreenRoute.Home) {
+    navigate(ScreenRoute.HomeRoute) {
         launchSingleTop = true
         popUpTo<ScreenRoute.AuthRoute> {
             inclusive = true

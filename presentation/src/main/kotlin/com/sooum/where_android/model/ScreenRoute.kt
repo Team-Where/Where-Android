@@ -56,33 +56,33 @@ sealed interface ScreenRoute {
 
 
     @Serializable
-    data object Home : ScreenRoute {
+    data object HomeRoute {
 
         @Serializable
-        sealed interface BottomNavigation {
+        data object Main : ScreenRoute {
 
             @Serializable
-            data object MeetList : BottomNavigation
+            sealed interface BottomNavigation {
 
-            @Serializable
-            data object FriendsList : BottomNavigation
+                @Serializable
+                data object MeetList : BottomNavigation
+
+                @Serializable
+                data object FriendsList : BottomNavigation
+
+                @Serializable
+                data class FriendMeetDetail(
+                    val friendId: Int
+                ) : BottomNavigation
+            }
         }
 
         @Serializable
-        data object Main : ScreenRoute
-
-        @Serializable
-        data class FriendMeetDetail(
-            val friendId: Int
-        ) : ScreenRoute
-
-        @Serializable
         data object MeetGuide : ScreenRoute
+
+        @Serializable
+        data class MeetDetail(
+            val meetDetailId: Int
+        ) : ScreenRoute
     }
-
-    @Serializable
-    data class MeetDetail(
-        val meetDetailId: Int
-    ) : ScreenRoute
-
 }
