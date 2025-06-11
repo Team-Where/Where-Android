@@ -60,3 +60,11 @@ fun Fragment.showSimpleToast(
 ) {
     requireContext().showSimpleToast(msg)
 }
+
+fun Context.openMarket() {
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        data = "market://details?id=$packageName".toUri()
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    startActivity(intent)
+}

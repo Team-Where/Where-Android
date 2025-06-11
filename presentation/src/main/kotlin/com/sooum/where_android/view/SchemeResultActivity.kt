@@ -14,7 +14,6 @@ import com.sooum.domain.model.SimpleMeet
 import com.sooum.where_android.WhereApp
 import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.view.invite.InviteBySchemeView
-import com.sooum.where_android.view.splash.SplashActivity
 import com.sooum.where_android.viewmodel.invite.InviteLinkViewModel
 import com.sooum.where_android.viewmodel.invite.SchemeResultViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,16 +58,16 @@ class SchemeResultActivity : AppCompatActivity() {
                 name = name,
                 code = code,
                 onSuccess = { simpleMeet ->
-                    val intent = if (activity == null) {
-                        Intent(this@SchemeResultActivity, SplashActivity::class.java)
+                    if (activity == null) {
+                        finish()
                     } else {
-                        Intent(this@SchemeResultActivity, activity::class.java)
+                        val intent = Intent(this@SchemeResultActivity, activity::class.java)
+                        intent.apply {
+                            addInviteScheme(simpleMeet, name!!, code!!)
+                        }
+                        finish()
+                        startActivity(intent)
                     }
-                    intent.apply {
-                        addInviteScheme(simpleMeet, name!!, code!!)
-                    }
-                    finish()
-                    startActivity(intent)
                 },
                 onFail = { msg ->
                     if (msg.isNotEmpty()) {

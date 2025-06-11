@@ -8,7 +8,6 @@ import com.sooum.core.notification.alarm.AlarmReceiver
 import com.sooum.where_android.WhereApp
 import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
-import com.sooum.where_android.view.splash.SplashActivity
 import java.io.Serializable
 
 internal const val LOCAL_ALARM_PROVIDER = "localAlarmProvider"
@@ -27,9 +26,8 @@ class LocalAlarmResultActivity : Activity() {
         if (meetId >= 0) {
             val intent = when (activity) {
                 null -> {
-                    Intent(this@LocalAlarmResultActivity, SplashActivity::class.java)
+                    return finish()
                 }
-
                 is MainActivity,
                 is MyMeetActivity -> {
                     Intent(this@LocalAlarmResultActivity, MyMeetActivity::class.java)

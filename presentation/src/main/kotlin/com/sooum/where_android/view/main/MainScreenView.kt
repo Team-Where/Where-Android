@@ -41,7 +41,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sooum.domain.model.Friend
@@ -178,56 +177,54 @@ fun MainScreenView(
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = ScreenRoute.MainGraph,
+                        startDestination = ScreenRoute.Home.Main,
                         modifier = Modifier
                     ) {
-                        navigation<ScreenRoute.MainGraph>(startDestination = ScreenRoute.Home.Main) {
-                            composable<ScreenRoute.Home.Main> {
-                                HomeScreenView(
-                                    navController = bottomNavController,
-                                    openDrawer = {
-                                        scope.launch {
-                                            drawerState.apply {
-                                                if (isClosed) open() else close()
-                                            }
-                                        }
-                                    },
-                                    navigationMeetDetail = navController::navigateMeetDetail,
-                                    navigationFriendDetail = navController::navigateFriendDetail,
-                                    navigationGuide = {
-                                        navController.navigate(ScreenRoute.Home.MeetGuide) {
-                                            launchSingleTop = true
+                        composable<ScreenRoute.Home.Main> {
+                            HomeScreenView(
+                                navController = bottomNavController,
+                                openDrawer = {
+                                    scope.launch {
+                                        drawerState.apply {
+                                            if (isClosed) open() else close()
                                         }
                                     }
-                                )
-                            }
-                            composable<ScreenRoute.Home.MeetGuide>() {
-                                MyMeetGuideView(
-                                    onBack = navController::popBackStack
-                                )
-                            }
-                            composable<ScreenRoute.Home.FriendMeetDetail>() {
-                                FriendMeetDetailView(
-                                    onBack = navController::popBackStack,
-                                    navigationMeetDetail = navController::navigateMeetDetail
-                                )
-                            }
-                            dialog<NewMeetResult>(
-                                dialogProperties = DialogProperties(
-                                    usePlatformDefaultWidth = false,
-                                    dismissOnBackPress = false
-                                )
-                            ) {
-                                val result = it.toRoute<NewMeetResult>()
-                                NewMeetResultView(
-                                    result = result,
-                                    close = navController::popBackStack,
-                                    navigationDetail = { id ->
-                                        navController.popBackStack()
-                                        navController.navigateMeetDetailById(id)
+                                },
+                                navigationMeetDetail = navController::navigateMeetDetail,
+                                navigationFriendDetail = navController::navigateFriendDetail,
+                                navigationGuide = {
+                                    navController.navigate(ScreenRoute.Home.MeetGuide) {
+                                        launchSingleTop = true
                                     }
-                                )
-                            }
+                                }
+                            )
+                        }
+                        composable<ScreenRoute.Home.MeetGuide>() {
+                            MyMeetGuideView(
+                                onBack = navController::popBackStack
+                            )
+                        }
+                        composable<ScreenRoute.Home.FriendMeetDetail>() {
+                            FriendMeetDetailView(
+                                onBack = navController::popBackStack,
+                                navigationMeetDetail = navController::navigateMeetDetail
+                            )
+                        }
+                        dialog<NewMeetResult>(
+                            dialogProperties = DialogProperties(
+                                usePlatformDefaultWidth = false,
+                                dismissOnBackPress = false
+                            )
+                        ) {
+                            val result = it.toRoute<NewMeetResult>()
+                            NewMeetResultView(
+                                result = result,
+                                close = navController::popBackStack,
+                                navigationDetail = { id ->
+                                    navController.popBackStack()
+                                    navController.navigateMeetDetailById(id)
+                                }
+                            )
                         }
                     }
                 }

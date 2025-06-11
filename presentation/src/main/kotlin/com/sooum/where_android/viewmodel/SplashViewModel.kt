@@ -8,9 +8,7 @@ import com.sooum.domain.model.TokenStatus
 import com.sooum.domain.usecase.auth.VersionCheckUseCase
 import com.sooum.domain.usecase.user.CheckUserTokenExpiredUseCase
 import com.sooum.domain.util.AppVersionProvider
-import com.sooum.where_android.view.auth.AuthActivity
-import com.sooum.where_android.view.main.MainActivity
-import com.sooum.where_android.view.onboarding.OnBoardingActivity
+import com.sooum.where_android.model.ScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -30,7 +28,7 @@ class SplashViewModel @Inject constructor(
 
     fun checkSplash(
         needUpdate: () -> Unit,
-        complete: (dest: Class<*>) -> Unit,
+        complete: (dest: ScreenRoute) -> Unit,
         onVersionCheckFailed: () -> Unit
     ) {
         viewModelScope.launch {
@@ -66,15 +64,15 @@ class SplashViewModel @Inject constructor(
                 val isFirst = isFirstLaunch.await()
                 val dest = if (result) {
                     //이미 로그인 되어있다면 Main으로 바로 가기
-                    MainActivity::class.java
+                    ScreenRoute.Home
                 } else {
                     //로그인 되어있지 않다면
                     if (isFirst) {
                         //첫 실행인 경우 온보딩
-                        OnBoardingActivity::class.java
+                        ScreenRoute.OnBoarding
                     } else {
                         //로그인 화면으로...
-                        AuthActivity::class.java
+                        ScreenRoute.AuthRoute.Auth
                     }
                 }
                 complete(dest)

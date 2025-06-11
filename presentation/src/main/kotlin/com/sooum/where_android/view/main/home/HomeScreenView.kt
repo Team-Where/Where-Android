@@ -22,12 +22,12 @@ fun HomeScreenView(
 ) {
     NavHost(
         navController = navController,
-        startDestination = ScreenRoute.BottomNavigation.MeetList,
+        startDestination = ScreenRoute.Home.BottomNavigation.MeetList,
         modifier = Modifier.padding(
             horizontal = 10.dp
         )
     ) {
-        composable<ScreenRoute.BottomNavigation.MeetList>() {
+        composable<ScreenRoute.Home.BottomNavigation.MeetList>() {
             MyMeetView(
                 openDrawer = openDrawer,
                 navigationGuide = navigationGuide,
@@ -35,7 +35,7 @@ fun HomeScreenView(
                 modifier = Modifier
             )
         }
-        composable<ScreenRoute.BottomNavigation.FriendsList>() {
+        composable<ScreenRoute.Home.BottomNavigation.FriendsList>() {
             FriendListView(
                 navigationMeetDetail = navigationFriendDetail,
                 modifier = Modifier

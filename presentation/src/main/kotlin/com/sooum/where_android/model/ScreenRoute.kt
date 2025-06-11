@@ -2,37 +2,63 @@ package com.sooum.where_android.model
 
 import kotlinx.serialization.Serializable
 
-sealed class ScreenRoute {
+sealed interface ScreenRoute {
 
     @Serializable
-    data object MainGraph : ScreenRoute()
-
-    sealed class BottomNavigation : ScreenRoute() {
+    data object SplashRoute {
 
         @Serializable
-        data object MeetList : BottomNavigation()
+        data object Splash : ScreenRoute
 
         @Serializable
-        data object FriendsList : BottomNavigation()
+        data object UpdateAlert : ScreenRoute
+
+        @Serializable
+        data object ErrorAlert : ScreenRoute
     }
 
-    sealed class Home :ScreenRoute() {
+    @Serializable
+    data object AuthRoute {
 
         @Serializable
-        data object Main : Home()
+        data object Auth : ScreenRoute
+
+        @Serializable
+        data object SocialLogin : ScreenRoute
+    }
+
+    @Serializable
+    data object OnBoarding : ScreenRoute
+
+
+    @Serializable
+    data object Home : ScreenRoute {
+
+        @Serializable
+        sealed interface BottomNavigation {
+
+            @Serializable
+            data object MeetList : BottomNavigation
+
+            @Serializable
+            data object FriendsList : BottomNavigation
+        }
+
+        @Serializable
+        data object Main : ScreenRoute
 
         @Serializable
         data class FriendMeetDetail(
             val friendId: Int
-        ) : Home()
+        ) : ScreenRoute
 
         @Serializable
-        data object MeetGuide : Home()
+        data object MeetGuide : ScreenRoute
     }
 
     @Serializable
     data class MeetDetail(
         val meetDetailId: Int
-    ) : ScreenRoute()
+    ) : ScreenRoute
 
 }

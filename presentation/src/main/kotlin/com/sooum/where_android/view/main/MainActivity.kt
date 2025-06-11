@@ -2,17 +2,22 @@ package com.sooum.where_android.view.main
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ViewCompositionStrategy
-import com.sooum.where_android.databinding.ActivityMainBinding
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.LocalAlarmProvider
 import com.sooum.where_android.view.checkInviteData
 import com.sooum.where_android.view.getLocalAlarmProvider
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
+import com.sooum.where_android.view.splash.registerSplashRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -23,30 +28,42 @@ val LocalActivity = compositionLocalOf<MainActivity> {
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
 
         intent?.checkInviteData(this@MainActivity)
         intent?.getLocalAlarmProvider()?.let {
             it.startToDetail()
         }
 
-        with(binding.composeView) {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool)
-            setContent {
-                CompositionLocalProvider(
-                    LocalActivity provides this@MainActivity
+        setContent {
+            val mainNavController = rememberNavController()
+            CompositionLocalProvider(
+                LocalActivity provides this@MainActivity
+            ) {
+                NavHost(
+                    navController = mainNavController,
+                    startDestination = ScreenRoute.SplashRoute
                 ) {
-                    MainScreenView(
-                        modifier = Modifier.fillMaxSize()
+                    registerSplashRoute(
+                        navigateScreen = {
+                            mainNavController.navigate(it) {
+                                launchSingleTop = true
+                                popUpTo<ScreenRoute.SplashRoute>() {
+                                    inclusive = true
+                                }
+                            }
+                        }
                     )
+                    composable<ScreenRoute.Home>() {
+                        MainScreenView(
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                 }
             }
         }
-        setContentView(binding.root)
     }
 
     override fun onNewIntent(intent: Intent?) {
