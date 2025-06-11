@@ -25,9 +25,7 @@ class LocalAlarmResultActivity : Activity() {
 
         if (meetId >= 0) {
             val intent = when (activity) {
-                null -> {
-                    return finish()
-                }
+                null,
                 is MainActivity,
                 is MyMeetActivity -> {
                     Intent(this@LocalAlarmResultActivity, MyMeetActivity::class.java)
