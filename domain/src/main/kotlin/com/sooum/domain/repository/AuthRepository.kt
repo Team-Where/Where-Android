@@ -60,4 +60,11 @@ interface AuthRepository {
         refreshToken: String
     ): Flow<ApiResult<PostRefreshTokenResult>>
 
+    /**
+     *  이메일 중복을 확인한다
+     */
+    suspend fun checkEmail(
+        email: String
+    ): Flow<ApiResult<Unit>>
+
 }

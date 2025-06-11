@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
@@ -13,6 +14,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentEmailVerificationBinding
+import com.sooum.where_android.view.widget.CustomSnackBar
+import com.sooum.where_android.view.widget.IconType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -41,17 +44,31 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
             }
 
             btnEmailCode.setOnClickListener {
-                authViewModel.getEmailAuth(editTextEmail.text.toString().trim())
-                btnEmailCode.text = "재전송"
-                startTimer()
+                val email = editTextEmail.text.toString().trim()
+                if (email.isNotEmpty() && isValidEmail(email)) {
+                    authViewModel.getEmailAuth(email)
+                    btnEmailCode.text = "재전송"
+                    editTextEmail.isEnabled = false
+                } else {
+                    showToast("이메일을 확인해주세요")
+                }
             }
 
-            editTextEmail.doAfterTextChanged { email ->
-                val input = email.toString()
-                authViewModel.onEmailVerifyInputChanged(input, editTextCode.text.toString())
+            editTextEmail.doAfterTextChanged {
+                authViewModel.onEmailInputChanged(it.toString())
 
-                textEmailWrong.visibility =
-                    if (input.isNotEmpty() && !isValidEmail(input)) View.VISIBLE else View.INVISIBLE
+                val isValid = isValidEmail(it.toString())
+                updateEditTextBackground(editTextEmail, isValid)
+                textEmailWrong.visibility = if (it.toString().isNotEmpty() && !isValid) View.VISIBLE else View.INVISIBLE
+                btnEmailCode.setBackgroundResource(
+                    if (isValid) R.drawable.shape_rounded_black else R.drawable.shape_rounded_gray_500
+                )
+            }
+
+
+            editTextEmail.setOnFocusChangeListener { _, _ ->
+                val email = editTextEmail.text.toString().trim()
+                updateEditTextBackground(editTextEmail, isValidEmail(email))
             }
 
             editTextCode.doAfterTextChanged { code ->
@@ -59,12 +76,15 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                     editTextEmail.text.toString(),
                     code.toString()
                 )
+                editTextCode.setBackgroundResource(R.drawable.shape_rounded_purple_radius_12)
             }
+
         }
 
         observeEmailRequestResult()
         observeEmailVerificationResult()
         setUpNextButtonStateObserver()
+        observeCheckEmail()
     }
 
     override fun onDestroyView() {
@@ -83,11 +103,33 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                     is ApiResult.Loading -> loadingAlertProvider.startLoading()
                     is ApiResult.Success -> {
                         loadingAlertProvider.endLoading()
-                        showToast("인증코드가 전송되었습니다.")
+                        startTimer()
+                        val snackBar = CustomSnackBar.make(requireView(), "인증 코드가 전송되었습니다.", IconType.Check)
+                        snackBar.showWithAnchor(binding.nextBtn)
                     }
 
                     is ApiResult.Fail -> {
                         loadingAlertProvider.endLoadingWithMessage("인증코드 전송에 실패하였습니다.")
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    // 이부분 수정해줘야함 그리고 실패뜨면 인증코드 전송 버튼도 비활성화
+    private fun observeCheckEmail() {
+        lifecycleScope.launch {
+            authViewModel.checkEmailState.collect { result ->
+                when (result) {
+                    is ApiResult.Loading -> loadingAlertProvider.startLoading()
+                    is ApiResult.Success -> {
+                        loadingAlertProvider.endLoading()
+                    }
+
+                    is ApiResult.Fail -> {
+                        binding.textEmailWrong.text = "이미 가입된 이메일입니다"
                     }
 
                     else -> {}
@@ -108,11 +150,7 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                                 authViewModel.setEmail(binding.editTextEmail.text.toString().trim())
                                 navigateTo(PasswordFragment())
                             }
-
-                            "Expired" -> showToast("인증번호가 만료되었습니다.")
-                            "NotVerified" -> showToast("인증번호가 일치하지 않습니다.")
-                            "NotSend" -> showToast("인증요청을 먼저 해주세요.")
-                            else -> showToast("알 수 없는 응답입니다: ${result.data}")
+                            else -> showVerificationResultSnackBar(result.data)
                         }
                     }
 
@@ -139,6 +177,7 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                 binding.textTimer.text = "00:00"
                 binding.textTimeOver.visibility = View.VISIBLE
                 binding.textTimer.setTextColor(ContextCompat.getColor(requireContext(), R.color.red_scale_700))
+                binding.editTextCode.setBackgroundResource(R.drawable.shape_rounded_red_radius_12)
             }
         }.start()
     }
@@ -158,5 +197,27 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
             editTextEmail.doAfterTextChanged { updateNextButtonState() }
             editTextCode.doAfterTextChanged { updateNextButtonState() }
         }
+    }
+
+    private fun updateEditTextBackground(
+        editText: EditText,
+        isValid: Boolean,
+        validBackgroundRes: Int = R.drawable.shape_rounded_purple_radius_12,
+        invalidBackgroundRes: Int = R.drawable.shape_rounded_red_radius_12
+    ) {
+        val resId = if (isValid) validBackgroundRes else invalidBackgroundRes
+        editText.setBackgroundResource(resId)
+    }
+
+    private fun showVerificationResultSnackBar(result: String) {
+        val (message, iconType) = when (result) {
+            "Verified" -> return
+            "Expired" -> "인증번호가 만료되었습니다." to IconType.Error
+            "NotVerified" -> "인증번호가 일치하지 않습니다." to IconType.Error
+            "NotSend" -> "인증요청을 먼저 해주세요." to IconType.Error
+            else -> "알 수 없는 응답입니다" to IconType.Error
+        }
+        val snackBar = CustomSnackBar.make(requireView(), message, iconType)
+        snackBar.showWithAnchor(binding.nextBtn)
     }
 }

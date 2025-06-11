@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.TokenStatus
 import com.sooum.domain.usecase.auth.VersionCheckUseCase
+import com.sooum.domain.usecase.user.CheckUserTokenExpiredUseCase
 import com.sooum.domain.util.AppVersionProvider
 import com.sooum.where_android.view.auth.AuthActivity
 import com.sooum.where_android.view.main.MainActivity
@@ -22,7 +24,8 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val appManageDataStore: AppManageDataStore,
     private val versionCheckUseCase: VersionCheckUseCase,
-    private val appVersionProvider: AppVersionProvider
+    private val appVersionProvider: AppVersionProvider,
+    private val checkUserTokenExpiredUseCase: CheckUserTokenExpiredUseCase,
 ) : ViewModel() {
 
     fun checkSplash(
@@ -36,8 +39,7 @@ class SplashViewModel @Inject constructor(
                 delay(3000L)
             }
             val checkLogin = async {
-
-                true
+                checkUserTokenExpiredUseCase() == TokenStatus.NOT_EXPIRED
             }
             val checkAppUpdate = async {
                 val version = appVersionProvider.getVersionName()

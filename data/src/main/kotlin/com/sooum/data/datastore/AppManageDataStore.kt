@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -25,6 +26,7 @@ class AppManageDataStore @Inject constructor(
 
     companion object {
 
+        private val USER_ID = intPreferencesKey("user_id")
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         private val KAKAO_ACCESS_TOKEN = stringPreferencesKey("kakao_access_token")
@@ -32,6 +34,18 @@ class AppManageDataStore @Inject constructor(
         private val NAVER_ACCESS_TOKEN = stringPreferencesKey("naver_access_token")
         private val NAVER_REFRESH_TOKEN = stringPreferencesKey("naver_refresh_token")
         private val FIRST_LAUNCH = booleanPreferencesKey("first_launch")
+    }
+
+    suspend fun saveUserId(userId: Int) {
+        appDataStore.edit { preferences ->
+            preferences[USER_ID] = userId
+        }
+    }
+
+    fun getUserId(): Flow<Int?> {
+        return appDataStore.data.map { preferences ->
+            preferences[USER_ID]
+        }
     }
 
     suspend fun saveAccessToken(token: String) {

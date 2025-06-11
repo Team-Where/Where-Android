@@ -1,5 +1,6 @@
 package com.sooum.data.repository
 
+import android.util.Log
 import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.data.network.auth.AuthApi
 import com.sooum.data.network.auth.request.EmailVerifyRequest
@@ -8,6 +9,7 @@ import com.sooum.data.network.auth.request.NameOnlyRequest
 import com.sooum.data.network.auth.request.SignUpRequest
 import com.sooum.data.network.safeFlow
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.CheckEmail
 import com.sooum.domain.model.EmailVerifyResult
 import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.LoginResult
@@ -37,7 +39,16 @@ class AuthRepositoryImpl @Inject constructor(
         val request = SignUpRequest(
             email, password, name, profileImage
         )
-       return safeFlow { authApi.signUp(request) }
+       return safeFlow {
+          val response =  authApi.signUp(request)
+           if (response.isSuccessful) {
+              val body = response.body()
+              if (body != null){
+                  appManageDataStore.saveUserId(body.id)
+              }
+           }
+           response
+       }
     }
 
     override suspend fun login(email: String, password: String): Flow<ApiResult<LoginResult>> {
@@ -46,12 +57,15 @@ class AuthRepositoryImpl @Inject constructor(
         return safeFlow {
             val response = authApi.login(request)
 
+            Log.d("AuthRepositoryImpl", response.body().toString())
+
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
                     val accessToken = response.headers()["Authorization"]?.removePrefix("Bearer ")?.trim()
                     val refreshToken = response.headers()["Refresh-Token"]
 
+                    appManageDataStore.saveUserId(body.userId)
                     accessToken?.let { appManageDataStore.saveAccessToken(it) }
                     refreshToken?.let { appManageDataStore.saveRefreshToken(it) }
                 }
@@ -95,6 +109,13 @@ class AuthRepositoryImpl @Inject constructor(
        return safeFlow {
          authApi.refreshToken(refreshToken = refreshToken)
        }
+    }
+
+    override suspend fun checkEmail(email: String): Flow<ApiResult<Unit>> {
+        return safeFlow {
+            val request = CheckEmail(email)
+            authApi.checkEmail(request)
+        }
     }
 
 }

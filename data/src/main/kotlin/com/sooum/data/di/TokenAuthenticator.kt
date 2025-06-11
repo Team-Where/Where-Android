@@ -1,13 +1,13 @@
 package com.sooum.data.di
 
-import com.sooum.data.network.TokenProvider
 import com.sooum.data.network.auth.AuthApi
+import com.sooum.domain.repository.TokenProvider
 import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
+import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import okhttp3.Request
 
 class TokenAuthenticator @Inject constructor(
     private val tokenProvider: TokenProvider,
