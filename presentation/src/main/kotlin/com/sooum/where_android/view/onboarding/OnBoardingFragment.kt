@@ -5,11 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavHostController
 import androidx.viewpager2.widget.ViewPager2
 import com.sooum.where_android.databinding.ActivityOnBoardingBinding
+import com.sooum.where_android.viewmodel.OnBoardingViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 internal class OnBoardingFragment : Fragment() {
     private var _binding: ActivityOnBoardingBinding? = null
+
+    private val onBoardingViewModel: OnBoardingViewModel by activityViewModels()
+
     val binding: ActivityOnBoardingBinding
         get() = _binding!!
 
@@ -58,15 +66,17 @@ internal class OnBoardingFragment : Fragment() {
     }
 
     fun setNavigation(
-        onNavigationClick: () -> Unit
+        navHostController: NavHostController
     ) {
         with(binding) {
             nextBtn.setOnClickListener {
-                onNavigationClick()
+                onBoardingViewModel.updateNotFirstLaunch()
+                navHostController.navigateAuth()
             }
 
             skipText.setOnClickListener {
-                onNavigationClick()
+                onBoardingViewModel.updateNotFirstLaunch()
+                navHostController.navigateAuth()
             }
         }
     }

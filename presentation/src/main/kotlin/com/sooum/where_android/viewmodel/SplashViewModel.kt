@@ -72,7 +72,7 @@ class SplashViewModel @Inject constructor(
                         ScreenRoute.OnBoarding
                     } else {
                         //로그인 화면으로...
-                        ScreenRoute.AuthRoute.Auth
+                        ScreenRoute.AuthRoute.SocialLogin
                     }
                 }
                 complete(dest)
