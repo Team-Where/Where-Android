@@ -5,40 +5,70 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.sooum.where_android.databinding.FragmentOnBoardingFirstBinding
+import androidx.viewpager2.widget.ViewPager2
+import com.sooum.where_android.databinding.ActivityOnBoardingBinding
 
 class OnBoardingFragment : Fragment() {
-    private lateinit var binding : FragmentOnBoardingFirstBinding
-
-    companion object {
-        private const val TEXT_RES = "textRes"
-        private const val IMAGE_RES = "imageRes"
-
-        fun newInstance(textResId: Int, imageResId: Int): OnBoardingFragment {
-            val fragment = OnBoardingFragment()
-            fragment.arguments = Bundle().apply {
-                putInt(TEXT_RES, textResId)
-                putInt(IMAGE_RES, imageResId)
-            }
-            return fragment
-        }
-    }
+    private var _binding: ActivityOnBoardingBinding? = null
+    val binding: ActivityOnBoardingBinding
+        get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentOnBoardingFirstBinding.inflate(inflater, container, false)
-
-        val textRes = arguments?.getInt(TEXT_RES) ?: 0
-        val imageRes = arguments?.getInt(IMAGE_RES) ?: 0
-
-        with(binding){
-            textTitle.setText(textRes)
-            imageOnBoarding.setImageResource(imageRes)
-        }
-
-
+        _binding = ActivityOnBoardingBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        with(binding) {
+            with(container) {
+                adapter = ViewPagerAdapter(requireActivity())
+                registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        super.onPageSelected(position)
+                        with(binding.imageBack) {
+                            visibility = if (position == 0) {
+                                View.INVISIBLE
+                            } else {
+                                View.VISIBLE
+                            }
+                        }
+                        if (position == binding.container.adapter!!.itemCount - 1) {
+                            binding.skipText.visibility = View.GONE
+                            binding.nextBtn.visibility = View.VISIBLE
+                        } else {
+                            binding.skipText.visibility = View.VISIBLE
+                            binding.nextBtn.visibility = View.INVISIBLE
+                        }
+                    }
+                })
+            }
+            with(binding) {
+                nextBtn.setOnClickListener {
+                    (requireActivity() as OnBoardingActivity).goNextActivity()
+                }
+
+                skipText.setOnClickListener {
+                    (requireActivity() as OnBoardingActivity).goNextActivity()
+                }
+
+                dotsIndicator.attachTo(container)
+
+                imageBack.setOnClickListener {
+                    val prevItem = container.currentItem - 1
+                    if (prevItem >= 0) {
+                        container.currentItem = prevItem
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
