@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 sealed interface ScreenRoute {
 
     @Serializable
-    data object SplashRoute {
+    data object SplashRoute : ScreenRoute {
 
         @Serializable
         data object Splash : ScreenRoute
@@ -18,7 +18,7 @@ sealed interface ScreenRoute {
     }
 
     @Serializable
-    data object AuthRoute {
+    data object AuthRoute : ScreenRoute {
 
         @Serializable
         data object SocialLogin : ScreenRoute
@@ -56,7 +56,7 @@ sealed interface ScreenRoute {
 
 
     @Serializable
-    data object HomeRoute {
+    data object HomeRoute : ScreenRoute {
 
         @Serializable
         data object Main : ScreenRoute {
@@ -83,6 +83,12 @@ sealed interface ScreenRoute {
         @Serializable
         data class MeetDetail(
             val meetDetailId: Int
+        ) : ScreenRoute
+
+        @Serializable
+        data class InviteByCode(
+            val name: String,
+            val code: String
         ) : ScreenRoute
     }
 }

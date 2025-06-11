@@ -14,6 +14,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
 import com.sooum.domain.model.NewMeetResult
 import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.invite.SchemeView
 import com.sooum.where_android.view.main.home.myMeet.MyMeetGuideView
 import com.sooum.where_android.view.main.home.newMeet.NewMeetResultView
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
@@ -52,6 +53,28 @@ fun NavGraphBuilder.registerHomeRoute(
                     if (mainNavController.backToHome()) {
                         mainNavController.navigationMeetDetailId(id)
                     }
+                }
+            )
+        }
+        composable<ScreenRoute.HomeRoute.InviteByCode> {
+            SchemeView(
+                navigateHome = {
+                    mainNavController.navigate(ScreenRoute.HomeRoute.Main) {
+                        launchSingleTop = true
+                        popUpTo<ScreenRoute.HomeRoute.InviteByCode> {
+                            inclusive = true
+                        }
+                    }
+                },
+                navigateMeet = { id ->
+                    mainNavController.navigate(ScreenRoute.HomeRoute.Main) {
+                        launchSingleTop = true
+                        popUpTo<ScreenRoute.HomeRoute.InviteByCode> {
+                            inclusive = true
+                        }
+                    }
+                    mainNavController.navigationMeetDetailId(id)
+
                 }
             )
         }

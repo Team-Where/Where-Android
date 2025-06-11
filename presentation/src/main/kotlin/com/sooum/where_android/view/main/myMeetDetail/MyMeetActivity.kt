@@ -12,7 +12,6 @@ import com.sooum.domain.model.ShareResult
 import com.sooum.where_android.MyFirebaseMessagingService
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
 import com.sooum.where_android.view.MapShareResultActivity
-import com.sooum.where_android.view.checkInviteData
 import com.sooum.where_android.view.getLocalAlarmProvider
 import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
@@ -53,7 +52,6 @@ class MyMeetActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMyMeetBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        intent?.checkInviteData(this@MyMeetActivity)
 
         intent.getIntExtra(MEET_ID, 0).let { id ->
             myMeetDetailViewModel.loadData(id)
@@ -72,8 +70,6 @@ class MyMeetActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.d("JWH", intent.toString())
-        intent?.checkInviteData(this@MyMeetActivity)
-
         intent?.extras?.getString(MapShareResultActivity.SHARE_RESULT)?.let { data ->
             val shareResult = Json.decodeFromString<ShareResult>(data)
             myMeetDetailPlaceWithCommentViewModel.addPlace(shareResult) {

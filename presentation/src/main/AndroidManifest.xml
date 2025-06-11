@@ -40,19 +40,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-
-        <activity
-            android:name=".view.main.myMeetDetail.MyMeetActivity"
-            android:exported="false"
-            android:launchMode="singleTop" />
-
-
-        <activity
-            android:name=".view.SchemeResultActivity"
-            android:exported="true"
-            android:launchMode="singleInstance">
 
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -73,6 +60,12 @@
                 <data android:scheme="audiwhere" />
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name=".view.main.myMeetDetail.MyMeetActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
 
         <activity
             android:name=".view.MapShareResultActivity"

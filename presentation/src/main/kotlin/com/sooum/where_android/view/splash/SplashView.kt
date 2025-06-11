@@ -21,20 +21,21 @@ import com.sooum.where_android.viewmodel.SplashViewModel
 @Composable
 internal fun SplashView(
     splashViewModel: SplashViewModel = hiltViewModel(),
+    showAlert: (ScreenRoute) -> Unit,
     nextScreen: (ScreenRoute) -> Unit,
 ) {
     val context = LocalContext.current
     LaunchedEffect(true) {
         splashViewModel.checkSplash(
             needUpdate = {
-                nextScreen(ScreenRoute.SplashRoute.UpdateAlert)
+                showAlert(ScreenRoute.SplashRoute.UpdateAlert)
             },
             complete = { dest ->
                 nextScreen(dest)
             },
             onVersionCheckFailed = {
                 context.showSimpleToast("업데이트 정보를 가져올 수 없습니다.\n앱을 종료합니다.")
-//                nextScreen(ScreenRoute.SplashRoute.ErrorAlert)
+//                showAlert(ScreenRoute.SplashRoute.ErrorAlert)
             }
 
         )

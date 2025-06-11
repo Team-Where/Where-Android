@@ -13,7 +13,6 @@ import com.kakao.sdk.common.KakaoSdk
 import com.navercorp.nid.NaverIdLoginSDK
 import com.sooum.where_android.view.LocalAlarmResultActivity
 import com.sooum.where_android.view.MapShareResultActivity
-import com.sooum.where_android.view.SchemeResultActivity
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
 import java.lang.ref.WeakReference
@@ -70,7 +69,6 @@ class WhereApp : Application(), SingletonImageLoader.Factory {
     private fun updateCurrentActivity(activity: Activity) {
         val ignoredActivities = setOf(
             MapShareResultActivity::class.java,
-            SchemeResultActivity::class.java,
             LocalAlarmResultActivity::class.java
         )
 

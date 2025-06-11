@@ -207,5 +207,5 @@ interface MeetRemoteDataSource {
     suspend fun inviteOkFromLink(
         userId: Int,
         code: String
-    ): Flow<ApiResult<Meet>>
+    ): Flow<ApiResult<MeetDetail>>
 }

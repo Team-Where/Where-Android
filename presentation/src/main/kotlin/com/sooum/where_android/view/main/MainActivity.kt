@@ -17,7 +17,6 @@ import androidx.navigation.compose.rememberNavController
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.LocalAlarmProvider
 import com.sooum.where_android.view.auth.registerAuthRoute
-import com.sooum.where_android.view.checkInviteData
 import com.sooum.where_android.view.common.modal.LoadingScreenProvider
 import com.sooum.where_android.view.common.modal.LoadingView
 import com.sooum.where_android.view.getLocalAlarmProvider
@@ -41,7 +40,6 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        intent?.checkInviteData(this@MainActivity)
         intent?.getLocalAlarmProvider()?.let {
             it.startToDetail()
         }
@@ -80,7 +78,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        intent?.checkInviteData(this@MainActivity)
         intent?.getLocalAlarmProvider()?.let {
             it.startToDetail()
         }

@@ -27,7 +27,7 @@ class SplashViewModel @Inject constructor(
     private val appVersionProvider: AppVersionProvider,
     private val checkUserTokenExpiredUseCase: CheckUserTokenExpiredUseCase,
     private val loadMeetDetailListUseCase: LoadMeetDetailListUseCase,
-    private val loadFriedListUseCase: LoadFriedListUseCase
+    private val loadFriedListUseCase: LoadFriedListUseCase,
 ) : ViewModel() {
 
     fun checkSplash(
@@ -74,7 +74,7 @@ class SplashViewModel @Inject constructor(
                             loadFriedListUseCase(it)
                         }
                     //이미 로그인 되어있다면 Main으로 바로 가기
-                    ScreenRoute.HomeRoute.Main
+                    ScreenRoute.HomeRoute
                 } else {
                     //로그인 되어있지 않다면
                     if (isFirst) {
@@ -82,7 +82,7 @@ class SplashViewModel @Inject constructor(
                         ScreenRoute.OnBoarding
                     } else {
                         //로그인 화면으로...
-                        ScreenRoute.AuthRoute.SocialLogin
+                        ScreenRoute.AuthRoute
                     }
                 }
                 complete(dest)
