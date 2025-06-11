@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.main.home.friendList
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -60,6 +61,9 @@ fun FriendMeetDetailView(
 ) {
     val friend by friendDetailViewModel.friend.collectAsState()
 
+    BackHandler {
+        onBack()
+    }
     MeetDetailContent(
         onBack = onBack,
         navigationMeetDetail = navigationMeetDetail,

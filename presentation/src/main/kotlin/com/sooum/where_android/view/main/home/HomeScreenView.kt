@@ -53,7 +53,15 @@ fun HomeScreenView(
         }
         composable<ScreenRoute.HomeRoute.Main.BottomNavigation.FriendMeetDetail>() {
             FriendMeetDetailView(
-                onBack = navController::popBackStack,
+                onBack = {
+                    navController.navigate(ScreenRoute.HomeRoute.Main.BottomNavigation.FriendsList) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
                 navigationMeetDetail = {
                     navigationMeetDetailId(it.meetId)
                 }
