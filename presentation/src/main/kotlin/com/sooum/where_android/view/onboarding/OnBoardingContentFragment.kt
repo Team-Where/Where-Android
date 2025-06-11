@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentOnBoardingContentBinding
 
-class OnBoardingContentFragment : Fragment() {
+internal class OnBoardingContentFragment : Fragment() {
     private var _binding: FragmentOnBoardingContentBinding? = null
     val binding: FragmentOnBoardingContentBinding
         get() = _binding!!
@@ -31,9 +31,14 @@ class OnBoardingContentFragment : Fragment() {
             return fragment
         }
 
-        fun step1Instance() = newInstance(R.string.onboarding_logo1, R.drawable.image_splash_1)
-        fun step2Instance() = newInstance(R.string.onboarding_logo2, R.drawable.image_splash_2)
-        fun step3Instance() = newInstance(R.string.onboarding_logo3, R.drawable.image_splash_3)
+        internal fun step1Instance() =
+            newInstance(R.string.onboarding_logo1, R.drawable.image_splash_1)
+
+        internal fun step2Instance() =
+            newInstance(R.string.onboarding_logo2, R.drawable.image_splash_2)
+
+        internal fun step3Instance() =
+            newInstance(R.string.onboarding_logo3, R.drawable.image_splash_3)
     }
 
     override fun onCreateView(

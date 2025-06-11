@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.sooum.where_android.databinding.ActivityOnBoardingBinding
 
-class OnBoardingFragment : Fragment() {
+internal class OnBoardingFragment : Fragment() {
     private var _binding: ActivityOnBoardingBinding? = null
     val binding: ActivityOnBoardingBinding
         get() = _binding!!
@@ -16,7 +16,7 @@ class OnBoardingFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = ActivityOnBoardingBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -46,23 +46,27 @@ class OnBoardingFragment : Fragment() {
                     }
                 })
             }
-            with(binding) {
-                nextBtn.setOnClickListener {
-                    (requireActivity() as OnBoardingActivity).goNextActivity()
-                }
+            dotsIndicator.attachTo(container)
 
-                skipText.setOnClickListener {
-                    (requireActivity() as OnBoardingActivity).goNextActivity()
+            imageBack.setOnClickListener {
+                val prevItem = container.currentItem - 1
+                if (prevItem >= 0) {
+                    container.currentItem = prevItem
                 }
+            }
+        }
+    }
 
-                dotsIndicator.attachTo(container)
+    fun setNavigation(
+        onNavigationClick: () -> Unit
+    ) {
+        with(binding) {
+            nextBtn.setOnClickListener {
+                onNavigationClick()
+            }
 
-                imageBack.setOnClickListener {
-                    val prevItem = container.currentItem - 1
-                    if (prevItem >= 0) {
-                        container.currentItem = prevItem
-                    }
-                }
+            skipText.setOnClickListener {
+                onNavigationClick()
             }
         }
     }

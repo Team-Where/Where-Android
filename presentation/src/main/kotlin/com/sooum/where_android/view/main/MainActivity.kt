@@ -17,6 +17,7 @@ import com.sooum.where_android.view.LocalAlarmProvider
 import com.sooum.where_android.view.checkInviteData
 import com.sooum.where_android.view.getLocalAlarmProvider
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
+import com.sooum.where_android.view.onboarding.registerOnBoardingRoute
 import com.sooum.where_android.view.splash.registerSplashRoute
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,16 +47,9 @@ class MainActivity : AppCompatActivity() {
                     navController = mainNavController,
                     startDestination = ScreenRoute.SplashRoute
                 ) {
-                    registerSplashRoute(
-                        navigateScreen = {
-                            mainNavController.navigate(it) {
-                                launchSingleTop = true
-                                popUpTo<ScreenRoute.SplashRoute>() {
-                                    inclusive = true
-                                }
-                            }
-                        }
-                    )
+                    registerSplashRoute(mainNavController)
+                    registerOnBoardingRoute(mainNavController)
+
                     composable<ScreenRoute.Home>() {
                         MainScreenView(
                             modifier = Modifier.fillMaxSize()
