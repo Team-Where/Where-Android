@@ -50,6 +50,7 @@
         android:background="@drawable/shape_rounded_gray_radius_12"
         android:hint="이메일 주소를 입력해주세요"
         android:imeOptions="actionDone"
+        android:selectAllOnFocus="true"
         android:inputType="textEmailAddress"
         android:maxLines="1"
         android:padding="16dp"

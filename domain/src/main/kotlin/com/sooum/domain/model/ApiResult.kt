@@ -12,12 +12,6 @@ sealed class ApiResult<out T> {
     data object SuccessEmpty : ApiResult<Nothing>()
 
     /**
-     * 삭제 예정
-     */
-    @Deprecated("삭제예정 관련 사용을 제거해주세요!!!!")
-    data object Loading : ApiResult<Nothing>()
-
-    /**
      * 실패
      */
     sealed class Fail : ApiResult<Nothing>() {

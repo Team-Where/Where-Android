@@ -1,6 +1,5 @@
 package com.sooum.where_android.viewmodel.auth
 
-import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ApiResult
@@ -9,43 +8,16 @@ import com.sooum.domain.usecase.auth.EmailVerifyUseCase
 import com.sooum.domain.usecase.auth.RequestEmailAuthUseCase
 import com.sooum.domain.usecase.auth.SignUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@OptIn(FlowPreview::class)
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
     private val getRequestEmailAuthUseCase: RequestEmailAuthUseCase,
     private val emailVerifyUseCase: EmailVerifyUseCase,
     private val checkEmailUseCase: CheckEmailUseCase,
-) : ViewModel(){
-  
-    private val _emailRequestState = MutableStateFlow<ApiResult<Unit>>(ApiResult.SuccessEmpty)
-    val emailRequestState: StateFlow<ApiResult<Unit>> = _emailRequestState.asStateFlow()
-
-    private val _emailVerifyState = MutableSharedFlow<ApiResult<String>>(replay = 0)
-    val emailVerifyState: SharedFlow<ApiResult<String>> = _emailVerifyState
-
-    private val _checkEmailState = MutableSharedFlow<ApiResult<Unit>>(replay = 0)
-    val checkEmailState: SharedFlow<ApiResult<Unit>> = _checkEmailState
-
-    private val _emailInput = MutableStateFlow("")
-    val emailInput: StateFlow<String> = _emailInput
-
-    fun onEmailInputChanged(input: String) {
-        _emailInput.value = input
-    }
+) : ViewModel() {
 
     var email: String = ""
         private set
@@ -116,30 +88,45 @@ class AuthViewModel @Inject constructor(
     }
 
     /**
-     * 이메일 중복 확인 기능
+     * 이메일 중복 확인 및 검증 코드 요청
      */
-    fun checkEmail(email: String) {
-      viewModelScope.launch {
-          checkEmailUseCase(
-              email = email
-          ).collect{ result ->
-              _checkEmailState.emit(result)
-          }
-      }
-    }
-
-    /**
-     * 이메일 검증 코드를 요청
-     */
-    fun getEmailAuth(email: String){
+    fun checkEmailAndAuth(
+        email: String,
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
+    ) {
         viewModelScope.launch {
-            getRequestEmailAuthUseCase(
+            checkEmailUseCase(
                 email = email
-            ).collect{ result ->
-               _emailRequestState.value = result
+            ).collect { checkResult ->
+                when (checkResult) {
+                    is ApiResult.Success -> {
+                        getRequestEmailAuthUseCase(
+                            email = email
+                        ).collect { authResult ->
+                            when (authResult) {
+                                is ApiResult.Success -> {
+                                    onSuccess()
+                                }
 
-                if (result is ApiResult.Success || result is ApiResult.Fail) {
-                    _emailRequestState.value = ApiResult.SuccessEmpty
+                                is ApiResult.Fail.Error -> {
+                                    onFail("인증코드 전송에 실패하였습니다.")
+                                }
+
+                                else -> {
+                                    onFail("인증코드 전송에 실패하였습니다.")
+                                }
+                            }
+                        }
+                    }
+
+                    is ApiResult.Fail.Error -> {
+                        onFail(checkResult.message ?: "인증코드 전송에 실패하였습니다.")
+                    }
+
+                    else -> {
+                        onFail("인증코드 전송에 실패하였습니다.")
+                    }
                 }
             }
         }
@@ -148,30 +135,31 @@ class AuthViewModel @Inject constructor(
     /**
      * 이메일 검증 코드를 확인
      */
-    fun verifyEmailCode(email: String, code: String){
+    fun verifyEmailCode(
+        email: String,
+        code: String,
+        onSuccess: (status: String) -> Unit,
+        onFail: (msg: String) -> Unit
+    ) {
         viewModelScope.launch {
             emailVerifyUseCase(
                 email = email,
                 code = code
-            ).collect{ result ->
-                _emailVerifyState.emit(result)
+            ).collect { result ->
+                when (result) {
+                    is ApiResult.Success -> {
+                        onSuccess(result.data)
+                    }
 
-                if (result is ApiResult.Success || result is ApiResult.Fail) {
-                    _emailRequestState.value = ApiResult.SuccessEmpty
+                    is ApiResult.Fail.Error -> {
+                        onFail("이메일 인증 요청에 실패했습니다.")
+                    }
+
+                    else -> {
+                        onFail("이메일 인증 요청에 실패했습니다.")
+                    }
                 }
             }
-        }
-    }
-
-    init {
-        viewModelScope.launch {
-            _emailInput
-                .debounce(300) // 입력 후 300ms 동안 정지하면 실행
-                .filter { it.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(it).matches() }
-                .distinctUntilChanged()
-                .collectLatest { email ->
-                    checkEmail(email)
-                }
         }
     }
 }
