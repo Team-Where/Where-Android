@@ -1,6 +1,7 @@
 package com.sooum.domain.usecase.user
 
 import android.util.Base64
+import com.sooum.domain.model.TokenStatus
 import com.sooum.domain.repository.TokenProvider
 import org.json.JSONObject
 import java.nio.charset.Charset
@@ -14,14 +15,23 @@ import javax.inject.Inject
 class CheckUserTokenExpiredUseCase @Inject constructor(
     private val tokenProvider: TokenProvider
 ) {
-    suspend operator fun invoke(): Boolean {
+    suspend operator fun invoke(): TokenStatus {
         val refreshToken: String? = tokenProvider.getRefreshToken()
+
         return if (refreshToken == null) {
-            false
+            TokenStatus.NONE
         } else {
             val exp = getJwtExpiration(refreshToken)
             val now = System.currentTimeMillis() / 1000
-            exp != null && exp > now
+            if (exp == null) {
+                TokenStatus.NONE
+            } else {
+                if (exp > now) {
+                    TokenStatus.NOT_EXPIRED
+                } else {
+                    TokenStatus.EXPIRED
+                }
+            }
         }
     }
 
