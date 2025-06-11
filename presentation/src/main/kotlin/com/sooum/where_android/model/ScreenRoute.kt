@@ -21,9 +21,6 @@ sealed interface ScreenRoute {
     data object AuthRoute {
 
         @Serializable
-        data object Auth : ScreenRoute
-
-        @Serializable
         data object SocialLogin : ScreenRoute
 
         @Serializable

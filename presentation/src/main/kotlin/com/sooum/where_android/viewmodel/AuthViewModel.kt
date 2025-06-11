@@ -4,18 +4,14 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.model.CheckEmail
 import com.sooum.domain.model.SignUpResult
 import com.sooum.domain.usecase.auth.CheckEmailUseCase
 import com.sooum.domain.usecase.auth.EmailVerifyUseCase
-import com.sooum.domain.usecase.auth.LoginUseCase
 import com.sooum.domain.usecase.auth.RequestEmailAuthUseCase
 import com.sooum.domain.usecase.auth.SignUpUseCase
-import com.sooum.domain.usecase.auth.ValidatePasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,19 +21,16 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase,
     private val signUpUseCase: SignUpUseCase,
     private val getRequestEmailAuthUseCase: RequestEmailAuthUseCase,
     private val emailVerifyUseCase: EmailVerifyUseCase,
-    private val checkEmailUseCase: CheckEmailUseCase
+    private val checkEmailUseCase: CheckEmailUseCase,
 ) : ViewModel(){
-
-    private val _loginState = MutableStateFlow<ApiResult<Any>>(ApiResult.SuccessEmpty)
-    val loginState: StateFlow<ApiResult<Any>> = _loginState.asStateFlow()
   
     private val _emailRequestState = MutableStateFlow<ApiResult<Unit>>(ApiResult.SuccessEmpty)
     val emailRequestState: StateFlow<ApiResult<Unit>> = _emailRequestState.asStateFlow()
@@ -92,18 +85,6 @@ class AuthViewModel @Inject constructor(
     fun onEmailVerifyInputChanged(emailValue: String, codeValue: String) {
         email = emailValue
         emailCode = codeValue
-    }
-
-    /**
-     * 로그인 기능
-     */
-    fun login(email: String, password: String) {
-        viewModelScope.launch {
-            _loginState.value = ApiResult.Loading
-            loginUseCase(email, password).collect { result ->
-                _loginState.value = result
-            }
-        }
     }
 
     /**

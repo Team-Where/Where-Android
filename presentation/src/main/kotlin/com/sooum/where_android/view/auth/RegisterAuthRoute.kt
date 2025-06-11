@@ -2,7 +2,7 @@ package com.sooum.where_android.view.auth
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.fragment.compose.AndroidFragment
@@ -29,7 +29,7 @@ fun NavGraphBuilder.registerAuthRoute(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.White)
-                    .safeDrawingPadding()
+                    .systemBarsPadding()
             ) { socialLoginFragment ->
                 socialLoginFragment.setNavigation(mainNavController)
             }
@@ -39,7 +39,7 @@ fun NavGraphBuilder.registerAuthRoute(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.White)
-                    .safeDrawingPadding()
+                    .systemBarsPadding()
             ) { signInFragment ->
                 signInFragment.setNavigation(mainNavController)
             }
@@ -49,7 +49,7 @@ fun NavGraphBuilder.registerAuthRoute(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.White)
-                    .safeDrawingPadding()
+                    .systemBarsPadding()
             ) { socialLoginProfileSettingFragment ->
                 socialLoginProfileSettingFragment.setNavigation(mainNavController)
             }
@@ -62,7 +62,7 @@ fun NavGraphBuilder.registerAuthRoute(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(Color.White)
-                        .safeDrawingPadding()
+                        .systemBarsPadding()
                 ) { agreementFragment ->
                     agreementFragment.setNavigation(mainNavController)
                 }
@@ -72,7 +72,7 @@ fun NavGraphBuilder.registerAuthRoute(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(Color.White)
-                        .safeDrawingPadding()
+                        .systemBarsPadding()
                 ) { emailVerificationFragment ->
                     emailVerificationFragment.setNavigation(mainNavController)
                 }
@@ -82,7 +82,7 @@ fun NavGraphBuilder.registerAuthRoute(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(Color.White)
-                        .safeDrawingPadding()
+                        .systemBarsPadding()
                 ) { passwordFragment ->
                     passwordFragment.setNavigation(mainNavController)
                 }
@@ -92,7 +92,7 @@ fun NavGraphBuilder.registerAuthRoute(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(Color.White)
-                        .safeDrawingPadding()
+                        .systemBarsPadding()
                 ) { profileSettingFragment ->
                     profileSettingFragment.setNavigation(mainNavController)
                 }
@@ -102,7 +102,7 @@ fun NavGraphBuilder.registerAuthRoute(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(Color.White)
-                        .safeDrawingPadding()
+                        .systemBarsPadding()
                 ) { signUpCompleteFragment ->
                     signUpCompleteFragment.setNavigation(mainNavController)
                 }
