@@ -1,10 +1,9 @@
-package com.sooum.where_android.viewmodel
+package com.sooum.where_android.viewmodel.auth
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.model.SignUpResult
 import com.sooum.domain.usecase.auth.CheckEmailUseCase
 import com.sooum.domain.usecase.auth.EmailVerifyUseCase
 import com.sooum.domain.usecase.auth.RequestEmailAuthUseCase
@@ -37,9 +36,6 @@ class AuthViewModel @Inject constructor(
 
     private val _emailVerifyState = MutableSharedFlow<ApiResult<String>>(replay = 0)
     val emailVerifyState: SharedFlow<ApiResult<String>> = _emailVerifyState
-
-    private val _signUpState = MutableStateFlow<ApiResult<SignUpResult>>(ApiResult.SuccessEmpty)
-    val signUpState: StateFlow<ApiResult<SignUpResult>> = _signUpState
 
     private val _checkEmailState = MutableSharedFlow<ApiResult<Unit>>(replay = 0)
     val checkEmailState: SharedFlow<ApiResult<Unit>> = _checkEmailState
@@ -91,6 +87,8 @@ class AuthViewModel @Inject constructor(
      * 회원가입 기능
      */
     fun signUp(
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
     ) {
         viewModelScope.launch {
             signUpUseCase(
@@ -99,7 +97,20 @@ class AuthViewModel @Inject constructor(
                 name = name,
                 profileImage = profileImage
             ).collect { result ->
-                _signUpState.value = result
+                when (result) {
+                    is ApiResult.Success -> {
+                        onSuccess()
+                    }
+
+                    is ApiResult.Fail.Error -> {
+                        onFail(result.message ?: "회원가입 실패")
+                    }
+
+                    else -> {
+                        onFail("회원가입 실패")
+
+                    }
+                }
             }
         }
     }

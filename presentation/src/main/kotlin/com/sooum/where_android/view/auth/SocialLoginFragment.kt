@@ -6,15 +6,11 @@ import android.content.Context
 import android.graphics.Paint
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
-import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentSocialLoginBinding
-import com.sooum.where_android.view.auth.signup.AuthBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SocialLoginFragment : AuthBaseFragment<FragmentSocialLoginBinding>(
@@ -55,9 +51,6 @@ class SocialLoginFragment : AuthBaseFragment<FragmentSocialLoginBinding>(
                 NaverIdLoginSDK.authenticate(requireContext(), launcher)
             }
         }
-
-        observeKakaoLoginResult()
-        observeNaverLoginResult()
     }
 
     private fun kakaoLogin(context: Context) {
@@ -77,65 +70,43 @@ class SocialLoginFragment : AuthBaseFragment<FragmentSocialLoginBinding>(
     }
 
     private fun handleKakaoToken(accessToken: String, refreshToken: String) {
-        kakaoViewModel.kakaoLogin(accessToken, refreshToken)
+        loadingAlertProvider.startLoading()
+        socialLoginViewModel.kakaoLogin(
+            accessToken = accessToken,
+            refreshToken = refreshToken,
+            onSuccess = { isSignUp, userId ->
+                loadingAlertProvider.endLoading()
+                if (isSignUp) {
+                    navHostController.navigateSocialProfile(userId)
+                } else {
+                    showToast("카카오 로그인 성공")
+                    navHostController.navigateHome()
+                }
+            },
+            onFail = { msg ->
+                loadingAlertProvider.endLoadingWithMessage(msg)
+            }
+        )
     }
 
     private fun handleNaverToken(accessToken: String, refreshToken: String) {
-        kakaoViewModel.naverLogin(accessToken, refreshToken)
-    }
-
-    private fun observeKakaoLoginResult() {
-        lifecycleScope.launch {
-            kakaoViewModel.kakaoSignUpState.collect { result ->
-                when (result) {
-                    is ApiResult.Loading -> loadingAlertProvider.startLoading()
-
-                    is ApiResult.Success -> {
-                        loadingAlertProvider.endLoading()
-                        val data = result.data
-                        if (data.signUp) {
-                            navHostController.navigateSocialProfile(data.userId)
-                        } else {
-                            showToast("카카오 로그인 성공")
-                            navHostController.navigateHome()
-                        }
-                    }
-
-                    is ApiResult.Fail -> {
-                        loadingAlertProvider.endLoadingWithMessage("카카오 로그인 실패")
-                    }
-
-                    else -> Unit
+        loadingAlertProvider.startLoading()
+        socialLoginViewModel.naverLogin(
+            accessToken = accessToken,
+            refreshToken = refreshToken,
+            onSuccess = { isSignUp, userId ->
+                loadingAlertProvider.endLoading()
+                if (isSignUp) {
+                    navHostController.navigateSocialProfile(userId)
+                } else {
+                    showToast("카카오 로그인 성공")
+                    navHostController.navigateHome()
                 }
+            },
+            onFail = { msg ->
+                loadingAlertProvider.endLoadingWithMessage(msg)
             }
-        }
-    }
-
-    private fun observeNaverLoginResult() {
-        lifecycleScope.launch {
-            kakaoViewModel.naverSignUpState.collect { result ->
-                when (result) {
-                    is ApiResult.Loading -> loadingAlertProvider.startLoading()
-
-                    is ApiResult.Success -> {
-                        loadingAlertProvider.endLoading()
-                        val data = result.data
-                        if (data.signUp) {
-                            navHostController.navigateSocialProfile(data.userId)
-                        } else {
-                            showToast("네이버 로그인 성공")
-                            navHostController.navigateHome()
-                        }
-                    }
-
-                    is ApiResult.Fail -> {
-                        loadingAlertProvider.endLoadingWithMessage("네이버 로그인 실패")
-                    }
-
-                    else -> Unit
-                }
-            }
-        }
+        )
     }
 
     override fun setNavigation(

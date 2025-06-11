@@ -8,6 +8,7 @@ import androidx.core.net.toUri
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentAgreementBinding
 import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.auth.AuthBaseFragment
 import com.sooum.where_android.view.auth.navigateEmailVerification
 import dagger.hilt.android.AndroidEntryPoint
 

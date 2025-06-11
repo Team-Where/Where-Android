@@ -9,6 +9,7 @@ import com.sooum.domain.model.ImageAddType
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentProfileSettingBinding
 import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.auth.AuthBaseFragment
 import com.sooum.where_android.view.auth.navigateComplete
 import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
 import dagger.hilt.android.AndroidEntryPoint

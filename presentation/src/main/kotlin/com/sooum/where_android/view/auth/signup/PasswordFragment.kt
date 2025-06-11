@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.widget.addTextChangedListener
 import com.sooum.where_android.databinding.FragmentPasswordBinding
 import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.auth.AuthBaseFragment
 import com.sooum.where_android.view.auth.navigateProfile
 import dagger.hilt.android.AndroidEntryPoint
 

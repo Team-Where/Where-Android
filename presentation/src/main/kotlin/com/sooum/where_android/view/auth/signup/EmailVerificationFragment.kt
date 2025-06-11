@@ -11,6 +11,7 @@ import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentEmailVerificationBinding
 import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.auth.AuthBaseFragment
 import com.sooum.where_android.view.auth.navigatePassword
 import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
@@ -25,7 +26,18 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observeEmailRequestResult()
+        observeEmailVerificationResult()
+        setUpNextButtonStateObserver()
+        observeCheckEmail()
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        countDownTimer?.cancel()
+    }
+
+    override fun initView() {
         with(binding) {
             nextBtn.isEnabled = false
 
@@ -58,7 +70,8 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
 
                 val isValid = isValidEmail(it.toString())
                 updateEditTextBackground(editTextEmail, isValid)
-                textEmailWrong.visibility = if (it.toString().isNotEmpty() && !isValid) View.VISIBLE else View.INVISIBLE
+                textEmailWrong.visibility =
+                    if (it.toString().isNotEmpty() && !isValid) View.VISIBLE else View.INVISIBLE
                 btnEmailCode.setBackgroundResource(
                     if (isValid) R.drawable.shape_rounded_black else R.drawable.shape_rounded_gray_500
                 )
@@ -79,20 +92,6 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
             }
 
         }
-
-        observeEmailRequestResult()
-        observeEmailVerificationResult()
-        setUpNextButtonStateObserver()
-        observeCheckEmail()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        countDownTimer?.cancel()
-    }
-
-    override fun initView() {
-
     }
 
     private fun observeEmailRequestResult() {

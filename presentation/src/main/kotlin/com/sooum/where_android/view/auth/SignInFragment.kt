@@ -4,7 +4,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavHostController
 import com.sooum.where_android.databinding.FragmentSignInBinding
 import com.sooum.where_android.model.ScreenRoute
-import com.sooum.where_android.view.auth.signup.AuthBaseFragment
 import com.sooum.where_android.viewmodel.auth.SignInViewModel
 
 class SignInFragment : AuthBaseFragment<FragmentSignInBinding>(
@@ -26,8 +25,8 @@ class SignInFragment : AuthBaseFragment<FragmentSignInBinding>(
                         navHostController.navigateHome()
                         loadingAlertProvider.endLoading()
                     },
-                    onFail = {
-                        loadingAlertProvider.endLoadingWithMessage("로그인 실패")
+                    onFail = { msg ->
+                        loadingAlertProvider.endLoadingWithMessage(msg)
                     }
                 )
             }

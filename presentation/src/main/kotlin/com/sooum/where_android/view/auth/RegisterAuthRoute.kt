@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.fragment.compose.AndroidFragment
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.sooum.where_android.model.ScreenRoute
@@ -112,11 +113,15 @@ fun NavGraphBuilder.registerAuthRoute(
 }
 
 
-internal fun NavHostController.navigateSignIn() {
+internal fun NavHostController.navigateSignIn(
+    applyOption: NavOptionsBuilder.() -> Unit = {}
+) {
     navigate(ScreenRoute.AuthRoute.SignIn) {
         launchSingleTop = true
+        this.applyOption()
     }
 }
+
 
 internal fun NavHostController.navigateSocialProfile(
     id: Int

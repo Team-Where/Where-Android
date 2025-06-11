@@ -40,7 +40,7 @@ class SignInViewModel @Inject constructor(
                     }
 
                     is ApiResult.Fail.Error -> {
-                        onFail(result.message ?: "로그인 실패")
+                        onFail("로그인 실패")
                     }
 
                     else -> {
