@@ -29,4 +29,8 @@ class TokenProviderImpl @Inject constructor(
             appDataStore.saveAccessToken(token)
         }
     }
+
+    override suspend fun clearAllUserData() {
+        appDataStore.clearAllUserData()
+    }
 }

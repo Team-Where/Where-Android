@@ -42,6 +42,14 @@ class AppManageDataStore @Inject constructor(
         }
     }
 
+    suspend fun clearAllUserData() {
+        appDataStore.edit { preferences ->
+            preferences.remove(ACCESS_TOKEN)
+            preferences.remove(REFRESH_TOKEN)
+            preferences.remove(USER_ID)
+        }
+    }
+
     fun getUserId(): Flow<Int?> {
         return appDataStore.data.map { preferences ->
             preferences[USER_ID]

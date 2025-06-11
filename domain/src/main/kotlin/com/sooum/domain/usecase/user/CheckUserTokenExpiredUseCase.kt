@@ -17,8 +17,9 @@ class CheckUserTokenExpiredUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): TokenStatus {
         val refreshToken: String? = tokenProvider.getRefreshToken()
-
-        return if (refreshToken == null) {
+        val userId: Int? = tokenProvider.getUserId()
+        return if (refreshToken == null || userId == null) {
+            tokenProvider.clearAllUserData()
             TokenStatus.NONE
         } else {
             val exp = getJwtExpiration(refreshToken)
