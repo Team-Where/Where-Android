@@ -25,6 +25,33 @@ sealed interface ScreenRoute {
 
         @Serializable
         data object SocialLogin : ScreenRoute
+
+        @Serializable
+        data class SocialProfile(
+            val userId: Int
+        ) : ScreenRoute
+
+        @Serializable
+        data object SignIn : ScreenRoute
+
+        @Serializable
+        data object SingUpRoute {
+
+            @Serializable
+            data object Agreement : ScreenRoute
+
+            @Serializable
+            data object EmailVerification : ScreenRoute
+
+            @Serializable
+            data object Password : ScreenRoute
+
+            @Serializable
+            data object Profile : ScreenRoute
+
+            @Serializable
+            data object Complete : ScreenRoute
+        }
     }
 
     @Serializable

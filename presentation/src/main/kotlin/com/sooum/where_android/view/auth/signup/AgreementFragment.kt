@@ -7,6 +7,8 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentAgreementBinding
+import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.auth.navigateEmailVerification
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -31,11 +33,11 @@ class AgreementFragment : AuthBaseFragment<FragmentAgreementBinding>(
                 showToast("체크박스를 확인해주세요.")
                 return@setOnClickListener
             }
-            navigateTo(EmailVerificationFragment())
+            navHostController.navigateEmailVerification()
         }
 
         binding.imageBack.setOnClickListener {
-            popBackStack()
+            navHostController.popBackStack<ScreenRoute.AuthRoute.SocialLogin>(inclusive = false)
         }
 
         setupCheckboxListeners()

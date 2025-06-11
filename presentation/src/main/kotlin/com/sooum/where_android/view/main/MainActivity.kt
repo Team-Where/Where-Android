@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.LocalAlarmProvider
+import com.sooum.where_android.view.auth.registerAuthRoute
 import com.sooum.where_android.view.checkInviteData
 import com.sooum.where_android.view.getLocalAlarmProvider
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     registerSplashRoute(mainNavController)
                     registerOnBoardingRoute(mainNavController)
+                    registerAuthRoute(mainNavController)
 
                     composable<ScreenRoute.Home>() {
                         MainScreenView(

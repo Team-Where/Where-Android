@@ -3,26 +3,16 @@ package com.sooum.where_android.view.auth
 import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Paint
-import android.os.Build
-import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavHostController
 import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.databinding.FragmentSocialLoginBinding
-import com.sooum.where_android.view.auth.signup.AgreementFragment
 import com.sooum.where_android.view.auth.signup.AuthBaseFragment
-import com.sooum.where_android.view.auth.signup.SocialLoginProfileSettingFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -30,7 +20,8 @@ import kotlinx.coroutines.launch
 class SocialLoginFragment : AuthBaseFragment<FragmentSocialLoginBinding>(
     FragmentSocialLoginBinding::inflate
 ) {
-    private val launcher = registerForActivityResult<Intent, ActivityResult>(
+
+    private val launcher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         when (result.resultCode) {
@@ -51,20 +42,10 @@ class SocialLoginFragment : AuthBaseFragment<FragmentSocialLoginBinding>(
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        checkNotificationPermission()
+    override fun initView() {
 
         with(binding) {
             textSignIn.paintFlags = textSignIn.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-            textSignIn.setOnClickListener {
-                (activity as AuthActivity).navigateToFragment(SignInFragment())
-            }
-
-            btnSignUp.setOnClickListener {
-                (activity as AuthActivity).navigateToFragment(AgreementFragment())
-            }
 
             imgKakao.setOnClickListener {
                 kakaoLogin(requireContext())
@@ -77,35 +58,6 @@ class SocialLoginFragment : AuthBaseFragment<FragmentSocialLoginBinding>(
 
         observeKakaoLoginResult()
         observeNaverLoginResult()
-    }
-
-    override fun initView() {
-
-    }
-
-    private fun checkNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val permission = android.Manifest.permission.POST_NOTIFICATIONS
-            when {
-                ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED -> Unit
-
-                shouldShowRequestPermissionRationale(permission) -> {
-                    showToast("알림을 위해 권한이 필요해요.")
-                    notificationPermissionLauncher.launch(permission)
-                }
-
-                else -> {
-                    notificationPermissionLauncher.launch(permission)
-                }
-            }
-        }
-    }
-
-    private val notificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        val message = if (isGranted) "알림 권한이 허용되었습니다." else "알림 권한이 거부되었습니다."
-        showToast(message)
     }
 
     private fun kakaoLogin(context: Context) {
@@ -142,13 +94,10 @@ class SocialLoginFragment : AuthBaseFragment<FragmentSocialLoginBinding>(
                         loadingAlertProvider.endLoading()
                         val data = result.data
                         if (data.signUp) {
-                            val bundle = Bundle().apply { putInt("userId", data.userId) }
-                            navigateTo(SocialLoginProfileSettingFragment().apply {
-                                arguments = bundle
-                            })
+                            navHostController.navigateSocialProfile(data.userId)
                         } else {
                             showToast("카카오 로그인 성공")
-                            (activity as AuthActivity).nextActivity()
+                            navHostController.navigateHome()
                         }
                     }
 
@@ -172,13 +121,10 @@ class SocialLoginFragment : AuthBaseFragment<FragmentSocialLoginBinding>(
                         loadingAlertProvider.endLoading()
                         val data = result.data
                         if (data.signUp) {
-                            val bundle = Bundle().apply { putInt("userId", data.userId) }
-                            navigateTo(SocialLoginProfileSettingFragment().apply {
-                                arguments = bundle
-                            })
+                            navHostController.navigateSocialProfile(data.userId)
                         } else {
                             showToast("네이버 로그인 성공")
-                            (activity as AuthActivity).nextActivity()
+                            navHostController.navigateHome()
                         }
                     }
 
@@ -188,6 +134,20 @@ class SocialLoginFragment : AuthBaseFragment<FragmentSocialLoginBinding>(
 
                     else -> Unit
                 }
+            }
+        }
+    }
+
+    override fun setNavigation(
+        navHostController: NavHostController
+    ) {
+        super.setNavigation(navHostController)
+        with(binding) {
+            textSignIn.setOnClickListener {
+                navHostController.navigateSignIn()
+            }
+            btnSignUp.setOnClickListener {
+                navHostController.navigateSignUp()
             }
         }
     }

@@ -2,16 +2,14 @@ package com.sooum.where_android.view.auth.signup
 
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.ImageAddType
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentSocialLoginProfileSettingBinding
-import com.sooum.where_android.view.auth.AuthActivity
+import com.sooum.where_android.view.auth.navigateHome
 import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
 import kotlinx.coroutines.launch
 
@@ -78,7 +76,7 @@ class SocialLoginProfileSettingFragment : AuthBaseFragment<FragmentSocialLoginPr
                     is ApiResult.Success -> {
                         loadingAlertProvider.endLoading()
                         showToast("프로필 업데이트 성공.")
-                        (activity as AuthActivity).nextActivity()
+                        navHostController.navigateHome()
                     }
 
                     is ApiResult.Fail -> {

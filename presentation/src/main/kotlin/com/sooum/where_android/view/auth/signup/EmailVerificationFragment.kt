@@ -2,22 +2,19 @@ package com.sooum.where_android.view.auth.signup
 
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentEmailVerificationBinding
+import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.auth.navigatePassword
 import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -40,7 +37,9 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
             }
 
             imageBack.setOnClickListener {
-                popBackStack()
+                navHostController.popBackStack<ScreenRoute.AuthRoute.SingUpRoute.Agreement>(
+                    inclusive = false
+                )
             }
 
             btnEmailCode.setOnClickListener {
@@ -148,7 +147,7 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                         when (result.data) {
                             "Verified" -> {
                                 authViewModel.setEmail(binding.editTextEmail.text.toString().trim())
-                                navigateTo(PasswordFragment())
+                                navHostController.navigatePassword()
                             }
                             else -> showVerificationResultSnackBar(result.data)
                         }

@@ -1,15 +1,11 @@
 package com.sooum.where_android.view.auth.signup
 
-import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentSignUpCompleteBinding
-import com.sooum.where_android.view.auth.AuthActivity
+import com.sooum.where_android.view.auth.navigateHome
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -17,9 +13,7 @@ import kotlinx.coroutines.launch
 class SignUpCompleteFragment : AuthBaseFragment<FragmentSignUpCompleteBinding>(
     FragmentSignUpCompleteBinding::inflate
 ) {
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun initView() {
         with(binding) {
             imageBack.setOnClickListener {
                 parentFragmentManager.popBackStack()
@@ -32,12 +26,7 @@ class SignUpCompleteFragment : AuthBaseFragment<FragmentSignUpCompleteBinding>(
                 authViewModel.signUp()
             }
         }
-
         observeSignUpResult()
-    }
-
-    override fun initView() {
-
     }
 
     private fun observeSignUpResult() {
@@ -50,10 +39,9 @@ class SignUpCompleteFragment : AuthBaseFragment<FragmentSignUpCompleteBinding>(
 
                     is ApiResult.Success -> {
                         loadingAlertProvider.endLoading {
-                            requireActivity().finish()
+                            showToast("회원가입 완료!")
+                            navHostController.navigateHome()
                         }
-                        showToast("회원가입 완료!")
-                        (requireActivity() as AuthActivity).nextActivity()
                     }
 
                     is ApiResult.Fail -> {

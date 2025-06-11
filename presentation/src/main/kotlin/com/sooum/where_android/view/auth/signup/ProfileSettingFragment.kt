@@ -2,21 +2,16 @@ package com.sooum.where_android.view.auth.signup
 
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.sooum.domain.model.ImageAddType
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentProfileSettingBinding
+import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.auth.navigateComplete
 import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileSettingFragment : AuthBaseFragment<FragmentProfileSettingBinding>(
@@ -32,14 +27,16 @@ class ProfileSettingFragment : AuthBaseFragment<FragmentProfileSettingBinding>(
 
             nextBtn.setOnClickListener {
                 authViewModel.setName(editNickname.text.toString().trim())
-                navigateTo(SignUpCompleteFragment())
+                navHostController.navigateComplete()
             }
 
             editNickname.addTextChangedListener { editable ->
                 nextBtn.isEnabled = !editable.isNullOrBlank()
             }
 
-            imageBack.setOnClickListener { popBackStack() }
+            imageBack.setOnClickListener {
+                navHostController.popBackStack<ScreenRoute.AuthRoute.SingUpRoute.Password>(inclusive = false)
+            }
 
             imageCamera.setOnClickListener {
                 val dialog = ImagePickerDialogFragment.getInstance(
