@@ -8,6 +8,7 @@ import com.sooum.where_android.databinding.FragmentSignInBinding
 import com.sooum.where_android.view.auth.SignInFragment
 import com.sooum.where_android.view.hamburger.EditProfileFragment
 import com.sooum.where_android.view.hamburger.HamburgerMainFragment
+import com.sooum.where_android.view.hamburger.SettingFragment
 
 @Composable
 fun DrawerContent(
@@ -15,7 +16,7 @@ fun DrawerContent(
     modifier: Modifier,
 ) {
     //TODO With AndroidFragment
-    AndroidFragment<EditProfileFragment>(
+    AndroidFragment<SettingFragment>(
         modifier = modifier
     ) {
 //        it.binding.btnLogin.setOnClickListener {
