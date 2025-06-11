@@ -6,15 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.Filter
 import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.usecase.meet.GetMeetDetailListUseCase
-import com.sooum.domain.usecase.meet.detail.LoadMeetDetailListUseCase
-import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import javax.inject.Inject
 
@@ -22,8 +19,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MyMeetViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
-    private val loadMeetDetailListUseCase: LoadMeetDetailListUseCase,
     getMeetDetailListUseCase: GetMeetDetailListUseCase
 ) : ViewModel() {
 
@@ -62,14 +57,6 @@ class MyMeetViewModel @Inject constructor(
 
     val filter
         get() = _filter.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            getLoginUserIdUseCase()?.let { id ->
-                loadMeetDetailListUseCase(id)
-            }
-        }
-    }
 
     fun updateFilter(filter: Filter) {
         _filter.value = filter

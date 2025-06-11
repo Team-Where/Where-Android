@@ -6,6 +6,8 @@ import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.TokenStatus
 import com.sooum.domain.usecase.auth.VersionCheckUseCase
+import com.sooum.domain.usecase.friend.LoadFriedListUseCase
+import com.sooum.domain.usecase.meet.detail.LoadMeetDetailListUseCase
 import com.sooum.domain.usecase.user.CheckUserTokenExpiredUseCase
 import com.sooum.domain.util.AppVersionProvider
 import com.sooum.where_android.model.ScreenRoute
@@ -24,6 +26,8 @@ class SplashViewModel @Inject constructor(
     private val versionCheckUseCase: VersionCheckUseCase,
     private val appVersionProvider: AppVersionProvider,
     private val checkUserTokenExpiredUseCase: CheckUserTokenExpiredUseCase,
+    private val loadMeetDetailListUseCase: LoadMeetDetailListUseCase,
+    private val loadFriedListUseCase: LoadFriedListUseCase
 ) : ViewModel() {
 
     fun checkSplash(
@@ -37,7 +41,7 @@ class SplashViewModel @Inject constructor(
                 delay(3000L)
             }
             val checkLogin = async {
-                checkUserTokenExpiredUseCase() == TokenStatus.NOT_EXPIRED
+                checkUserTokenExpiredUseCase()
             }
             val checkAppUpdate = async {
                 val version = appVersionProvider.getVersionName()
@@ -62,7 +66,13 @@ class SplashViewModel @Inject constructor(
             } else {
                 val result = checkLogin.await()
                 val isFirst = isFirstLaunch.await()
-                val dest = if (result) {
+                val dest = if (result == TokenStatus.NOT_EXPIRED) {
+                    //유저정보가 있는 경우 데이터를 미리 로드해준다.
+                    appManageDataStore.getUserId().firstOrNull()
+                        ?.let {
+                            loadMeetDetailListUseCase(it)
+                            loadFriedListUseCase(it)
+                        }
                     //이미 로그인 되어있다면 Main으로 바로 가기
                     ScreenRoute.Home
                 } else {
