@@ -35,11 +35,15 @@ adb shell am start -n com.where.android/com.sooum.where_android.view.main.MainAc
 ### 앱링크 로부터 들어온경우
 
 ~~~shell
-
+adb shell am start -a android.intent.action.VIEW \
+    -d "https://audiwhere.shop/invite/49144buebo?name=임의의값" \
+    com.where.android
 ~~~
 
 ### 스키마로부터 들어온경우
 
 ~~~shell
-
+adb shell am start -a android.intent.action.VIEW \
+    -d "audiwhere://invite/49144buebo?name=임의의값" \
+    com.where.android
 ~~~
