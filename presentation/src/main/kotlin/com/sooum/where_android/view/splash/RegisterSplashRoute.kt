@@ -8,8 +8,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
+import com.sooum.where_android.checkAlarmScheme
 import com.sooum.where_android.checkAppScheme
 import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.main.navigationMeetDetailId
 
 fun NavGraphBuilder.registerSplashRoute(
     mainNavController: NavHostController,
@@ -33,12 +35,18 @@ fun NavGraphBuilder.registerSplashRoute(
                     } else {
                         Log.d("JWH", intent.toString())
 
-                        //스킴으로 실행된 경우 체크
+                        //스키마 혹은 앱링크로 실행된 경우 체크
                         intent.checkAppScheme()?.let {
                             mainNavController.navigateNext(it)
                             return@SplashView
                         }
 
+                        Log.d("JWH", intent.action.toString())
+
+                        //알람데이터로 부터 id를 가져온 경우 추가 실행
+                        intent.checkAlarmScheme()?.let { id ->
+                            mainNavController.navigationMeetDetailId(id)
+                        }
                         //어떤 조건도 걸리지 않은 경우 그냥 진행 한다.
                         mainNavController.navigateNext(route)
                     }

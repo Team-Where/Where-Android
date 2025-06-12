@@ -88,9 +88,11 @@ class MeetDetailRepositoryImpl @Inject constructor(
     override suspend fun loadMeetDetailList(userId: UserId) {
         val meetDetails = meetRemoteDataSource.getMeetList(userId).first()
         meetDetails.forEach { meetDetail ->
-            val time = makeStandardDate(meetDetail.date, meetDetail.time)
-            if (time != null) {
-                alarmMaker.makeAlarm(meetDetail.id, meetDetail.title, time)
+            if (!meetDetail.finished) {
+                val time = makeStandardDate(meetDetail.date, meetDetail.time)
+                if (time != null) {
+                    alarmMaker.makeAlarm(meetDetail.id, meetDetail.title, time)
+                }
             }
         }
         _meetDetailList.update {

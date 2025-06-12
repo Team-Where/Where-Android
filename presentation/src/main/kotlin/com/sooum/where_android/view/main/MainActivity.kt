@@ -16,14 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.core.util.Consumer
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.sooum.where_android.checkAlarmScheme
 import com.sooum.where_android.checkAppScheme
 import com.sooum.where_android.model.ScreenRoute
-import com.sooum.where_android.view.LocalAlarmProvider
 import com.sooum.where_android.view.auth.registerAuthRoute
 import com.sooum.where_android.view.common.modal.LoadingScreenProvider
 import com.sooum.where_android.view.common.modal.LoadingView
-import com.sooum.where_android.view.getLocalAlarmProvider
-import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
 import com.sooum.where_android.view.onboarding.registerOnBoardingRoute
 import com.sooum.where_android.view.splash.registerSplashRoute
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,10 +41,6 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        intent?.getLocalAlarmProvider()?.let {
-            it.startToDetail()
-        }
-
         setContent {
             val mainNavController = rememberNavController()
             val scope = rememberCoroutineScope()
@@ -58,6 +52,9 @@ class MainActivity : AppCompatActivity() {
                 val onNewIntentConsumer = Consumer<Intent> {
                     it.checkAppScheme()?.let {
                         mainNavController.navigate(it)
+                    }
+                    it.checkAlarmScheme()?.let { id ->
+                        mainNavController.navigationMeetDetailId(id)
                     }
                 }
 
@@ -88,23 +85,5 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        intent?.getLocalAlarmProvider()?.let {
-            it.startToDetail()
-        }
-    }
-
-    private fun LocalAlarmProvider.startToDetail() {
-        val id = meetId
-        startActivity(
-            Intent(this@MainActivity, MyMeetActivity::class.java).apply {
-                putExtras(Bundle().apply {
-                    putInt(MyMeetActivity.MEET_ID, id)
-                })
-            }
-        )
     }
 }

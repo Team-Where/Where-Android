@@ -21,7 +21,7 @@ class LocalAlarmManager(
         alarmType: Int
     ): PendingIntent {
         val intent = Intent(context, AlarmReceiver::class.java).apply {
-            action = "ALARM_${meetId}_$alarmType"
+            action = "${AlarmReceiver.ACTION_PREFIX}_${meetId}_$alarmType"
             putExtra(AlarmReceiver.MEET_ID, meetId)
             putExtra(AlarmReceiver.MEET_NAME, meetName)
             putExtra(AlarmReceiver.ALARM_TYPE, alarmType)

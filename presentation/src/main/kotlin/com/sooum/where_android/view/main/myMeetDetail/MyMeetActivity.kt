@@ -12,7 +12,6 @@ import com.sooum.domain.model.ShareResult
 import com.sooum.where_android.MyFirebaseMessagingService
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
 import com.sooum.where_android.view.MapShareResultActivity
-import com.sooum.where_android.view.getLocalAlarmProvider
 import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailFcmViewModel
@@ -75,12 +74,6 @@ class MyMeetActivity : AppCompatActivity() {
             myMeetDetailPlaceWithCommentViewModel.addPlace(shareResult) {
                 CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
             }
-        }
-
-        intent?.getLocalAlarmProvider()?.let {
-            val id = it.meetId
-            myMeetDetailViewModel.loadData(id)
-            myMeetDetailPlaceWithCommentViewModel.loadData(id)
         }
     }
 }
