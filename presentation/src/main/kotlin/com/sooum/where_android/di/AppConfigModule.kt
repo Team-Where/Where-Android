@@ -35,7 +35,7 @@ object AppConfigModule {
         return object : AlarmOption {
             override fun makeIntent(): Intent {
                 val intent = Intent(context, MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+
                 }
                 return intent
             }
