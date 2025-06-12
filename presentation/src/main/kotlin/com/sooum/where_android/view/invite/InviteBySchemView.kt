@@ -32,27 +32,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sooum.domain.model.Schedule
+import com.sooum.domain.model.SimpleMeet
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray200
 import com.sooum.where_android.theme.GrayScale700
 import com.sooum.where_android.theme.GrayScale800
 import com.sooum.where_android.theme.GrayScale900
 import com.sooum.where_android.theme.pretendard
-import com.sooum.where_android.view.InviteData
 import com.sooum.where_android.view.widget.CoverImageView
 import com.sooum.where_android.view.widget.PrimaryButton
 
 @Composable
-fun InviteBySchemeView(
-    inviteData: InviteData,
+internal fun InviteBySchemeView(
+    name: String,
+    simpleMeet: SimpleMeet,
     onBack: () -> Unit = {},
     onClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .safeDrawingPadding()
             .background(Color.White)
+            .safeDrawingPadding()
     ) {
         Box(
             modifier = Modifier
@@ -74,7 +75,7 @@ fun InviteBySchemeView(
                 contentDescription = null
             )
             Text(
-                text = "${inviteData.name}님이 초대합니다.",
+                text = "${name}님이 초대합니다.",
                 modifier = Modifier.align(Alignment.BottomCenter),
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Medium,
@@ -95,20 +96,20 @@ fun InviteBySchemeView(
             verticalArrangement = Arrangement.Center
         ) {
             CoverImageView(
-                inviteData.image,
+                simpleMeet.image,
                 120.dp,
                 16.dp
             )
             Spacer(Modifier.height(16.dp))
             Text(
-                text = inviteData.title,
+                text = simpleMeet.title,
                 fontSize = 24.sp,
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
                 color = GrayScale900
             )
             Spacer(Modifier.height(12.dp))
-            inviteData.schedule?.let { schedule: Schedule ->
+            simpleMeet.schedule?.let { schedule: Schedule ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(5.dp)
@@ -156,14 +157,13 @@ fun InviteBySchemeView(
 @Composable
 private fun InviteSchemePreview() {
     InviteBySchemeView(
-        InviteData(
+        name = "QWER",
+        SimpleMeet(
             0,
             "2024 연말파티\uD83E\uDD42",
             "",
             "",
             "",
-            "QWER",
-            "u212u8n49k"
         )
     )
 }

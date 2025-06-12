@@ -39,6 +39,7 @@ import com.sooum.domain.model.SimpleMeet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.transform
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -281,11 +282,29 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         return safeFlow { scheduleApi.deleteSchedule(request) }
     }
 
-    override suspend fun inviteOkFromLink(userId: Int, code: String): Flow<ApiResult<Meet>> {
+    override suspend fun inviteOkFromLink(userId: Int, code: String): Flow<ApiResult<MeetDetail>> {
         val request = InviteMeetOkLinkRequest(
             userId = userId,
             link = code
         )
-        return safeFlow { meetApi.inviteMeetOkLink(request) }
+        return safeFlow { meetApi.inviteMeetOkLink(request) }.transform { apiResult ->
+            when (apiResult) {
+                is ApiResult.Success -> {
+                    emit(ApiResult.Success(apiResult.data.toMeetDetail()))
+                }
+
+                is ApiResult.SuccessEmpty -> {
+                    emit(ApiResult.SuccessEmpty)
+                }
+
+                is ApiResult.Fail.Error -> {
+                    emit(ApiResult.Fail.Error(apiResult.code, apiResult.message))
+                }
+
+                is ApiResult.Fail.Exception -> {
+                    emit(ApiResult.Fail.Exception(apiResult.e))
+                }
+            }
+        }
     }
 }

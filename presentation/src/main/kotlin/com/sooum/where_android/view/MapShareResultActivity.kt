@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import com.sooum.domain.model.ShareResult
 import com.sooum.where_android.WhereApp
+import com.sooum.where_android.view.main.MainActivity
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
 import kotlinx.serialization.json.Json
 
@@ -23,18 +24,28 @@ class MapShareResultActivity : Activity() {
         super.onCreate(savedInstanceState)
         val activity = WhereApp.currentActivity?.get()
 
-        if (activity is MyMeetActivity) {
-            intent.parseMapShare()?.let { result ->
-                val shareResultText = Json.encodeToString(result)
-                startActivity(
-                    Intent(this, MyMeetActivity::class.java).apply {
-                        putExtras(
-                            Bundle().apply {
-                                putString(SHARE_RESULT, shareResultText)
-                            }
-                        )
-                    }
-                )
+        when (activity) {
+            is MyMeetActivity -> {
+                intent.parseMapShare()?.let { result ->
+                    val shareResultText = Json.encodeToString(result)
+                    startActivity(
+                        Intent(this, MyMeetActivity::class.java).apply {
+                            putExtras(
+                                Bundle().apply {
+                                    putString(SHARE_RESULT, shareResultText)
+                                }
+                            )
+                        }
+                    )
+                }
+            }
+
+            is MainActivity -> {
+
+            }
+
+            else -> {
+
             }
         }
 

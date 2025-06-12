@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.main.home.friendList
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -50,16 +51,19 @@ import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.widget.CircleProfileView
-import com.sooum.where_android.viewmodel.MeetDetailViewModel
+import com.sooum.where_android.viewmodel.FriendDetailViewModel
 
 @Composable
 fun FriendMeetDetailView(
-    meetDetailViewModel: MeetDetailViewModel = hiltViewModel(),
+    friendDetailViewModel: FriendDetailViewModel = hiltViewModel(),
     navigationMeetDetail: (Friend.FriendMeet) -> Unit,
     onBack: () -> Unit
 ) {
-    val friend by meetDetailViewModel.friend.collectAsState()
+    val friend by friendDetailViewModel.friend.collectAsState()
 
+    BackHandler {
+        onBack()
+    }
     MeetDetailContent(
         onBack = onBack,
         navigationMeetDetail = navigationMeetDetail,

@@ -2,11 +2,12 @@ package com.sooum.where_android.view.auth.signup
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import com.sooum.where_android.databinding.FragmentPasswordBinding
+import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.auth.AuthBaseFragment
+import com.sooum.where_android.view.auth.navigateProfile
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,12 +24,14 @@ class PasswordFragment : AuthBaseFragment<FragmentPasswordBinding>(
             nextBtn.isEnabled = false
 
             imageBack.setOnClickListener {
-                popBackStack()
+                navHostController.popBackStack<ScreenRoute.AuthRoute.SingUpRoute.EmailVerification>(
+                    inclusive = false
+                )
             }
 
             nextBtn.setOnClickListener {
                 authViewModel.setPassword(editTextPassword.text.toString().trim())
-                navigateTo(ProfileSettingFragment())
+                navHostController.navigateProfile()
             }
 
             editTextPassword.addTextChangedListener {

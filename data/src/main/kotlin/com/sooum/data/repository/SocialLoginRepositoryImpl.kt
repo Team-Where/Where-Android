@@ -2,11 +2,11 @@ package com.sooum.data.repository
 
 import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.data.network.auth.request.NameOnlyRequest
-import com.sooum.data.network.socialLogin.SocialLoginApi
 import com.sooum.data.network.safeFlow
+import com.sooum.data.network.socialLogin.SocialLoginApi
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.PostProfileResult
+import com.sooum.domain.model.auth.SocialSignUpResult
 import com.sooum.domain.repository.SocialLoginRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +24,7 @@ class SocialLoginRepositoryImpl @Inject constructor(
     override suspend fun kakaoLogin(
         accessToken: String,
         refreshToken: String
-    ): Flow<ApiResult<KakaoSignUpResult>> {
+    ): Flow<ApiResult<SocialSignUpResult>> {
         return safeFlow {
             val response = socialLoginApi.kakaoLogin(
                 authorization = accessToken,
@@ -37,6 +37,7 @@ class SocialLoginRepositoryImpl @Inject constructor(
                     val access = response.headers()["Authorization"]?.removePrefix("Bearer ")?.trim()
                     val refresh = response.headers()["Refresh-Token"]
 
+                    appManageDataStore.saveUserId(body.userId)
                     access?.let { appManageDataStore.saveAccessToken(it) }
                     refresh?.let { appManageDataStore.saveRefreshToken(it) }
                 }
@@ -50,7 +51,7 @@ class SocialLoginRepositoryImpl @Inject constructor(
     override suspend fun naverLogin(
         accessToken: String,
         refreshToken: String
-    ): Flow<ApiResult<KakaoSignUpResult>> {
+    ): Flow<ApiResult<SocialSignUpResult>> {
         return safeFlow {
             val response = socialLoginApi.naverLogin(
                 authorization = accessToken,
@@ -63,6 +64,7 @@ class SocialLoginRepositoryImpl @Inject constructor(
                     val access = response.headers()["Authorization"]?.removePrefix("Bearer ")?.trim()
                     val refresh = response.headers()["Refresh-Token"]
 
+                    appManageDataStore.saveUserId(body.userId)
                     access?.let { appManageDataStore.saveAccessToken(it) }
                     refresh?.let { appManageDataStore.saveRefreshToken(it) }
                 }

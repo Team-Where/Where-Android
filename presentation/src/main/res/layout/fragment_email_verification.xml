@@ -1,45 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/white"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/image_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="15dp"
         android:src="@drawable/icon_arrow_back"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="15dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/pretend_semibold"
         android:text="가입을 위한 이메일을\n인증해주세요"
         android:textColor="#1F2937"
         android:textSize="24sp"
-        android:fontFamily="@font/pretend_semibold"
-        android:layout_marginStart="15dp"
-        app:layout_constraintTop_toBottomOf="@id/image_back"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="32dp"/>
+        app:layout_constraintTop_toBottomOf="@id/image_back" />
 
     <TextView
         android:id="@+id/text_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="이메일"
-        android:textSize="14sp"
-        android:textColor="#374151"
         android:layout_marginStart="15dp"
         android:layout_marginTop="50dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_title"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:text="이메일"
+        android:textColor="#374151"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
     <EditText
         android:id="@+id/edit_text_email"
@@ -47,11 +46,15 @@
         android:layout_height="56dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="15dp"
         android:background="@drawable/shape_rounded_gray_radius_12"
         android:hint="이메일 주소를 입력해주세요"
+        android:imeOptions="actionDone"
+        android:selectAllOnFocus="true"
+        android:inputType="textEmailAddress"
+        android:maxLines="1"
         android:padding="16dp"
         android:textSize="18sp"
-        android:layout_marginEnd="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_email" />
 
@@ -59,25 +62,27 @@
         android:id="@+id/text_email_wrong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#EF4444"
         android:layout_marginStart="15dp"
         android:layout_marginTop="5dp"
-        android:text="잘못된 이메일 입니다."
         android:fontFamily="@font/pretend_regular"
-        app:layout_constraintTop_toBottomOf="@id/edit_text_email"
+        android:text="잘못된 이메일 입니다."
+        android:textColor="#EF4444"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="invisible"/>
+        app:layout_constraintTop_toBottomOf="@id/edit_text_email" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_email_code"
         android:layout_width="70dp"
         android:layout_height="28dp"
-        android:background="@drawable/shape_rounded_gray_500"
-        android:text="인증코드 전송"
-        android:textColor="@color/white"
-        android:textSize="10sp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
+        android:background="@drawable/shape_rounded_gray_500"
+        android:text="인증코드 전송"
+        android:imeOptions="actionDone"
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_email"
         tools:ignore="MissingConstraints" />
@@ -86,71 +91,70 @@
         android:id="@+id/text_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="인증코드"
-        android:textSize="14sp"
-        android:textColor="#374151"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
-        app:layout_constraintTop_toBottomOf="@id/text_email_wrong"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:text="인증코드"
+        android:textColor="#374151"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_email_wrong" />
 
     <EditText
         android:id="@+id/edit_text_code"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:hint="코드 6자리 입력해주세요"
-        android:textSize="18sp"
-        android:background="@drawable/shape_rounded_gray_radius_12"
-        app:layout_constraintTop_toBottomOf="@id/text_password"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/shape_rounded_gray_radius_12"
+        android:hint="코드 6자리 입력해주세요"
         android:padding="16dp"
-        android:layout_marginEnd="15dp"/>
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_password" />
 
     <TextView
         android:id="@+id/text_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="03:00"
-        android:textSize="16sp"
-        android:textColor="@color/main_color"
-        android:layout_marginEnd="30dp"
         android:layout_marginTop="25dp"
+        android:layout_marginEnd="30dp"
+        android:textColor="@color/main_color"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_password" />
+        app:layout_constraintTop_toBottomOf="@id/text_password"
+        tools:text="03:00" />
 
     <TextView
         android:id="@+id/text_time_over"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#EF4444"
         android:layout_marginStart="15dp"
         android:layout_marginTop="5dp"
-        android:text="인증 시간이 만료되었습니다."
         android:fontFamily="@font/pretend_regular"
-        app:layout_constraintTop_toBottomOf="@id/edit_text_code"
+        android:text="인증 시간이 만료되었습니다."
+        android:textColor="#EF4444"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="invisible"/>
+        app:layout_constraintTop_toBottomOf="@id/edit_text_code" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/nextBtn"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="다음"
-        android:fontFamily="@font/pretend_semibold"
-        android:textSize="16sp"
-        android:textColor="@color/white"
-        android:background="@drawable/button_main_shape"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:stateListAnimator="@null"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        tools:ignore="HardcodedText"
-        android:layout_marginBottom="40dp" />
-
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/button_main_shape"
+        android:fontFamily="@font/pretend_semibold"
+        android:stateListAnimator="@null"
+        android:text="다음"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="HardcodedText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

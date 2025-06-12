@@ -4,6 +4,7 @@
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@android:color/white</item>
         <item name="android:windowLightStatusBar">true</item>
+        <!--        <item name="android:windowBackground">@color/main_color</item>-->
     </style>
 
     <style name="Theme.Whereandroid" parent="Base.Theme.Whereandroid" />

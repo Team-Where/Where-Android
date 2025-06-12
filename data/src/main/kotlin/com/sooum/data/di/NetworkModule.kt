@@ -4,10 +4,10 @@ import com.sooum.data.network.NullOnEmptyConverterFactory
 import com.sooum.data.network.auth.AuthApi
 import com.sooum.data.network.comment.CommentApi
 import com.sooum.data.network.friend.FriendApi
-import com.sooum.data.network.socialLogin.SocialLoginApi
 import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.place.PlaceApi
 import com.sooum.data.network.schedule.ScheduleApi
+import com.sooum.data.network.socialLogin.SocialLoginApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,6 +54,7 @@ object NetworkModule {
             .client(
                 OkHttpClient.Builder()
                     .authenticator(tokenAuthenticator)
+                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                     .build()
             )
             .addConverterFactory(

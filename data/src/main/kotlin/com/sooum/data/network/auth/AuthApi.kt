@@ -1,26 +1,16 @@
 package com.sooum.data.network.auth
 
-import com.sooum.data.network.auth.request.CheckEmailRequest
 import com.sooum.data.network.auth.request.EmailVerifyRequest
 import com.sooum.data.network.auth.request.LoginRequest
-import com.sooum.data.network.auth.request.NameOnlyRequest
 import com.sooum.data.network.auth.request.SignUpRequest
 import com.sooum.domain.model.CheckEmail
-import com.sooum.domain.model.EmailVerifyResult
-import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.LoginResult
-import com.sooum.domain.model.PostProfileResult
 import com.sooum.domain.model.PostRefreshTokenResult
 import com.sooum.domain.model.SignUpResult
-import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Multipart
 import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
