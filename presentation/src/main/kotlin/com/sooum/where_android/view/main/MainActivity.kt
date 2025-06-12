@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.core.util.Consumer
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.sooum.where_android.checkAlarmScheme
@@ -69,18 +70,26 @@ class MainActivity : AppCompatActivity() {
             }
             DisposableEffect(this@MainActivity, mainNavController) {
                 val onNewIntentConsumer = Consumer<Intent> {
-                    it.checkAppScheme()?.let { inviteRoute ->
-                        mainNavController.navigate(inviteRoute) {
-                            launchSingleTop = true
+                    if (mainNavController.currentDestination?.hasRoute<ScreenRoute.HomeRoute>() == true) {
+                        it.checkAppScheme()?.let { inviteRoute ->
+                            mainNavController.navigate(inviteRoute) {
+                                launchSingleTop = true
+                            }
                         }
-                    }
-                    it.checkAlarmScheme()?.let { id ->
-                        mainNavController.navigationMeetDetailId(id)
-                    }
-                    it.parseMapShareResult()?.let { shareResult ->
-                        mainNavController.navigate(ScreenRoute.HomeRoute.MapShareResult(shareResult)) {
-                            launchSingleTop = true
+                        it.checkAlarmScheme()?.let { id ->
+                            mainNavController.navigationMeetDetailId(id)
                         }
+                        it.parseMapShareResult()?.let { shareResult ->
+                            mainNavController.navigate(
+                                ScreenRoute.HomeRoute.MapShareResult(
+                                    shareResult
+                                )
+                            ) {
+                                launchSingleTop = true
+                            }
+                        }
+                    } else {
+                        showSimpleToast("로그인 후 이용 가능합니다.")
                     }
                 }
 
