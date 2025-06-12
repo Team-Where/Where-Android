@@ -5,7 +5,7 @@ import android.content.Intent
 import com.sooum.core.notification.AlarmOption
 import com.sooum.core.notification.NotificationConfig
 import com.sooum.where_android.R
-import com.sooum.where_android.view.LocalAlarmResultActivity
+import com.sooum.where_android.view.main.MainActivity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,8 +34,8 @@ object AppConfigModule {
     ): AlarmOption {
         return object : AlarmOption {
             override fun makeIntent(): Intent {
-                val intent = Intent(context, LocalAlarmResultActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                val intent = Intent(context, MainActivity::class.java).apply {
+
                 }
                 return intent
             }

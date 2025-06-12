@@ -1,12 +1,28 @@
 package com.sooum.domain.model
 
 sealed class ApiResult<out T> {
+    /**
+     * 일반적인 성공 응답
+     */
     data class Success<out T>(val data: T) : ApiResult<T>()
-    data object SuccessEmpty : ApiResult<Nothing>()
-    data object Loading : ApiResult<Nothing>()
 
+    /**
+     * 성공 응답이지만 body가 빈경우
+     */
+    data object SuccessEmpty : ApiResult<Nothing>()
+
+    /**
+     * 실패
+     */
     sealed class Fail : ApiResult<Nothing>() {
+        /**
+         * 실패를 수신한 경우
+         */
         data class Error(val code: Int, val message: String?) : Fail()
+
+        /**
+         * 응답에 예외가 발생한 경우
+         */
         data class Exception(val e: Throwable) : Fail()
     }
 }

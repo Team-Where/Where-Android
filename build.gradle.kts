@@ -10,3 +10,9 @@ plugins {
     alias(libs.plugins.google.gms.google.services) apply false
     id("dev.iurysouza.modulegraph") version "0.12.0"
 }
+
+moduleGraphConfig {
+    readmePath.set("${rootDir}/README.md")
+    heading.set("## Module Graph")
+    showFullPath.set(false)
+}

@@ -1,8 +1,8 @@
 package com.sooum.data.network.socialLogin
 
 import com.sooum.data.network.auth.request.NameOnlyRequest
-import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.PostProfileResult
+import com.sooum.domain.model.auth.SocialSignUpResult
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -19,13 +19,13 @@ interface SocialLoginApi {
     suspend fun kakaoLogin(
         @Header("Authorization") authorization: String,
         @Header("refreshToken") refreshToken: String
-    ): Response<KakaoSignUpResult>
+    ): Response<SocialSignUpResult>
 
     @POST("api/user/naver/login")
     suspend fun naverLogin(
         @Header("Authorization") authorization: String,
         @Header("refreshToken") refreshToken: String
-    ): Response<KakaoSignUpResult>
+    ): Response<SocialSignUpResult>
 
     @PUT("api/user/{userId}/nickname")
     suspend fun putNickName(

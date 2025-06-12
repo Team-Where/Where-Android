@@ -117,7 +117,7 @@ interface MeetDetailRepository {
     suspend fun inviteOkFromLink(
         userId: Int,
         link: String
-    ): ActionResult<*>
+    ): ActionResult<MeetDetail>
 
     /**
      * 해당 화면 탈출시

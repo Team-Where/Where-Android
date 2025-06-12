@@ -15,8 +15,8 @@ data class MeetListItemResponse(
     val image: String?,
     val finished: Boolean,
     val createdAt: String,
-    val scheduleDate: String?,
-    val scheduleTime: String?
+    val scheduleDate: String? = null,
+    val scheduleTime: String? = null
 ) {
     fun toMeetDetail(): MeetDetail {
         return MeetDetail(

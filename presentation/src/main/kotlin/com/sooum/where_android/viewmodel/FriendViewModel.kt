@@ -6,9 +6,7 @@ import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.Friend
 import com.sooum.domain.usecase.friend.DeleteFriendUseCase
 import com.sooum.domain.usecase.friend.GetFriendListUseCase
-import com.sooum.domain.usecase.friend.LoadFriedListUseCase
 import com.sooum.domain.usecase.friend.UpdateFriendFavoriteUseCase
-import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,8 +16,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FriendViewModel @Inject constructor(
-    private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
-    private val loadFriedListUseCase: LoadFriedListUseCase,
     getFriendListUseCase: GetFriendListUseCase,
     private val deleteUserUseCase: DeleteFriendUseCase,
     private val updateUserFavoriteUseCase: UpdateFriendFavoriteUseCase,
@@ -65,14 +61,6 @@ class FriendViewModel @Inject constructor(
                 is ActionResult.Fail -> {
                     onFail(result.msg)
                 }
-            }
-        }
-    }
-
-    init {
-        viewModelScope.launch {
-            getLoginUserIdUseCase()?.let { id ->
-                loadFriedListUseCase(id)
             }
         }
     }

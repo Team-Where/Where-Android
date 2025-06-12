@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,14 +35,13 @@ import com.sooum.where_android.view.widget.PrimaryButton
 
 @Composable
 fun NewMeetResultView(
+    modifier: Modifier,
     result: NewMeetResult,
     close: () -> Unit = {},
     navigationDetail: (id: Int) -> Unit = {}
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
+        modifier = modifier
             .padding(10.dp),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -126,6 +124,7 @@ fun NewMeetResultView(
 @Preview
 fun NewMeetResultPreview() {
     NewMeetResultView(
+        modifier = Modifier,
         NewMeetResult(
             id = 0,
             title = "2024 연말파티\uD83E\uDD42",

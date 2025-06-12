@@ -14,12 +14,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MeetDetailViewModel @Inject constructor(
+class FriendDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getFriendByIdUseCase: GetFriendByIdUseCase,
 ) : ViewModel() {
 
-    private val route = savedStateHandle.toRoute<ScreenRoute.Home.FriendMeetDetail>()
+    private val route =
+        savedStateHandle.toRoute<ScreenRoute.HomeRoute.Main.BottomNavigation.FriendMeetDetail>()
 
     private val findUserId = route.friendId
 
