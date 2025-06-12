@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.sooum.where_android.checkAlarmScheme
 import com.sooum.where_android.checkAppScheme
 import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.parseMapShareResult
 import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.view.auth.registerAuthRoute
 import com.sooum.where_android.view.common.modal.LoadingScreenProvider
@@ -68,11 +69,18 @@ class MainActivity : AppCompatActivity() {
             }
             DisposableEffect(this@MainActivity, mainNavController) {
                 val onNewIntentConsumer = Consumer<Intent> {
-                    it.checkAppScheme()?.let {
-                        mainNavController.navigate(it)
+                    it.checkAppScheme()?.let { inviteRoute ->
+                        mainNavController.navigate(inviteRoute) {
+                            launchSingleTop = true
+                        }
                     }
                     it.checkAlarmScheme()?.let { id ->
                         mainNavController.navigationMeetDetailId(id)
+                    }
+                    it.parseMapShareResult()?.let { shareResult ->
+                        mainNavController.navigate(ScreenRoute.HomeRoute.MapShareResult(shareResult)) {
+                            launchSingleTop = true
+                        }
                     }
                 }
 

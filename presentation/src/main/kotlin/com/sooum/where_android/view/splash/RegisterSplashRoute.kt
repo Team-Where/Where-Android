@@ -11,6 +11,7 @@ import androidx.navigation.compose.navigation
 import com.sooum.where_android.checkAlarmScheme
 import com.sooum.where_android.checkAppScheme
 import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.parseMapShareResult
 import com.sooum.where_android.view.main.navigationMeetDetailId
 
 fun NavGraphBuilder.registerSplashRoute(
@@ -42,6 +43,15 @@ fun NavGraphBuilder.registerSplashRoute(
                         }
 
                         Log.d("JWH", intent.action.toString())
+
+                        intent.parseMapShareResult()?.let { shareResult ->
+                            mainNavController.navigateNext(
+                                ScreenRoute.HomeRoute.MapShareResult(
+                                    shareResult
+                                )
+                            )
+                            return@SplashView
+                        }
 
                         //알람데이터로 부터 id를 가져온 경우 추가 실행
                         intent.checkAlarmScheme()?.let { id ->

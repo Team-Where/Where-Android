@@ -8,10 +8,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.sooum.domain.model.ShareResult
 import com.sooum.where_android.MyFirebaseMessagingService
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
-import com.sooum.where_android.view.share.MapShareResultActivity
+import com.sooum.where_android.parseMapShareResult
 import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailFcmViewModel
@@ -19,7 +18,6 @@ import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailPlaceViewModel
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailTabViewModel
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.serialization.json.Json
 
 @AndroidEntryPoint
 class MyMeetActivity : AppCompatActivity() {
@@ -69,8 +67,7 @@ class MyMeetActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.d("JWH", intent.toString())
-        intent?.extras?.getString(MapShareResultActivity.SHARE_RESULT)?.let { data ->
-            val shareResult = Json.decodeFromString<ShareResult>(data)
+        intent?.parseMapShareResult()?.let { shareResult ->
             myMeetDetailPlaceWithCommentViewModel.addPlace(shareResult) {
                 CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
             }

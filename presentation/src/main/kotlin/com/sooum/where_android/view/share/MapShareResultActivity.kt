@@ -40,12 +40,20 @@ class MapShareResultActivity : Activity() {
                 }
             }
 
+            null,
             is MainActivity -> {
-
-            }
-
-            else -> {
-
+                intent.parseMapShare()?.let { result ->
+                    val shareResultText = Json.encodeToString(result)
+                    startActivity(
+                        Intent(this, MainActivity::class.java).apply {
+                            putExtras(
+                                Bundle().apply {
+                                    putString(SHARE_RESULT, shareResultText)
+                                }
+                            )
+                        }
+                    )
+                }
             }
         }
 
