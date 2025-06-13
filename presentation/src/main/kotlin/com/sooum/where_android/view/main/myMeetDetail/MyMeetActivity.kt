@@ -65,7 +65,11 @@ class MyMeetActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(fcmReceiver)
+        try {
+            unregisterReceiver(fcmReceiver)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
