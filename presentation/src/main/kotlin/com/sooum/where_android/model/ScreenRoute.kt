@@ -90,5 +90,46 @@ sealed interface ScreenRoute {
             val name: String,
             val code: String
         ) : ScreenRoute
+
+
+        @Serializable
+        data object HamburgerRoute {
+
+            @Serializable
+            data object ProfileEdit : ScreenRoute
+
+            @Serializable
+            data object Notification : ScreenRoute
+
+            @Serializable
+            data object FAQ : ScreenRoute
+
+            @Serializable
+            data object Notice : ScreenRoute
+
+            @Serializable
+            data object InquiryRoute {
+
+                @Serializable
+                data object Inquiry : ScreenRoute
+
+                @Serializable
+                data object Write : ScreenRoute
+
+            }
+
+            @Serializable
+            data object SettingRoute {
+
+                @Serializable
+                data object Setting : ScreenRoute
+
+                @Serializable
+                data object EditPassword : ScreenRoute
+
+                @Serializable
+                data object DeleteAccount : ScreenRoute
+            }
+        }
     }
 }

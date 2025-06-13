@@ -22,6 +22,7 @@ import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.auth.registerAuthRoute
 import com.sooum.where_android.view.common.modal.LoadingScreenProvider
 import com.sooum.where_android.view.common.modal.LoadingView
+import com.sooum.where_android.view.hamburger.registerHamburgerRoute
 import com.sooum.where_android.view.onboarding.registerOnBoardingRoute
 import com.sooum.where_android.view.splash.registerSplashRoute
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,6 +75,7 @@ class MainActivity : AppCompatActivity() {
                     registerOnBoardingRoute(mainNavController)
                     registerAuthRoute(mainNavController)
                     registerHomeRoute(mainNavController)
+                    registerHamburgerRoute(mainNavController)
                 }
             }
             if (loadingScreenProvider.showLoading) {

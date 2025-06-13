@@ -103,7 +103,15 @@ fun MainScreenView(
                                         drawerState.close()
                                     }
                                 },
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier.fillMaxSize(),
+                                navigate = {
+                                    scope.launch {
+                                        drawerState.close()
+                                        navController.navigate(it) {
+                                            launchSingleTop = true
+                                        }
+                                    }
+                                }
                             )
                         }
                     }
@@ -135,7 +143,6 @@ fun MainScreenView(
         }
     }
 }
-
 
 
 @Composable
