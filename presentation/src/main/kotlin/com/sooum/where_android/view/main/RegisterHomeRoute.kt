@@ -104,10 +104,10 @@ fun NavGraphBuilder.registerHomeRoute(
                     mainNavController.navigationMeetDetailId(id) {
                         val shareResultText = Json.encodeToString(
                             ShareResult(
-                                shareResultRoute.source,
-                                shareResultRoute.placeName,
-                                shareResultRoute.link,
-                                shareResultRoute.address
+                                source = shareResultRoute.source,
+                                placeName = shareResultRoute.placeName,
+                                address = shareResultRoute.address,
+                                link = shareResultRoute.link
                             )
                         )
                         putString(SHARE_RESULT, shareResultText)
