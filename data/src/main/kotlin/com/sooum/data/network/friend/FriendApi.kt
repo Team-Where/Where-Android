@@ -8,11 +8,13 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
+import retrofit2.http.Headers
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface FriendApi {
 
+    @Headers("Cache-Control: max-age=60")
     @GET("api/friend/{id}")
     suspend fun getFriendList(
         @Path("id") id: Int
