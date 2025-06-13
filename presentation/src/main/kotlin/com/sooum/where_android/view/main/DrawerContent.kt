@@ -6,6 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.fragment.compose.AndroidFragment
+import com.sooum.where_android.view.hamburger.setting.DeleteAccountFragment
 import com.sooum.where_android.model.ScreenRoute
 
 @Composable
@@ -15,6 +17,9 @@ fun DrawerContent(
     navigate: (Any) -> Unit
 ) {
     //TODO With AndroidFragment
+//    AndroidFragment<DeleteAccountFragment>(
+//        modifier = modifier
+//    ) {
 //    AndroidFragment<SignInFragment>(
 //        modifier = modifier
 //    ) {
