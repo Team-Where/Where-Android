@@ -89,7 +89,8 @@ class MyMeetActivity : AppCompatActivity() {
     private fun ShareResult.doAddPlace() {
         myMeetDetailPlaceWithCommentViewModel.addPlace(
             shareResult = this,
-            onSuccess = {
+            onSuccess = { placeId ->
+                myMeetDetailTabViewModel.updateFocusId(placeId)
                 CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
             },
             onFail = { msg ->
