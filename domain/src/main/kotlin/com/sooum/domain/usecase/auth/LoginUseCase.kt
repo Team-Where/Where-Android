@@ -1,6 +1,5 @@
 package com.sooum.domain.usecase.auth
 
-import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.LoginResult
 import com.sooum.domain.repository.AuthRepository

@@ -88,9 +88,11 @@ class MeetDetailRepositoryImpl @Inject constructor(
     override suspend fun loadMeetDetailList(userId: UserId) {
         val meetDetails = meetRemoteDataSource.getMeetList(userId).first()
         meetDetails.forEach { meetDetail ->
-            val time = makeStandardDate(meetDetail.date, meetDetail.time)
-            if (time != null) {
-                alarmMaker.makeAlarm(meetDetail.id, meetDetail.title, time)
+            if (!meetDetail.finished) {
+                val time = makeStandardDate(meetDetail.date, meetDetail.time)
+                if (time != null) {
+                    alarmMaker.makeAlarm(meetDetail.id, meetDetail.title, time)
+                }
             }
         }
         _meetDetailList.update {
@@ -410,17 +412,19 @@ class MeetDetailRepositoryImpl @Inject constructor(
         }.first()
     }
 
-    override suspend fun inviteOkFromLink(userId: Int, link: String): ActionResult<*> {
+    override suspend fun inviteOkFromLink(userId: Int, link: String): ActionResult<MeetDetail> {
         return meetRemoteDataSource.inviteOkFromLink(
             userId,
             link,
         ).transform { result ->
             result.covertApiResultToActionResultIfSuccess(
-                onSuccess = { meet ->
-                    val tempList = _meetDetailList.value.toMutableList()
-                    tempList.add(MeetDetail(meet))
-                    _meetDetailList.value = tempList
-                    emit(ActionResult.Success(Unit))
+                onSuccess = { meetDetail ->
+                    _meetDetailList.update { meetDetailList ->
+                        val tempList = meetDetailList.toMutableList()
+                        tempList.add(meetDetail)
+                        tempList
+                    }
+                    emit(ActionResult.Success(meetDetail))
                 },
                 onFail = {
                     emit(ActionResult.Fail(it))

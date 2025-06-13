@@ -76,10 +76,10 @@ interface MeetApi {
     @POST("api/meeting/invite/ok")
     suspend fun inviteMeetOk(
         @Body data: InviteMeetRequest
-    ): Response<Meet>
+    ): Response<MeetListItemResponse>
 
     @POST("api/meeting/invite/ok/link")
     suspend fun inviteMeetOkLink(
         @Body data: InviteMeetOkLinkRequest
-    ): Response<Meet>
+    ): Response<MeetListItemResponse>
 }

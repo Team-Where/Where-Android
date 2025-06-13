@@ -1,19 +1,19 @@
 package com.sooum.data.di
 
-import com.sooum.data.network.TokenProvider
 import com.sooum.data.repository.AuthRepositoryImpl
 import com.sooum.data.repository.FriendRepositoryImpl
-import com.sooum.data.repository.SocialLoginRepositoryImpl
 import com.sooum.data.repository.MeetDetailCommentRepositoryImpl
 import com.sooum.data.repository.MeetDetailPlaceRepositoryImpl
 import com.sooum.data.repository.MeetDetailRepositoryImpl
+import com.sooum.data.repository.SocialLoginRepositoryImpl
 import com.sooum.data.repository.TokenProviderImpl
 import com.sooum.domain.repository.AuthRepository
 import com.sooum.domain.repository.FriendRepository
-import com.sooum.domain.repository.SocialLoginRepository
 import com.sooum.domain.repository.MeetDetailCommentRepository
 import com.sooum.domain.repository.MeetDetailPlaceRepository
 import com.sooum.domain.repository.MeetDetailRepository
+import com.sooum.domain.repository.SocialLoginRepository
+import com.sooum.domain.repository.TokenProvider
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

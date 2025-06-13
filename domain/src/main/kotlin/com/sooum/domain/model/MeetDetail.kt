@@ -126,7 +126,14 @@ data class SimpleMeet(
     val date: String? = null,
     @SerialName("scheduleTime")
     val time: String? = null
-)
+) {
+    val schedule: Schedule?
+        get() = if (date != null && time != null) {
+            Schedule(id, date, time)
+        } else {
+            null
+        }
+}
 
 /**
  * 일정 수신시 사용되는 기본형 데이터

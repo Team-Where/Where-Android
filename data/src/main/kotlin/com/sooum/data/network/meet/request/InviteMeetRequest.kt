@@ -1,6 +1,7 @@
 package com.sooum.data.network.meet.request
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * 모임 초대시 사용되는 model
@@ -8,6 +9,7 @@ import kotlinx.serialization.SerialName
  * @param[fromId] 초대한 사용자 id
  * @param[toId] 초대받은 사용자 id
  */
+@Serializable
 data class InviteMeetRequest(
     @SerialName("id")
     val meetId: Int,

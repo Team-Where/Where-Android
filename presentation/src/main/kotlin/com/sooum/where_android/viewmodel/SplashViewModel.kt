@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.TokenStatus
 import com.sooum.domain.usecase.auth.VersionCheckUseCase
+import com.sooum.domain.usecase.friend.LoadFriedListUseCase
+import com.sooum.domain.usecase.meet.detail.LoadMeetDetailListUseCase
+import com.sooum.domain.usecase.user.CheckUserTokenExpiredUseCase
 import com.sooum.domain.util.AppVersionProvider
-import com.sooum.where_android.view.auth.AuthActivity
-import com.sooum.where_android.view.main.MainActivity
-import com.sooum.where_android.view.onboarding.OnBoardingActivity
+import com.sooum.where_android.model.ScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -17,21 +19,20 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import android.util.Base64
-import org.json.JSONObject
-import java.nio.charset.Charset
-import java.util.Date
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val appManageDataStore: AppManageDataStore,
     private val versionCheckUseCase: VersionCheckUseCase,
-    private val appVersionProvider: AppVersionProvider
+    private val appVersionProvider: AppVersionProvider,
+    private val checkUserTokenExpiredUseCase: CheckUserTokenExpiredUseCase,
+    private val loadMeetDetailListUseCase: LoadMeetDetailListUseCase,
+    private val loadFriedListUseCase: LoadFriedListUseCase,
 ) : ViewModel() {
 
     fun checkSplash(
         needUpdate: () -> Unit,
-        complete: (dest: Class<*>) -> Unit,
+        complete: (dest: ScreenRoute) -> Unit,
         onVersionCheckFailed: () -> Unit
     ) {
         viewModelScope.launch {
@@ -40,14 +41,7 @@ class SplashViewModel @Inject constructor(
                 delay(3000L)
             }
             val checkLogin = async {
-                val refreshToken = appManageDataStore.getRefreshToken().firstOrNull()
-                if (refreshToken.isNullOrBlank()) {
-                    false
-                } else {
-                    val exp = getJwtExpiration(refreshToken)
-                    val now = System.currentTimeMillis() / 1000
-                    exp != null && exp > now
-                }
+                checkUserTokenExpiredUseCase()
             }
             val checkAppUpdate = async {
                 val version = appVersionProvider.getVersionName()
@@ -72,36 +66,27 @@ class SplashViewModel @Inject constructor(
             } else {
                 val result = checkLogin.await()
                 val isFirst = isFirstLaunch.await()
-                val dest = if (result) {
+                val dest = if (result == TokenStatus.NOT_EXPIRED) {
+                    //유저정보가 있는 경우 데이터를 미리 로드해준다.
+                    appManageDataStore.getUserId().firstOrNull()
+                        ?.let {
+                            loadMeetDetailListUseCase(it)
+                            loadFriedListUseCase(it)
+                        }
                     //이미 로그인 되어있다면 Main으로 바로 가기
-                    MainActivity::class.java
+                    ScreenRoute.HomeRoute
                 } else {
                     //로그인 되어있지 않다면
                     if (isFirst) {
                         //첫 실행인 경우 온보딩
-                        OnBoardingActivity::class.java
+                        ScreenRoute.OnBoarding
                     } else {
                         //로그인 화면으로...
-                        AuthActivity::class.java
+                        ScreenRoute.AuthRoute
                     }
                 }
                 complete(dest)
             }
         }
-    }
-}
-
-private fun getJwtExpiration(token: String): Long? {
-    return try {
-        val parts = token.split(".")
-        if (parts.size < 2) return null
-
-        val payload = parts[1]
-        val decodedBytes = Base64.decode(payload, Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP)
-        val json = JSONObject(String(decodedBytes, Charset.forName("UTF-8")))
-
-        json.getLong("exp")
-    } catch (e: Exception) {
-        null
     }
 }

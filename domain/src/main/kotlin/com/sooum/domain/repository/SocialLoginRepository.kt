@@ -1,8 +1,8 @@
 package com.sooum.domain.repository
 
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.model.KakaoSignUpResult
 import com.sooum.domain.model.PostProfileResult
+import com.sooum.domain.model.auth.SocialSignUpResult
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
@@ -14,7 +14,7 @@ interface SocialLoginRepository {
     suspend fun kakaoLogin(
         accessToken: String,
         refreshToken: String
-    ): Flow<ApiResult<KakaoSignUpResult>>
+    ): Flow<ApiResult<SocialSignUpResult>>
 
     /**
      * 카카오 로그인을 한다
@@ -22,7 +22,7 @@ interface SocialLoginRepository {
     suspend fun naverLogin(
         accessToken: String,
         refreshToken: String
-    ): Flow<ApiResult<KakaoSignUpResult>>
+    ): Flow<ApiResult<SocialSignUpResult>>
 
     /**
      * 닉네임을 변경한다

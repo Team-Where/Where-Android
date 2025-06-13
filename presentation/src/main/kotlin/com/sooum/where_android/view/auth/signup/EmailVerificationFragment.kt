@@ -1,24 +1,18 @@
 package com.sooum.where_android.view.auth.signup
 
-import android.os.Bundle
 import android.os.CountDownTimer
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.sooum.domain.model.ApiResult
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentEmailVerificationBinding
+import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.auth.AuthBaseFragment
+import com.sooum.where_android.view.auth.navigatePassword
 import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBinding>(
@@ -26,40 +20,76 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
 ) {
     private var countDownTimer: CountDownTimer? = null
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        countDownTimer?.cancel()
+    }
+
+    override fun initView() {
+        setUpNextButtonStateObserver()
 
         with(binding) {
             nextBtn.isEnabled = false
 
             nextBtn.setOnClickListener {
+                loadingAlertProvider.startLoading()
                 authViewModel.verifyEmailCode(
-                    editTextEmail.text.toString().trim(),
-                    editTextCode.text.toString().trim()
+                    email = editTextEmail.text.toString().trim(),
+                    code = editTextCode.text.toString().trim(),
+                    onSuccess = { status ->
+                        when (status) {
+                            VERIFIED -> {
+                                authViewModel.setEmail(binding.editTextEmail.text.toString().trim())
+                                navHostController.navigatePassword()
+                            }
+
+                            else -> {
+                                showVerificationResultSnackBar(status)
+                            }
+                        }
+
+                    },
+                    onFail = { msg ->
+                        loadingAlertProvider.endLoadingWithMessage(msg)
+                    }
                 )
             }
 
             imageBack.setOnClickListener {
-                popBackStack()
+                navHostController.popBackStack<ScreenRoute.AuthRoute.SingUpRoute.Agreement>(
+                    inclusive = false
+                )
             }
 
             btnEmailCode.setOnClickListener {
                 val email = editTextEmail.text.toString().trim()
                 if (email.isNotEmpty() && isValidEmail(email)) {
-                    authViewModel.getEmailAuth(email)
-                    btnEmailCode.text = "재전송"
-                    editTextEmail.isEnabled = false
+                    loadingAlertProvider.startLoading()
+                    authViewModel.checkEmailAndAuth(
+                        email = email,
+                        onSuccess = {
+                            loadingAlertProvider.endLoading()
+                            emailCodeRequestSuccess()
+                            btnEmailCode.text = "재전송"
+                            editTextEmail.isEnabled = false
+                            editTextCode.requestFocus()
+                        },
+                        onFail = { msg ->
+                            loadingAlertProvider.endLoadingWithMessage(msg)
+                            editTextEmail.isEnabled = true
+                            editTextEmail.requestFocus()
+                        }
+                    )
                 } else {
                     showToast("이메일을 확인해주세요")
                 }
             }
 
             editTextEmail.doAfterTextChanged {
-                authViewModel.onEmailInputChanged(it.toString())
-
                 val isValid = isValidEmail(it.toString())
                 updateEditTextBackground(editTextEmail, isValid)
-                textEmailWrong.visibility = if (it.toString().isNotEmpty() && !isValid) View.VISIBLE else View.INVISIBLE
+                textEmailWrong.visibility =
+                    if (it.toString().isNotEmpty() && !isValid) View.VISIBLE else View.INVISIBLE
                 btnEmailCode.setBackgroundResource(
                     if (isValid) R.drawable.shape_rounded_black else R.drawable.shape_rounded_gray_500
                 )
@@ -73,95 +103,23 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
 
             editTextCode.doAfterTextChanged { code ->
                 authViewModel.onEmailVerifyInputChanged(
-                    editTextEmail.text.toString(),
-                    code.toString()
+                    emailValue = editTextEmail.text.toString(),
+                    codeValue = code.toString()
                 )
                 editTextCode.setBackgroundResource(R.drawable.shape_rounded_purple_radius_12)
             }
 
         }
-
-        observeEmailRequestResult()
-        observeEmailVerificationResult()
-        setUpNextButtonStateObserver()
-        observeCheckEmail()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        countDownTimer?.cancel()
-    }
-
-    override fun initView() {
-
-    }
-
-    private fun observeEmailRequestResult() {
-        lifecycleScope.launch {
-            authViewModel.emailRequestState.collect { result ->
-                when (result) {
-                    is ApiResult.Loading -> loadingAlertProvider.startLoading()
-                    is ApiResult.Success -> {
-                        loadingAlertProvider.endLoading()
-                        startTimer()
-                        val snackBar = CustomSnackBar.make(requireView(), "인증 코드가 전송되었습니다.", IconType.Check)
-                        snackBar.showWithAnchor(binding.nextBtn)
-                    }
-
-                    is ApiResult.Fail -> {
-                        loadingAlertProvider.endLoadingWithMessage("인증코드 전송에 실패하였습니다.")
-                    }
-
-                    else -> {}
-                }
-            }
-        }
-    }
-
-    // 이부분 수정해줘야함 그리고 실패뜨면 인증코드 전송 버튼도 비활성화
-    private fun observeCheckEmail() {
-        lifecycleScope.launch {
-            authViewModel.checkEmailState.collect { result ->
-                when (result) {
-                    is ApiResult.Loading -> loadingAlertProvider.startLoading()
-                    is ApiResult.Success -> {
-                        loadingAlertProvider.endLoading()
-                    }
-
-                    is ApiResult.Fail -> {
-                        binding.textEmailWrong.text = "이미 가입된 이메일입니다"
-                    }
-
-                    else -> {}
-                }
-            }
-        }
-    }
-
-    private fun observeEmailVerificationResult() {
-        lifecycleScope.launch {
-            authViewModel.emailVerifyState.collect { result ->
-                when (result) {
-                    is ApiResult.Loading -> loadingAlertProvider.startLoading()
-                    is ApiResult.Success -> {
-                        loadingAlertProvider.endLoading()
-                        when (result.data) {
-                            "Verified" -> {
-                                authViewModel.setEmail(binding.editTextEmail.text.toString().trim())
-                                navigateTo(PasswordFragment())
-                            }
-                            else -> showVerificationResultSnackBar(result.data)
-                        }
-                    }
-
-                    is ApiResult.Fail -> {
-                        loadingAlertProvider.endLoadingWithMessage("이메일 인증 요청에 실패했습니다.")
-                    }
-
-                    else -> {}
-                }
-            }
-        }
+    /**
+     * 이메일 코드 전송 성공시, 카운트 다운을 시작하고, 스낵바를 출력한다.
+     */
+    private fun emailCodeRequestSuccess() {
+        startTimer()
+        val snackBar =
+            CustomSnackBar.make(requireView(), "인증 코드가 전송되었습니다.", IconType.Check)
+        snackBar.showWithAnchor(binding.nextBtn)
     }
 
     private fun startTimer(durationMillis: Long = 10 * 60 * 1000L) {
@@ -176,8 +134,14 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
             override fun onFinish() {
                 binding.textTimer.text = "00:00"
                 binding.textTimeOver.visibility = View.VISIBLE
-                binding.textTimer.setTextColor(ContextCompat.getColor(requireContext(), R.color.red_scale_700))
+                binding.textTimer.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.red_scale_700
+                    )
+                )
                 binding.editTextCode.setBackgroundResource(R.drawable.shape_rounded_red_radius_12)
+                binding.btnEmailCode.isEnabled = true
             }
         }.start()
     }
@@ -211,13 +175,20 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
 
     private fun showVerificationResultSnackBar(result: String) {
         val (message, iconType) = when (result) {
-            "Verified" -> return
-            "Expired" -> "인증번호가 만료되었습니다." to IconType.Error
-            "NotVerified" -> "인증번호가 일치하지 않습니다." to IconType.Error
-            "NotSend" -> "인증요청을 먼저 해주세요." to IconType.Error
+            VERIFIED -> return
+            EXPIRED -> "인증번호가 만료되었습니다." to IconType.Error
+            NOT_VERIFIED -> "인증번호가 일치하지 않습니다." to IconType.Error
+            NOT_SEND -> "인증요청을 먼저 해주세요." to IconType.Error
             else -> "알 수 없는 응답입니다" to IconType.Error
         }
         val snackBar = CustomSnackBar.make(requireView(), message, iconType)
         snackBar.showWithAnchor(binding.nextBtn)
+    }
+
+    companion object {
+        private const val VERIFIED = "Verified"
+        private const val EXPIRED = "Expired"
+        private const val NOT_VERIFIED = "NotVerified"
+        private const val NOT_SEND = "NotSend"
     }
 }
