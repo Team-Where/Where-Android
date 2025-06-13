@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.sooum.domain.model.ShareResult
 import com.sooum.where_android.MyFirebaseMessagingService
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
 import com.sooum.where_android.parseMapShareResult
@@ -61,6 +62,11 @@ class MyMeetActivity : AppCompatActivity() {
 
         val intentFilter = IntentFilter(MyFirebaseMessagingService.FCM_DATA_RECEIVED)
         registerReceiver(fcmReceiver, intentFilter, RECEIVER_EXPORTED)
+
+        intent?.parseMapShareResult()?.let { shareResult ->
+            myMeetDetailTabViewModel.selectedTabPosition = 1
+            shareResult.doAddPlace()
+        }
     }
 
     override fun onDestroy() {
@@ -76,15 +82,19 @@ class MyMeetActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         Log.d("JWH", intent.toString())
         intent?.parseMapShareResult()?.let { shareResult ->
-            myMeetDetailPlaceWithCommentViewModel.addPlace(
-                shareResult = shareResult,
-                onSuccess = {
-                    CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
-                },
-                onFail = { msg ->
-                    CustomSnackBar.make(binding.root, msg, IconType.Error).show()
-                }
-            )
+            shareResult.doAddPlace()
         }
+    }
+
+    private fun ShareResult.doAddPlace() {
+        myMeetDetailPlaceWithCommentViewModel.addPlace(
+            shareResult = this,
+            onSuccess = {
+                CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
+            },
+            onFail = { msg ->
+                CustomSnackBar.make(binding.root, msg, IconType.Error).show()
+            }
+        )
     }
 }
