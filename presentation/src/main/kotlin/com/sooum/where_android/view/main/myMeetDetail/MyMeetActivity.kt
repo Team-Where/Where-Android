@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.sooum.where_android.MyFirebaseMessagingService
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
 import com.sooum.where_android.parseMapShareResult
+import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailFcmViewModel
@@ -50,10 +51,13 @@ class MyMeetActivity : AppCompatActivity() {
         binding = ActivityMyMeetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        intent.getIntExtra(MEET_ID, 0).let { id ->
-            myMeetDetailViewModel.loadData(id)
-            myMeetDetailPlaceWithCommentViewModel.loadData(id)
+        val id = intent.getIntExtra(MEET_ID, 0)
+        if (id <= 0) {
+            showSimpleToast("잘못된 접근입니다.")
+            return
         }
+        myMeetDetailViewModel.loadData(id)
+        myMeetDetailPlaceWithCommentViewModel.loadData(id)
 
         val intentFilter = IntentFilter(MyFirebaseMessagingService.FCM_DATA_RECEIVED)
         registerReceiver(fcmReceiver, intentFilter, RECEIVER_EXPORTED)
@@ -68,9 +72,15 @@ class MyMeetActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         Log.d("JWH", intent.toString())
         intent?.parseMapShareResult()?.let { shareResult ->
-            myMeetDetailPlaceWithCommentViewModel.addPlace(shareResult) {
-                CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
-            }
+            myMeetDetailPlaceWithCommentViewModel.addPlace(
+                shareResult = shareResult,
+                onSuccess = {
+                    CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
+                },
+                onFail = { msg ->
+                    CustomSnackBar.make(binding.root, msg, IconType.Error).show()
+                }
+            )
         }
     }
 }

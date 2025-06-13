@@ -14,12 +14,11 @@ class AddPlaceUseCase @Inject constructor(
         meetId: Int,
         userId: Int,
         shareResult: ShareResult
-    ) {
-        meetDetailPlaceWithCommentRepository.addMeetPlace(
+    ) = meetDetailPlaceWithCommentRepository.addMeetPlace(
             meetId = meetId,
             userId = userId,
             name = shareResult.placeName,
             address = shareResult.address,
         )
-    }
+
 }

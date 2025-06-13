@@ -94,12 +94,20 @@ class MyMeetDetailPlaceViewModel @Inject constructor(
 
     fun addPlace(
         shareResult: ShareResult,
-        complete: () -> Unit
+        onSuccess: () -> Unit,
+        onFail: (msg: String) -> Unit
     ) {
         viewModelScope.launch {
             meetDetailId?.let {
-                addPlaceUseCase(it, getLoginUserIdUseCase()!!, shareResult)
-                complete()
+                when (val result = addPlaceUseCase(it, getLoginUserIdUseCase()!!, shareResult)) {
+                    is ActionResult.Success -> {
+                        onSuccess()
+                    }
+
+                    is ActionResult.Fail -> {
+                        onFail(result.msg)
+                    }
+                }
             }
         }
     }
