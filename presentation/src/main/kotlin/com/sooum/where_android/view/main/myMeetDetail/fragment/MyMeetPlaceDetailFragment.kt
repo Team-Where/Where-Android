@@ -166,6 +166,7 @@ class MyMeetPlaceDetailFragment :
             textPlaceName.text = placeItem.place.name
             textPlaceDetail.text = placeItem.place.address
             textCommentNumber.text = placeItem.commentCount.toString()
+            textCommentCount.text = placeItem.commentCount.toString()
             textLikeNumber.text = placeItem.likeCount.toString()
 
             with(placeItem.place.myLike) {
