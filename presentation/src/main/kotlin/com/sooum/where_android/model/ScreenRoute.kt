@@ -95,38 +95,71 @@ sealed interface ScreenRoute {
         @Serializable
         data object HamburgerRoute {
 
+            /**
+             * 프로필 설정화면
+             */
             @Serializable
             data object ProfileEdit : ScreenRoute
 
+            /**
+             * 알림 목록 화면
+             */
             @Serializable
             data object Notification : ScreenRoute
 
+            /**
+             * FAQ 화면
+             */
             @Serializable
             data object FAQ : ScreenRoute
 
+            /**
+             * 공지 화면
+             */
             @Serializable
             data object Notice : ScreenRoute
 
+            /**
+             * 1대1 문의 화면
+             */
             @Serializable
             data object InquiryRoute {
 
+                /**
+                 * 1대1 문의 메인
+                 */
                 @Serializable
                 data object Inquiry : ScreenRoute
 
+                /**
+                 * 1대1 문의 작성 화면
+                 */
                 @Serializable
                 data object Write : ScreenRoute
 
             }
 
+            /**
+             * 설정 화면
+             */
             @Serializable
             data object SettingRoute {
 
+                /**
+                 * 설정화면 메인
+                 */
                 @Serializable
                 data object Setting : ScreenRoute
 
+                /**
+                 * 설정화면 - 비번 수정
+                 */
                 @Serializable
                 data object EditPassword : ScreenRoute
 
+                /**
+                 * 설정화면 - 계정 삭제
+                 */
                 @Serializable
                 data object DeleteAccount : ScreenRoute
             }

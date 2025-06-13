@@ -11,17 +11,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.sooum.where_android.model.ScreenRoute
 
+/**
+ * drawerRoute에서 Home으로 가는 확장
+ */
+private fun NavHostController.navigateHome() {
+    navigate(ScreenRoute.HomeRoute.Main) {
+        launchSingleTop = true
+        popUpTo<ScreenRoute.HomeRoute.HamburgerRoute> {
+            inclusive = true
+        }
+    }
+}
+
 fun NavGraphBuilder.registerHamburgerRoute(
     mainNavController: NavHostController,
 ) {
-    val navigateHome: () -> Unit = {
-        mainNavController.navigate(ScreenRoute.HomeRoute.Main) {
-            launchSingleTop = true
-            popUpTo<ScreenRoute.HomeRoute.HamburgerRoute> {
-                inclusive = true
-            }
-        }
-    }
     navigation<ScreenRoute.HomeRoute.HamburgerRoute>(
         startDestination = ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit
     ) {
@@ -30,7 +34,7 @@ fun NavGraphBuilder.registerHamburgerRoute(
                 modifier = Modifier.safeDrawingPadding()
             ) {
                 TextButton(
-                    navigateHome
+                    mainNavController::navigateHome
                 ) {
                     Text("Home")
                 }
@@ -42,7 +46,7 @@ fun NavGraphBuilder.registerHamburgerRoute(
                 modifier = Modifier.safeDrawingPadding()
             ) {
                 TextButton(
-                    navigateHome
+                    mainNavController::navigateHome
                 ) {
                     Text("Home")
                 }
@@ -54,7 +58,7 @@ fun NavGraphBuilder.registerHamburgerRoute(
                 modifier = Modifier.safeDrawingPadding()
             ) {
                 TextButton(
-                    navigateHome
+                    mainNavController::navigateHome
                 ) {
                     Text("Home")
                 }
@@ -66,125 +70,142 @@ fun NavGraphBuilder.registerHamburgerRoute(
                 modifier = Modifier.safeDrawingPadding()
             ) {
                 TextButton(
-                    navigateHome
+                    mainNavController::navigateHome
                 ) {
                     Text("Home")
                 }
                 Text(text = "Notice")
             }
         }
-        navigation<ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute>(
-            startDestination = ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry
-        ) {
-            composable<ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry> {
-                Column(
-                    modifier = Modifier.safeDrawingPadding()
-                ) {
-                    TextButton(
-                        navigateHome
-                    ) {
-                        Text("Home")
-                    }
-                    Text(text = "Inquiry")
+        installInquiryRoute(mainNavController)
+        installSettingRoute(mainNavController)
+    }
+}
 
-                    TextButton(
-                        onClick = {
-                            mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Write) {
-                                launchSingleTop = true
-                            }
-                        }
-                    ) {
-                        Text("Write")
-                    }
+/**
+ * 문의 관련 중첩 네비게이션
+ */
+private fun NavGraphBuilder.installInquiryRoute(
+    mainNavController: NavHostController,
+) {
+    navigation<ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute>(
+        startDestination = ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry
+    ) {
+        composable<ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry> {
+            Column(
+                modifier = Modifier.safeDrawingPadding()
+            ) {
+                TextButton(
+                    mainNavController::navigateHome
+                ) {
+                    Text("Home")
                 }
-            }
-            composable<ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Write> {
-                Column(
-                    modifier = Modifier.safeDrawingPadding()
-                ) {
-                    TextButton(
-                        onClick = {
-                            mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry) {
-                                launchSingleTop = true
-                                popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry) {
+                Text(text = "Inquiry")
 
-                                }
-                            }
+                TextButton(
+                    onClick = {
+                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Write) {
+                            launchSingleTop = true
                         }
-                    ) {
-                        Text("Back")
                     }
-                    Text(text = "Write")
+                ) {
+                    Text("Write")
                 }
             }
         }
+        composable<ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Write> {
+            Column(
+                modifier = Modifier.safeDrawingPadding()
+            ) {
+                TextButton(
+                    onClick = {
+                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry) {
+                            launchSingleTop = true
+                            popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry) {
 
-        navigation<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute>(
-            startDestination = ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting
-        ) {
-            composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting> {
-                Column(
-                    modifier = Modifier.safeDrawingPadding()
+                            }
+                        }
+                    }
                 ) {
-                    TextButton(
-                        navigateHome
-                    ) {
-                        Text("Home")
-                    }
-                    Text(text = "Setting")
-                    TextButton(
-                        onClick = {
-                            mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.EditPassword) {
-                                launchSingleTop = true
-                            }
+                    Text("Back")
+                }
+                Text(text = "Write")
+            }
+        }
+    }
+}
+
+/**
+ * 설정 관련 중첩 네비게이션
+ */
+private fun NavGraphBuilder.installSettingRoute(
+    mainNavController: NavHostController
+) {
+    navigation<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute>(
+        startDestination = ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting
+    ) {
+        composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting> {
+            Column(
+                modifier = Modifier.safeDrawingPadding()
+            ) {
+                TextButton(
+                    mainNavController::navigateHome
+                ) {
+                    Text("Home")
+                }
+                Text(text = "Setting")
+                TextButton(
+                    onClick = {
+                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.EditPassword) {
+                            launchSingleTop = true
                         }
-                    ) {
-                        Text("Edit")
                     }
-                    TextButton(
-                        onClick = {
-                            mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteAccount) {
-                                launchSingleTop = true
-                            }
+                ) {
+                    Text("Edit")
+                }
+                TextButton(
+                    onClick = {
+                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteAccount) {
+                            launchSingleTop = true
                         }
-                    ) {
-                        Text("Delete")
                     }
+                ) {
+                    Text("Delete")
                 }
             }
-            composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.EditPassword> {
-                Column(
-                    modifier = Modifier.safeDrawingPadding()
-                ) {
-                    TextButton(
-                        onClick = {
-                            mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
-                                launchSingleTop = true
-                                popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting)
-                            }
+        }
+        composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.EditPassword> {
+            Column(
+                modifier = Modifier.safeDrawingPadding()
+            ) {
+                TextButton(
+                    onClick = {
+                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
+                            launchSingleTop = true
+                            popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting)
                         }
-                    ) {
-                        Text("Back")
                     }
-                    Text(text = "EditPassword")
+                ) {
+                    Text("Back")
                 }
+                Text(text = "EditPassword")
             }
-            composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteAccount> {
-                Column(
-                    modifier = Modifier.safeDrawingPadding()
-                ) {
-                    TextButton(
-                        onClick = {
-                            mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
-                                launchSingleTop = true
-                                popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting)
-                            }
+        }
+        composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteAccount> {
+            Column(
+                modifier = Modifier.safeDrawingPadding()
+            ) {
+                TextButton(
+                    onClick = {
+                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
+                            launchSingleTop = true
+                            popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting)
                         }
-                    ) {
-                        Text("Back")
                     }
-                    Text(text = "DeleteAccount")
+                ) {
+                    Text("Back")
                 }
+                Text(text = "DeleteAccount")
             }
         }
     }
