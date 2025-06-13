@@ -1,5 +1,6 @@
 package com.sooum.data.di
 
+import android.content.Context
 import com.sooum.data.network.NullOnEmptyConverterFactory
 import com.sooum.data.network.auth.AuthApi
 import com.sooum.data.network.comment.CommentApi
@@ -11,13 +12,16 @@ import com.sooum.data.network.socialLogin.SocialLoginApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
+import okhttp3.Cache
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import java.io.File
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -34,54 +38,75 @@ annotation class NoAuthRetrofit
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    private const val BASE_URL = "https://audiwhere.shop"
+
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(
+        @ApplicationContext context: Context
+    ): OkHttpClient.Builder {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
             .setLevel(HttpLoggingInterceptor.Level.BODY)
+
         return OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
+            .cache(
+                Cache(
+                    directory = File(context.cacheDir, "http_cache"),
+                    maxSize = 50L * 1024L * 1024L // 50 MiB
+                )
+            )
+    }
+
+    private fun makeRetrofit(
+        okHttpClient: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(
+                NullOnEmptyConverterFactory()
+            )
+            .addConverterFactory(
+                Json.asConverterFactory("application/json; charset=UTF8".toMediaType())
+            )
             .build()
     }
 
     @WhereRetrofit
     @Provides
     fun provideAuthRetrofit(
-        tokenAuthenticator: TokenAuthenticator
-    ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("https://audiwhere.shop")
-            .client(
-                OkHttpClient.Builder()
-                    .authenticator(tokenAuthenticator)
-                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                    .build()
-            )
-            .addConverterFactory(
-                NullOnEmptyConverterFactory()
-            )
-            .addConverterFactory(
-                Json.asConverterFactory("application/json; charset=UTF8".toMediaType())
-            )
+        okHttpClientBuilder: OkHttpClient.Builder,
+        tokenAuthenticator: TokenAuthenticator,
+    ): Retrofit = makeRetrofit(
+        okHttpClientBuilder
+            .authenticator(tokenAuthenticator)
+            .addNetworkInterceptor { chain ->
+                val originalResponse = chain.proceed(chain.request())
+
+                // 캐시는 GET 요청에만 적용
+                if (chain.request().method == "GET") {
+                    originalResponse.newBuilder()
+                        .removeHeader("Cache-Control") // 서버에서 온 private 제거
+                        .header("Cache-Control", "public, max-age=60") // 60초 동안 캐시
+                        .build()
+                } else {
+                    originalResponse
+                }
+            }
             .build()
-    }
+    )
 
     @Provides
     @Singleton
     @NoAuthRetrofit
     fun provideRetrofit(
-        okHttpClient: OkHttpClient
-    ): Retrofit =
-        Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl("https://audiwhere.shop")
-            .addConverterFactory(
-                NullOnEmptyConverterFactory()
-            )
-            .addConverterFactory(
-                Json.asConverterFactory("application/json; charset=UTF8".toMediaType())
-            )
+        okHttpClientBuilder: OkHttpClient.Builder
+    ): Retrofit = makeRetrofit(
+        okHttpClientBuilder
             .build()
+    )
+
 
     @Provides
     @Singleton
