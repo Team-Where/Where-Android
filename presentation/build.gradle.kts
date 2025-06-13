@@ -104,8 +104,6 @@ dependencies {
     //이미지 라이브러리
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    ksp("com.github.bumptech.glide:ksp:4.16.0")
 
     //날짜 관련
     implementation(libs.kotlinx.datetime)
