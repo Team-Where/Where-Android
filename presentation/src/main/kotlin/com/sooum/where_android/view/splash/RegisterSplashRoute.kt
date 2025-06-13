@@ -1,7 +1,6 @@
 package com.sooum.where_android.view.splash
 
 import android.content.Intent
-import android.util.Log
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -34,7 +33,6 @@ fun NavGraphBuilder.registerSplashRoute(
                     ) {
                         mainNavController.navigateNext(route)
                     } else {
-                        Log.d("JWH", intent.toString())
 
                         //스키마 혹은 앱링크로 실행된 경우 체크
                         intent.checkAppScheme()?.let {
@@ -42,8 +40,7 @@ fun NavGraphBuilder.registerSplashRoute(
                             return@SplashView
                         }
 
-                        Log.d("JWH", intent.action.toString())
-
+                        //지도 데이터를 파싱해서 시작된 경우
                         intent.parseMapShareResult()?.let { shareResult ->
                             mainNavController.navigateNext(
                                 ScreenRoute.HomeRoute.MapShareResult(

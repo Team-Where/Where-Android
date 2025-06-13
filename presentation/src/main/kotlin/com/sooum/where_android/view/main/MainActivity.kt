@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             }
             DisposableEffect(this@MainActivity, mainNavController) {
                 val onNewIntentConsumer = Consumer<Intent> {
-                    if (mainNavController.currentDestination?.hasRoute<ScreenRoute.HomeRoute>() == true) {
+                    if (mainNavController.currentDestination?.hasRoute<ScreenRoute.HomeRoute.Main>() == true) {
                         it.checkAppScheme()?.let { inviteRoute ->
                             mainNavController.navigate(inviteRoute) {
                                 launchSingleTop = true
