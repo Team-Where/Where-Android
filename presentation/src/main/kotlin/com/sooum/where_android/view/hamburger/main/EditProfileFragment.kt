@@ -1,19 +1,14 @@
-package com.sooum.where_android.view.hamburger
+package com.sooum.where_android.view.hamburger.main
 
 import android.os.Bundle
 import android.view.View
 import com.sooum.where_android.databinding.FragmentEditProfileBinding
+import com.sooum.where_android.view.hamburger.HamburgerBaseFragment
 
 class EditProfileFragment : HamburgerBaseFragment<FragmentEditProfileBinding>(
     FragmentEditProfileBinding ::inflate
 ) {
     override fun initView() {
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
 
     }
 }

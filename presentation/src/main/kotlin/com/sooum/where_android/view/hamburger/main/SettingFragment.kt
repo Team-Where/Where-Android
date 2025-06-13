@@ -1,4 +1,4 @@
-package com.sooum.where_android.view.hamburger.setting
+package com.sooum.where_android.view.hamburger.main
 
 import android.os.Bundle
 import android.view.View
@@ -12,9 +12,4 @@ class SettingFragment : HamburgerBaseFragment<FragmentSettingBinding>(
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-    }
 }
