@@ -54,7 +54,7 @@ fun MeetDetailListView(
 }
 
 @Composable
-private fun MyMeetContentCard(
+fun MyMeetContentCard(
     meetDetail: MeetDetail,
     onClick: () -> Unit
 ) {
