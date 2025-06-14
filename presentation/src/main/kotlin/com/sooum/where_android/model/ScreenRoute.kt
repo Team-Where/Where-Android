@@ -162,6 +162,13 @@ sealed interface ScreenRoute {
                  */
                 @Serializable
                 data object DeleteAccount : ScreenRoute
+
+                /**
+                 * 설정화면 - 계정 삭제 완료
+                 */
+                @Serializable
+                data object DeleteComplete : ScreenRoute
+
             }
         }
     }

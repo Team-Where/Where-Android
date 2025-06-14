@@ -4,8 +4,10 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavHostController
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentDeleteAccountBinding
+import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.hamburger.HamburgerBaseFragment
 
 class DeleteAccountFragment : HamburgerBaseFragment<FragmentDeleteAccountBinding>(
@@ -33,6 +35,25 @@ class DeleteAccountFragment : HamburgerBaseFragment<FragmentDeleteAccountBinding
             )
 
             binding.textQuestion.text = spannable
+        }
+    }
+
+    override fun setNavigation(
+        navHostController: NavHostController
+    ) {
+        super.setNavigation(navHostController)
+        with(binding) {
+            imageClose.setOnClickListener {
+                navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
+                    launchSingleTop = true
+                    popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting)
+                }
+            }
+            nextBtn.setOnClickListener {
+                navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteComplete) {
+                    launchSingleTop = true
+                }
+            }
         }
     }
 }

@@ -1,20 +1,32 @@
 package com.sooum.where_android.view.hamburger
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.Modifier
+import androidx.fragment.compose.AndroidFragment
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.hamburger.main.EditProfileFragment
+import com.sooum.where_android.view.hamburger.main.FaqFragment
+import com.sooum.where_android.view.hamburger.main.InquiryFragment
+import com.sooum.where_android.view.hamburger.main.NotificationFragment
+import com.sooum.where_android.view.hamburger.main.SettingFragment
+import com.sooum.where_android.view.hamburger.setting.DeleteAccountCompleteFragment
+import com.sooum.where_android.view.hamburger.setting.DeleteAccountFragment
+import com.sooum.where_android.view.hamburger.setting.EditPasswordFragment
 
 /**
  * drawerRoute에서 Home으로 가는 확장
  */
-private fun NavHostController.navigateHome() {
+internal fun NavHostController.navigateHome() {
     navigate(ScreenRoute.HomeRoute.Main) {
         launchSingleTop = true
         popUpTo<ScreenRoute.HomeRoute.HamburgerRoute> {
@@ -30,51 +42,67 @@ fun NavGraphBuilder.registerHamburgerRoute(
         startDestination = ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit
     ) {
         composable<ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit> {
-            Column(
+            Box(
                 modifier = Modifier.safeDrawingPadding()
             ) {
-                TextButton(
-                    mainNavController::navigateHome
-                ) {
-                    Text("Home")
+                BackHandler {
+                    mainNavController.navigateHome()
                 }
-                Text(text = "ProfileEdit")
+                AndroidFragment<EditProfileFragment>(
+                    modifier = Modifier.fillMaxSize()
+                ) { editProfileFragment ->
+                    editProfileFragment.setNavigation(
+                        navHostController = mainNavController
+                    )
+                }
             }
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.Notification> {
-            Column(
+            Box(
                 modifier = Modifier.safeDrawingPadding()
             ) {
-                TextButton(
-                    mainNavController::navigateHome
-                ) {
-                    Text("Home")
+                BackHandler {
+                    mainNavController.navigateHome()
                 }
-                Text(text = "Notification")
+                AndroidFragment<NotificationFragment>(
+                    modifier = Modifier.fillMaxSize()
+                ) { notificationFragment ->
+                    notificationFragment.setNavigation(
+                        navHostController = mainNavController
+                    )
+                }
             }
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.FAQ> {
-            Column(
+            Box(
                 modifier = Modifier.safeDrawingPadding()
             ) {
-                TextButton(
-                    mainNavController::navigateHome
-                ) {
-                    Text("Home")
+                BackHandler {
+                    mainNavController.navigateHome()
                 }
-                Text(text = "FAQ")
+                AndroidFragment<FaqFragment>(
+                    modifier = Modifier.fillMaxSize()
+                ) { faqFragment ->
+                    faqFragment.setNavigation(
+                        navHostController = mainNavController
+                    )
+                }
             }
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.Notice> {
-            Column(
+            Box(
                 modifier = Modifier.safeDrawingPadding()
             ) {
-                TextButton(
-                    mainNavController::navigateHome
-                ) {
-                    Text("Home")
+                BackHandler {
+                    mainNavController.navigateHome()
                 }
-                Text(text = "Notice")
+                AndroidFragment<NotificationFragment>(
+                    modifier = Modifier.fillMaxSize()
+                ) { noticeFragment ->
+                    noticeFragment.setNavigation(
+                        navHostController = mainNavController
+                    )
+                }
             }
         }
         installInquiryRoute(mainNavController)
@@ -92,15 +120,19 @@ private fun NavGraphBuilder.installInquiryRoute(
         startDestination = ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry
     ) {
         composable<ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry> {
-            Column(
+            Box(
                 modifier = Modifier.safeDrawingPadding()
             ) {
-                TextButton(
-                    mainNavController::navigateHome
-                ) {
-                    Text("Home")
+                BackHandler {
+                    mainNavController.navigateHome()
                 }
-                Text(text = "Inquiry")
+                AndroidFragment<InquiryFragment>(
+                    modifier = Modifier.fillMaxSize()
+                ) { inquiryFragment ->
+                    inquiryFragment.setNavigation(
+                        navHostController = mainNavController
+                    )
+                }
 
                 TextButton(
                     onClick = {
@@ -109,7 +141,7 @@ private fun NavGraphBuilder.installInquiryRoute(
                         }
                     }
                 ) {
-                    Text("Write")
+                    Text("Test-Write")
                 }
             }
         }
@@ -145,67 +177,86 @@ private fun NavGraphBuilder.installSettingRoute(
         startDestination = ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting
     ) {
         composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting> {
-            Column(
+            Box(
                 modifier = Modifier.safeDrawingPadding()
             ) {
-                TextButton(
-                    mainNavController::navigateHome
-                ) {
-                    Text("Home")
+                BackHandler {
+                    mainNavController.navigateHome()
                 }
-                Text(text = "Setting")
-                TextButton(
-                    onClick = {
-                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.EditPassword) {
-                            launchSingleTop = true
-                        }
-                    }
-                ) {
-                    Text("Edit")
-                }
-                TextButton(
-                    onClick = {
-                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteAccount) {
-                            launchSingleTop = true
-                        }
-                    }
-                ) {
-                    Text("Delete")
+                AndroidFragment<SettingFragment>(
+                    modifier = Modifier.fillMaxSize()
+                ) { settingFragment ->
+                    settingFragment.setNavigation(
+                        navHostController = mainNavController
+                    )
                 }
             }
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.EditPassword> {
-            Column(
+            Box(
                 modifier = Modifier.safeDrawingPadding()
             ) {
-                TextButton(
-                    onClick = {
-                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
-                            launchSingleTop = true
-                            popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting)
-                        }
+                BackHandler {
+                    mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
+                        launchSingleTop = true
+                        popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting)
                     }
-                ) {
-                    Text("Back")
                 }
-                Text(text = "EditPassword")
+                AndroidFragment<EditPasswordFragment>(
+                    modifier = Modifier.fillMaxSize()
+                ) { editPasswordFragment ->
+                    editPasswordFragment.setNavigation(
+                        navHostController = mainNavController
+                    )
+                }
             }
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteAccount> {
-            Column(
+            Box(
                 modifier = Modifier.safeDrawingPadding()
             ) {
+                BackHandler {
+                    mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
+                        launchSingleTop = true
+                        popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting)
+                    }
+                }
+                AndroidFragment<DeleteAccountFragment>(
+                    modifier = Modifier.fillMaxSize()
+                ) { deleteAccountFragment ->
+                    deleteAccountFragment.setNavigation(
+                        navHostController = mainNavController
+                    )
+                }
+            }
+        }
+
+        composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteComplete> {
+            Box(
+                modifier = Modifier.safeDrawingPadding()
+            ) {
+                BackHandler {
+                    //Block Back Click
+                }
+                AndroidFragment<DeleteAccountCompleteFragment>(
+                    modifier = Modifier.fillMaxSize()
+                ) { deleteAccountCompleteFragment ->
+                    deleteAccountCompleteFragment.setNavigation(
+                        navHostController = mainNavController
+                    )
+                }
                 TextButton(
                     onClick = {
-                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
+                        mainNavController.navigate(ScreenRoute.AuthRoute) {
+                            popUpTo(ScreenRoute.HomeRoute) {
+                                inclusive = true
+                            }
                             launchSingleTop = true
-                            popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting)
                         }
                     }
                 ) {
-                    Text("Back")
+                    Text("Test-Complete")
                 }
-                Text(text = "DeleteAccount")
             }
         }
     }
