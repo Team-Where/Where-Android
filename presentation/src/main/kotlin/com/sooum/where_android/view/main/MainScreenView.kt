@@ -2,6 +2,7 @@ package com.sooum.where_android.view.main
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
@@ -27,6 +28,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.main.home.HomeScreenView
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
@@ -95,20 +97,25 @@ fun MainScreenView(
                         ModalDrawerSheet(
                             drawerState = drawerState,
                             drawerShape = RectangleShape,
-                            drawerContainerColor = Color.White
+                            drawerContainerColor = Color.White,
+                            windowInsets = WindowInsets(0.dp)
                         ) {
                             DrawerContent(
+                                modifier = Modifier.fillMaxSize(),
                                 closeDrawer = {
                                     scope.launch {
                                         drawerState.close()
                                     }
                                 },
-                                modifier = Modifier.fillMaxSize(),
                                 navigate = {
                                     scope.launch {
-                                        drawerState.close()
-                                        navController.navigate(it) {
-                                            launchSingleTop = true
+                                        async {
+                                            drawerState.close()
+                                        }
+                                        async {
+                                            navController.navigate(it) {
+                                                launchSingleTop = true
+                                            }
                                         }
                                     }
                                 }
