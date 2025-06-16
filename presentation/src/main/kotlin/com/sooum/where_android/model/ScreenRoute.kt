@@ -106,7 +106,7 @@ sealed interface ScreenRoute {
                 shareResult.address,
                 shareResult.link
             )
-            
+        }
         @Serializable
         data object HamburgerRoute {
 
