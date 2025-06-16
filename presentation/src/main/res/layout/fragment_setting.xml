@@ -43,9 +43,9 @@
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:orientation="horizontal"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="25dp"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/text_account_setting">
 
@@ -74,9 +74,9 @@
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:orientation="horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/linearLayout1">
 
@@ -105,9 +105,9 @@
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:orientation="horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/linearLayout2">
 
@@ -194,9 +194,9 @@
     <LinearLayout
         android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:orientation="horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/text_customer">
 
@@ -225,9 +225,9 @@
     <LinearLayout
         android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:orientation="horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/linearLayout4">
 
