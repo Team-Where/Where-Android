@@ -3,14 +3,16 @@ package com.sooum.where_android.view.hamburger.main.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sooum.domain.model.NoticeResult
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ItemNoticeBinding
+import com.sooum.where_android.util.NoticeDiffUtil
 
 class NoticeItemRecyclerView(
     private val noticeList: List<NoticeResult>
-) : RecyclerView.Adapter<NoticeItemRecyclerView.NoticeViewHolder>() {
+) : ListAdapter< NoticeResult,NoticeItemRecyclerView.NoticeViewHolder>(NoticeDiffUtil) {
 
     private val expandedPositions = mutableSetOf<Int>()
 

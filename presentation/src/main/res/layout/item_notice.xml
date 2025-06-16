@@ -11,7 +11,7 @@
         android:id="@+id/textTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tools:text="asd"
+        tools:text="안녕하세요"
         android:textSize="16sp"
         android:textColor="#212529"
         android:fontFamily="@font/pretend_medium"
@@ -21,7 +21,6 @@
         app:layout_constraintBottom_toTopOf="@+id/textDate"
         app:layout_goneMarginBottom="8dp"/>
 
-    <!-- 화살표 아이콘 -->
     <ImageView
         android:id="@+id/imageExpand"
         android:layout_width="24dp"
@@ -32,7 +31,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/textTitle" />
 
-    <!-- 날짜 -->
     <TextView
         android:id="@+id/textDate"
         android:layout_width="wrap_content"
@@ -45,7 +43,6 @@
         app:layout_constraintBottom_toTopOf="@+id/expandLayout"
         android:layout_marginTop="4dp" />
 
-    <!-- 펼쳐지는 영역 -->
     <LinearLayout
         android:id="@+id/expandLayout"
         android:layout_width="0dp"
@@ -64,7 +61,7 @@
         android:id="@+id/textContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="asd"
+        tools:text="안녕하세요"
         android:textSize="14sp"
         android:textColor="#495057"
         android:lineSpacingExtra="4dp"/>
