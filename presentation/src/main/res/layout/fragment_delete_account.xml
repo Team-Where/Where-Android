@@ -17,7 +17,7 @@
         android:id="@+id/textTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="설정"
+        android:text="계정탈퇴"
         android:textSize="24sp"
         android:textColor="@color/gray_scale_800"
         android:fontFamily="@font/pretend_semibold"
@@ -86,7 +86,7 @@
     </RadioGroup>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/nextBtn"
+        android:id="@+id/completeBtn"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="완료"

@@ -49,7 +49,7 @@ class DeleteAccountFragment : HamburgerBaseFragment<FragmentDeleteAccountBinding
                     popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting)
                 }
             }
-            nextBtn.setOnClickListener {
+            completeBtn.setOnClickListener {
                 navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteComplete) {
                     launchSingleTop = true
                 }
