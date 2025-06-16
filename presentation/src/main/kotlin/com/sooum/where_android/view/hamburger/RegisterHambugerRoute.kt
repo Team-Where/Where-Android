@@ -17,6 +17,7 @@ import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.hamburger.main.EditProfileFragment
 import com.sooum.where_android.view.hamburger.main.FaqFragment
 import com.sooum.where_android.view.hamburger.main.InquiryFragment
+import com.sooum.where_android.view.hamburger.main.NoticeFragment
 import com.sooum.where_android.view.hamburger.main.NotificationFragment
 import com.sooum.where_android.view.hamburger.main.SettingFragment
 import com.sooum.where_android.view.hamburger.setting.DeleteAccountCompleteFragment
@@ -96,7 +97,7 @@ fun NavGraphBuilder.registerHamburgerRoute(
                 BackHandler {
                     mainNavController.navigateHome()
                 }
-                AndroidFragment<NotificationFragment>(
+                AndroidFragment<NoticeFragment>(
                     modifier = Modifier.fillMaxSize()
                 ) { noticeFragment ->
                     noticeFragment.setNavigation(
