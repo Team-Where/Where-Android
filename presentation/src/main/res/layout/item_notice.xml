@@ -36,8 +36,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="2024.12.24"
-        android:textColor="#868E96"
+        android:textColor="@color/gray_scale_700"
         android:textSize="12sp"
+        android:fontFamily="@font/pretend_regular"
         app:layout_constraintTop_toBottomOf="@+id/textTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/expandLayout"
@@ -62,8 +63,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="안녕하세요"
+        android:fontFamily="@font/pretend_regular"
         android:textSize="14sp"
-        android:textColor="#495057"
+        android:textColor="@color/gray_scale_700"
         android:lineSpacingExtra="4dp"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
