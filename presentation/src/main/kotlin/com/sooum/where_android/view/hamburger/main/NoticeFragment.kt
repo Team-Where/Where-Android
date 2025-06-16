@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sooum.domain.model.NoticeResult
 import com.sooum.where_android.databinding.FragmentNoticeBinding
 import com.sooum.where_android.view.hamburger.HamburgerBaseFragment
-import com.sooum.where_android.view.hamburger.main.adapter.NoticeItemRecyclerView
+import com.sooum.where_android.view.hamburger.main.adapter.NoticeRecyclerView
 
 class NoticeFragment : HamburgerBaseFragment<FragmentNoticeBinding>(
     FragmentNoticeBinding ::inflate
@@ -17,7 +17,7 @@ class NoticeFragment : HamburgerBaseFragment<FragmentNoticeBinding>(
             NoticeResult(3,"⚠ 서버 점검 공지", "2024.11.04", "2024.12.2")
         )
 
-        val adapter = NoticeItemRecyclerView(sampleData)
+        val adapter = NoticeRecyclerView(sampleData)
         binding.recyclerNotice.adapter = adapter
         binding.recyclerNotice.layoutManager = LinearLayoutManager(requireContext())
     }

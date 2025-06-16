@@ -5,24 +5,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.sooum.domain.model.FaqItem
 import com.sooum.domain.model.NoticeResult
 import com.sooum.where_android.R
+import com.sooum.where_android.databinding.ItemFaqBinding
 import com.sooum.where_android.databinding.ItemNoticeBinding
 import com.sooum.where_android.util.NoticeDiffUtil
 
-class NoticeItemRecyclerView(
-    private val noticeList: List<NoticeResult>
-) : ListAdapter< NoticeResult,NoticeItemRecyclerView.NoticeViewHolder>(NoticeDiffUtil) {
+class FaqRecyclerView (
+    private val noticeList: List<FaqItem>
+) : RecyclerView.Adapter<FaqRecyclerView.FaqViewHolder>() {
 
     private val expandedPositions = mutableSetOf<Int>()
 
-    inner class NoticeViewHolder(private val binding: ItemNoticeBinding) :
+    inner class FaqViewHolder(private val binding: ItemFaqBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) = with(binding) {
             val item = noticeList[position]
             textTitle.text = item.title
-            textDate.text = item.date
             textContent.text = item.content
 
             val isExpanded = expandedPositions.contains(position)
@@ -42,12 +43,12 @@ class NoticeItemRecyclerView(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoticeViewHolder {
-        val binding = ItemNoticeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return NoticeViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FaqRecyclerView.FaqViewHolder {
+        val binding = ItemFaqBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return FaqViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: NoticeViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FaqRecyclerView.FaqViewHolder, position: Int) {
         holder.bind(position)
     }
 

@@ -242,7 +242,7 @@
                 android:id="@+id/image_notice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_notice"
+                android:src="@drawable/icon_vector_notice"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
