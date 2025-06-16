@@ -15,7 +15,11 @@ inline fun <T> ApiResult<T>.covertApiResultToActionResultIfSuccess(
         }
 
         is ApiResult.Fail.Error -> {
-            onFail(this.message ?: "알수 없는 오류가 발생했습니다.")
+            if (this.code == 500) {
+                onFail("서버 내부 오류")
+            } else {
+                onFail(this.message ?: "알수 없는 오류가 발생했습니다.")
+            }
         }
 
         is ApiResult.Fail.Exception -> {
@@ -42,7 +46,11 @@ inline fun <T> ApiResult<T>.covertApiResultToActionResultIfSuccessEmpty(
         }
 
         is ApiResult.Fail.Error -> {
-            onFail(this.message ?: "알수 없는 오류가 발생했습니다.")
+            if (this.code == 500) {
+                onFail("서버 내부 오류")
+            } else {
+                onFail(this.message ?: "알수 없는 오류가 발생했습니다.")
+            }
         }
 
         is ApiResult.Fail.Exception -> {

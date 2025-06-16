@@ -85,7 +85,7 @@ class MeetDetailPlaceRepositoryImpl @Inject constructor(
         userId: Int,
         name: String,
         address: String,
-    ): ActionResult<String> {
+    ): ActionResult<Int> {
         return meetRemoteDataSource.addMeetPlace(
             meetId,
             userId,
@@ -97,7 +97,7 @@ class MeetDetailPlaceRepositoryImpl @Inject constructor(
                     val temp = _meetPlaceList.value.toMutableList()
                     temp.add(PlaceWithUsers(place))
                     _meetPlaceList.value = temp
-                    emit(ActionResult.Success(place.toString()))
+                    emit(ActionResult.Success(place.id))
                 },
                 onFail = { msg ->
                     emit(ActionResult.Fail(msg))

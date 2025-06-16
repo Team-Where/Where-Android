@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.invite
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -36,6 +37,9 @@ fun SchemeView(
                 navigateHome()
             }
         )
+    }
+    BackHandler {
+        navigateHome()
     }
     Box(
         modifier = Modifier.fillMaxSize()

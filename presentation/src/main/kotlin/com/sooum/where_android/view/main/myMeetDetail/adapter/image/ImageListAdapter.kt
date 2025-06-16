@@ -1,16 +1,20 @@
 package com.sooum.where_android.view.main.myMeetDetail.adapter.image
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import coil3.load
+import coil3.request.error
+import coil3.request.placeholder
 import com.sooum.domain.model.ProfileImage
-import com.sooum.where_android.databinding.ItemProfileImageBinding
+import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ItemProfileImageOverflowBinding
 import com.sooum.where_android.util.ProfileDiffUtil
+import com.sooum.where_android.view.main.myMeetDetail.adapter.image.ImageListAdapter.OverflowViewHolder
 
-class ImageListAdapter : ListAdapter<ProfileImage, RecyclerView.ViewHolder>(ProfileDiffUtil) {
+class ImageListAdapter : ListAdapter<ProfileImage, OverflowViewHolder>(ProfileDiffUtil) {
 
     companion object {
         private const val MAX_DISPLAY_COUNT = 5
@@ -19,7 +23,7 @@ class ImageListAdapter : ListAdapter<ProfileImage, RecyclerView.ViewHolder>(Prof
     }
 
     override fun getItemCount(): Int {
-        return if (super.getItemCount() > MAX_DISPLAY_COUNT) MAX_DISPLAY_COUNT else super.getItemCount()
+        return (super.getItemCount()).takeIf { it <= MAX_DISPLAY_COUNT } ?: MAX_DISPLAY_COUNT
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -30,38 +34,48 @@ class ImageListAdapter : ListAdapter<ProfileImage, RecyclerView.ViewHolder>(Prof
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OverflowViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return if (viewType == TYPE_OVERFLOW) {
-            val binding = ItemProfileImageOverflowBinding.inflate(inflater, parent, false)
-            OverflowViewHolder(binding)
-        } else {
-            val binding = ItemProfileImageBinding.inflate(inflater, parent, false)
-            NormalViewHolder(binding)
-        }
+        val binding = ItemProfileImageOverflowBinding.inflate(inflater, parent, false)
+        return OverflowViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: OverflowViewHolder, position: Int) {
         val item = getItem(position)
-        if (holder is NormalViewHolder) {
-            holder.bind(item)
-        } else if (holder is OverflowViewHolder) {
+        holder.bind(item)
+        if (getItemViewType(position) == TYPE_OVERFLOW) {
             val extraCount = super.getItemCount() - MAX_DISPLAY_COUNT
-            holder.bind(item, extraCount)
+            holder.bindCount(extraCount)
         }
     }
 
-    class NormalViewHolder(private val binding: ItemProfileImageBinding) : RecyclerView.ViewHolder(binding.root) {
+    class OverflowViewHolder(
+        private val binding: ItemProfileImageOverflowBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(item: ProfileImage) {
-            Glide.with(binding.root).load(item.profileImage).circleCrop().into(binding.profileImage)
+            with(binding) {
+                imageProfile.load(
+                    data = item.profileImage
+                ) {
+                    placeholder(R.drawable.image_profile_default_cover)
+                    error(R.drawable.image_profile_default_cover)
+                }
+                textOverflow.visibility = View.GONE
+            }
         }
-    }
 
-    class OverflowViewHolder(private val binding: ItemProfileImageOverflowBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ProfileImage, overflowCount: Int) {
-            Glide.with(binding.root).load(item.profileImage).circleCrop().into(binding.imageProfile)
-            binding.textOverflow.text = "+$overflowCount"
-            binding.textOverflow.visibility = ViewGroup.VISIBLE
+        fun bindCount(overflowCount: Int) {
+            with(binding) {
+                with(textOverflow) {
+                    text = "+$overflowCount"
+                    visibility = if (overflowCount > 0) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
+                }
+            }
         }
     }
 }

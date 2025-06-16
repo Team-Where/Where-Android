@@ -16,6 +16,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HTTP
+import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -53,16 +54,19 @@ interface MeetApi {
         @Body data: FinishMeetRequest,
     ): Response<String>
 
+    @Headers("Cache-Control: max-age=60")
     @GET("api/meeting/participant/{id}")
     suspend fun getMeetInviteStatus(
         @Path("id") meetId: Int
     ): Response<List<MeetInviteStatus>>
 
+    @Headers("Cache-Control: max-age=60")
     @GET("api/meeting/{id}")
     suspend fun getMeetList(
         @Path("id") userId: Int
     ): Response<List<MeetListItemResponse>>
 
+    @Headers("Cache-Control: max-age=60")
     @GET("api/meeting/invite/{link}")
     suspend fun getMeetInvite(
         @Path("link") link :String

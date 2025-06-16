@@ -2,6 +2,7 @@ package com.sooum.where_android.view.main
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,11 +15,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.core.util.Consumer
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.sooum.where_android.checkAlarmScheme
 import com.sooum.where_android.checkAppScheme
 import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.parseMapShareResult
+import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.view.auth.registerAuthRoute
 import com.sooum.where_android.view.common.modal.LoadingScreenProvider
 import com.sooum.where_android.view.common.modal.LoadingView
@@ -38,9 +42,25 @@ val LocalLoadingProvider = compositionLocalOf<LoadingScreenProvider> {
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    private var backKeyPressedTime = 0L
+
+    private val onBackPressedCallback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+                    backKeyPressedTime = System.currentTimeMillis()
+
+                    showSimpleToast("뒤로 버튼을 한번 더 누르시면 종료됩니다.")
+                } else {
+                    finishAndRemoveTask()
+                }
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
         setContent {
             val mainNavController = rememberNavController()
@@ -51,11 +71,26 @@ class MainActivity : AppCompatActivity() {
             }
             DisposableEffect(this@MainActivity, mainNavController) {
                 val onNewIntentConsumer = Consumer<Intent> {
-                    it.checkAppScheme()?.let {
-                        mainNavController.navigate(it)
-                    }
-                    it.checkAlarmScheme()?.let { id ->
-                        mainNavController.navigationMeetDetailId(id)
+                    if (mainNavController.currentDestination?.hasRoute<ScreenRoute.HomeRoute.Main>() == true) {
+                        it.checkAppScheme()?.let { inviteRoute ->
+                            mainNavController.navigate(inviteRoute) {
+                                launchSingleTop = true
+                            }
+                        }
+                        it.checkAlarmScheme()?.let { id ->
+                            mainNavController.navigationMeetDetailId(id)
+                        }
+                        it.parseMapShareResult()?.let { shareResult ->
+                            mainNavController.navigate(
+                                ScreenRoute.HomeRoute.MapShareResult(
+                                    shareResult
+                                )
+                            ) {
+                                launchSingleTop = true
+                            }
+                        }
+                    } else {
+                        showSimpleToast("로그인 후 이용 가능합니다.")
                     }
                 }
 

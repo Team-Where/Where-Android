@@ -50,16 +50,13 @@ class MyMeetTabFragment : MyMeetBaseFragment<FragmentMyMeetTabBinding>(
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab) {}
-                override fun onTabReselected(tab: TabLayout.Tab) {}
-            })
-
-            myMeetDetailTabViewModel.selectedTabPosition.let { position ->
-                if (position == 1) {
-                    val tab = getTabAt(position)
-                    selectTab(tab)
-                } else {
-                    loadFragment(0)
+                override fun onTabReselected(tab: TabLayout.Tab) {
+                    loadFragment(tab.position)
                 }
+            })
+            myMeetDetailTabViewModel.selectedTabPosition.let { position ->
+                val tab = getTabAt(position)
+                selectTab(tab)
             }
         }
     }

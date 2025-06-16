@@ -2,7 +2,10 @@ package com.sooum.where_android
 
 import android.content.Intent
 import com.sooum.core.notification.alarm.AlarmReceiver
+import com.sooum.domain.model.ShareResult
 import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.share.MapShareResultActivity
+import kotlinx.serialization.json.Json
 
 /**
  * 스카마 혹은 앱링크로 으로 실행되었는지 확인
@@ -35,4 +38,10 @@ fun Intent.checkAlarmScheme(): Int? {
         return id.takeIf { it > 0 }
     }
     return null
+}
+
+fun Intent.parseMapShareResult(): ShareResult? {
+    return extras?.getString(MapShareResultActivity.SHARE_RESULT)?.let { data ->
+        Json.decodeFromString<ShareResult>(data)
+    }
 }

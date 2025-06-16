@@ -11,6 +11,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -21,6 +22,7 @@ interface PlaceApi {
         @Body data: AddPlaceRequest
     ): Response<Place>
 
+    @Headers("Cache-Control: max-age=60")
     @GET("api/place")
     suspend fun getPlaceList(
         @Query("meetingId") meetingId: Int,

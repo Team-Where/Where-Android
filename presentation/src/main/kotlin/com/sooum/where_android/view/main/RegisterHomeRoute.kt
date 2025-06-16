@@ -13,11 +13,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
 import com.sooum.domain.model.NewMeetResult
+import com.sooum.domain.model.ShareResult
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.invite.SchemeView
 import com.sooum.where_android.view.main.home.myMeet.MyMeetGuideView
 import com.sooum.where_android.view.main.home.newMeet.NewMeetResultView
 import com.sooum.where_android.view.main.myMeetDetail.MyMeetActivity
+import com.sooum.where_android.view.share.MapPlaceResultView
+import com.sooum.where_android.view.share.MapShareResultActivity.Companion.SHARE_RESULT
+import kotlinx.serialization.json.Json
 
 fun NavGraphBuilder.registerHomeRoute(
     mainNavController: NavHostController
@@ -78,6 +82,39 @@ fun NavGraphBuilder.registerHomeRoute(
                 }
             )
         }
+
+        composable<ScreenRoute.HomeRoute.MapShareResult> { backstackEntry ->
+            val shareResultRoute = backstackEntry.toRoute<ScreenRoute.HomeRoute.MapShareResult>()
+            MapPlaceResultView(
+                navigateHome = {
+                    mainNavController.navigate(ScreenRoute.HomeRoute.Main) {
+                        launchSingleTop = true
+                        popUpTo<ScreenRoute.HomeRoute.MapShareResult> {
+                            inclusive = true
+                        }
+                    }
+                },
+                navigateMeet = { id ->
+                    mainNavController.navigate(ScreenRoute.HomeRoute.Main) {
+                        launchSingleTop = true
+                        popUpTo<ScreenRoute.HomeRoute.MapShareResult> {
+                            inclusive = true
+                        }
+                    }
+                    mainNavController.navigationMeetDetailId(id) {
+                        val shareResultText = Json.encodeToString(
+                            ShareResult(
+                                source = shareResultRoute.source,
+                                placeName = shareResultRoute.placeName,
+                                address = shareResultRoute.address,
+                                link = shareResultRoute.link
+                            )
+                        )
+                        putString(SHARE_RESULT, shareResultText)
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -85,12 +122,18 @@ internal fun NavHostController.backToHome(): Boolean {
     return popBackStack<ScreenRoute.HomeRoute.Main>(inclusive = false)
 }
 
-internal fun NavHostController.navigationMeetDetailId(id: Int) {
+internal fun NavHostController.navigationMeetDetailId(
+    id: Int,
+    applyBundle: Bundle.() -> Unit = {}
+) {
     context.startActivity(
         Intent(context, MyMeetActivity::class.java).apply {
-            putExtras(Bundle().apply {
-                putInt(MyMeetActivity.MEET_ID, id)
-            })
+            putExtras(
+                Bundle().apply {
+                    putInt(MyMeetActivity.MEET_ID, id)
+                    applyBundle()
+                }
+            )
         }
     )
 }
