@@ -22,13 +22,13 @@ class SettingFragment : HamburgerBaseFragment<FragmentSettingBinding>(
                 navHostController.navigateHome()
             }
 
-            textChangePassword.setOnClickListener {
+            linearLayout1.setOnClickListener {
                 navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.EditPassword) {
                     launchSingleTop = true
                 }
             }
 
-            textExit.setOnClickListener {
+            linearLayout3.setOnClickListener {
                 navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteAccount) {
                     launchSingleTop = true
                 }

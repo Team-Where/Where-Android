@@ -3,9 +3,12 @@ package com.sooum.where_android.view.hamburger
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavHostController
 import androidx.viewbinding.ViewBinding
 import com.sooum.where_android.view.common.BaseViewBindingFragment
+import com.sooum.where_android.viewmodel.auth.AuthViewModel
+import com.sooum.where_android.viewmodel.hambuger.InquiryTabViewModel
 import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 
 abstract class HamburgerBaseFragment<VB : ViewBinding>(
@@ -13,6 +16,7 @@ abstract class HamburgerBaseFragment<VB : ViewBinding>(
 ) : BaseViewBindingFragment<VB>(bindingInflater) {
 
     protected lateinit var navHostController: NavHostController
+    protected val inquiryViewModel: InquiryTabViewModel by activityViewModels()
 
     protected val loadingAlertProvider by lazy {
         LoadingAlertProvider(this)
