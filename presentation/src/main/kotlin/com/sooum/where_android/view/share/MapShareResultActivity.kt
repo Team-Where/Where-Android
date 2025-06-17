@@ -3,6 +3,7 @@ package com.sooum.where_android.view.share
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.sooum.domain.model.ShareResult
 import com.sooum.where_android.WhereApp
@@ -58,6 +59,7 @@ class MapShareResultActivity : Activity() {
      */
 
     private fun Intent.parseMapShare(): ShareResult? {
+
         /**
          * [네이버 지도]
          * 신사소곱창 성수점
@@ -73,28 +75,37 @@ class MapShareResultActivity : Activity() {
          */
         if (this.action == Intent.ACTION_SEND && this.type == "text/plain") {
             val sharedText: String = this.getStringExtra(Intent.EXTRA_TEXT) ?: ""
-            val lines = sharedText.lines().filter { it.isNotBlank() }
-            if (lines.isEmpty()) return null
-
-            val source = when {
-                lines.first().contains("[네이버 지도]") -> "네이버"
-                lines.first().contains("[카카오맵]") -> "카카오"
-                else -> return null
-            }
-
-            val placeName = lines.getOrNull(1) ?: return null
-            val address = lines.getOrNull(2) ?: return null
-            val link = lines.find { it.startsWith("http") } ?: return null
-
-            return ShareResult(
-                source = source,
-                placeName = placeName,
-                address = address,
-                link = link
-            )
+            Log.d("JWH", "map Share\n$sharedText")
+            return parseShareResult(sharedText)
         }
 
         return null
+    }
+
+    private fun parseShareResult(text: String): ShareResult? {
+        val lines = text.lines().map { it.trim() }.filter { it.isNotEmpty() }
+
+        return when {
+            lines.any { it.contains("[네이버 지도]") } -> {
+                ShareResult(
+                    source = "네이버",
+                    placeName = lines.getOrNull(1)?.removePrefix("* ") ?: "",
+                    address = lines.getOrNull(2) ?: "",
+                    link = lines.find { it.startsWith("https://naver.me") } ?: ""
+                )
+            }
+
+            lines.any { it.contains("[카카오맵]") } -> {
+                ShareResult(
+                    source = "카카오",
+                    placeName = lines.getOrNull(0)?.substringAfter("] ") ?: "",
+                    address = lines.getOrNull(1) ?: "",
+                    link = lines.find { it.startsWith("https://kko.kakao.com") } ?: ""
+                )
+            }
+
+            else -> null
+        }
     }
 }
 
