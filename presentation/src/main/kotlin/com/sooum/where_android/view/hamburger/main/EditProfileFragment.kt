@@ -1,7 +1,9 @@
 package com.sooum.where_android.view.hamburger.main
 
+import android.content.Context
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -115,7 +117,10 @@ class EditProfileFragment : HamburgerBaseFragment<FragmentEditProfileBinding>(
         }
         with(binding) {
             btnConfirm.setOnClickListener {
-                binding.editNickname.clearFocus()
+                val imm: InputMethodManager =
+                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(it.windowToken, 0)
+
                 loadingScreenProvider.startLoading()
                 profileEditViewModel.updateProfileData(
                     onSuccess = {
