@@ -1,6 +1,7 @@
 package com.sooum.where_android.view.hamburger
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.fragment.compose.AndroidFragment
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -36,6 +38,11 @@ internal fun NavHostController.navigateHome() {
     }
 }
 
+private val parentModifier = Modifier
+    .fillMaxSize()
+    .background(Color.White)
+    .safeDrawingPadding()
+
 fun NavGraphBuilder.registerHamburgerRoute(
     mainNavController: NavHostController,
 ) {
@@ -44,7 +51,7 @@ fun NavGraphBuilder.registerHamburgerRoute(
     ) {
         composable<ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigateHome()
@@ -60,7 +67,7 @@ fun NavGraphBuilder.registerHamburgerRoute(
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.Notification> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigateHome()
@@ -76,7 +83,7 @@ fun NavGraphBuilder.registerHamburgerRoute(
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.FAQ> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigateHome()
@@ -92,7 +99,7 @@ fun NavGraphBuilder.registerHamburgerRoute(
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.Notice> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigateHome()
@@ -122,7 +129,7 @@ private fun NavGraphBuilder.installInquiryRoute(
     ) {
         composable<ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigateHome()
@@ -148,7 +155,7 @@ private fun NavGraphBuilder.installInquiryRoute(
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Write> {
             Column(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 TextButton(
                     onClick = {
@@ -179,7 +186,7 @@ private fun NavGraphBuilder.installSettingRoute(
     ) {
         composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigateHome()
@@ -195,7 +202,7 @@ private fun NavGraphBuilder.installSettingRoute(
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.EditPassword> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
@@ -214,7 +221,7 @@ private fun NavGraphBuilder.installSettingRoute(
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteAccount> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
@@ -234,7 +241,7 @@ private fun NavGraphBuilder.installSettingRoute(
 
         composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteComplete> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     //Block Back Click
