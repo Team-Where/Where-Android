@@ -6,6 +6,7 @@ import com.google.android.material.tabs.TabLayout
 import com.sooum.where_android.databinding.FragmentInquiryBinding
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.hamburger.HamburgerBaseFragment
+import com.sooum.where_android.view.hamburger.main.inquiry.InquiryCompleteAnswerFragment
 import com.sooum.where_android.view.hamburger.main.inquiry.InquiryWaitingAnswerFragment
 import com.sooum.where_android.view.main.myMeetDetail.fragment.MyMeetDetailFragment
 import com.sooum.where_android.view.main.myMeetDetail.fragment.MyMeetPlaceFragment
@@ -64,7 +65,7 @@ class InquiryFragment : HamburgerBaseFragment<FragmentInquiryBinding>(
     ) {
         val fragment = when (position) {
             0 -> InquiryWaitingAnswerFragment()
-            1 -> InquiryWaitingAnswerFragment()
+            1 -> InquiryCompleteAnswerFragment()
             else -> return
         }
         inquiryViewModel.selectedTabPosition = position

@@ -15,32 +15,10 @@ class FaqFragment : HamburgerBaseFragment<FragmentFaqBinding>(
     FragmentFaqBinding::inflate
 ) {
     override fun initView() = with(binding) {
-        val faqList = listOf(
-            FaqItem(
-                title = FaqConst.FAQ_WHAT_IS_SERVICE,
-                content = FaqConst.FAQ_WHAT_IS_SERVICE_STRING
-            ),
-            FaqItem(
-                title = FaqConst.FAQ_CHANGE_NICKNAME,
-                content = FaqConst.FAQ_CHANGE_NICKNAME_STRING
-            ),
-            FaqItem(
-                title = FaqConst.FAQ_LOGOUT,
-                content = FaqConst.FAQ_LOGOUT_STRING
-            ),
-            FaqItem(
-                title = FaqConst.FAQ_CHANGE_PASSWORD,
-                content = FaqConst.FAQ_CHANGE_PASSWORD_STRING
-            ),
-            FaqItem(
-                title = FaqConst.FAQ_MAKE_MEET,
-                content = FaqConst.FAQ_MAKE_MEET_STRING
-            )
-        )
 
-        val faqAdapter = FaqRecyclerView(faqList)
-        recyclerFaq.layoutManager = LinearLayoutManager(requireContext())
-        recyclerFaq.adapter = faqAdapter
+//        val faqAdapter = FaqRecyclerView(faqList)
+//        recyclerFaq.layoutManager = LinearLayoutManager(requireContext())
+//        recyclerFaq.adapter = faqAdapter
     }
 
     override fun setNavigation(
