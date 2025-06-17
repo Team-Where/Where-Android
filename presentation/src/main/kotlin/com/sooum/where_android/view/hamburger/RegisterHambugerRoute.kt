@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -16,7 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.sooum.where_android.model.ScreenRoute
-import com.sooum.where_android.view.hamburger.main.EditProfileFragment
+import com.sooum.where_android.view.hamburger.main.EditProfileView
 import com.sooum.where_android.view.hamburger.main.FaqFragment
 import com.sooum.where_android.view.hamburger.main.InquiryFragment
 import com.sooum.where_android.view.hamburger.main.NoticeFragment
@@ -47,22 +48,14 @@ fun NavGraphBuilder.registerHamburgerRoute(
     mainNavController: NavHostController,
 ) {
     navigation<ScreenRoute.HomeRoute.HamburgerRoute>(
-        startDestination = ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit
+        startDestination = ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit::class
     ) {
-        composable<ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit> {
+        composable<ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit> { backStackEntey ->
             Box(
                 modifier = parentModifier
+                    .imePadding()
             ) {
-                BackHandler {
-                    mainNavController.navigateHome()
-                }
-                AndroidFragment<EditProfileFragment>(
-                    modifier = Modifier.fillMaxSize()
-                ) { editProfileFragment ->
-                    editProfileFragment.setNavigation(
-                        navHostController = mainNavController
-                    )
-                }
+                EditProfileView(mainNavController)
             }
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.Notification> {

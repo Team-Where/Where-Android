@@ -1,8 +1,8 @@
 package com.sooum.domain.model.user
 
 data class MyPageInfo(
-    val email: String,
-    val nickname: String,
+    val email: String = "",
+    val nickname: String = "",
     val imageSrc: String? = null,
-    val existsByNickName: Boolean
+    val existsByNickName: Boolean = false
 )

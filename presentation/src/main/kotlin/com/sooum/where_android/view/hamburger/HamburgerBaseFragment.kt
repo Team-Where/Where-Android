@@ -6,12 +6,17 @@ import androidx.annotation.CallSuper
 import androidx.navigation.NavHostController
 import androidx.viewbinding.ViewBinding
 import com.sooum.where_android.view.common.BaseViewBindingFragment
+import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 
 abstract class HamburgerBaseFragment<VB : ViewBinding>(
     bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
 ) : BaseViewBindingFragment<VB>(bindingInflater) {
 
     protected lateinit var navHostController: NavHostController
+
+    protected val loadingAlertProvider by lazy {
+        LoadingAlertProvider(this)
+    }
 
     @CallSuper
     open fun setNavigation(

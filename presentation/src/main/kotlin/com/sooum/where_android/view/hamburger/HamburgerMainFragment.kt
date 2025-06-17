@@ -24,15 +24,13 @@ class HamburgerMainFragment : HamburgerBaseFragment<FragmentHamburgerMainBinding
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 userViewModel.myPage.collect { myPageInfo ->
-                    myPageInfo?.let {
-                        binding.textNickname.text = it.nickname + "님"
+                    binding.textNickname.text = myPageInfo.nickname + "님"
 
-                        binding.imageProfile
-                            .load(it.imageSrc) {
-                                placeholder(R.drawable.image_profile_default_cover)
-                                error(R.drawable.image_profile_default_cover)
-                            }
-                    }
+                    binding.imageProfile
+                        .load(myPageInfo.imageSrc) {
+                            placeholder(R.drawable.image_profile_default_cover)
+                            error(R.drawable.image_profile_default_cover)
+                        }
                 }
             }
         }
@@ -60,7 +58,11 @@ class HamburgerMainFragment : HamburgerBaseFragment<FragmentHamburgerMainBinding
     ) {
         with(binding) {
             listOf(
-                btnEditProfile to ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit,
+                btnEditProfile to ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit(
+                    email = userViewModel.myPage.value.email,
+                    nickName = userViewModel.myPage.value.nickname,
+                    imageSrc = userViewModel.myPage.value.imageSrc,
+                ),
                 navigationRingArea to ScreenRoute.HomeRoute.HamburgerRoute.Notification,
                 navigationFaqArea to ScreenRoute.HomeRoute.HamburgerRoute.FAQ,
                 navigationPersonArea to ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute,

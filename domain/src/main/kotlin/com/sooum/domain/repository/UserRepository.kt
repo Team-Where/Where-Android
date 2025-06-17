@@ -7,7 +7,7 @@ import java.io.File
 
 interface UserRepository {
 
-    fun getMyPage(): Flow<MyPageInfo?>
+    fun getMyPage(): Flow<MyPageInfo>
 
     suspend fun loadMyPage(
         userId: Int

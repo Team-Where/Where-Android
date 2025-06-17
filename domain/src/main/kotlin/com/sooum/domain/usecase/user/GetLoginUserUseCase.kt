@@ -11,6 +11,6 @@ import javax.inject.Inject
 class GetLoginUserUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
-    operator fun invoke(): Flow<MyPageInfo?> =
+    operator fun invoke(): Flow<MyPageInfo> =
         userRepository.getMyPage()
 }

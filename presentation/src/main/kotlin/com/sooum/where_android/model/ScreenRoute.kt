@@ -107,6 +107,7 @@ sealed interface ScreenRoute {
                 shareResult.link
             )
         }
+
         @Serializable
         data object HamburgerRoute {
 
@@ -114,7 +115,11 @@ sealed interface ScreenRoute {
              * 프로필 설정화면
              */
             @Serializable
-            data object ProfileEdit : ScreenRoute
+            data class ProfileEdit(
+                val email: String = "",
+                val nickName: String = "",
+                val imageSrc: String? = null
+            ) : ScreenRoute
 
             /**
              * 알림 목록 화면

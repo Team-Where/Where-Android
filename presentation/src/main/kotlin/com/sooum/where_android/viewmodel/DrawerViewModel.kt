@@ -2,6 +2,7 @@ package com.sooum.where_android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sooum.domain.model.user.MyPageInfo
 import com.sooum.domain.usecase.meet.GetMeetDetailListUseCase
 import com.sooum.domain.usecase.user.GetLoginUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,17 +19,17 @@ class DrawerViewModel @Inject constructor(
 
     val myPage = getLoginUserUseCase()
         .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
-            null
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = MyPageInfo()
         )
 
     val meetCount = getMeetListUseCase().transform {
         emit(it.size)
     }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000L),
-        0
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = 0
     )
 
 }

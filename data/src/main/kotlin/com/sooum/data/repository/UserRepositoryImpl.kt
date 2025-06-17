@@ -18,11 +18,11 @@ class UserRepositoryImpl @Inject constructor(
     private val userRemoteDataSource: UserRemoteDataSource
 ) : UserRepository {
 
-    private var _myPage: MutableStateFlow<MyPageInfo?> = MutableStateFlow(null)
+    private var _myPage: MutableStateFlow<MyPageInfo> = MutableStateFlow(MyPageInfo())
     private val myPage
         get() = _myPage.asStateFlow()
 
-    override fun getMyPage(): Flow<MyPageInfo?> = myPage
+    override fun getMyPage(): Flow<MyPageInfo> = myPage
 
     override suspend fun loadMyPage(userId: Int) {
         val result = userRemoteDataSource.getMyPage(userId)
@@ -32,7 +32,7 @@ class UserRepositoryImpl @Inject constructor(
             }
         } else {
             _myPage.update {
-                null
+                MyPageInfo()
             }
         }
     }
