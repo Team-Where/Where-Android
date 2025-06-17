@@ -78,4 +78,8 @@ class UserRemoteDataSourceImpl @Inject constructor(
         )
         return safeFlow { userApi.editNickName(userId, request) }.first()
     }
+
+    override suspend fun deleteAccount(userId: Int): ApiResult<String> {
+        return safeFlow { userApi.deleteAccount(userId) }.first()
+    }
 }
