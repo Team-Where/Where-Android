@@ -12,7 +12,9 @@ import com.sooum.domain.model.CommentListItem
 import com.sooum.domain.model.PLACE_STATE_NOT_PICK
 import com.sooum.domain.model.PLACE_STATE_PICK
 import com.sooum.domain.model.PlaceItem
+import com.sooum.domain.model.ProfileImage
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceDetailBinding
+import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.startMapUriOrMarket
 import com.sooum.where_android.view.balloon.PlacePickBalloonFactory
 import com.sooum.where_android.view.common.modal.DeleteModalFragment
@@ -46,15 +48,19 @@ class MyMeetPlaceDetailFragment :
         const val PLACE_ID = "placeId"
     }
 
+    private var placeId: Int = -1
     override fun initView() {
-        val placeId = arguments?.getInt(PLACE_ID, 0) ?: 0
-        if (placeId < 0) {
+        placeId = arguments?.getInt(PLACE_ID, 0) ?: -1
+        if (placeId <= 0) {
             //Error
-        } else {
-            myMeetDetailCommentViewModel.loadData(placeId)
+            showSimpleToast("잘못된 접근 입니다.")
+            findNavController().popBackStack()
+            return
         }
-        setCommentRecyclerView()
 
+        myMeetDetailCommentViewModel.loadData(placeId)
+
+        setCommentRecyclerView()
         setProfileImageRecyclerView()
 
         with(binding) {
@@ -73,7 +79,6 @@ class MyMeetPlaceDetailFragment :
                     EditMyMeetDataFragment.commentAdd()
                 )
             }
-
         }
 
         lifecycleScope.launch {
@@ -161,6 +166,7 @@ class MyMeetPlaceDetailFragment :
             textPlaceName.text = placeItem.place.name
             textPlaceDetail.text = placeItem.place.address
             textCommentNumber.text = placeItem.commentCount.toString()
+            textCommentCount.text = placeItem.commentCount.toString()
             textLikeNumber.text = placeItem.likeCount.toString()
 
             with(placeItem.place.myLike) {
@@ -205,6 +211,7 @@ class MyMeetPlaceDetailFragment :
 
                 }
             }
+            imageListAdapter.submitList(placeItem.place.users.map { ProfileImage(it) })
         }
     }
 
@@ -235,6 +242,17 @@ class MyMeetPlaceDetailFragment :
     }
 
     override fun onDelete() {
-        //TODO 환님 모임 삭제 눌렀을때 액션 정의
+        loadingAlertProvider.startLoading()
+        myMeetDetailPlaceViewModel.deletePlace(
+            placeId = placeId,
+            onSuccess = {
+                loadingAlertProvider.endLoading {
+                    findNavController().popBackStack()
+                }
+            },
+            onFail = { msg ->
+                loadingAlertProvider.endLoadingWithMessage(msg)
+            }
+        )
     }
 }

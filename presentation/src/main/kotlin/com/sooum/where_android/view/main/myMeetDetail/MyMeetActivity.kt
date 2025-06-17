@@ -11,7 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.sooum.domain.model.ShareResult
 import com.sooum.where_android.MyFirebaseMessagingService
 import com.sooum.where_android.databinding.ActivityMyMeetBinding
-import com.sooum.where_android.view.MapShareResultActivity
+import com.sooum.where_android.parseMapShareResult
+import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailFcmViewModel
@@ -19,7 +20,6 @@ import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailPlaceViewModel
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailTabViewModel
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.serialization.json.Json
 
 @AndroidEntryPoint
 class MyMeetActivity : AppCompatActivity() {
@@ -52,28 +52,50 @@ class MyMeetActivity : AppCompatActivity() {
         binding = ActivityMyMeetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        intent.getIntExtra(MEET_ID, 0).let { id ->
-            myMeetDetailViewModel.loadData(id)
-            myMeetDetailPlaceWithCommentViewModel.loadData(id)
+        val id = intent.getIntExtra(MEET_ID, 0)
+        if (id <= 0) {
+            showSimpleToast("잘못된 접근입니다.")
+            return
         }
+        myMeetDetailViewModel.loadData(id)
+        myMeetDetailPlaceWithCommentViewModel.loadData(id)
 
         val intentFilter = IntentFilter(MyFirebaseMessagingService.FCM_DATA_RECEIVED)
         registerReceiver(fcmReceiver, intentFilter, RECEIVER_EXPORTED)
+
+        intent?.parseMapShareResult()?.let { shareResult ->
+            myMeetDetailTabViewModel.selectedTabPosition = 1
+            shareResult.doAddPlace()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(fcmReceiver)
+        try {
+            unregisterReceiver(fcmReceiver)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.d("JWH", intent.toString())
-        intent?.extras?.getString(MapShareResultActivity.SHARE_RESULT)?.let { data ->
-            val shareResult = Json.decodeFromString<ShareResult>(data)
-            myMeetDetailPlaceWithCommentViewModel.addPlace(shareResult) {
-                CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
-            }
+        intent?.parseMapShareResult()?.let { shareResult ->
+            shareResult.doAddPlace()
         }
+    }
+
+    private fun ShareResult.doAddPlace() {
+        myMeetDetailPlaceWithCommentViewModel.addPlace(
+            shareResult = this,
+            onSuccess = { placeId ->
+                myMeetDetailTabViewModel.updateFocusId(placeId)
+                CustomSnackBar.make(binding.root, "새로운 장소를 추가했습니다.", IconType.Check).show()
+            },
+            onFail = { msg ->
+                CustomSnackBar.make(binding.root, msg, IconType.Error).show()
+            }
+        )
     }
 }

@@ -1,4 +1,4 @@
-package com.sooum.where_android.view
+package com.sooum.where_android.view.share
 
 import android.app.Activity
 import android.content.Intent
@@ -26,30 +26,31 @@ class MapShareResultActivity : Activity() {
 
         when (activity) {
             is MyMeetActivity -> {
-                intent.parseMapShare()?.let { result ->
-                    val shareResultText = Json.encodeToString(result)
-                    startActivity(
-                        Intent(this, MyMeetActivity::class.java).apply {
-                            putExtras(
-                                Bundle().apply {
-                                    putString(SHARE_RESULT, shareResultText)
-                                }
-                            )
-                        }
-                    )
-                }
+                runActivity(MyMeetActivity::class.java)
             }
 
+            null,
             is MainActivity -> {
-
-            }
-
-            else -> {
-
+                runActivity(MainActivity::class.java)
             }
         }
 
         ActivityCompat.finishAffinity(this)
+    }
+
+    private fun runActivity(dest: Class<*>) {
+        intent.parseMapShare()?.let { result ->
+            val shareResultText = Json.encodeToString(result)
+            startActivity(
+                Intent(this, dest).apply {
+                    putExtras(
+                        Bundle().apply {
+                            putString(SHARE_RESULT, shareResultText)
+                        }
+                    )
+                }
+            )
+        }
     }
 
     /**
@@ -73,7 +74,6 @@ class MapShareResultActivity : Activity() {
         if (this.action == Intent.ACTION_SEND && this.type == "text/plain") {
             val sharedText: String = this.getStringExtra(Intent.EXTRA_TEXT) ?: ""
             val lines = sharedText.lines().filter { it.isNotBlank() }
-
             if (lines.isEmpty()) return null
 
             val source = when {

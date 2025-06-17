@@ -20,7 +20,7 @@ interface MeetDetailPlaceRepository {
         userId: Int,
         name: String,
         address: String,
-    ): ActionResult<String>
+    ): ActionResult<Int>
 
 
     /**

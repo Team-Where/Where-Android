@@ -108,19 +108,31 @@ class LoadingScreenProvider(
     var showLoading by mutableStateOf(false)
         private set
 
+    var loadingMessage by mutableStateOf("")
+        private set
+
     private var showJob: Job? = null
     private var loadingStartTime: Long = 0
 
-    fun startLoading() {
+    fun startLoading(
+        message: String = ""
+    ) {
         showJob?.cancel()
         showLoading = false
         loadingStartTime = System.currentTimeMillis()
 
         showJob = scope.launch {
             delay(debounceThreshold)
+            loadingMessage = message
             loadingStartTime = System.currentTimeMillis()
             showLoading = true
         }
+    }
+
+    fun updateMessage(
+        message: String
+    ) {
+        loadingMessage = message
     }
 
     fun stopLoading(
@@ -129,7 +141,7 @@ class LoadingScreenProvider(
         scope.launch {
             // 대기 중이던 로딩 예약이 있다면 취소
             showJob?.cancel()
-
+            loadingMessage = ""
             if (!showLoading) {
                 // 로딩이 아예 표시되지 않았던 경우 (300ms 이내 종료)
                 withAction()

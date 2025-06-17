@@ -3,6 +3,8 @@ package com.sooum.where_android.viewmodel.meetdetail
 import androidx.annotation.IntRange
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,4 +39,19 @@ class MyMeetDetailTabViewModel @Inject constructor(
      * 스크롤된 위치 저장
      */
     var savedScroll: Int = -1
+
+    /**
+     * 공유 후 포커싱 된 id
+     */
+    private var _focusPlaceId = MutableStateFlow(null as Int?)
+    fun updateFocusId(placeId: Int) {
+        _focusPlaceId.value = placeId
+    }
+
+    fun clearFocusId() {
+        _focusPlaceId.value = null
+    }
+
+    val focusPlaceId
+        get() = _focusPlaceId.asStateFlow()
 }
