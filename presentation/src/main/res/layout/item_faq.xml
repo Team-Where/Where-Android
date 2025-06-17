@@ -15,10 +15,10 @@
         android:textSize="16sp"
         android:textColor="#212529"
         android:fontFamily="@font/pretend_medium"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageExpand"
-        app:layout_constraintBottom_toTopOf="@+id/textDate"
         app:layout_goneMarginBottom="8dp"/>
 
     <ImageView
@@ -31,18 +31,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/textTitle" />
 
-    <TextView
-        android:id="@+id/textDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="2024.12.24"
-        android:textColor="@color/gray_scale_700"
-        android:textSize="12sp"
-        android:fontFamily="@font/pretend_regular"
-        app:layout_constraintTop_toBottomOf="@+id/textTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/expandLayout"
-        android:layout_marginTop="4dp" />
 
     <LinearLayout
         android:id="@+id/expandLayout"
@@ -52,20 +40,20 @@
         android:visibility="gone"
         android:background="@drawable/shape_rounded_light_blue_radius_12"
         android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@id/textDate"
+        app:layout_constraintTop_toBottomOf="@id/textTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="20dp">
 
-    <TextView
-        android:id="@+id/textContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="안녕하세요"
-        android:fontFamily="@font/pretend_regular"
-        android:textSize="14sp"
-        android:textColor="@color/gray_scale_700"
-        android:lineSpacingExtra="4dp"/>
+        <TextView
+            android:id="@+id/textContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="안녕하세요"
+            android:fontFamily="@font/pretend_regular"
+            android:textSize="14sp"
+            android:textColor="@color/gray_scale_700"
+            android:lineSpacingExtra="4dp"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -135,15 +135,15 @@ private fun NavGraphBuilder.installInquiryRoute(
                     )
                 }
 
-                TextButton(
-                    onClick = {
-                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Write) {
-                            launchSingleTop = true
-                        }
-                    }
-                ) {
-                    Text("Test-Write")
-                }
+//                TextButton(
+//                    onClick = {
+//                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Write) {
+//                            launchSingleTop = true
+//                        }
+//                    }
+//                ) {
+//                    Text("Test-Write")
+//                }
             }
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Write> {
