@@ -36,6 +36,13 @@ class HamburgerMainFragment : HamburgerBaseFragment<FragmentHamburgerMainBinding
                 }
             }
         }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userViewModel.meetCount.collect { count ->
+                    binding.textMeetCount.text = count.toString()
+                }
+            }
+        }
     }
 
     fun setCloseDrawer(
