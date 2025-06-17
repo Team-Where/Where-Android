@@ -13,12 +13,12 @@ interface UserRemoteDataSource {
     suspend fun addProfileImage(
         userId: Int,
         imageFile: File
-    ): ApiResult<*>
+    ): ApiResult<String>
 
     suspend fun editProfileImage(
         userId: Int,
         imageFile: File
-    ): ApiResult<*>
+    ): ApiResult<String>
 
     suspend fun deleteProfileImage(
         userId: Int,

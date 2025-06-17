@@ -48,7 +48,7 @@ fun NavGraphBuilder.registerHamburgerRoute(
     mainNavController: NavHostController,
 ) {
     navigation<ScreenRoute.HomeRoute.HamburgerRoute>(
-        startDestination = ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit::class
+        startDestination = ScreenRoute.HomeRoute.HamburgerRoute.Notification
     ) {
         composable<ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit> { backStackEntey ->
             Box(

@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AddProfileResponse(
-    @SerialName("link")
+    @SerialName("newLink")
     val imageSrc: String
 )

@@ -37,23 +37,51 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addProfile(userId: Int, imageFile: File): ActionResult<*> {
+    override suspend fun addProfile(userId: Int, imageFile: File): ActionResult<String> {
         val result = userRemoteDataSource.addProfileImage(userId, imageFile)
+        if (result is ApiResult.Success) {
+            _myPage.update { pageInfo ->
+                pageInfo.copy(
+                    imageSrc = result.data
+                )
+            }
+        }
         return result.covertApiResultToActionResultIfSuccess()
     }
 
-    override suspend fun editProfile(userId: Int, imageFile: File): ActionResult<*> {
+    override suspend fun editProfile(userId: Int, imageFile: File): ActionResult<String> {
         val result = userRemoteDataSource.editProfileImage(userId, imageFile)
+        if (result is ApiResult.Success) {
+            _myPage.update { pageInfo ->
+                pageInfo.copy(
+                    imageSrc = result.data
+                )
+            }
+        }
         return result.covertApiResultToActionResultIfSuccess()
     }
 
-    override suspend fun deleteProfile(userId: Int): ActionResult<*> {
+    override suspend fun deleteProfile(userId: Int): ActionResult<Any> {
         val result = userRemoteDataSource.deleteProfileImage(userId)
+        if (result is ApiResult.SuccessEmpty) {
+            _myPage.update { pageInfo ->
+                pageInfo.copy(
+                    imageSrc = null
+                )
+            }
+        }
         return result.covertApiResultToActionResultIfSuccessEmpty()
     }
 
-    override suspend fun editNickName(userId: Int, nickName: String): ActionResult<*> {
-        val result = userRemoteDataSource.editNickname(userId, nickName)
+    override suspend fun editNickName(userId: Int, newNickName: String): ActionResult<*> {
+        val result = userRemoteDataSource.editNickname(userId, newNickName)
+        if (result is ApiResult.SuccessEmpty) {
+            _myPage.update { pageInfo ->
+                pageInfo.copy(
+                    nickname = newNickName
+                )
+            }
+        }
         return result.covertApiResultToActionResultIfSuccessEmpty()
     }
 }

@@ -6,12 +6,14 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
-fun File?.createPart() : MultipartBody.Part {
+fun File?.createPart(
+    key: String = "image"
+): MultipartBody.Part {
     if (this != null) {
         val requestFile = asRequestBody("image/*".toMediaTypeOrNull())
-        return  MultipartBody.Part.createFormData("image", name, requestFile)
+        return MultipartBody.Part.createFormData(key, name, requestFile)
     } else {
         val emptyBody = byteArrayOf().toRequestBody("image/*".toMediaTypeOrNull())
-        return MultipartBody.Part.createFormData("image", "", emptyBody)
+        return MultipartBody.Part.createFormData(key, "", emptyBody)
     }
 }

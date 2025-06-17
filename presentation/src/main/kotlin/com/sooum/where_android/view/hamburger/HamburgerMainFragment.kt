@@ -7,6 +7,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import coil3.load
 import coil3.request.error
 import coil3.request.placeholder
+import coil3.request.transformations
+import coil3.transform.CircleCropTransformation
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentHamburgerMainBinding
 import com.sooum.where_android.model.ScreenRoute
@@ -28,6 +30,7 @@ class HamburgerMainFragment : HamburgerBaseFragment<FragmentHamburgerMainBinding
 
                     binding.imageProfile
                         .load(myPageInfo.imageSrc) {
+                            transformations(CircleCropTransformation())
                             placeholder(R.drawable.image_profile_default_cover)
                             error(R.drawable.image_profile_default_cover)
                         }
@@ -53,16 +56,19 @@ class HamburgerMainFragment : HamburgerBaseFragment<FragmentHamburgerMainBinding
         }
     }
 
+    private fun makeProfileEdit(): ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit {
+        return ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit(
+            email = userViewModel.myPage.value.email,
+            nickName = userViewModel.myPage.value.nickname,
+            imageSrc = userViewModel.myPage.value.imageSrc,
+        )
+    }
+
     fun setNavigation(
         navigate: (Any) -> Unit
     ) {
         with(binding) {
             listOf(
-                btnEditProfile to ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit(
-                    email = userViewModel.myPage.value.email,
-                    nickName = userViewModel.myPage.value.nickname,
-                    imageSrc = userViewModel.myPage.value.imageSrc,
-                ),
                 navigationRingArea to ScreenRoute.HomeRoute.HamburgerRoute.Notification,
                 navigationFaqArea to ScreenRoute.HomeRoute.HamburgerRoute.FAQ,
                 navigationPersonArea to ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute,
@@ -72,6 +78,9 @@ class HamburgerMainFragment : HamburgerBaseFragment<FragmentHamburgerMainBinding
                 view.setOnClickListener {
                     navigate(route)
                 }
+            }
+            btnEditProfile.setOnClickListener {
+                navigate(makeProfileEdit())
             }
         }
     }

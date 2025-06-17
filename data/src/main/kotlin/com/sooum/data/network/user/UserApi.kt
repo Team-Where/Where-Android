@@ -41,11 +41,11 @@ interface UserApi {
     @DELETE("api/user/{userId}/delete")
     suspend fun deleteProfileImage(
         @Path("userId") userId: Int,
-    ): Response<Any>
+    ): Response<String>
 
     @PUT("api/user/{userId}/nickname")
     suspend fun editNickName(
         @Path("userId") userId: Int,
         @Body data: EditNicknameRequest
-    ): Response<Any>
+    ): Response<String>
 }

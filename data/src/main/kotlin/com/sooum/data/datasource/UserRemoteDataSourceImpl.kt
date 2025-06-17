@@ -37,15 +37,33 @@ class UserRemoteDataSourceImpl @Inject constructor(
     override suspend fun addProfileImage(
         userId: Int,
         imageFile: File
-    ): ApiResult<*> {
-        return safeFlow { userApi.addProfileImage(userId, imageFile.createPart()) }.first()
+    ): ApiResult<String> {
+        val result =
+            safeFlow { userApi.addProfileImage(userId, imageFile.createPart("file")) }.first()
+        if (result is ApiResult.Success) {
+            val addProfileResponse = result.data
+            return ApiResult.Success(
+                addProfileResponse.imageSrc
+            )
+        } else {
+            return result as ApiResult<String>
+        }
     }
 
     override suspend fun editProfileImage(
         userId: Int,
         imageFile: File
-    ): ApiResult<*> {
-        return safeFlow { userApi.editProfileImage(userId, imageFile.createPart()) }.first()
+    ): ApiResult<String> {
+        val result =
+            safeFlow { userApi.editProfileImage(userId, imageFile.createPart("file")) }.first()
+        if (result is ApiResult.Success) {
+            val editProfileResponse = result.data
+            return ApiResult.Success(
+                editProfileResponse.imageSrc
+            )
+        } else {
+            return result as ApiResult<String>
+        }
     }
 
     override suspend fun deleteProfileImage(

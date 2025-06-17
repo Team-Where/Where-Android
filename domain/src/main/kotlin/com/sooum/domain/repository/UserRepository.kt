@@ -16,19 +16,19 @@ interface UserRepository {
     suspend fun addProfile(
         userId: Int,
         imageFile: File
-    ): ActionResult<*>
+    ): ActionResult<String>
 
     suspend fun editProfile(
         userId: Int,
         imageFile: File
-    ): ActionResult<*>
+    ): ActionResult<String>
 
     suspend fun deleteProfile(
         userId: Int,
-    ): ActionResult<*>
+    ): ActionResult<Any>
 
     suspend fun editNickName(
         userId: Int,
-        nickName: String
+        newNickName: String
     ): ActionResult<*>
 }

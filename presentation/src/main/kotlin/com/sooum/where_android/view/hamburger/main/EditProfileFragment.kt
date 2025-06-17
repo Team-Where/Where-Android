@@ -2,7 +2,6 @@ package com.sooum.where_android.view.hamburger.main
 
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
-import android.widget.ImageView
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -18,14 +17,21 @@ import androidx.navigation.NavHostController
 import coil3.load
 import coil3.request.error
 import coil3.request.placeholder
+import coil3.request.transformations
+import coil3.transform.CircleCropTransformation
 import com.sooum.domain.model.ImageAddType
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentEditProfileBinding
 import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
+import com.sooum.where_android.view.common.modal.LoadingScreenProvider
 import com.sooum.where_android.view.hamburger.HamburgerBaseFragment
 import com.sooum.where_android.view.hamburger.navigateHome
+import com.sooum.where_android.view.main.LocalLoadingProvider
+import com.sooum.where_android.view.widget.CustomSnackBar
+import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.viewmodel.hambuger.ProfileEditViewModel
 import kotlinx.coroutines.launch
+
 
 class EditProfileFragment : HamburgerBaseFragment<FragmentEditProfileBinding>(
     FragmentEditProfileBinding::inflate
@@ -48,14 +54,15 @@ class EditProfileFragment : HamburgerBaseFragment<FragmentEditProfileBinding>(
             editNickname.doAfterTextChanged {
                 profileEditViewModel.updateNickName(it.toString())
             }
-            editNickname.filters = arrayOf<InputFilter>(LengthFilter(8))
-
             editEmail.setText(email)
 
             imageProfile.load(imageSrc) {
+                transformations(CircleCropTransformation())
                 placeholder(R.drawable.image_profile_default_cover)
                 error(R.drawable.image_profile_default_cover)
             }
+
+            editNickname.filters = arrayOf<InputFilter>(LengthFilter(8))
             imageCamera.setOnClickListener {
                 val dialog = ImagePickerDialogFragment.getInstance(
                     handler = object : ImagePickerDialogFragment.ImageTypeHandler {
@@ -67,8 +74,9 @@ class EditProfileFragment : HamburgerBaseFragment<FragmentEditProfileBinding>(
                                 }
 
                                 is ImageAddType.Content -> {
-                                    imageProfile.setImageURI(imageType.uri)
-                                    imageProfile.scaleType = ImageView.ScaleType.CENTER_CROP
+                                    imageProfile.load(imageType.uri) {
+                                        transformations(CircleCropTransformation())
+                                    }
                                 }
 
                                 else -> {}
@@ -94,7 +102,8 @@ class EditProfileFragment : HamburgerBaseFragment<FragmentEditProfileBinding>(
     }
 
     fun setViewModel(
-        profileEditViewModel: ProfileEditViewModel
+        profileEditViewModel: ProfileEditViewModel,
+        loadingScreenProvider: LoadingScreenProvider
     ) {
         this.profileEditViewModel = profileEditViewModel
         lifecycleScope.launch {
@@ -102,6 +111,24 @@ class EditProfileFragment : HamburgerBaseFragment<FragmentEditProfileBinding>(
                 profileEditViewModel.btnEnabled.collect {
                     binding.btnConfirm.isEnabled = it
                 }
+            }
+        }
+        with(binding) {
+            btnConfirm.setOnClickListener {
+                binding.editNickname.clearFocus()
+                loadingScreenProvider.startLoading()
+                profileEditViewModel.updateProfileData(
+                    onSuccess = {
+                        loadingScreenProvider.stopLoading {
+                            CustomSnackBar.make(binding.root, "변경이 완료되었습니다.", IconType.Check).show()
+                        }
+                    },
+                    onFail = { msg ->
+                        loadingScreenProvider.stopLoading {
+                            CustomSnackBar.make(binding.root, msg, IconType.Error).show()
+                        }
+                    }
+                )
             }
         }
     }
@@ -112,7 +139,9 @@ fun EditProfileView(
     controller: NavHostController,
     profileEditViewModel: ProfileEditViewModel = hiltViewModel()
 ) {
-    BackHandler {
+    val loadingScreenProvider = LocalLoadingProvider.current
+
+    BackHandler() {
         controller.navigateHome()
     }
     AndroidFragment<EditProfileFragment>(
@@ -123,7 +152,7 @@ fun EditProfileView(
             EditProfileFragment.PROFILE_IMAGE to profileEditViewModel.imageSrc
         )
     ) { editProfileFragment ->
-        editProfileFragment.setViewModel(profileEditViewModel)
+        editProfileFragment.setViewModel(profileEditViewModel, loadingScreenProvider)
         editProfileFragment.setNavigation(
             navHostController = controller
         )
