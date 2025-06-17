@@ -4,7 +4,13 @@ import com.sooum.data.extension.covertApiResultToActionResultIfSuccess
 import com.sooum.data.extension.covertApiResultToActionResultIfSuccessEmpty
 import com.sooum.domain.datasource.UserRemoteDataSource
 import com.sooum.domain.model.ActionResult
+import com.sooum.domain.model.ApiResult
+import com.sooum.domain.model.user.MyPageInfo
 import com.sooum.domain.repository.UserRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.io.File
 import javax.inject.Inject
 
@@ -12,9 +18,23 @@ class UserRepositoryImpl @Inject constructor(
     private val userRemoteDataSource: UserRemoteDataSource
 ) : UserRepository {
 
-    override suspend fun getMyPage(userId: Int): ActionResult<String> {
+    private var _myPage: MutableStateFlow<MyPageInfo?> = MutableStateFlow(null)
+    private val myPage
+        get() = _myPage.asStateFlow()
+
+    override fun getMyPage(): Flow<MyPageInfo?> = myPage
+
+    override suspend fun loadMyPage(userId: Int) {
         val result = userRemoteDataSource.getMyPage(userId)
-        return result.covertApiResultToActionResultIfSuccess()
+        if (result is ApiResult.Success) {
+            _myPage.update {
+                result.data
+            }
+        } else {
+            _myPage.update {
+                null
+            }
+        }
     }
 
     override suspend fun addProfile(userId: Int, imageFile: File): ActionResult<*> {

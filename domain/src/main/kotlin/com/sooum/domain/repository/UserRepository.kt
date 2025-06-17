@@ -1,13 +1,17 @@
 package com.sooum.domain.repository
 
 import com.sooum.domain.model.ActionResult
+import com.sooum.domain.model.user.MyPageInfo
+import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface UserRepository {
 
-    suspend fun getMyPage(
+    fun getMyPage(): Flow<MyPageInfo?>
+
+    suspend fun loadMyPage(
         userId: Int
-    ): ActionResult<String>
+    )
 
     suspend fun addProfile(
         userId: Int,

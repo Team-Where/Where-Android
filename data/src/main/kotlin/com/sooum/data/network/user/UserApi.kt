@@ -3,6 +3,7 @@ package com.sooum.data.network.user
 import com.sooum.data.network.user.request.EditNicknameRequest
 import com.sooum.data.network.user.response.AddProfileResponse
 import com.sooum.data.network.user.response.EditProfileResponse
+import com.sooum.data.network.user.response.MyPageResponse
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -18,10 +19,10 @@ import retrofit2.http.Path
 interface UserApi {
 
     @Headers("Cache-Control: max-age=60")
-    @GET("api/user/myPage/{userId}")
+    @GET("api/user/mypage/{userId}")
     suspend fun getMyPage(
         @Path("userId") userId: Int
-    ): Response<String>
+    ): Response<MyPageResponse>
 
     @Multipart
     @POST("api/user/{userId}/upload")
