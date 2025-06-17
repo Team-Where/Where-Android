@@ -29,4 +29,7 @@ interface UserRemoteDataSource {
         nickName: String
     ): ApiResult<*>
 
+    suspend fun deleteAccount(
+        userId: Int
+    ): ApiResult<String>
 }

@@ -48,4 +48,9 @@ interface UserApi {
         @Path("userId") userId: Int,
         @Body data: EditNicknameRequest
     ): Response<String>
+
+    @DELETE("api/user/{userId}")
+    suspend fun deleteAccount(
+        @Path("userId") userId: Int,
+    ): Response<String>
 }

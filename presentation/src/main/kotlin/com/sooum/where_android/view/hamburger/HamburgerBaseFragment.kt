@@ -7,9 +7,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavHostController
 import androidx.viewbinding.ViewBinding
 import com.sooum.where_android.view.common.BaseViewBindingFragment
-import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 import com.sooum.where_android.viewmodel.auth.AuthViewModel
 import com.sooum.where_android.viewmodel.hambuger.InquiryTabViewModel
+import com.sooum.where_android.view.common.modal.LoadingAlertProvider
 
 abstract class HamburgerBaseFragment<VB : ViewBinding>(
     bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB

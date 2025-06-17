@@ -31,4 +31,8 @@ interface UserRepository {
         userId: Int,
         newNickName: String
     ): ActionResult<*>
+
+    suspend fun deleteAccount(
+        userId: Int,
+    ): ActionResult<*>
 }

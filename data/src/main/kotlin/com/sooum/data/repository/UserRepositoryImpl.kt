@@ -84,4 +84,14 @@ class UserRepositoryImpl @Inject constructor(
         }
         return result.covertApiResultToActionResultIfSuccessEmpty()
     }
+
+    override suspend fun deleteAccount(userId: Int): ActionResult<*> {
+        val result = userRemoteDataSource.deleteAccount(userId)
+        if (result is ApiResult.SuccessEmpty) {
+            _myPage.update {
+                MyPageInfo()
+            }
+        }
+        return result.covertApiResultToActionResultIfSuccessEmpty()
+    }
 }
