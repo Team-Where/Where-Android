@@ -2,22 +2,14 @@ package com.sooum.where_android.view.main.home.myMeet
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
@@ -27,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,7 +35,6 @@ import com.sooum.where_android.theme.GrayScale300
 import com.sooum.where_android.theme.GrayScale500
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
-import com.sooum.where_android.view.widget.CoverImageView
 
 @Composable
 internal fun MyMeetListView(
@@ -54,152 +44,75 @@ internal fun MyMeetListView(
     modifier: Modifier = Modifier
 ) {
     if (meetDetailList.isEmpty()) {
-        Column(
-            modifier = modifier,
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.image_main_mymeet_none),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .width(81.45.dp)
-                        .height(87.dp)
-                )
-                Spacer(Modifier.height(16.dp))
-
-                Text(
-                    text = stringResource(R.string.my_meet_no_meet),
-                    fontFamily = pretendard,
-                    color = GrayScale500,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
-                )
-
-                Spacer(Modifier.height(20.dp))
-
-                OutlinedButton(
-                    onClick = navigationGuide,
-                    modifier = Modifier.height(40.dp),
-                    border = BorderStroke(1.dp, GrayScale300)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = null,
-                            tint = Primary600
-                        )
-                        Text(
-                            text = stringResource(R.string.my_meet_no_meet_btn),
-                            fontFamily = pretendard,
-                            color = Primary600,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                }
-            }
-        }
+        EmptyListView(
+            navigationGuide = navigationGuide,
+            modifier = modifier
+        )
     } else {
-        LazyVerticalGrid(
-            modifier = modifier,
-            columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(28.dp)
-        ) {
-            items(meetDetailList) { meetDetail ->
-                MyMeetContentCard(
-                    meetDetail = meetDetail,
-                    onClick = {
-                        navigationMeetDetail(meetDetail)
-                    }
-                )
-            }
-        }
+        MeetDetailListView(
+            meetDetailList = meetDetailList,
+            navigationMeetDetail = navigationMeetDetail,
+            modifier = modifier
+        )
     }
 }
 
-
 @Composable
-private fun MyMeetContentCard(
-    meetDetail: MeetDetail,
-    onClick: () -> Unit
+private fun EmptyListView(
+    navigationGuide: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val size = 170.dp
     Column(
-        modifier = Modifier.clickable {
-            onClick()
-        }
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = Modifier
-                .size(size)
-                .clip(RoundedCornerShape(10.dp))
-                .align(Alignment.CenterHorizontally)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CoverImageView(
-                src = meetDetail.image,
-                size = size,
-                radius = 10.dp
+            Image(
+                painter = painterResource(R.drawable.image_main_mymeet_none),
+                contentDescription = null,
+                modifier = Modifier
+                    .width(81.45.dp)
+                    .height(87.dp)
             )
-            if (meetDetail.finished) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.5f))
+            Spacer(Modifier.height(16.dp))
+
+            Text(
+                text = stringResource(R.string.my_meet_no_meet),
+                fontFamily = pretendard,
+                color = GrayScale500,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            )
+
+            Spacer(Modifier.height(20.dp))
+
+            OutlinedButton(
+                onClick = navigationGuide,
+                modifier = Modifier.height(40.dp),
+                border = BorderStroke(1.dp, GrayScale300)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .background(Primary600, RoundedCornerShape(17.dp))
-                            .width(65.dp)
-                            .height(21.dp)
-                            .align(Alignment.Center)
-                    ) {
-                        Text(
-                            text = "종료된 모임",
-                            color = Color.White,
-                            fontFamily = pretendard,
-                            fontSize = 12.sp,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = null,
+                        tint = Primary600
+                    )
+                    Text(
+                        text = stringResource(R.string.my_meet_no_meet_btn),
+                        fontFamily = pretendard,
+                        color = Primary600,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             }
         }
-
-        Spacer(
-            modifier = Modifier.height(16.dp)
-        )
-        Text(
-            text = meetDetail.title,
-            fontFamily = pretendard,
-            fontWeight = FontWeight.Medium,
-            fontSize = 16.sp,
-            color = if (meetDetail.finished) {
-                Color.Black.copy(0.5f)
-            } else {
-                Color.Black
-            }
-        )
-        Spacer(
-            modifier = Modifier.height(8.dp)
-        )
-        Text(
-            text = meetDetail.date ?: "등록된 일정이 없어요",
-            fontFamily = pretendard,
-            fontWeight = FontWeight.Normal,
-            fontSize = 14.sp,
-            color = if (meetDetail.finished) {
-                Color.Black.copy(0.25f)
-            } else {
-                Color.Black.copy(0.5f)
-            }
-        )
     }
 }
 
@@ -254,20 +167,3 @@ private fun MyMeetListViewPreView(
 }
 
 
-@Composable
-@Preview
-private fun MyMeetContentCardPreView() {
-    Surface(
-        color = Color.White
-    ) {
-        MyMeetContentCard(
-            meetDetail = MeetDetail(
-                3,
-                "행궁동 갈 사람\uD83C\uDF42",
-                "선선해진 날씨에 같이 사람~!",
-                Schedule(3, "2025-1-27", "")
-            ),
-            onClick = {}
-        )
-    }
-}

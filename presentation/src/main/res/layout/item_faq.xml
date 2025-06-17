@@ -5,7 +5,15 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp"
+    android:layout_marginTop="20dp"
     android:background="@android:color/white">
+
+    <ImageView
+        android:id="@+id/iconQ"
+        android:layout_width="13dp"
+        android:layout_height="23dp"
+        android:src="@drawable/icon_q"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/textTitle"
@@ -15,9 +23,9 @@
         android:textSize="16sp"
         android:textColor="#212529"
         android:fontFamily="@font/pretend_medium"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="7dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iconQ"
         app:layout_constraintEnd_toStartOf="@+id/imageExpand"
         app:layout_goneMarginBottom="8dp"/>
 

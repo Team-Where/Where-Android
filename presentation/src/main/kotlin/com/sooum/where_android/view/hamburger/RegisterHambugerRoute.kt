@@ -1,20 +1,23 @@
 package com.sooum.where_android.view.hamburger
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.fragment.compose.AndroidFragment
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.sooum.where_android.model.ScreenRoute
-import com.sooum.where_android.view.hamburger.main.EditProfileFragment
+import com.sooum.where_android.view.hamburger.main.EditProfileView
 import com.sooum.where_android.view.hamburger.main.FaqFragment
 import com.sooum.where_android.view.hamburger.main.InquiryFragment
 import com.sooum.where_android.view.hamburger.main.NoticeFragment
@@ -36,31 +39,28 @@ internal fun NavHostController.navigateHome() {
     }
 }
 
+private val parentModifier = Modifier
+    .fillMaxSize()
+    .background(Color.White)
+    .safeDrawingPadding()
+
 fun NavGraphBuilder.registerHamburgerRoute(
     mainNavController: NavHostController,
 ) {
     navigation<ScreenRoute.HomeRoute.HamburgerRoute>(
-        startDestination = ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit
+        startDestination = ScreenRoute.HomeRoute.HamburgerRoute.Notification
     ) {
-        composable<ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit> {
+        composable<ScreenRoute.HomeRoute.HamburgerRoute.ProfileEdit> { backStackEntey ->
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
+                    .imePadding()
             ) {
-                BackHandler {
-                    mainNavController.navigateHome()
-                }
-                AndroidFragment<EditProfileFragment>(
-                    modifier = Modifier.fillMaxSize()
-                ) { editProfileFragment ->
-                    editProfileFragment.setNavigation(
-                        navHostController = mainNavController
-                    )
-                }
+                EditProfileView(mainNavController)
             }
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.Notification> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigateHome()
@@ -76,7 +76,7 @@ fun NavGraphBuilder.registerHamburgerRoute(
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.FAQ> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigateHome()
@@ -92,7 +92,7 @@ fun NavGraphBuilder.registerHamburgerRoute(
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.Notice> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigateHome()
@@ -122,7 +122,7 @@ private fun NavGraphBuilder.installInquiryRoute(
     ) {
         composable<ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigateHome()
@@ -148,7 +148,7 @@ private fun NavGraphBuilder.installInquiryRoute(
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Write> {
             Column(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 TextButton(
                     onClick = {
@@ -179,7 +179,7 @@ private fun NavGraphBuilder.installSettingRoute(
     ) {
         composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigateHome()
@@ -195,7 +195,7 @@ private fun NavGraphBuilder.installSettingRoute(
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.EditPassword> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
@@ -214,7 +214,7 @@ private fun NavGraphBuilder.installSettingRoute(
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteAccount> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
@@ -234,7 +234,7 @@ private fun NavGraphBuilder.installSettingRoute(
 
         composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteComplete> {
             Box(
-                modifier = Modifier.safeDrawingPadding()
+                modifier = parentModifier
             ) {
                 BackHandler {
                     //Block Back Click

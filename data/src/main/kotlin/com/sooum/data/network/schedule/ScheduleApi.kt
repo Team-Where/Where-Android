@@ -8,6 +8,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -19,6 +20,7 @@ interface ScheduleApi {
         @Body data: AddScheduleRequest
     ): Response<Schedule>
 
+    @Headers("Cache-Control: max-age=60")
     @GET("api/schedule/{id}")
     suspend fun getSchedule(
         @Path("id") scheduleId: Int

@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.main.myMeetDetail.fragment
 
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
@@ -7,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.skydoves.balloon.balloon
+import com.sooum.domain.model.PlaceRank
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentMyMeetPlaceBinding
@@ -19,6 +21,7 @@ import com.sooum.where_android.view.main.myMeetDetail.adapter.place.adapter.Sele
 import com.sooum.where_android.view.main.myMeetDetail.adapter.place.callback.PlaceClickCallBack
 import com.sooum.where_android.view.main.myMeetDetail.common.MyMeetBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -97,6 +100,51 @@ class MyMeetPlaceFragment : MyMeetBaseFragment<FragmentMyMeetPlaceBinding>(
                         binding.placePickItemListView.visibility = View.VISIBLE
                         binding.placePickItemNoData.visibility = View.GONE
                         selectedPlaceListAdapter.submitList(pickList)
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myMeetDetailTabViewModel.focusPlaceId.collect { focusPlaceId ->
+                    //바로 변경하면 submitList와 대기시간이 발생하므로 조금 기다려본다.
+                    delay(500L)
+                    Log.d("JWHP-1", focusPlaceId.toString())
+                    if (focusPlaceId != null) {
+                        Log.d("JWHP-2", getSelectedTabState().toString())
+                        when (getSelectedTabState()) {
+                            0 -> {
+                                val findIndex =
+                                    allPlaceListAdapter.currentList.indexOfFirst { it.placeId == focusPlaceId }
+                                Log.d("JWHP-3", "findIndex : $findIndex")
+                                if (findIndex >= 0) {
+                                    val holder =
+                                        binding.placeAllItemListView.findViewHolderForAdapterPosition(
+                                            findIndex
+                                        )
+                                    holder?.itemView?.y?.toInt()?.let { destY ->
+                                        binding.root.smoothScrollTo(0, destY)
+                                    }
+                                }
+                            }
+
+                            1 -> {
+                                val findIndex =
+                                    bestPlaceListAdapter.currentList.indexOfFirst { it is PlaceRank.PostItem && it.place.placeId == focusPlaceId }
+                                Log.d("JWHP-3", "findIndex : $findIndex")
+                                if (findIndex >= 0) {
+                                    val holder =
+                                        binding.placeBestItemListView.findViewHolderForAdapterPosition(
+                                            findIndex
+                                        )
+                                    holder?.itemView?.y?.toInt()?.let { destY ->
+                                        binding.root.smoothScrollTo(0, destY)
+                                    }
+                                }
+                            }
+                        }
+                        myMeetDetailTabViewModel.clearFocusId()
                     }
                 }
             }

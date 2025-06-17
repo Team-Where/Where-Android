@@ -1,5 +1,6 @@
 package com.sooum.where_android.model
 
+import com.sooum.domain.model.ShareResult
 import kotlinx.serialization.Serializable
 
 sealed interface ScreenRoute {
@@ -91,6 +92,21 @@ sealed interface ScreenRoute {
             val code: String
         ) : ScreenRoute
 
+        @Serializable
+        data class MapShareResult(
+            val source: String,
+            val placeName: String,
+            val address: String,
+            val link: String
+        ) : ScreenRoute {
+
+            constructor(shareResult: ShareResult) : this(
+                shareResult.source,
+                shareResult.placeName,
+                shareResult.address,
+                shareResult.link
+            )
+        }
 
         @Serializable
         data object HamburgerRoute {
@@ -99,7 +115,11 @@ sealed interface ScreenRoute {
              * 프로필 설정화면
              */
             @Serializable
-            data object ProfileEdit : ScreenRoute
+            data class ProfileEdit(
+                val email: String = "",
+                val nickName: String = "",
+                val imageSrc: String? = null
+            ) : ScreenRoute
 
             /**
              * 알림 목록 화면

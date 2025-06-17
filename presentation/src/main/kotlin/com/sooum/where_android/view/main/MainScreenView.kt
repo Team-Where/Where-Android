@@ -124,7 +124,7 @@ fun MainScreenView(
                     }
                 },
                 modifier = Modifier.padding(innerPadding),
-                gesturesEnabled = false
+                gesturesEnabled = true
             ) {
                 CompositionLocalProvider(
                     LocalLayoutDirection provides LayoutDirection.Ltr

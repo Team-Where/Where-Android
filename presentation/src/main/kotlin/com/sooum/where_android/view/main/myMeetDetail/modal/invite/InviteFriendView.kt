@@ -84,6 +84,7 @@ import com.sooum.where_android.view.widget.UserItemView
 import com.sooum.where_android.view.widget.UserViewType
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -422,7 +423,7 @@ class InviteFriendFragment : Fragment() {
                                 //로그인된 화면이므로 getLoginUserUseCase는 항상 null이 아니다.
                                 KaKaoShareUtil.sendInvite(
                                     context = context,
-                                    userName = getLoginUserUseCase()!!.name,
+                                    userName = getLoginUserUseCase().first()!!.nickname,
                                     meetName = meet.title,
                                     inviteCode = meet.inviteCode
                                 )
