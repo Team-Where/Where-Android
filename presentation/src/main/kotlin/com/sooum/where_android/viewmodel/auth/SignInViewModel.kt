@@ -3,9 +3,8 @@ package com.sooum.where_android.viewmodel.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.usecase.LoadDataWhenLoginUserCase
 import com.sooum.domain.usecase.auth.LoginUseCase
-import com.sooum.domain.usecase.friend.LoadFriedListUseCase
-import com.sooum.domain.usecase.meet.detail.LoadMeetDetailListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -14,8 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val loadMeetDetailListUseCase: LoadMeetDetailListUseCase,
-    private val loadFriedListUseCase: LoadFriedListUseCase,
+    private val loadDataWhenLoginUserCase: LoadDataWhenLoginUserCase,
 ) : ViewModel() {
 
     /**
@@ -33,8 +31,7 @@ class SignInViewModel @Inject constructor(
                     is ApiResult.Success -> {
                         val id = result.data.userId
                         async {
-                            loadFriedListUseCase(id)
-                            loadMeetDetailListUseCase(id)
+                            loadDataWhenLoginUserCase(id)
                         }
                         onSuccess()
                     }
