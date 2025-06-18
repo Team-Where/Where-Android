@@ -83,7 +83,7 @@ class NewMeetViewModel @Inject constructor(
             title = "",
             image = null,
             description = "",
-            participants = emptyList()
+            participants = emptySet()
         )
     )
 
@@ -105,7 +105,7 @@ class NewMeetViewModel @Inject constructor(
     }
 
     fun inviteFriend(friend: Friend) {
-        val temp = newMeetData.participants.toMutableList()
+        val temp = newMeetData.participants.toMutableSet()
         temp.add(friend.id)
         newMeetData = newMeetData.copy(participants = temp)
     }

@@ -28,7 +28,7 @@ class AddMeetUseCase @Inject constructor(
             title = newMeet.title,
             fromId = fromId,
             description = newMeet.description,
-            participants = newMeet.participants,
+            participants = newMeet.participants.toList(),
             imageFile = file
         )
     }

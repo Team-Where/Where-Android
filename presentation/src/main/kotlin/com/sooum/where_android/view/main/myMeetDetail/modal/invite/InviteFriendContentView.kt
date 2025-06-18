@@ -35,6 +35,7 @@ import com.sooum.where_android.view.widget.UserViewType
 fun InviteFriendContentView(
     recentUserList: List<Friend>,
     userList: List<Friend>,
+    invitedFriedIdSet: Set<Int> = emptySet(),
     inviteFriend: (Friend) -> Unit,
     headerColor: Color = Color(0xff374151),
     kakaoClickAction: (() -> Unit)? = null,
@@ -102,7 +103,9 @@ fun InviteFriendContentView(
             ) { friend ->
                 UserItemView(
                     user = friend.toUser(),
-                    type = UserViewType.Invite,
+                    type = UserViewType.Invite(
+                        finish = invitedFriedIdSet.contains(friend.id)
+                    ),
                     iconClickAction = {
                         inviteFriend(friend)
                     }
@@ -126,7 +129,9 @@ fun InviteFriendContentView(
             ) { friend ->
                 UserItemView(
                     user = friend.toUser(),
-                    type = UserViewType.Invite,
+                    type = UserViewType.Invite(
+                        finish = invitedFriedIdSet.contains(friend.id)
+                    ),
                     iconClickAction = {
                         inviteFriend(friend)
                     }

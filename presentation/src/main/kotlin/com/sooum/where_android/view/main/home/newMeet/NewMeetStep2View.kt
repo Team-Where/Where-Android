@@ -41,6 +41,7 @@ fun NewMeetStep2View(
     modifier: Modifier = Modifier,
     userList: List<Friend>,
     recentUserList: List<Friend>,
+    invitedFriedIdSet: Set<Int> = emptySet(),
     nextViewType: () -> Unit,
     inviteFriend: (Friend) -> Unit,
     onClose: () -> Unit
@@ -100,6 +101,7 @@ fun NewMeetStep2View(
                 InviteFriendContentView(
                     recentUserList = recentUserList,
                     userList = userList,
+                    invitedFriedIdSet = invitedFriedIdSet,
                     inviteFriend = { user ->
                         scope.launch {
                             cancelJob?.cancel()

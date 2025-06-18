@@ -28,10 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,7 +71,9 @@ sealed class UserViewType {
     /**
      * 초대 관련
      */
-    data object Invite : UserViewType()
+    data class Invite(
+        val finish: Boolean = false
+    ) : UserViewType()
 
     /**
      * 초대 대기중
@@ -218,17 +216,13 @@ fun UserItemView(
                     val shape = RoundedCornerShape(8.dp)
                     val buttonModifier = Modifier
                         .height(32.dp)
-                    var alreadyAdd by remember {
-                        mutableStateOf(false)
-                    }
 
                     Button(
                         onClick = {
-                            alreadyAdd = true
                             iconClickAction?.invoke()
                         },
                         modifier = buttonModifier,
-                        enabled = !alreadyAdd,
+                        enabled = !type.finish,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.White,
                             disabledContainerColor = GrayScale100
@@ -240,7 +234,7 @@ fun UserItemView(
                         shape = shape,
                         border = BorderStroke(1.dp, GrayScale300),
                     ) {
-                        AnimatedVisibility(alreadyAdd) {
+                        AnimatedVisibility(type.finish) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -260,7 +254,7 @@ fun UserItemView(
                                 )
                             }
                         }
-                        AnimatedVisibility(!alreadyAdd) {
+                        AnimatedVisibility(!type.finish) {
                             Text(
                                 text = "초대",
                                 color = Primary600,
@@ -337,7 +331,8 @@ fun UserItemPreview() {
             UserViewType.Favorite(isFavorite = false),
             UserViewType.Delete,
             UserViewType.Option,
-            UserViewType.Invite,
+            UserViewType.Invite(true),
+            UserViewType.Invite(false),
             UserViewType.Waiting
         ).forEach { type ->
             UserItemView(

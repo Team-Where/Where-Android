@@ -229,7 +229,9 @@ fun InviteFriendView(
                             ) { friend ->
                                 UserItemView(
                                     user = friend.toUser(),
-                                    type = UserViewType.Invite,
+                                    type = UserViewType.Invite(
+                                        false
+                                    ),
                                 )
                             }
                         }
