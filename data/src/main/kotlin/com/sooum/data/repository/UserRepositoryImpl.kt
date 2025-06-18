@@ -94,4 +94,14 @@ class UserRepositoryImpl @Inject constructor(
         }
         return result.covertApiResultToActionResultIfSuccessEmpty()
     }
+
+    override suspend fun registerToken(userId: Int, fcmToken: String): ActionResult<*> {
+        val result = userRemoteDataSource.registerToken(userId, fcmToken)
+        return result.covertApiResultToActionResultIfSuccessEmpty()
+    }
+
+    override suspend fun unRegisterToken(userId: Int): ActionResult<*> {
+        val result = userRemoteDataSource.unRegisterToken(userId)
+        return result.covertApiResultToActionResultIfSuccessEmpty()
+    }
 }

@@ -35,4 +35,13 @@ interface UserRepository {
     suspend fun deleteAccount(
         userId: Int,
     ): ActionResult<*>
+
+    suspend fun registerToken(
+        userId: Int,
+        fcmToken: String
+    ): ActionResult<*>
+
+    suspend fun unRegisterToken(
+        userId: Int
+    ): ActionResult<*>
 }
