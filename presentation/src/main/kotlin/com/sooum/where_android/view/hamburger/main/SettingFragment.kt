@@ -1,5 +1,10 @@
 package com.sooum.where_android.view.hamburger.main
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.fragment.compose.AndroidFragment
 import androidx.navigation.NavHostController
 import com.sooum.where_android.databinding.FragmentSettingBinding
 import com.sooum.where_android.model.ScreenRoute
@@ -28,11 +33,34 @@ class SettingFragment : HamburgerBaseFragment<FragmentSettingBinding>(
                 }
             }
 
+
+            logoutContentArea.setOnClickListener {
+                navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.LogOut) {
+                    launchSingleTop = true
+                }
+            }
+
             deleteAccountContentArea.setOnClickListener {
                 navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteAccount) {
                     launchSingleTop = true
                 }
             }
         }
+    }
+}
+
+@Composable
+fun SettingView(
+    controller: NavHostController
+) {
+    BackHandler {
+        controller.navigateHome()
+    }
+    AndroidFragment<SettingFragment>(
+        modifier = Modifier.fillMaxSize()
+    ) { settingFragment ->
+        settingFragment.setNavigation(
+            navHostController = controller
+        )
     }
 }

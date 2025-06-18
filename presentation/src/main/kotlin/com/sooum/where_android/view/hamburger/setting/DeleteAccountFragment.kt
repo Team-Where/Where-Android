@@ -3,18 +3,38 @@ package com.sooum.where_android.view.hamburger.setting
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
+import androidx.fragment.compose.AndroidFragment
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentDeleteAccountBinding
 import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.common.modal.LoadingScreenProvider
 import com.sooum.where_android.view.hamburger.HamburgerBaseFragment
+import com.sooum.where_android.view.hamburger.navigateHome
+import com.sooum.where_android.view.main.LocalLoadingProvider
+import com.sooum.where_android.view.widget.CustomSnackBar
+import com.sooum.where_android.view.widget.IconType
+import com.sooum.where_android.viewmodel.hambuger.DeleteAccountViewModel
 
 class DeleteAccountFragment : HamburgerBaseFragment<FragmentDeleteAccountBinding>(
     FragmentDeleteAccountBinding::inflate
 ) {
+    private lateinit var deleteAccountViewModel: DeleteAccountViewModel
+
     override fun initView() {
         highlightReasonKeyword()
+        with(binding) {
+            radioGroupReason.setOnCheckedChangeListener { radioGroup, index ->
+                completeBtn.isEnabled = radioGroup.checkedRadioButtonId != -1
+            }
+        }
     }
 
     private fun highlightReasonKeyword() {
@@ -49,11 +69,57 @@ class DeleteAccountFragment : HamburgerBaseFragment<FragmentDeleteAccountBinding
                     popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting)
                 }
             }
+        }
+    }
+
+    fun setViewModel(
+        deleteAccountViewModel: DeleteAccountViewModel,
+        loadingScreenProvider: LoadingScreenProvider
+    ) {
+        this.deleteAccountViewModel = deleteAccountViewModel
+        with(binding) {
             completeBtn.setOnClickListener {
-                navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteComplete) {
-                    launchSingleTop = true
-                }
+                loadingScreenProvider.startLoading()
+                deleteAccountViewModel.deleteAccount(
+                    onSuccess = {
+                        loadingScreenProvider.stopLoading {
+                            navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteComplete) {
+                                launchSingleTop = true
+                            }
+                        }
+                    },
+                    onFail = { msg ->
+                        loadingScreenProvider.stopLoading {
+                            CustomSnackBar.make(
+                                binding.root, msg, IconType.Error
+                            ).showWithAnchor(binding.completeBtn)
+                        }
+                    }
+                )
             }
         }
+    }
+}
+
+@Composable
+fun DeleteAccountView(
+    controller: NavHostController,
+    deleteAccountViewModel: DeleteAccountViewModel = hiltViewModel()
+) {
+    val loadingScreenProvider = LocalLoadingProvider.current
+    BackHandler() {
+        controller.navigateHome()
+    }
+    BackHandler(loadingScreenProvider.showLoading) {
+        //Block Back When Loading
+    }
+    AndroidFragment<DeleteAccountFragment>(
+        modifier = Modifier.fillMaxSize(),
+        arguments = bundleOf()
+    ) { deleteAccountFragment ->
+        deleteAccountFragment.setNavigation(
+            navHostController = controller
+        )
+        deleteAccountFragment.setViewModel(deleteAccountViewModel, loadingScreenProvider)
     }
 }

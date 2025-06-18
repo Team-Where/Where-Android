@@ -172,6 +172,12 @@ sealed interface ScreenRoute {
                 data object Setting : ScreenRoute
 
                 /**
+                 * 설정화면 로그아웃
+                 */
+                @Serializable
+                data object LogOut : ScreenRoute
+
+                /**
                  * 설정화면 - 비번 수정
                  */
                 @Serializable

@@ -15,6 +15,7 @@ import androidx.fragment.compose.AndroidFragment
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.hamburger.main.EditProfileView
@@ -22,9 +23,10 @@ import com.sooum.where_android.view.hamburger.main.FaqFragment
 import com.sooum.where_android.view.hamburger.main.InquiryFragment
 import com.sooum.where_android.view.hamburger.main.NoticeFragment
 import com.sooum.where_android.view.hamburger.main.NotificationFragment
-import com.sooum.where_android.view.hamburger.main.SettingFragment
-import com.sooum.where_android.view.hamburger.setting.DeleteAccountCompleteFragment
-import com.sooum.where_android.view.hamburger.setting.DeleteAccountFragment
+import com.sooum.where_android.view.hamburger.main.SettingView
+import com.sooum.where_android.view.hamburger.main.dialog.LogOutView
+import com.sooum.where_android.view.hamburger.setting.DeleteAccountCompleteView
+import com.sooum.where_android.view.hamburger.setting.DeleteAccountView
 import com.sooum.where_android.view.hamburger.setting.EditPasswordFragment
 
 /**
@@ -181,17 +183,27 @@ private fun NavGraphBuilder.installSettingRoute(
             Box(
                 modifier = parentModifier
             ) {
-                BackHandler {
-                    mainNavController.navigateHome()
-                }
-                AndroidFragment<SettingFragment>(
-                    modifier = Modifier.fillMaxSize()
-                ) { settingFragment ->
-                    settingFragment.setNavigation(
-                        navHostController = mainNavController
-                    )
-                }
+                SettingView(
+                    controller = mainNavController
+                )
             }
+        }
+        dialog<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.LogOut> {
+            LogOutView(
+                dismiss = {
+                    mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
+                        launchSingleTop = true
+                        popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.LogOut) {
+                            inclusive = true
+                        }
+                    }
+                },
+                logOut = {
+                    //TODO Logout
+                    //Delete All User Session
+                    mainNavController.goToAuthScreen()
+                }
+            )
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.EditPassword> {
             Box(
@@ -216,19 +228,9 @@ private fun NavGraphBuilder.installSettingRoute(
             Box(
                 modifier = parentModifier
             ) {
-                BackHandler {
-                    mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
-                        launchSingleTop = true
-                        popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting)
-                    }
-                }
-                AndroidFragment<DeleteAccountFragment>(
-                    modifier = Modifier.fillMaxSize()
-                ) { deleteAccountFragment ->
-                    deleteAccountFragment.setNavigation(
-                        navHostController = mainNavController
-                    )
-                }
+                DeleteAccountView(
+                    controller = mainNavController
+                )
             }
         }
 
@@ -236,29 +238,19 @@ private fun NavGraphBuilder.installSettingRoute(
             Box(
                 modifier = parentModifier
             ) {
-                BackHandler {
-                    //Block Back Click
-                }
-                AndroidFragment<DeleteAccountCompleteFragment>(
-                    modifier = Modifier.fillMaxSize()
-                ) { deleteAccountCompleteFragment ->
-                    deleteAccountCompleteFragment.setNavigation(
-                        navHostController = mainNavController
-                    )
-                }
-                TextButton(
-                    onClick = {
-                        mainNavController.navigate(ScreenRoute.AuthRoute) {
-                            popUpTo(ScreenRoute.HomeRoute) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
-                    }
-                ) {
-                    Text("Test-Complete")
-                }
+                DeleteAccountCompleteView(
+                    controller = mainNavController
+                )
             }
         }
+    }
+}
+
+internal fun NavHostController.goToAuthScreen() {
+    navigate(ScreenRoute.AuthRoute) {
+        popUpTo(ScreenRoute.HomeRoute) {
+            inclusive = true
+        }
+        launchSingleTop = true
     }
 }
