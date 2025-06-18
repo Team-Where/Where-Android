@@ -56,6 +56,9 @@ class MyMeetPlaceFragment : MyMeetBaseFragment<FragmentMyMeetPlaceBinding>(
                     if (meetDetail != null) {
                         if (meetDetail.finished) {
                             showPlaceToolTipFinished = true
+                            binding.btnPlaceShare.visibility = View.INVISIBLE
+                        } else {
+                            binding.btnPlaceShare.visibility = View.VISIBLE
                         }
                     }
                 }
