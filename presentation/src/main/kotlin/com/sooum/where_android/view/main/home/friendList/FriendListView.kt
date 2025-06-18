@@ -61,7 +61,7 @@ import com.sooum.where_android.view.main.home.friendList.modal.ProfileDetailModa
 import com.sooum.where_android.view.widget.SearchField
 import com.sooum.where_android.view.widget.UserItemView
 import com.sooum.where_android.view.widget.UserViewType
-import com.sooum.where_android.viewmodel.FriendViewModel
+import com.sooum.where_android.viewmodel.main.FriendViewModel
 
 
 sealed class FriendListViewType(

@@ -12,7 +12,7 @@ import coil3.transform.CircleCropTransformation
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentHamburgerMainBinding
 import com.sooum.where_android.model.ScreenRoute
-import com.sooum.where_android.viewmodel.DrawerViewModel
+import com.sooum.where_android.viewmodel.main.DrawerViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

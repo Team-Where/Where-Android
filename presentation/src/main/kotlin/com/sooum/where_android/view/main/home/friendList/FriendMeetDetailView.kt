@@ -51,7 +51,7 @@ import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.widget.CircleProfileView
-import com.sooum.where_android.viewmodel.FriendDetailViewModel
+import com.sooum.where_android.viewmodel.main.FriendDetailViewModel
 
 @Composable
 fun FriendMeetDetailView(
