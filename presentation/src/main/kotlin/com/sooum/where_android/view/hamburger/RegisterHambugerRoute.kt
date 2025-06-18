@@ -23,8 +23,8 @@ import com.sooum.where_android.view.hamburger.main.InquiryFragment
 import com.sooum.where_android.view.hamburger.main.NoticeFragment
 import com.sooum.where_android.view.hamburger.main.NotificationFragment
 import com.sooum.where_android.view.hamburger.main.SettingFragment
-import com.sooum.where_android.view.hamburger.setting.DeleteAccountCompleteFragment
-import com.sooum.where_android.view.hamburger.setting.DeleteAccountFragment
+import com.sooum.where_android.view.hamburger.setting.DeleteAccountCompleteView
+import com.sooum.where_android.view.hamburger.setting.DeleteAccountView
 import com.sooum.where_android.view.hamburger.setting.EditPasswordFragment
 
 /**
@@ -216,19 +216,9 @@ private fun NavGraphBuilder.installSettingRoute(
             Box(
                 modifier = parentModifier
             ) {
-                BackHandler {
-                    mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
-                        launchSingleTop = true
-                        popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting)
-                    }
-                }
-                AndroidFragment<DeleteAccountFragment>(
-                    modifier = Modifier.fillMaxSize()
-                ) { deleteAccountFragment ->
-                    deleteAccountFragment.setNavigation(
-                        navHostController = mainNavController
-                    )
-                }
+                DeleteAccountView(
+                    controller = mainNavController
+                )
             }
         }
 
@@ -236,28 +226,9 @@ private fun NavGraphBuilder.installSettingRoute(
             Box(
                 modifier = parentModifier
             ) {
-                BackHandler {
-                    //Block Back Click
-                }
-                AndroidFragment<DeleteAccountCompleteFragment>(
-                    modifier = Modifier.fillMaxSize()
-                ) { deleteAccountCompleteFragment ->
-                    deleteAccountCompleteFragment.setNavigation(
-                        navHostController = mainNavController
-                    )
-                }
-                TextButton(
-                    onClick = {
-                        mainNavController.navigate(ScreenRoute.AuthRoute) {
-                            popUpTo(ScreenRoute.HomeRoute) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
-                    }
-                ) {
-                    Text("Test-Complete")
-                }
+                DeleteAccountCompleteView(
+                    controller = mainNavController
+                )
             }
         }
     }
