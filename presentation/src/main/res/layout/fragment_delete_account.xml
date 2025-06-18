@@ -56,10 +56,10 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#1F2937"
-            android:textSize="16sp"
             android:fontFamily="@font/pretend_regular"
-            android:text="사용을 잘 안해서" />
+            android:text="사용을 잘 안해서"
+            android:textColor="#1F2937"
+            android:textSize="16sp" />
 
         <RadioButton
             android:layout_width="wrap_content"
