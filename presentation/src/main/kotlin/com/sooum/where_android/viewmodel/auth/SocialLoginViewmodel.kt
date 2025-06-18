@@ -82,7 +82,7 @@ class SocialLoginViewmodel @Inject constructor(
         viewModelScope.launch {
             launch {
                 appManageDataStore.saveNaverAccessToken(accessToken)
-                appManageDataStore.saveKakaoRefreshToken(refreshToken)
+                appManageDataStore.saveNaverRefreshToken(refreshToken)
             }
             launch {
                 naverSignUpUseCase(
