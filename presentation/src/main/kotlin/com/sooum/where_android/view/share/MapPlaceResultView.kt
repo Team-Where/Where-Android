@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,11 +32,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sooum.domain.model.MeetDetail
 import com.sooum.where_android.R
+import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.main.home.myMeet.MyMeetContentCard
 import com.sooum.where_android.view.widget.PrimaryButton
@@ -81,23 +84,27 @@ private fun MapPlaceResultContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(54.dp)
+                    .height(52.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = navigateHome
+                    onClick = navigateHome,
                 ) {
                     Icon(painter = painterResource(R.drawable.icon_back), "close map place result")
                 }
             }
             Column(
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier.padding(20.dp)
             ) {
                 Text(
                     text = "장소를 공유할\n모임을 선택해 주세요.",
                     fontFamily = pretendard,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 24.sp,
+                    color = Gray800
                 )
+
+                Spacer(Modifier.height(32.dp))
 
                 LazyVerticalGrid(
                     modifier = Modifier.fillMaxWidth(),
@@ -144,4 +151,16 @@ private fun MapPlaceResultContent(
                 .padding(10.dp)
         )
     }
+}
+
+@Preview
+@Composable
+private fun MapPlaceContentPreview() {
+    MapPlaceResultContent(
+        meetDetailList = listOf(
+            MeetDetail(1, "1", "3", null),
+            MeetDetail(2, "2", "3", null),
+            MeetDetail(3, "3", "3", null),
+        )
+    )
 }
