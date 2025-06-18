@@ -42,7 +42,7 @@ class MyMeetPlaceFragment : MyMeetBaseFragment<FragmentMyMeetPlaceBinding>(
     private val placeInfoBalloon by balloon<PlaceInfoBalloonFactory>()
     private val placeAddBalloon by balloon<PlaceAddBalloonFactory>()
 
-    private var find = false
+    private var showPlaceToolTipFinished = false
     private var restoreType: Int = -1
 
     override fun initView() {
@@ -50,15 +50,27 @@ class MyMeetPlaceFragment : MyMeetBaseFragment<FragmentMyMeetPlaceBinding>(
         setUpBtn()
         restoreType()
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myMeetDetailViewModel.meetDetail.collect { meetDetail ->
+                    if (meetDetail != null) {
+                        if (meetDetail.finished) {
+                            showPlaceToolTipFinished = true
+                        }
+                    }
+                }
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 myMeetDetailPlaceViewModel.placeList.collect { placeList ->
                     if (placeList.isEmpty()) {
-                        if (!find) {
+                        if (!showPlaceToolTipFinished) {
                             //1회만 작동하도록
                             placeAddBalloon.showAlignBottom(binding.btnPlaceShareIcon)
                             binding.placeItemNoData.visibility = View.VISIBLE
-                            find = true
+                            showPlaceToolTipFinished = true
                         }
                     } else {
                         binding.placeItemNoData.visibility = View.GONE
