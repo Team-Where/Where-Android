@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.navigation.NavHostController
 import com.sooum.where_android.databinding.FragmentDeleteAccountCompleteBinding
-import com.sooum.where_android.model.ScreenRoute
+import com.sooum.where_android.view.hamburger.goToAuthScreen
 
 
 @Composable
@@ -22,12 +22,7 @@ fun DeleteAccountCompleteView(
         modifier = Modifier.fillMaxSize()
     ) {
         completeBtn.setOnClickListener {
-            controller.navigate(ScreenRoute.AuthRoute) {
-                popUpTo(ScreenRoute.HomeRoute) {
-                    inclusive = true
-                }
-                launchSingleTop = true
-            }
+            controller.goToAuthScreen()
         }
     }
 }
