@@ -41,9 +41,10 @@
         app:layout_constraintTop_toBottomOf="@id/imageClose"/>
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
+        android:id="@+id/password_change_content_area"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
+        android:padding="15dp"
         android:orientation="horizontal"
         android:layout_marginTop="25dp"
         android:gravity="center"
@@ -55,7 +56,6 @@
             android:layout_height="wrap_content"
             android:text="비밀번호 변경"
             android:textSize="16sp"
-            android:layout_marginStart="15dp"
             android:fontFamily="@font/pretend_medium"
             android:textColor="@color/black" />
 
@@ -67,18 +67,18 @@
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_marginEnd="20dp"
             android:src="@drawable/icon_right" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/logout_content_area"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
+        android:padding="15dp"
         android:orientation="horizontal"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout1">
+        app:layout_constraintTop_toBottomOf="@id/password_change_content_area">
 
         <TextView
             android:id="@+id/text_logout"
@@ -86,7 +86,6 @@
             android:layout_height="wrap_content"
             android:text="로그아웃"
             android:textSize="16sp"
-            android:layout_marginStart="15dp"
             android:fontFamily="@font/pretend_medium"
             android:textColor="@color/black" />
 
@@ -98,18 +97,18 @@
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_marginEnd="20dp"
             android:src="@drawable/icon_right" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
+        android:id="@+id/delete_account_content_area"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
+        android:padding="15dp"
         android:orientation="horizontal"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout2">
+        app:layout_constraintTop_toBottomOf="@id/logout_content_area">
 
         <TextView
             android:id="@+id/text_exit"
@@ -117,7 +116,6 @@
             android:layout_height="wrap_content"
             android:text="계정 탈퇴"
             android:textSize="16sp"
-            android:layout_marginStart="15dp"
             android:fontFamily="@font/pretend_medium"
             android:textColor="@color/black" />
 
@@ -129,7 +127,6 @@
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_marginEnd="20dp"
             android:src="@drawable/icon_right" />
     </LinearLayout>
 
@@ -145,7 +142,7 @@
         android:layout_marginTop="40dp"
         app:layout_goneMarginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout3"/>
+        app:layout_constraintTop_toBottomOf="@id/delete_account_content_area"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -192,9 +189,10 @@
         app:layout_constraintTop_toBottomOf="@id/view"/>
 
     <LinearLayout
-        android:id="@+id/linearLayout4"
+        android:id="@+id/private_policy_content_area"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
+        android:padding="15dp"
         android:orientation="horizontal"
         android:layout_marginTop="25dp"
         android:gravity="center"
@@ -206,7 +204,6 @@
             android:layout_height="wrap_content"
             android:text="개인정보처리방침"
             android:textSize="16sp"
-            android:layout_marginStart="15dp"
             android:fontFamily="@font/pretend_medium"
             android:textColor="@color/black" />
 
@@ -218,18 +215,18 @@
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_marginEnd="20dp"
             android:src="@drawable/icon_right" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout5"
+        android:id="@+id/service_content_area"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
+        android:padding="15dp"
         android:orientation="horizontal"
         android:layout_marginTop="25dp"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout4">
+        app:layout_constraintTop_toBottomOf="@id/private_policy_content_area">
 
         <TextView
             android:id="@+id/text_service"
@@ -237,7 +234,6 @@
             android:layout_height="wrap_content"
             android:text="서비스 이용약관"
             android:textSize="16sp"
-            android:layout_marginStart="15dp"
             android:fontFamily="@font/pretend_medium"
             android:textColor="@color/black" />
 
@@ -249,7 +245,6 @@
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_marginEnd="20dp"
             android:src="@drawable/icon_right" />
     </LinearLayout>
 
@@ -265,7 +260,7 @@
         android:layout_marginTop="40dp"
         app:layout_goneMarginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout5"/>
+        app:layout_constraintTop_toBottomOf="@id/service_content_area"/>
 
     <TextView
         android:id="@+id/text_app_version"
