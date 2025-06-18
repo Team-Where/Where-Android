@@ -34,5 +34,4 @@ class DrawerViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000L),
         initialValue = 0
     )
-
 }

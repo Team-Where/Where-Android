@@ -8,4 +8,6 @@ import android.content.Intent
 interface AlarmOption {
 
     fun makeIntent(): Intent
+
+    suspend fun notificationAllowed(): Boolean
 }
