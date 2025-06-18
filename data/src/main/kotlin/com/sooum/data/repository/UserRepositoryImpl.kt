@@ -22,6 +22,12 @@ class UserRepositoryImpl @Inject constructor(
     private val myPage
         get() = _myPage.asStateFlow()
 
+    override suspend fun clearWhenLogout() {
+        _myPage.update {
+            MyPageInfo()
+        }
+    }
+
     override fun getMyPage(): Flow<MyPageInfo> = myPage
 
     override suspend fun loadMyPage(userId: Int) {

@@ -5,7 +5,10 @@ import com.sooum.domain.usecase.meet.detail.LoadMeetDetailListUseCase
 import com.sooum.domain.usecase.user.LoadUserInfoUseCase
 import javax.inject.Inject
 
-class LoadDataWhenLoginUserCase @Inject constructor(
+/**
+ * 로그인시 불러올 일괄 데이터 요청
+ */
+class LoadDataWhenLoginUseCase @Inject constructor(
     private val loadMeetDetailListUseCase: LoadMeetDetailListUseCase,
     private val loadFriedListUseCase: LoadFriedListUseCase,
     private val loadUserInfoUseCase: LoadUserInfoUseCase,

@@ -15,18 +15,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.theme.pretendard
+import com.sooum.where_android.view.main.LocalLoadingProvider
 import com.sooum.where_android.view.widget.GrayButton
 import com.sooum.where_android.view.widget.PrimaryButton
+import com.sooum.where_android.viewmodel.hambuger.LogoutViewModel
 
 @Composable
 fun LogOutView(
+    logoutViewModel: LogoutViewModel = hiltViewModel(),
     dismiss: () -> Unit = {},
-    logOut: () -> Unit = {}
+    logoutAction: () -> Unit = {}
 ) {
+    val loadingScreenProvider = LocalLoadingProvider.current
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -58,7 +67,21 @@ fun LogOutView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                onClick = logOut,
+                onClick = {
+                    loadingScreenProvider.startLoading()
+                    logoutViewModel.logout(
+                        onSuccess = {
+                            loadingScreenProvider.stopLoading {
+                                logoutAction()
+                            }
+                        },
+                        onFail = { msg ->
+                            loadingScreenProvider.stopLoading {
+                                context.showSimpleToast(msg)
+                            }
+                        }
+                    )
+                },
                 title = "로그아웃"
             )
         }

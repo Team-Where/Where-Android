@@ -198,7 +198,7 @@ private fun NavGraphBuilder.installSettingRoute(
                         }
                     }
                 },
-                logOut = {
+                logoutAction = {
                     //TODO Logout
                     //Delete All User Session
                     mainNavController.goToAuthScreen()

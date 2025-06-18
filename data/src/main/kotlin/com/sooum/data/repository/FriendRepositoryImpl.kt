@@ -33,6 +33,12 @@ class FriendRepositoryImpl @Inject constructor(
     )
     private val friendListFlow: StateFlow<List<Friend>> = _friendListFlow.asStateFlow()
 
+    override suspend fun clearWhenLogout() {
+        _friendListFlow.update {
+            emptyList()
+        }
+    }
+
     override fun getFriendList(): Flow<List<Friend>> {
         return friendListFlow
     }

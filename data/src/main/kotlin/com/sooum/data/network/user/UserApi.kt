@@ -55,7 +55,7 @@ interface UserApi {
         @Path("userId") userId: Int,
     ): Response<String>
 
-    @DELETE("api/user/{userId}/fcm-token")
+    @POST("api/user/{userId}/fcm-token")
     suspend fun registerToken(
         @Path("userId") userId: Int,
         @Body data: FcmRegisterRequest

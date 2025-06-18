@@ -50,6 +50,7 @@ class AppManageDataStore @Inject constructor(
             preferences.remove(ACCESS_TOKEN)
             preferences.remove(REFRESH_TOKEN)
             preferences.remove(USER_ID)
+            preferences.remove(SAVED_FCM_TOKEN)
         }
     }
 

@@ -11,7 +11,6 @@ import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.repository.MeetDetailRepository
-import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -32,7 +31,6 @@ typealias PlaceId = Int
 
 class MeetDetailRepositoryImpl @Inject constructor(
     private val meetRemoteDataSource: MeetRemoteDataSource,
-    private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
     private val alarmMaker: AlarmMaker
 ) : MeetDetailRepository {
 
@@ -40,6 +38,12 @@ class MeetDetailRepositoryImpl @Inject constructor(
      * 로그인된 유저의 id로 가져온 전체 모임 목록
      */
     private val _meetDetailList = MutableStateFlow(emptyList<MeetDetail>())
+
+    override suspend fun clearWhenLogout() {
+        _meetDetailList.update {
+            emptyList()
+        }
+    }
 
     /**
      * [loadMeetDetailSubData]이후 해당 모임에 해당되는 초대 현황 리스트

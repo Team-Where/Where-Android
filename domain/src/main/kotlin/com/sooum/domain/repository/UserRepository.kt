@@ -2,10 +2,11 @@ package com.sooum.domain.repository
 
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.user.MyPageInfo
+import com.sooum.domain.repository.tool.ClearFlow
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
-interface UserRepository {
+interface UserRepository : ClearFlow {
 
     fun getMyPage(): Flow<MyPageInfo>
 

@@ -3,7 +3,7 @@ package com.sooum.where_android.viewmodel.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.usecase.LoadDataWhenLoginUserCase
+import com.sooum.domain.usecase.LoadDataWhenLoginUseCase
 import com.sooum.domain.usecase.auth.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val loadDataWhenLoginUserCase: LoadDataWhenLoginUserCase,
+    private val loadDataWhenLoginUserCase: LoadDataWhenLoginUseCase,
 ) : ViewModel() {
 
     /**
