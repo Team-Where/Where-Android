@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import coil3.load
 import coil3.request.error
 import coil3.request.placeholder
+import coil3.request.transformations
+import coil3.transform.CircleCropTransformation
 import com.sooum.domain.model.ProfileImage
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ItemProfileImageOverflowBinding
@@ -58,6 +60,7 @@ class ImageListAdapter : ListAdapter<ProfileImage, OverflowViewHolder>(ProfileDi
                 imageProfile.load(
                     data = item.profileImage
                 ) {
+                    transformations(CircleCropTransformation())
                     placeholder(R.drawable.image_profile_default_cover)
                     error(R.drawable.image_profile_default_cover)
                 }
