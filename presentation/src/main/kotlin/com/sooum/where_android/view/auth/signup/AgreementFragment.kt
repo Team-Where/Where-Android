@@ -1,10 +1,7 @@
 package com.sooum.where_android.view.auth.signup
 
-import android.os.Bundle
-import android.view.View
 import android.widget.CheckBox
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.net.toUri
+import androidx.navigation.NavHostController
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentAgreementBinding
 import com.sooum.where_android.model.ScreenRoute
@@ -19,9 +16,7 @@ class AgreementFragment : AuthBaseFragment<FragmentAgreementBinding>(
 ) {
     private lateinit var allCheckboxes: List<CheckBox>
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun initView() {
         allCheckboxes = listOf(
             binding.checkboxRequiredAge,
             binding.checkboxRequiredService,
@@ -43,23 +38,6 @@ class AgreementFragment : AuthBaseFragment<FragmentAgreementBinding>(
 
         setupCheckboxListeners()
         updateNextButtonBackground()
-    }
-
-    override fun initView() {
-
-        with(binding) {
-            listOf(
-                buttonViewServiceTerms to WebType.SERVICE_TERMS,
-                buttonViewAgeTerms to WebType.USE_TERMS,
-                buttonViewMarketingTerms to WebType.MARKETING_TERMS,
-                buttonViewAdsTerms to WebType.ADS_TERMS
-            ).forEach { (button, type) ->
-                button.setOnClickListener {
-                    openWebTab(type)
-                }
-            }
-        }
-
     }
 
     private fun setupCheckboxListeners() {
@@ -114,11 +92,25 @@ class AgreementFragment : AuthBaseFragment<FragmentAgreementBinding>(
         ADS_TERMS("https://meteor-condor-9e6.notion.site/3-205912bcf29c807fbdc4d69da0a841df")
     }
 
-    private fun openWebTab(
-        type: WebType
-    ) {
-        val intent = CustomTabsIntent.Builder()
-            .build()
-        intent.launchUrl(requireContext(), type.url.toUri())
+    override fun setNavigation(navHostController: NavHostController) {
+        super.setNavigation(navHostController)
+        with(binding) {
+            listOf(
+                buttonViewServiceTerms to WebType.SERVICE_TERMS,
+                buttonViewAgeTerms to WebType.USE_TERMS,
+                buttonViewMarketingTerms to WebType.MARKETING_TERMS,
+                buttonViewAdsTerms to WebType.ADS_TERMS
+            ).forEach { (button, type) ->
+                button.setOnClickListener {
+                    navHostController.navigate(
+                        ScreenRoute.AuthRoute.SingUpRoute.WebView(
+                            destUrl = type.url
+                        )
+                    ) {
+                        launchSingleTop = true
+                    }
+                }
+            }
+        }
     }
 }

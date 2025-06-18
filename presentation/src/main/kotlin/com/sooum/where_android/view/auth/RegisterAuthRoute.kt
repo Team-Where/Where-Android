@@ -1,7 +1,9 @@
 package com.sooum.where_android.view.auth
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -11,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.toRoute
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.auth.signup.AgreementFragment
 import com.sooum.where_android.view.auth.signup.EmailVerificationFragment
@@ -18,6 +21,7 @@ import com.sooum.where_android.view.auth.signup.PasswordFragment
 import com.sooum.where_android.view.auth.signup.ProfileSettingFragment
 import com.sooum.where_android.view.auth.signup.SignUpCompleteFragment
 import com.sooum.where_android.view.auth.signup.SocialLoginProfileSettingFragment
+import com.sooum.where_android.view.hamburger.setting.WebViewContent
 
 fun NavGraphBuilder.registerAuthRoute(
     mainNavController: NavHostController,
@@ -108,6 +112,22 @@ fun NavGraphBuilder.registerAuthRoute(
                     signUpCompleteFragment.setNavigation(mainNavController)
                 }
             }
+            composable<ScreenRoute.AuthRoute.SingUpRoute.WebView> { backStackEntry ->
+                val webViewRoute: ScreenRoute.AuthRoute.SingUpRoute.WebView =
+                    backStackEntry.toRoute()
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White)
+                        .safeDrawingPadding()
+                ) {
+                    WebViewContent(
+                        url = webViewRoute.destUrl,
+                        onClick = mainNavController::backToAgree,
+                        onBack = mainNavController::backToAgree,
+                    )
+                }
+            }
         }
     }
 }
@@ -134,6 +154,15 @@ internal fun NavHostController.navigateSocialProfile(
 internal fun NavHostController.navigateSignUp() {
     navigate(ScreenRoute.AuthRoute.SingUpRoute) {
         launchSingleTop = true
+    }
+}
+
+internal fun NavHostController.backToAgree() {
+    navigate(ScreenRoute.AuthRoute.SingUpRoute.Agreement) {
+        launchSingleTop = true
+        popUpTo<ScreenRoute.AuthRoute.SingUpRoute.WebView> {
+            inclusive = true
+        }
     }
 }
 

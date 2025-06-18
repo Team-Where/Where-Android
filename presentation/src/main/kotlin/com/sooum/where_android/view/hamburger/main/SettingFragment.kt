@@ -35,13 +35,32 @@ class SettingFragment : HamburgerBaseFragment<FragmentSettingBinding>(
 
 
             logoutContentArea.setOnClickListener {
-                navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.LogOut) {
+                navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Logout) {
                     launchSingleTop = true
                 }
             }
 
             deleteAccountContentArea.setOnClickListener {
                 navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteAccount) {
+                    launchSingleTop = true
+                }
+            }
+            privatePolicyContentArea.setOnClickListener {
+                navHostController.navigate(
+                    ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.WebView(
+                        destUrl = "https://meteor-condor-9e6.notion.site/20f912bcf29c8020a3b6e3c468c30462"
+                    )
+                ) {
+                    launchSingleTop = true
+                }
+            }
+
+            serviceContentArea.setOnClickListener {
+                navHostController.navigate(
+                    ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.WebView(
+                        destUrl = "https://meteor-condor-9e6.notion.site/20f912bcf29c80e69e6ed03cc42776b5?pvs=74"
+                    )
+                ) {
                     launchSingleTop = true
                 }
             }
