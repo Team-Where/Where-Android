@@ -33,6 +33,9 @@ class AppManageDataStore @Inject constructor(
         private val KAKAO_REFRESH_TOKEN = stringPreferencesKey("kakao_refresh_token")
         private val NAVER_ACCESS_TOKEN = stringPreferencesKey("naver_access_token")
         private val NAVER_REFRESH_TOKEN = stringPreferencesKey("naver_refresh_token")
+
+        private val SAVED_FCM_TOKEN = stringPreferencesKey("saved_fcm_token")
+
         private val FIRST_LAUNCH = booleanPreferencesKey("first_launch")
     }
 
@@ -105,7 +108,6 @@ class AppManageDataStore @Inject constructor(
         }
     }
 
-
     /**
      * 첫 실행인지 확인 한다. 값이 없으면 true로 준다
      */
@@ -118,9 +120,23 @@ class AppManageDataStore @Inject constructor(
     /**
      * 첫 앱 실행이 끝난 경우 구분
      */
-    suspend fun setNotFirstLaunch(){
+    suspend fun setNotFirstLaunch() {
         appDataStore.edit { preferences ->
             preferences[FIRST_LAUNCH] = false
+        }
+    }
+
+    suspend fun setSavedFcmToken(
+        token: String
+    ) {
+        appDataStore.edit { preferences ->
+            preferences[SAVED_FCM_TOKEN] = token
+        }
+    }
+
+    fun getSavedFcmToken(): Flow<String?> {
+        return appDataStore.data.map { preferences ->
+            preferences[SAVED_FCM_TOKEN]
         }
     }
 }

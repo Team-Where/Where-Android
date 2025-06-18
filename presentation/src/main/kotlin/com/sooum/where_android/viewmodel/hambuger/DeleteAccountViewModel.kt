@@ -4,7 +4,7 @@ package com.sooum.where_android.viewmodel.hambuger
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.model.ActionResult
-import com.sooum.domain.repository.TokenProvider
+import com.sooum.domain.provider.TokenProvider
 import com.sooum.domain.usecase.user.DeleteAccountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
