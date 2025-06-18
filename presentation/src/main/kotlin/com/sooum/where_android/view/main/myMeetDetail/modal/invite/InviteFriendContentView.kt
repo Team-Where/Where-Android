@@ -34,7 +34,7 @@ import com.sooum.where_android.view.widget.UserViewType
 @Composable
 fun InviteFriendContentView(
     recentUserList: List<Friend>,
-    userList: List<Friend>,
+    friendList: List<Friend>,
     invitedFriedIdSet: Set<Int> = emptySet(),
     inviteFriend: (Friend) -> Unit,
     headerColor: Color = Color(0xff374151),
@@ -104,7 +104,8 @@ fun InviteFriendContentView(
                 UserItemView(
                     user = friend.toUser(),
                     type = UserViewType.Invite(
-                        finish = invitedFriedIdSet.contains(friend.id)
+                        finish = invitedFriedIdSet.contains(friend.id),
+                        meetCount = friend.meetList.size
                     ),
                     iconClickAction = {
                         inviteFriend(friend)
@@ -113,7 +114,7 @@ fun InviteFriendContentView(
             }
             item {
                 Text(
-                    text = "친구(${userList.size})",
+                    text = "친구(${friendList.size})",
                     modifier = Modifier.height(20.dp),
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = pretendard,
@@ -122,7 +123,7 @@ fun InviteFriendContentView(
                 )
             }
             items(
-                items = userList,
+                items = friendList,
                 key = {
                     "d" + it.id
                 }
@@ -130,7 +131,8 @@ fun InviteFriendContentView(
                 UserItemView(
                     user = friend.toUser(),
                     type = UserViewType.Invite(
-                        finish = invitedFriedIdSet.contains(friend.id)
+                        finish = invitedFriedIdSet.contains(friend.id),
+                        meetCount = friend.meetList.size
                     ),
                     iconClickAction = {
                         inviteFriend(friend)
@@ -149,7 +151,7 @@ private fun InviteFriendViewPreview() {
             listOf(
                 Friend(1, "냠냠")
             ),
-        userList = listOf(
+        friendList = listOf(
             Friend(2, "냠냠")
         ),
         inviteFriend = {}

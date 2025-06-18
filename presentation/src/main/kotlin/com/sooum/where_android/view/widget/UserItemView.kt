@@ -72,7 +72,8 @@ sealed class UserViewType {
      * 초대 관련
      */
     data class Invite(
-        val finish: Boolean = false
+        val finish: Boolean,
+        val meetCount: Int
     ) : UserViewType()
 
     /**
@@ -147,7 +148,7 @@ fun UserItemView(
                 )
                 if (type is UserViewType.Invite) {
                     Text(
-                        text = "N번 만남",
+                        text = String.format("%d번 만남", type.meetCount),
                         color = Color(0xff9ca3af),
                         fontWeight = FontWeight.Normal,
                         fontSize = 11.sp,
@@ -331,8 +332,8 @@ fun UserItemPreview() {
             UserViewType.Favorite(isFavorite = false),
             UserViewType.Delete,
             UserViewType.Option,
-            UserViewType.Invite(true),
-            UserViewType.Invite(false),
+            UserViewType.Invite(true, 0),
+            UserViewType.Invite(false, 0),
             UserViewType.Waiting
         ).forEach { type ->
             UserItemView(

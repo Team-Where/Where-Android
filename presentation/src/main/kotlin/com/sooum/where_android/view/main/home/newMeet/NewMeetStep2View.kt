@@ -100,7 +100,7 @@ fun NewMeetStep2View(
                 NewMeetHeader(type = NewMeetType.Friend)
                 InviteFriendContentView(
                     recentUserList = recentUserList,
-                    userList = userList,
+                    friendList = userList,
                     invitedFriedIdSet = invitedFriedIdSet,
                     inviteFriend = { user ->
                         scope.launch {
