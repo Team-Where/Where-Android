@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.hamburger.main.inquiry
 
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sooum.domain.model.InquiryResult
 import com.sooum.where_android.databinding.FragmentInquiryCompleteAnswerBinding
@@ -12,11 +13,16 @@ class InquiryCompleteAnswerFragment : HamburgerBaseFragment<FragmentInquiryCompl
     FragmentInquiryCompleteAnswerBinding ::inflate
 ) {
     override fun initView() = with(binding) {
-//        val dummyData = getDummyData().filter { it.answered }
+//        val dummyList = getDummyData().filter { it.answered }
 //
-//        val adapter = InquiryRecyclerView(dummyData)
+//        val adapter = InquiryRecyclerView(dummyList)
 //        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 //        recyclerView.adapter = adapter
+//
+//        val isEmpty = dummyList.isEmpty()
+//        iconWarning.visibility = if (isEmpty) View.VISIBLE else View.GONE
+//        textNoNotification.visibility = if (isEmpty) View.VISIBLE else View.GONE
+//        recyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
     }
 
 
