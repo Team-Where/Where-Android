@@ -10,8 +10,12 @@ import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import com.sooum.core.notification.NotificationUtil
 import com.sooum.core.notification.di.FCMTool
+import com.sooum.domain.usecase.user.UpdateFcmToken
 import com.sooum.where_android.view.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -20,6 +24,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     @Inject
     @FCMTool
     lateinit var fcmNotificationUtil: NotificationUtil
+
+    @Inject
+    lateinit var updateFcmToken: UpdateFcmToken
 
     // 메시지를 수신할 때 호출 된다.
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -57,7 +64,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        //TODO 신규 토큰 갱신시 로그인 되어있다면 서버로 갱신 요청
+        CoroutineScope(Dispatchers.IO).launch {
+            updateFcmToken(token)
+        }
     }
 
     /**
