@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.hamburger.setting
 
+import android.content.res.ColorStateList
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
@@ -27,13 +28,29 @@ class DeleteAccountFragment : HamburgerBaseFragment<FragmentDeleteAccountBinding
     FragmentDeleteAccountBinding::inflate
 ) {
     private lateinit var deleteAccountViewModel: DeleteAccountViewModel
+    private lateinit var colorStateList: ColorStateList
 
     override fun initView() {
+        colorStateList = ColorStateList(
+            arrayOf(
+                intArrayOf(-android.R.attr.state_checked),
+                intArrayOf(android.R.attr.state_checked)
+            ),
+            intArrayOf(
+                ContextCompat.getColor(requireContext(), R.color.main_color),
+                ContextCompat.getColor(requireContext(), R.color.white)
+            )
+        )
+
         highlightReasonKeyword()
         with(binding) {
             radioGroupReason.setOnCheckedChangeListener { radioGroup, index ->
                 completeBtn.isEnabled = radioGroup.checkedRadioButtonId != -1
             }
+            radio1.buttonTintList = colorStateList
+            radio2.buttonTintList = colorStateList
+            radio3.buttonTintList = colorStateList
+            radio4.buttonTintList = colorStateList
         }
     }
 

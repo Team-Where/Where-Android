@@ -63,14 +63,18 @@
         app:layout_constraintTop_toBottomOf="@id/textQuestion">
 
         <RadioButton
+            android:id="@+id/radio1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pretend_regular"
             android:text="사용을 잘 안해서"
+            android:checked="true"
             android:textColor="#1F2937"
+            android:theme="@style/MyRadioButton"
             android:textSize="16sp" />
 
         <RadioButton
+            android:id="@+id/radio2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pretend_regular"
@@ -79,6 +83,7 @@
             android:textSize="16sp" />
 
         <RadioButton
+            android:id="@+id/radio3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pretend_regular"
@@ -87,6 +92,7 @@
             android:textSize="16sp" />
 
         <RadioButton
+            android:id="@+id/radio4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pretend_regular"
