@@ -67,6 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pretend_regular"
+            android:padding="15dp"
             android:text="사용을 잘 안해서"
             android:checked="true"
             android:textColor="#1F2937"
@@ -80,6 +81,8 @@
             android:fontFamily="@font/pretend_regular"
             android:text="잦은 오류, 장애가 발생해서"
             android:textColor="#1F2937"
+            android:padding="15dp"
+            android:theme="@style/MyRadioButton"
             android:textSize="16sp" />
 
         <RadioButton
@@ -89,6 +92,8 @@
             android:fontFamily="@font/pretend_regular"
             android:text="이용 방법이 어려워서"
             android:textColor="#1F2937"
+            android:padding="15dp"
+            android:theme="@style/MyRadioButton"
             android:textSize="16sp" />
 
         <RadioButton
@@ -98,6 +103,8 @@
             android:fontFamily="@font/pretend_regular"
             android:text="기타"
             android:textColor="#1F2937"
+            android:padding="15dp"
+            android:theme="@style/MyRadioButton"
             android:textSize="16sp" />
     </RadioGroup>
 

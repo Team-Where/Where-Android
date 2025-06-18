@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.hamburger.main
 
+import android.view.View
 import androidx.navigation.NavHostController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sooum.domain.model.NotificationItem
@@ -12,9 +13,20 @@ class NotificationFragment : HamburgerBaseFragment<FragmentNotificationBinding>(
 ) {
     override fun initView() = with(binding) {
 
-//        val adapter = NotificationRecyclerView(dummyList)
-//        recyclerNotification.adapter = adapter
-//        recyclerNotification.layoutManager = LinearLayoutManager(requireContext())
+        val dummyList = listOf<NotificationItem>(
+//            NotificationItem(
+//                1, "", "adasd", "asdasd","asdsd","asdads"
+//            )
+        )
+
+        val adapter = NotificationRecyclerView(dummyList)
+        recyclerNotification.adapter = adapter
+        recyclerNotification.layoutManager = LinearLayoutManager(requireContext())
+
+        val isEmpty = dummyList.isEmpty()
+        iconWarning.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        textNoNotification.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        recyclerNotification.visibility = if (isEmpty) View.GONE else View.VISIBLE
     }
 
     override fun setNavigation(
