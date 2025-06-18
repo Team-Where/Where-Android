@@ -65,9 +65,11 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.Friend
 import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.toUser
+import com.sooum.domain.usecase.meet.invite.InviteFriendUseCase
 import com.sooum.domain.usecase.user.GetLoginUserUseCase
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray100
@@ -78,6 +80,8 @@ import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.util.KaKaoShareUtil
 import com.sooum.where_android.view.widget.CircleProfileView
+import com.sooum.where_android.view.widget.CustomSnackBar
+import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.view.widget.SearchField
 import com.sooum.where_android.view.widget.UserItemView
 import com.sooum.where_android.view.widget.UserViewType
@@ -100,14 +104,6 @@ fun InviteFriendView(
     inviteFriend: (Friend) -> Unit,
     onBack: () -> Unit
 ) {
-
-    //filter only not invited User
-    val friendList = friendList.filter {
-        !(
-                inviteFriendList.map { it.id }.contains(it.id) ||
-                        waitingFriendList.map { it.id }.contains(it.id)
-                )
-    }
     Scaffold(
         modifier = modifier,
         containerColor = Color.White
@@ -402,6 +398,9 @@ class InviteFriendFragment : Fragment() {
     @Inject
     lateinit var getLoginUserUseCase: GetLoginUserUseCase
 
+    @Inject
+    lateinit var inviteFriendUseCase: InviteFriendUseCase
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -439,13 +438,37 @@ class InviteFriendFragment : Fragment() {
                     waitingFriendList = waitingFriendList,
                     friendList = friendList,
                     recentUserList = emptyList(),
-                    inviteFriend = {
-                        //TODO Request Meet Invite!
-                        val temp = invitedFriedIdSet.toMutableSet()
-                        temp.add(it.id)
-                        invitedFriedIdSet = temp
+                    inviteFriend = { friend ->
+                        scope.launch {
+                            myMeetDetailViewModel.meetDetail.value?.let { meet ->
+                                val result = inviteFriendUseCase(
+                                    meetId = meet.id,
+                                    friendId = friend.id
+                                )
+                                when (result) {
+                                    is ActionResult.Success -> {
+                                        val temp = invitedFriedIdSet.toMutableSet()
+                                        temp.add(friend.id)
+                                        invitedFriedIdSet = temp
+                                        CustomSnackBar.make(
+                                            requireView(),
+                                            "초대되었습니다.",
+                                            IconType.Check
+                                        ).show()
+                                    }
+
+                                    is ActionResult.Fail -> {
+                                        CustomSnackBar.make(
+                                            requireView(),
+                                            result.msg,
+                                            IconType.Error
+                                        ).show()
+                                    }
+                                }
+                            }
+                        }
                     },
-                    invitedFriedIdSet = invitedFriedIdSet,
+                    invitedFriedIdSet = invitedFriedIdSet + waitingFriendList.map { it.id } + inviteFriendList.map { it.id },
                     inviteByKaKao = {
                         scope.launch {
                             myMeetDetailViewModel.meetDetail.value?.let { meet ->

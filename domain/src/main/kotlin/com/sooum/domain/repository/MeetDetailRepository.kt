@@ -120,6 +120,12 @@ interface MeetDetailRepository : ClearFlow {
         link: String
     ): ActionResult<MeetDetail>
 
+    suspend fun invite(
+        meetId: Int,
+        userId: Int,
+        friendId: Int
+    ): ActionResult<Unit>
+
     /**
      * 해당 화면 탈출시
      */

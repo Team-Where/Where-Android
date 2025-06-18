@@ -11,6 +11,7 @@ import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.model.Schedule
 import com.sooum.domain.repository.MeetDetailRepository
+import com.sooum.domain.usecase.friend.GetFriendByIdUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
@@ -31,7 +33,8 @@ typealias PlaceId = Int
 
 class MeetDetailRepositoryImpl @Inject constructor(
     private val meetRemoteDataSource: MeetRemoteDataSource,
-    private val alarmMaker: AlarmMaker
+    private val alarmMaker: AlarmMaker,
+    private val getFriendUseCase: GetFriendByIdUseCase
 ) : MeetDetailRepository {
 
     /**
@@ -429,6 +432,41 @@ class MeetDetailRepositoryImpl @Inject constructor(
                         tempList
                     }
                     emit(ActionResult.Success(meetDetail))
+                },
+                onFail = {
+                    emit(ActionResult.Fail(it))
+                }
+            )
+        }.first()
+    }
+
+    override suspend fun invite(meetId: Int, userId: Int, friendId: Int): ActionResult<Unit> {
+        return meetRemoteDataSource.inviteMeet(
+            meetId,
+            userId,
+            friendId
+        ).transform { result ->
+            result.covertApiResultToActionResultIfSuccessEmpty(
+                onSuccess = {
+                    val friend = getFriendUseCase(friendId).firstOrNull()
+                    if (friend == null) {
+                        emit(ActionResult.Fail("친구 정보를 가져 올 수 없습니다."))
+                    } else {
+                        _meetInviteStatus.update { list ->
+                            val temp = list.toMutableList()
+                            val data = MeetInviteStatus(
+                                fromId = userId,
+                                fromName = "",
+                                toId = friendId,
+                                toName = friend.name,
+                                status = false,
+                                toImage = friend.image
+                            )
+                            temp.add(data)
+                            temp
+                        }
+                        emit(ActionResult.Success(Unit))
+                    }
                 },
                 onFail = {
                     emit(ActionResult.Fail(it))

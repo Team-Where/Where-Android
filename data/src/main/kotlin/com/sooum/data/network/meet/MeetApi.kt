@@ -75,7 +75,7 @@ interface MeetApi {
     @POST("api/meeting/invite")
     suspend fun inviteMeet(
         @Body data: InviteMeetRequest
-    ): Response<Any>
+    ): Response<String>
 
     @POST("api/meeting/invite/ok")
     suspend fun inviteMeetOk(
