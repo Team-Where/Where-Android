@@ -8,13 +8,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,6 +36,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +53,8 @@ import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray100
 import com.sooum.where_android.theme.Gray600
 import com.sooum.where_android.theme.Gray800
+import com.sooum.where_android.theme.GrayScale600
+import com.sooum.where_android.theme.GrayScale700
 import com.sooum.where_android.theme.Primary600
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.widget.CircleProfileView
@@ -60,6 +67,7 @@ fun FriendMeetDetailView(
     onBack: () -> Unit
 ) {
     val friend by friendDetailViewModel.friend.collectAsState()
+    val myProfile by friendDetailViewModel.userProfile.collectAsState()
 
     BackHandler {
         onBack()
@@ -68,6 +76,7 @@ fun FriendMeetDetailView(
         onBack = onBack,
         navigationMeetDetail = navigationMeetDetail,
         friend = friend,
+        userProfile = myProfile
     )
 }
 
@@ -75,8 +84,12 @@ fun FriendMeetDetailView(
 private fun MeetDetailContent(
     onBack: () -> Unit,
     navigationMeetDetail: (Friend.FriendMeet) -> Unit,
-    friend: Friend?
+    friend: Friend?,
+    userProfile: String
 ) {
+    val configuration = LocalConfiguration.current
+
+    val screenHeight = configuration.screenHeightDp.dp
     if (friend != null) {
         Column {
             Box(
@@ -133,7 +146,7 @@ private fun MeetDetailContent(
                                     .offset(x = -xOffset)
                             ) {
                                 MeetDetailProfileImage(
-                                    profileUrl = "https://s3-alpha-sig.figma.com/img/9483/f88f/f5cb8c568739dce8dfccbd21052d5203?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=c2C9C3hRNYGTpTmc2607-BjDjlAsK5bACRu2X-UJ35KrgsJqjPTvJqFzbVYM-7FiNtlB7eO5d~yf3uM7VlXSQ1sxAN0rAIc8SB2wuYh48Z3s7SIdr8WtuRH0MGB7IjrPDLWS-UnBRyQ7joM~qzCev43D~iS1dHpA~vZn7jPe9kIYFaAs4v7EKSDUX3zo9ZaaRJxnLjd8GQ1B7dnAJOUVPF~TYjA1cpGIPfhcBwp5WM~uq5uC43ZtDcLE-baAU6k5VXjxlSRn9-av7GC8iP-yDcf94x5aLHOAjhtRcUCJZ9I5hsgt2VjLMxv4-m7dkK1hix63uAEuVo9awUC0RykU8g__",
+                                    profileUrl = userProfile,
                                     useBorder = false,
                                     name = "나"
                                 )
@@ -180,11 +193,53 @@ private fun MeetDetailContent(
                             .background(Gray100)
                     )
                 }
-
-                this.initGroupItem(
-                    meetDetailGroupList = friend.meetList.groupBy { it.date.year },
-                    navigationMeetDetail = navigationMeetDetail
-                )
+                if (friend.meetList.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .height(
+                                    with(LocalDensity.current) {
+                                        screenHeight -
+                                                300.dp - // 프로필 영역
+                                                8.dp - //SpacerBar
+                                                75.dp - // bottom
+                                                64.dp - //현재 헤더 영역
+                                                WindowInsets.statusBars.getTop(this)
+                                                    .toDp() -  // 상태바
+                                                WindowInsets.navigationBars.getBottom(this)
+                                                    .toDp() // 네비바
+                                    }
+                                )
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.Center),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.icon_info),
+                                    contentDescription = null,
+                                    tint = GrayScale600
+                                )
+                                Text(
+                                    text = "아직 함께하는 모임이 없어요!",
+                                    fontFamily = pretendard,
+                                    color = GrayScale700,
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 16.sp
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    this.initGroupItem(
+                        meetDetailGroupList = friend.meetList.groupBy { it.date.year },
+                        navigationMeetDetail = navigationMeetDetail
+                    )
+                }
             }
 
         }
@@ -383,6 +438,7 @@ private fun MeetDetailContentPreview() {
                 onBack = {},
                 navigationMeetDetail = {},
                 friend = Friend(0, "우리동네 먹짱방방"),
+                userProfile = ""
             )
         }
     }
@@ -393,93 +449,99 @@ internal class GroupDataParameterProvider() :
     PreviewParameterProvider<Map<Int, List<Friend.FriendMeet>>> {
     override val values: Sequence<Map<Int, List<Friend.FriendMeet>>>
         get() = sequenceOf(
-//            mapOf(
-//                2025 to listOf(
-//                    Friend.FriendMeet(
-//                        3,
-//                        null,
-//                        "행궁동 갈 사람\uD83C\uDF42",
-//                        "선선해진 날씨에 같이 사람~!",
-//                        Friend.Date("2025-01-27")
-//                    ),
-//                    Friend.FriendMeet(
-//                        1,
-//                        null,
-//                        "2024 연말파티\uD83E\uDD42",
-//                        "벌써 연말이다 신나게 놀아보장~~",
-//                        Friend.Date("2025-01-26")
-//                    ),
-//                    Friend.FriendMeet(
-//                        4,
-//                        null,
-//                        "2024 연말파티\uD83E\uDD42",
-//                        "벌써 연말이다 신나게 놀아보장~~",
-//                        Friend.Date("2025-01-25")
-//                    )
-//                )
-//            ),
-//            mapOf(
-//                2025 to listOf(
-//                    MeetDetail(
-//                        3,
-//                        "행궁동 갈 사람\uD83C\uDF42",
-//                        "선선해진 날씨에 같이 사람~!",
-//                        Schedule(3, "2025-1-27", "14:00")
-//
-//                    ),
-//                    MeetDetail(
-//                        1,
-//                        "2024 연말파티\uD83E\uDD42",
-//                        "벌써 연말이다 신나게 놀아보장~~",
-//                        Schedule(1, "2025-1-26", "14:00")
-//                    ),
-//                    MeetDetail(
-//                        4,
-//                        "2024 연말파티\uD83E\uDD42",
-//                        "벌써 연말이다 신나게 놀아보장~~",
-//                        Schedule(4, "2025-1-25", "14:00")
-//
-//                    )
-//                ),
-//                2024 to listOf(
-//                    MeetDetail(
-//                        2,
-//                        "2024 연말파티\uD83E\uDD42",
-//                        "벌써 연말이다 신나게 놀아보장~~",
-//                        Schedule(2, "2024-12-25", "14:00")
-//                    ),
-//                )
-//            ),
-//            mapOf(
-//                2025 to listOf(
-//                    MeetDetail(
-//                        6,
-//                        "행궁동 갈 사람\uD83C\uDF42",
-//                        "선선해진 날씨에 같이 사람~!",
-//                        Schedule(6, "2025-2-2", "14:00")
-//                    ),
-//                    MeetDetail(
-//                        7,
-//                        "행궁동 갈 사람\uD83C\uDF42",
-//                        "선선해진 날씨에 같이 사람~!",
-//                        Schedule(7, "2025-2-1", "14:00")
-//                    ),
-//                    MeetDetail(
-//                        3,
-//                        "행궁동 갈 사람\uD83C\uDF42",
-//                        "선선해진 날씨에 같이 사람~!",
-//                        Schedule(3, "2025-1-27", "14:00")
-//                    )
-//                ),
-//                2024 to listOf(
-//                    MeetDetail(
-//                        2,
-//                        "2024 연말파티\uD83E\uDD42",
-//                        "벌써 연말이다 신나게 놀아보장~~",
-//                        Schedule(2, "2024-12-25", "14:00")
-//                    ),
-//                )
-//            )
+            mapOf(
+                2025 to listOf(
+                    Friend.FriendMeet(
+                        3,
+                        null,
+                        "행궁동 갈 사람\uD83C\uDF42",
+                        "선선해진 날씨에 같이 사람~!",
+                        Friend.Date("2025-01-27")
+                    ),
+                    Friend.FriendMeet(
+                        1,
+                        null,
+                        "2024 연말파티\uD83E\uDD42",
+                        "벌써 연말이다 신나게 놀아보장~~",
+                        Friend.Date("2025-01-26")
+                    ),
+                    Friend.FriendMeet(
+                        4,
+                        null,
+                        "2024 연말파티\uD83E\uDD42",
+                        "벌써 연말이다 신나게 놀아보장~~",
+                        Friend.Date("2025-01-25")
+                    )
+                )
+            ),
+            mapOf(
+                2025 to listOf(
+                    Friend.FriendMeet(
+                        3,
+                        null,
+                        "행궁동 갈 사람\uD83C\uDF42",
+                        "선선해진 날씨에 같이 사람~!",
+                        Friend.Date("2025-01-27")
+                    ),
+                    Friend.FriendMeet(
+                        1,
+                        null,
+                        "2024 연말파티\uD83E\uDD42",
+                        "벌써 연말이다 신나게 놀아보장~~",
+                        Friend.Date("2025-01-26")
+                    ),
+                    Friend.FriendMeet(
+                        4,
+                        null,
+                        "2024 연말파티\uD83E\uDD42",
+                        "벌써 연말이다 신나게 놀아보장~~",
+                        Friend.Date("2025-01-25")
+                    )
+                ),
+                2024 to listOf(
+                    Friend.FriendMeet(
+                        2,
+                        null,
+                        "2024 연말파티\uD83E\uDD42",
+                        "벌써 연말이다 신나게 놀아보장~~",
+                        Friend.Date("2024-12-25")
+                    ),
+                )
+            ),
+            mapOf(
+                2025 to listOf(
+                    Friend.FriendMeet(
+                        6,
+                        null,
+                        "행궁동 갈 사람\uD83C\uDF42",
+                        "선선해진 날씨에 같이 사람~!",
+                        Friend.Date("2025-02-02")
+                    ),
+                    Friend.FriendMeet(
+                        7,
+                        null,
+                        "행궁동 갈 사람\uD83C\uDF42",
+                        "선선해진 날씨에 같이 사람~!",
+                        Friend.Date("2025-02-01")
+                    ),
+                    Friend.FriendMeet(
+                        3,
+                        null,
+                        "행궁동 갈 사람\uD83C\uDF42",
+                        "선선해진 날씨에 같이 사람~!",
+                        Friend.Date("2025-01-27")
+                    )
+                ),
+                2024 to listOf(
+                    Friend.FriendMeet(
+                        2,
+                        null,
+                        "2024 연말파티\uD83E\uDD42",
+                        "벌써 연말이다 신나게 놀아보장~~",
+                        Friend.Date("2024-12-25")
+                    ),
+                )
+            )
         )
 }
 
@@ -494,7 +556,10 @@ fun GroupDataListViewPreview(
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            initGroupItem(data, {})
+            initGroupItem(
+                meetDetailGroupList = data,
+                navigationMeetDetail = {}
+            )
         }
     }
 }
