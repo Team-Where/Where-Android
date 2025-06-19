@@ -50,10 +50,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/content_area"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/finish_Container">
@@ -409,10 +408,10 @@
             android:layout_height="0dp"
             android:background="#80ffffff"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/finish_Container"
+            app:layout_constraintBottom_toBottomOf="@id/content_area"
+            app:layout_constraintLeft_toLeftOf="@id/content_area"
+            app:layout_constraintRight_toRightOf="@id/content_area"
+            app:layout_constraintTop_toTopOf="@id/content_area"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
