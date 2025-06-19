@@ -19,10 +19,12 @@ import com.sooum.domain.usecase.meet.invite.GetMeetInviteStatusUseCase
 import com.sooum.domain.usecase.meet.schedule.AddMeetScheduleUseCase
 import com.sooum.domain.usecase.meet.schedule.UpdateMeetScheduleUseCase
 import com.sooum.domain.usecase.user.GetLoginUserIdUseCase
+import com.sooum.domain.usecase.user.GetLoginUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
@@ -31,6 +33,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MyMeetDetailViewModel @Inject constructor(
     private val getLoginUserIdUseCase: GetLoginUserIdUseCase,
+    private val getLoginUserUseCase: GetLoginUserUseCase,
     private val getMeetDetailByIdUseCase: GetMeetDetailByIdUseCase,
     getMeetInviteStatusUseCase: GetMeetInviteStatusUseCase,
     private val addMeetScheduleUseCase: AddMeetScheduleUseCase,
@@ -60,9 +63,9 @@ class MyMeetDetailViewModel @Inject constructor(
     val invitedFriendList = inviteStatus.transform { list ->
         val convertList = mutableListOf<InvitedFriend>()
         val myData = InvitedFriend(
-            getLoginUserIdUseCase()!!,
-            "나",
-            null, //TODO 내 프로필 가져오기
+            id = getLoginUserIdUseCase()!!,
+            name = "나",
+            image = getLoginUserUseCase().first().imageSrc,
             isMe = true
         )
         convertList.add(myData)
@@ -234,6 +237,7 @@ class MyMeetDetailViewModel @Inject constructor(
             )
         }
     }
+
     fun updateImage(
         image: ImageAddType,
         onSuccess: () -> Unit,

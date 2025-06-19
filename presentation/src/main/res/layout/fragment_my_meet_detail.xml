@@ -36,8 +36,8 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_marginStart="6dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
                     android:fontFamily="@font/pretend_semibold"
                     android:text="모임이 종료되었어요"
                     android:textColor="@color/main_color"
@@ -50,10 +50,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/content_area"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/finish_Container">
@@ -338,14 +337,6 @@
                         app:layout_constraintTop_toBottomOf="@id/divider3"
                         tools:layout_editor_absoluteX="16dp" />
 
-                    <View
-                        android:id="@+id/finish_opacity"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:background="#80ffffff"
-                        android:visibility="gone"
-                        tools:visibility="visible"
-                        tools:ignore="MissingConstraints" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
@@ -410,6 +401,18 @@
                 app:layout_constraintTop_toBottomOf="@id/waiting_friend_cardview" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/finish_opacity"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#80ffffff"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/content_area"
+            app:layout_constraintLeft_toLeftOf="@id/content_area"
+            app:layout_constraintRight_toRightOf="@id/content_area"
+            app:layout_constraintTop_toTopOf="@id/content_area"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

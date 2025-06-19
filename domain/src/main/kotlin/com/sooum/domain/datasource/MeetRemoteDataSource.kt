@@ -86,7 +86,7 @@ interface MeetRemoteDataSource {
         meetId: Int,
         fromUserId: Int,
         toUserId: Int
-    ): Flow<ApiResult<Any>>
+    ): Flow<ApiResult<String>>
 
     /**
      * [link]에 해당하는 모임정보를 가져온다.

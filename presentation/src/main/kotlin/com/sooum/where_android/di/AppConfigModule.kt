@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.sooum.core.notification.AlarmOption
 import com.sooum.core.notification.NotificationConfig
+import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.where_android.R
 import com.sooum.where_android.view.main.MainActivity
 import dagger.Module
@@ -11,6 +12,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.first
 import javax.inject.Singleton
 
 
@@ -30,7 +32,8 @@ object AppConfigModule {
     @Provides
     @Singleton
     fun provideAlarmOption(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
+        appManageDataStore: AppManageDataStore
     ): AlarmOption {
         return object : AlarmOption {
             override fun makeIntent(): Intent {
@@ -38,6 +41,10 @@ object AppConfigModule {
 
                 }
                 return intent
+            }
+
+            override suspend fun notificationAllowed(): Boolean {
+                return appManageDataStore.getNotificationAllowed().first()
             }
         }
     }

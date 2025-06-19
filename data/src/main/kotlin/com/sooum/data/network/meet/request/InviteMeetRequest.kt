@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class InviteMeetRequest(
-    @SerialName("id")
+    @SerialName("meetingId")
     val meetId: Int,
     @SerialName("fromId")
     val fromId: Int,

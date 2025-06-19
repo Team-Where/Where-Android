@@ -5,10 +5,11 @@ import com.sooum.domain.model.MeetDetail
 import com.sooum.domain.model.MeetInviteStatus
 import com.sooum.domain.model.NewMeetResult
 import com.sooum.domain.model.Schedule
+import com.sooum.domain.repository.tool.ClearFlow
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
-interface MeetDetailRepository {
+interface MeetDetailRepository : ClearFlow {
 
     suspend fun loadMeetDetailList(userId: Int)
 
@@ -118,6 +119,12 @@ interface MeetDetailRepository {
         userId: Int,
         link: String
     ): ActionResult<MeetDetail>
+
+    suspend fun invite(
+        meetId: Int,
+        userId: Int,
+        friendId: Int
+    ): ActionResult<Unit>
 
     /**
      * 해당 화면 탈출시

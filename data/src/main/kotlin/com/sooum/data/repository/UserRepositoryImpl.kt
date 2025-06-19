@@ -22,6 +22,12 @@ class UserRepositoryImpl @Inject constructor(
     private val myPage
         get() = _myPage.asStateFlow()
 
+    override suspend fun clearWhenLogout() {
+        _myPage.update {
+            MyPageInfo()
+        }
+    }
+
     override fun getMyPage(): Flow<MyPageInfo> = myPage
 
     override suspend fun loadMyPage(userId: Int) {
@@ -92,6 +98,16 @@ class UserRepositoryImpl @Inject constructor(
                 MyPageInfo()
             }
         }
+        return result.covertApiResultToActionResultIfSuccessEmpty()
+    }
+
+    override suspend fun registerToken(userId: Int, fcmToken: String): ActionResult<*> {
+        val result = userRemoteDataSource.registerToken(userId, fcmToken)
+        return result.covertApiResultToActionResultIfSuccessEmpty()
+    }
+
+    override suspend fun unRegisterToken(userId: Int): ActionResult<*> {
+        val result = userRemoteDataSource.unRegisterToken(userId)
         return result.covertApiResultToActionResultIfSuccessEmpty()
     }
 }

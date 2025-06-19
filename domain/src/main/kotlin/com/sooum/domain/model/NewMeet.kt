@@ -11,7 +11,7 @@ data class NewMeet(
     val title: String,
     val description: String,
     val image: ImageAddType? = null,
-    val participants: List<Int> = emptyList()
+    val participants: Set<Int> = emptySet()
 )
 
 /**

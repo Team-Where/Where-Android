@@ -137,11 +137,11 @@ class MeetRemoteDataSourceImpl @Inject constructor(
         meetId: Int,
         fromUserId: Int,
         toUserId: Int
-    ): Flow<ApiResult<Any>> {
+    ): Flow<ApiResult<String>> {
         val request = InviteMeetRequest(
-            meetId,
-            fromUserId,
-            toUserId
+            meetId = meetId,
+            fromId = fromUserId,
+            toId = toUserId
         )
         return safeFlow { meetApi.inviteMeet(request) }
     }

@@ -1,6 +1,6 @@
 package com.sooum.domain.usecase.user
 
-import com.sooum.domain.repository.TokenProvider
+import com.sooum.domain.provider.TokenProvider
 import javax.inject.Inject
 
 /**

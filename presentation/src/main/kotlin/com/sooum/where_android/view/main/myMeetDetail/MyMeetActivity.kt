@@ -81,9 +81,7 @@ class MyMeetActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.d("JWH", intent.toString())
-        intent?.parseMapShareResult()?.let { shareResult ->
-            shareResult.doAddPlace()
-        }
+        intent?.parseMapShareResult()?.doAddPlace()
     }
 
     private fun ShareResult.doAddPlace() {

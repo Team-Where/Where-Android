@@ -2,7 +2,7 @@ package com.sooum.domain.usecase.user
 
 import android.util.Base64
 import com.sooum.domain.model.TokenStatus
-import com.sooum.domain.repository.TokenProvider
+import com.sooum.domain.provider.TokenProvider
 import org.json.JSONObject
 import java.nio.charset.Charset
 import javax.inject.Inject

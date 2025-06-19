@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sooum.domain.model.Filter
 import com.sooum.domain.model.MeetDetail
-import com.sooum.where_android.viewmodel.MyMeetViewModel
+import com.sooum.where_android.viewmodel.main.MyMeetViewModel
 
 @Composable
 fun MyMeetView(

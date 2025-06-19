@@ -1,4 +1,4 @@
-package com.sooum.where_android.viewmodel
+package com.sooum.where_android.viewmodel.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

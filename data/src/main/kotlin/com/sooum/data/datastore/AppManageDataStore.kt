@@ -33,6 +33,11 @@ class AppManageDataStore @Inject constructor(
         private val KAKAO_REFRESH_TOKEN = stringPreferencesKey("kakao_refresh_token")
         private val NAVER_ACCESS_TOKEN = stringPreferencesKey("naver_access_token")
         private val NAVER_REFRESH_TOKEN = stringPreferencesKey("naver_refresh_token")
+
+        private val SAVED_FCM_TOKEN = stringPreferencesKey("saved_fcm_token")
+
+        private val NOTIFICATION_ALLOWED = booleanPreferencesKey("notification_allowed")
+
         private val FIRST_LAUNCH = booleanPreferencesKey("first_launch")
     }
 
@@ -47,6 +52,7 @@ class AppManageDataStore @Inject constructor(
             preferences.remove(ACCESS_TOKEN)
             preferences.remove(REFRESH_TOKEN)
             preferences.remove(USER_ID)
+            preferences.remove(SAVED_FCM_TOKEN)
         }
     }
 
@@ -105,7 +111,6 @@ class AppManageDataStore @Inject constructor(
         }
     }
 
-
     /**
      * 첫 실행인지 확인 한다. 값이 없으면 true로 준다
      */
@@ -118,9 +123,41 @@ class AppManageDataStore @Inject constructor(
     /**
      * 첫 앱 실행이 끝난 경우 구분
      */
-    suspend fun setNotFirstLaunch(){
+    suspend fun setNotFirstLaunch() {
         appDataStore.edit { preferences ->
             preferences[FIRST_LAUNCH] = false
+        }
+    }
+
+    suspend fun setSavedFcmToken(
+        token: String?
+    ) {
+        appDataStore.edit { preferences ->
+            if (token == null) {
+                preferences.remove(SAVED_FCM_TOKEN)
+            } else {
+                preferences[SAVED_FCM_TOKEN] = token
+            }
+        }
+    }
+
+    fun getSavedFcmToken(): Flow<String?> {
+        return appDataStore.data.map { preferences ->
+            preferences[SAVED_FCM_TOKEN]
+        }
+    }
+
+    suspend fun setNotificationAllowed(
+        allowed: Boolean
+    ) {
+        appDataStore.edit { preferences ->
+            preferences[NOTIFICATION_ALLOWED] = allowed
+        }
+    }
+
+    fun getNotificationAllowed(): Flow<Boolean> {
+        return appDataStore.data.map { preferences ->
+            preferences[NOTIFICATION_ALLOWED] ?: true //따로 설정하지 않은 경우 허용 처리로 본다.
         }
     }
 }

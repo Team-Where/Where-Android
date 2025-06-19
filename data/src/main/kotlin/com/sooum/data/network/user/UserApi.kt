@@ -1,6 +1,7 @@
 package com.sooum.data.network.user
 
 import com.sooum.data.network.user.request.EditNicknameRequest
+import com.sooum.data.network.user.request.FcmRegisterRequest
 import com.sooum.data.network.user.response.AddProfileResponse
 import com.sooum.data.network.user.response.EditProfileResponse
 import com.sooum.data.network.user.response.MyPageResponse
@@ -52,5 +53,11 @@ interface UserApi {
     @DELETE("api/user/{userId}")
     suspend fun deleteAccount(
         @Path("userId") userId: Int,
+    ): Response<String>
+
+    @POST("api/user/{userId}/fcm-token")
+    suspend fun registerToken(
+        @Path("userId") userId: Int,
+        @Body data: FcmRegisterRequest
     ): Response<String>
 }

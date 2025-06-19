@@ -6,7 +6,6 @@ import com.sooum.data.repository.MeetDetailCommentRepositoryImpl
 import com.sooum.data.repository.MeetDetailPlaceRepositoryImpl
 import com.sooum.data.repository.MeetDetailRepositoryImpl
 import com.sooum.data.repository.SocialLoginRepositoryImpl
-import com.sooum.data.repository.TokenProviderImpl
 import com.sooum.data.repository.UserRepositoryImpl
 import com.sooum.domain.repository.AuthRepository
 import com.sooum.domain.repository.FriendRepository
@@ -14,7 +13,6 @@ import com.sooum.domain.repository.MeetDetailCommentRepository
 import com.sooum.domain.repository.MeetDetailPlaceRepository
 import com.sooum.domain.repository.MeetDetailRepository
 import com.sooum.domain.repository.SocialLoginRepository
-import com.sooum.domain.repository.TokenProvider
 import com.sooum.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -69,9 +67,4 @@ abstract class RepositoryModule {
         impl: SocialLoginRepositoryImpl
     ): SocialLoginRepository
 
-    @Binds
-    @Singleton
-    abstract fun bindTokenProvider(
-        impl: TokenProviderImpl
-    ): TokenProvider
 }

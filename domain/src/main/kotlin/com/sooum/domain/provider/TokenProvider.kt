@@ -1,4 +1,4 @@
-package com.sooum.domain.repository
+package com.sooum.domain.provider
 
 interface TokenProvider {
     fun getAccessToken(): String?

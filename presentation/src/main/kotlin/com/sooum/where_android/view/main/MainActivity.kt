@@ -2,6 +2,7 @@ package com.sooum.where_android.view.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -73,17 +74,22 @@ class MainActivity : AppCompatActivity() {
                 LoadingScreenProvider(scope)
             }
             DisposableEffect(this@MainActivity, mainNavController) {
-                val onNewIntentConsumer = Consumer<Intent> {
+                val onNewIntentConsumer = Consumer<Intent> { intent ->
+                    if (intent.action == "android.intent.action.MAIN" && intent.hasCategory("android.intent.category.LAUNCHER")) {
+                        //By pass If Launch
+                        return@Consumer
+                    }
+                    Log.d("JWH", intent.toString())
                     if (mainNavController.currentDestination?.hasRoute<ScreenRoute.HomeRoute.Main>() == true) {
-                        it.checkAppScheme()?.let { inviteRoute ->
+                        intent.checkAppScheme()?.let { inviteRoute ->
                             mainNavController.navigate(inviteRoute) {
                                 launchSingleTop = true
                             }
                         }
-                        it.checkAlarmScheme()?.let { id ->
+                        intent.checkAlarmScheme()?.let { id ->
                             mainNavController.navigationMeetDetailId(id)
                         }
-                        it.parseMapShareResult()?.let { shareResult ->
+                        intent.parseMapShareResult()?.let { shareResult ->
                             mainNavController.navigate(
                                 ScreenRoute.HomeRoute.MapShareResult(
                                     shareResult

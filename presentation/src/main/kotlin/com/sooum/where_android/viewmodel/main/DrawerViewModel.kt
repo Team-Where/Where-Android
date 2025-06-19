@@ -1,4 +1,4 @@
-package com.sooum.where_android.viewmodel
+package com.sooum.where_android.viewmodel.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import javax.inject.Inject
 
+/**
+ * [com.sooum.where_android.view.main.DrawerContent] 에서 사용되는 viewmodel
+ */
 @HiltViewModel
 class DrawerViewModel @Inject constructor(
     getLoginUserUseCase: GetLoginUserUseCase,
@@ -31,5 +34,4 @@ class DrawerViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000L),
         initialValue = 0
     )
-
 }

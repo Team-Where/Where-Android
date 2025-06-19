@@ -5,12 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.usecase.friend.LoadFriedListUseCase
+import com.sooum.domain.usecase.LoadDataWhenLoginUseCase
 import com.sooum.domain.usecase.kakao.KakaoSignUpUseCase
 import com.sooum.domain.usecase.kakao.NaverSignUpUseCase
 import com.sooum.domain.usecase.kakao.NickNameUpdateUseCase
 import com.sooum.domain.usecase.kakao.ProfileUpdateUseCase
-import com.sooum.domain.usecase.meet.detail.LoadMeetDetailListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.combine
@@ -25,8 +24,7 @@ class SocialLoginViewmodel @Inject constructor(
     private val nickNameUpdateUseCase: NickNameUpdateUseCase,
     private val profileUpdateUseCase: ProfileUpdateUseCase,
     private val appManageDataStore: AppManageDataStore,
-    private val loadMeetDetailListUseCase: LoadMeetDetailListUseCase,
-    private val loadFriedListUseCase: LoadFriedListUseCase,
+    private val loadDataWhenLoginUserCase: LoadDataWhenLoginUseCase
 ) : ViewModel() {
 
     /**
@@ -51,8 +49,7 @@ class SocialLoginViewmodel @Inject constructor(
                         is ApiResult.Success -> {
                             val id = result.data.userId
                             async {
-                                loadFriedListUseCase(id)
-                                loadMeetDetailListUseCase(id)
+                                loadDataWhenLoginUserCase(id)
                             }
                             onSuccess(result.data.signUp, id)
                         }
@@ -82,7 +79,7 @@ class SocialLoginViewmodel @Inject constructor(
         viewModelScope.launch {
             launch {
                 appManageDataStore.saveNaverAccessToken(accessToken)
-                appManageDataStore.saveKakaoRefreshToken(refreshToken)
+                appManageDataStore.saveNaverRefreshToken(refreshToken)
             }
             launch {
                 naverSignUpUseCase(
@@ -92,8 +89,7 @@ class SocialLoginViewmodel @Inject constructor(
                         is ApiResult.Success -> {
                             val id = result.data.userId
                             async {
-                                loadFriedListUseCase(id)
-                                loadMeetDetailListUseCase(id)
+                                loadDataWhenLoginUserCase(id)
                             }
                             onSuccess(result.data.signUp, id)
                         }

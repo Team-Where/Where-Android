@@ -16,6 +16,7 @@ import com.sooum.where_android.R
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.showSimpleToast
 import com.sooum.where_android.theme.Primary600
+import com.sooum.where_android.view.main.LocalActivity
 import com.sooum.where_android.viewmodel.SplashViewModel
 
 @Composable
@@ -25,6 +26,7 @@ internal fun SplashView(
     nextScreen: (ScreenRoute) -> Unit,
 ) {
     val context = LocalContext.current
+    val activity = LocalActivity.current
     LaunchedEffect(true) {
         splashViewModel.checkSplash(
             needUpdate = {
@@ -35,6 +37,7 @@ internal fun SplashView(
             },
             onVersionCheckFailed = {
                 context.showSimpleToast("업데이트 정보를 가져올 수 없습니다.\n앱을 종료합니다.")
+                activity.finish()
 //                showAlert(ScreenRoute.SplashRoute.ErrorAlert)
             }
 

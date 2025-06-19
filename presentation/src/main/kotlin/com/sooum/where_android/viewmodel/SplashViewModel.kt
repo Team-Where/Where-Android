@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.domain.model.ApiResult
 import com.sooum.domain.model.TokenStatus
-import com.sooum.domain.usecase.LoadDataWhenLoginUserCase
+import com.sooum.domain.usecase.LoadDataWhenLoginUseCase
 import com.sooum.domain.usecase.auth.VersionCheckUseCase
 import com.sooum.domain.usecase.user.CheckUserTokenExpiredUseCase
 import com.sooum.domain.util.AppVersionProvider
@@ -25,7 +25,7 @@ class SplashViewModel @Inject constructor(
     private val versionCheckUseCase: VersionCheckUseCase,
     private val appVersionProvider: AppVersionProvider,
     private val checkUserTokenExpiredUseCase: CheckUserTokenExpiredUseCase,
-    private val loadDataWhenLoginUserCase: LoadDataWhenLoginUserCase,
+    private val loadDataWhenLoginUserCase: LoadDataWhenLoginUseCase,
 ) : ViewModel() {
 
     fun checkSplash(
@@ -46,11 +46,7 @@ class SplashViewModel @Inject constructor(
 
                 when (val versionResult = versionCheckUseCase(version).firstOrNull()) {
                     is ApiResult.Success -> versionResult.data
-                    is ApiResult.Fail -> {
-                        onVersionCheckFailed()
-                        false
-                    }
-                    else -> false
+                    else -> null
                 }
             }
             val isFirstLaunch = async {
@@ -59,6 +55,10 @@ class SplashViewModel @Inject constructor(
             }
             joinAll(timeJob, checkLogin, checkAppUpdate, isFirstLaunch)
             val isNewVersion = checkAppUpdate.await()
+            if (isNewVersion == null) {
+                onVersionCheckFailed()
+                return@launch
+            }
             if (!isNewVersion) {
                 needUpdate()
             } else {

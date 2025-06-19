@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
+import androidx.navigation.toRoute
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.hamburger.main.EditProfileView
 import com.sooum.where_android.view.hamburger.main.FaqFragment
@@ -28,6 +29,7 @@ import com.sooum.where_android.view.hamburger.main.dialog.LogOutView
 import com.sooum.where_android.view.hamburger.setting.DeleteAccountCompleteView
 import com.sooum.where_android.view.hamburger.setting.DeleteAccountView
 import com.sooum.where_android.view.hamburger.setting.EditPasswordFragment
+import com.sooum.where_android.view.hamburger.setting.WebViewContent
 
 /**
  * drawerRoute에서 Home으로 가는 확장
@@ -188,19 +190,17 @@ private fun NavGraphBuilder.installSettingRoute(
                 )
             }
         }
-        dialog<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.LogOut> {
+        dialog<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Logout> {
             LogOutView(
                 dismiss = {
                     mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
                         launchSingleTop = true
-                        popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.LogOut) {
+                        popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Logout) {
                             inclusive = true
                         }
                     }
                 },
-                logOut = {
-                    //TODO Logout
-                    //Delete All User Session
+                logoutAction = {
                     mainNavController.goToAuthScreen()
                 }
             )
@@ -233,13 +233,33 @@ private fun NavGraphBuilder.installSettingRoute(
                 )
             }
         }
-
         composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.DeleteComplete> {
             Box(
                 modifier = parentModifier
             ) {
                 DeleteAccountCompleteView(
                     controller = mainNavController
+                )
+            }
+        }
+        composable<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.WebView> { backStackEntry ->
+            val webViewRoute: ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.WebView =
+                backStackEntry.toRoute()
+            Box(
+                modifier = parentModifier
+            ) {
+                val backToSetting = {
+                    mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.Setting) {
+                        launchSingleTop = true
+                        popUpTo<ScreenRoute.HomeRoute.HamburgerRoute.SettingRoute.WebView> {
+                            inclusive = true
+                        }
+                    }
+                }
+                WebViewContent(
+                    url = webViewRoute.destUrl,
+                    onClick = backToSetting,
+                    onBack = backToSetting
                 )
             }
         }

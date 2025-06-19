@@ -1,7 +1,7 @@
 package com.sooum.data.di
 
 import com.sooum.data.network.auth.AuthApi
-import com.sooum.domain.repository.TokenProvider
+import com.sooum.domain.provider.TokenProvider
 import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator

@@ -108,7 +108,8 @@ fun NewMeetModal(
                         sheetState.hide()
                         onDismiss()
                     }
-                }
+                },
+                invitedFriedIdSet = newMeetViewModel.newMeetData.participants
             )
             if (showLoading) {
                 LoadingView(
@@ -137,7 +138,8 @@ private fun NewMeetContent(
     type: ImageAddType?,
     updateImageType: (ImageAddType) -> Unit,
     inviteFriend: (Friend) -> Unit,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    invitedFriedIdSet: Set<Int> = emptySet()
 ) {
 
     when (viewType) {
@@ -158,10 +160,10 @@ private fun NewMeetContent(
         is NewMeetType.Friend -> {
             NewMeetStep2View(
                 modifier = modifier,
-                userList = friendList,
-                recentUserList = friendList,
+                friendList = friendList,
                 nextViewType = goStepResult,
                 inviteFriend = inviteFriend,
+                invitedFriedIdSet = invitedFriedIdSet,
                 onClose = onClose
             )
         }

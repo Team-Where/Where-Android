@@ -1,7 +1,6 @@
 package com.sooum.where_android.view.main.myMeetDetail.modal.invite
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,9 +65,11 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import com.sooum.domain.model.ActionResult
 import com.sooum.domain.model.Friend
 import com.sooum.domain.model.InvitedFriend
 import com.sooum.domain.model.toUser
+import com.sooum.domain.usecase.meet.invite.InviteFriendUseCase
 import com.sooum.domain.usecase.user.GetLoginUserUseCase
 import com.sooum.where_android.R
 import com.sooum.where_android.theme.Gray100
@@ -79,9 +80,12 @@ import com.sooum.where_android.theme.Gray800
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.util.KaKaoShareUtil
 import com.sooum.where_android.view.widget.CircleProfileView
+import com.sooum.where_android.view.widget.CustomSnackBar
+import com.sooum.where_android.view.widget.IconType
 import com.sooum.where_android.view.widget.SearchField
 import com.sooum.where_android.view.widget.UserItemView
 import com.sooum.where_android.view.widget.UserViewType
+import com.sooum.where_android.viewmodel.main.FriendViewModel
 import com.sooum.where_android.viewmodel.meetdetail.MyMeetDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -93,8 +97,8 @@ fun InviteFriendView(
     modifier: Modifier = Modifier,
     inviteFriendList: List<InvitedFriend>,
     waitingFriendList: List<InvitedFriend>,
-    userList: List<Friend>,
-    recentUserList: List<Friend>,
+    friendList: List<Friend>,
+    invitedFriedIdSet: Set<Int> = emptySet(),
     inviteByKaKao: () -> Unit,
     inviteFriend: (Friend) -> Unit,
     onBack: () -> Unit
@@ -203,7 +207,7 @@ fun InviteFriendView(
                 if (searchValue.isEmpty()) {
                     Spacer(Modifier.fillMaxSize())
                 } else {
-                    val filterNameList = userList.filter { it.name.contains(searchValue) }
+                    val filterNameList = friendList.filter { it.name.contains(searchValue) }
                     if (filterNameList.isEmpty()) {
                         Column(
                             modifier = Modifier
@@ -229,7 +233,10 @@ fun InviteFriendView(
                             ) { friend ->
                                 UserItemView(
                                     user = friend.toUser(),
-                                    type = UserViewType.Invite,
+                                    type = UserViewType.Invite(
+                                        finish = false,
+                                        meetCount = friend.meetList.size
+                                    ),
                                 )
                             }
                         }
@@ -244,9 +251,9 @@ fun InviteFriendView(
                         waitingFriendList = waitingFriendList
                     )
                     InviteFriendContentView(
-                        recentUserList = recentUserList,
-                        userList = userList,
+                        friendList = friendList,
                         inviteFriend = inviteFriend,
+                        invitedFriedIdSet = invitedFriedIdSet,
                         headerColor = Gray600,
                         kakaoClickAction = inviteByKaKao
                     )
@@ -372,8 +379,7 @@ private fun InviteFriendViewPreview() {
         onBack = {},
         inviteFriendList = emptyList(),
         waitingFriendList = emptyList(),
-        userList = emptyList(),
-        recentUserList = emptyList(),
+        friendList = emptyList(),
         inviteFriend = {},
         inviteByKaKao = {}
     )
@@ -384,9 +390,13 @@ private fun InviteFriendViewPreview() {
 class InviteFriendFragment : Fragment() {
 
     private val myMeetDetailViewModel: MyMeetDetailViewModel by activityViewModels()
+    private val friendViewModel: FriendViewModel by activityViewModels()
 
     @Inject
     lateinit var getLoginUserUseCase: GetLoginUserUseCase
+
+    @Inject
+    lateinit var inviteFriendUseCase: InviteFriendUseCase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -400,12 +410,22 @@ class InviteFriendFragment : Fragment() {
             setContent {
                 val scope = rememberCoroutineScope()
                 val context = LocalContext.current
+
                 val inviteFriendList by myMeetDetailViewModel.invitedFriendList.collectAsState(
                     emptyList()
                 )
                 val waitingFriendList by myMeetDetailViewModel.waitingFriendList.collectAsState(
                     emptyList()
                 )
+                val friendList by friendViewModel.friendList.collectAsState(
+                    emptyList()
+                )
+
+                var invitedFriedIdSet by remember {
+                    mutableStateOf(emptySet<Int>())
+                }
+
+
                 InviteFriendView(
                     modifier = Modifier
                         .safeDrawingPadding()
@@ -413,17 +433,44 @@ class InviteFriendFragment : Fragment() {
                         .padding(10.dp),
                     inviteFriendList = inviteFriendList,
                     waitingFriendList = waitingFriendList,
-                    userList = emptyList(),
-                    recentUserList = emptyList(),
-                    inviteFriend = {},
+                    friendList = friendList,
+                    inviteFriend = { friend ->
+                        scope.launch {
+                            myMeetDetailViewModel.meetDetail.value?.let { meet ->
+                                val result = inviteFriendUseCase(
+                                    meetId = meet.id,
+                                    friendId = friend.id
+                                )
+                                when (result) {
+                                    is ActionResult.Success -> {
+                                        val temp = invitedFriedIdSet.toMutableSet()
+                                        temp.add(friend.id)
+                                        invitedFriedIdSet = temp
+                                        CustomSnackBar.make(
+                                            requireView(),
+                                            "초대되었습니다.",
+                                            IconType.Check
+                                        ).show()
+                                    }
+
+                                    is ActionResult.Fail -> {
+                                        CustomSnackBar.make(
+                                            requireView(),
+                                            result.msg,
+                                            IconType.Error
+                                        ).show()
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    invitedFriedIdSet = invitedFriedIdSet + waitingFriendList.map { it.id } + inviteFriendList.map { it.id },
                     inviteByKaKao = {
                         scope.launch {
                             myMeetDetailViewModel.meetDetail.value?.let { meet ->
-                                Log.d("JWH", meet.toString())
-                                //로그인된 화면이므로 getLoginUserUseCase는 항상 null이 아니다.
                                 KaKaoShareUtil.sendInvite(
                                     context = context,
-                                    userName = getLoginUserUseCase().first()!!.nickname,
+                                    userName = getLoginUserUseCase().first().nickname,
                                     meetName = meet.title,
                                     inviteCode = meet.inviteCode
                                 )

@@ -49,6 +49,11 @@ sealed interface ScreenRoute {
 
             @Serializable
             data object Complete : ScreenRoute
+
+            @Serializable
+            data class WebView(
+                val destUrl: String
+            ) : ScreenRoute
         }
     }
 
@@ -175,7 +180,7 @@ sealed interface ScreenRoute {
                  * 설정화면 로그아웃
                  */
                 @Serializable
-                data object LogOut : ScreenRoute
+                data object Logout : ScreenRoute
 
                 /**
                  * 설정화면 - 비번 수정
@@ -195,6 +200,10 @@ sealed interface ScreenRoute {
                 @Serializable
                 data object DeleteComplete : ScreenRoute
 
+                @Serializable
+                data class WebView(
+                    val destUrl: String
+                ) : ScreenRoute
             }
         }
     }
