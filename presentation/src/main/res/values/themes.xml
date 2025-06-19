@@ -47,6 +47,9 @@
         <item name="thumbTextPadding">0dp</item>
     </style>
 
-
+    <style name="MyRadioButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/main_color</item>
+        <item name="colorControlActivated">@color/main_color</item>
+    </style>
 
 </resources>
