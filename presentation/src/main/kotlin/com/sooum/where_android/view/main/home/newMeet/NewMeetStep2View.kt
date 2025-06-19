@@ -39,8 +39,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun NewMeetStep2View(
     modifier: Modifier = Modifier,
-    userList: List<Friend>,
-    recentUserList: List<Friend>,
+    friendList: List<Friend>,
     invitedFriedIdSet: Set<Int> = emptySet(),
     nextViewType: () -> Unit,
     inviteFriend: (Friend) -> Unit,
@@ -48,6 +47,7 @@ fun NewMeetStep2View(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
     Scaffold(
         containerColor = Color.White,
         snackbarHost = {
@@ -99,8 +99,7 @@ fun NewMeetStep2View(
                 }
                 NewMeetHeader(type = NewMeetType.Friend)
                 InviteFriendContentView(
-                    recentUserList = recentUserList,
-                    friendList = userList,
+                    friendList = friendList,
                     invitedFriedIdSet = invitedFriedIdSet,
                     inviteFriend = { user ->
                         scope.launch {
@@ -128,8 +127,7 @@ fun NewMeetStep2View(
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 private fun NewMeetStep2ViewPreview() {
     NewMeetStep2View(
-        recentUserList = emptyList(),
-        userList = emptyList(),
+        friendList = emptyList(),
         inviteFriend = {},
         nextViewType = {},
         onClose = {}

@@ -98,7 +98,6 @@ fun InviteFriendView(
     inviteFriendList: List<InvitedFriend>,
     waitingFriendList: List<InvitedFriend>,
     friendList: List<Friend>,
-    recentUserList: List<Friend>,
     invitedFriedIdSet: Set<Int> = emptySet(),
     inviteByKaKao: () -> Unit,
     inviteFriend: (Friend) -> Unit,
@@ -252,7 +251,6 @@ fun InviteFriendView(
                         waitingFriendList = waitingFriendList
                     )
                     InviteFriendContentView(
-                        recentUserList = recentUserList,
                         friendList = friendList,
                         inviteFriend = inviteFriend,
                         invitedFriedIdSet = invitedFriedIdSet,
@@ -382,7 +380,6 @@ private fun InviteFriendViewPreview() {
         inviteFriendList = emptyList(),
         waitingFriendList = emptyList(),
         friendList = emptyList(),
-        recentUserList = emptyList(),
         inviteFriend = {},
         inviteByKaKao = {}
     )
@@ -437,7 +434,6 @@ class InviteFriendFragment : Fragment() {
                     inviteFriendList = inviteFriendList,
                     waitingFriendList = waitingFriendList,
                     friendList = friendList,
-                    recentUserList = emptyList(),
                     inviteFriend = { friend ->
                         scope.launch {
                             myMeetDetailViewModel.meetDetail.value?.let { meet ->

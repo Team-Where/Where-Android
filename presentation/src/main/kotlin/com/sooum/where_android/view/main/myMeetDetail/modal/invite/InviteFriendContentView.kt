@@ -30,16 +30,31 @@ import com.sooum.where_android.R
 import com.sooum.where_android.theme.pretendard
 import com.sooum.where_android.view.widget.UserItemView
 import com.sooum.where_android.view.widget.UserViewType
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun InviteFriendContentView(
-    recentUserList: List<Friend>,
     friendList: List<Friend>,
     invitedFriedIdSet: Set<Int> = emptySet(),
     inviteFriend: (Friend) -> Unit,
     headerColor: Color = Color(0xff374151),
     kakaoClickAction: (() -> Unit)? = null,
 ) {
+    val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+    val oneMonthAgo = today.minus(value = 1, unit = DateTimeUnit.MONTH)
+
+    val recentFriendList = friendList.filter { friend ->
+        //한달내 모임이 있는 경우를 최근만난 친구로 본다.
+        friend.meetList.any { meet ->
+            val meetDate = LocalDate.parse(meet.date.date)
+            meetDate >= oneMonthAgo
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -96,7 +111,7 @@ fun InviteFriendContentView(
                 )
             }
             items(
-                items = recentUserList,
+                items = recentFriendList,
                 key = {
                     "rc" + it.id
                 }
@@ -147,10 +162,6 @@ fun InviteFriendContentView(
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 private fun InviteFriendViewPreview() {
     InviteFriendContentView(
-        recentUserList =
-            listOf(
-                Friend(1, "냠냠")
-            ),
         friendList = listOf(
             Friend(2, "냠냠")
         ),

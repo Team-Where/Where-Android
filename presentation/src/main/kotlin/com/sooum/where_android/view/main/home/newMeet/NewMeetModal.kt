@@ -160,8 +160,7 @@ private fun NewMeetContent(
         is NewMeetType.Friend -> {
             NewMeetStep2View(
                 modifier = modifier,
-                userList = friendList,
-                recentUserList = friendList,
+                friendList = friendList,
                 nextViewType = goStepResult,
                 inviteFriend = inviteFriend,
                 invitedFriedIdSet = invitedFriedIdSet,
