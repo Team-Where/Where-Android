@@ -46,11 +46,7 @@ class SplashViewModel @Inject constructor(
 
                 when (val versionResult = versionCheckUseCase(version).firstOrNull()) {
                     is ApiResult.Success -> versionResult.data
-                    is ApiResult.Fail -> {
-                        onVersionCheckFailed()
-                        false
-                    }
-                    else -> false
+                    else -> null
                 }
             }
             val isFirstLaunch = async {
@@ -59,6 +55,10 @@ class SplashViewModel @Inject constructor(
             }
             joinAll(timeJob, checkLogin, checkAppUpdate, isFirstLaunch)
             val isNewVersion = checkAppUpdate.await()
+            if (isNewVersion == null) {
+                onVersionCheckFailed()
+                return@launch
+            }
             if (!isNewVersion) {
                 needUpdate()
             } else {
