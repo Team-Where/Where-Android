@@ -15,13 +15,8 @@ class SocialLoginProfileSettingFragment :
     ) {
     private var selectedImageUri: Uri? = null
 
-    private val userId: Int by lazy {
-        requireArguments().getInt("userId")
-    }
-
     override fun initView() {
         with(binding) {
-            editNickname.filters = getNicknameInputFilters()
 
             imageCamera.setOnClickListener {
                 val dialog = ImagePickerDialogFragment.getInstance(
@@ -52,7 +47,6 @@ class SocialLoginProfileSettingFragment :
                 loadingAlertProvider.startLoading()
 
                 socialLoginViewModel.putNickNameAndProfile(
-                    userId = userId,
                     nickName = editNickname.text.toString(),
                     imageFile = selectedImageUri,
                     onSuccess = {

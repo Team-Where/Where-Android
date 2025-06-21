@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.sooum.where_android",
+  "applicationId": "com.where.android",
   "variantName": "release",
   "elements": [
     {
