@@ -295,7 +295,7 @@ private fun Step1TextField(
             },
             placeholder = {
                 Text(
-                    text = "모임에 대한 간단한 소개를 입력해주세요.",
+                    text = "모임 이름을 입력해주세요.",
                     color = GrayScale600,
                     fontFamily = pretendard,
                     fontWeight = FontWeight.Medium,
