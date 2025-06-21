@@ -34,6 +34,8 @@ class InquiryFragment : HamburgerBaseFragment<FragmentInquiryBinding>(
                 }
             }
 
+
+
         }
     }
 
