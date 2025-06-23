@@ -8,6 +8,7 @@ import com.sooum.data.network.friend.FriendApi
 import com.sooum.data.network.meet.MeetApi
 import com.sooum.data.network.place.PlaceApi
 import com.sooum.data.network.schedule.ScheduleApi
+import com.sooum.data.network.setting.SettingApi
 import com.sooum.data.network.socialLogin.SocialLoginApi
 import com.sooum.data.network.user.UserApi
 import dagger.Module
@@ -147,6 +148,14 @@ object NetworkModule {
         @WhereRetrofit retrofit: Retrofit
     ): ScheduleApi {
         return retrofit.create(ScheduleApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSettingApi(
+        @WhereRetrofit retrofit: Retrofit
+    ): SettingApi {
+        return retrofit.create(SettingApi::class.java)
     }
 
     @Provides
