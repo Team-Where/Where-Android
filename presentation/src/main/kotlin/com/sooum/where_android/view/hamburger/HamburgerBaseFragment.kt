@@ -22,6 +22,7 @@ abstract class HamburgerBaseFragment<VB : ViewBinding>(
 
     protected val noticeViewModel: NoticeViewModel by activityViewModels()
 
+
     protected val loadingAlertProvider by lazy {
         LoadingAlertProvider(this)
     }

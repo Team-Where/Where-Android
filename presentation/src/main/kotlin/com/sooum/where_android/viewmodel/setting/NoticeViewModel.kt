@@ -20,6 +20,7 @@ class NoticeViewModel @Inject constructor(
         viewModelScope.launch {
             settingRepository.getNotice()
         }
+
     }
 
     // 공지화면 공지 목록
