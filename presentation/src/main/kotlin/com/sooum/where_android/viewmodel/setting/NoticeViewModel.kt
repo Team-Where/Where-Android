@@ -3,6 +3,7 @@ package com.sooum.where_android.viewmodel.setting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.domain.repository.SettingRepository
+import com.sooum.domain.usecase.setting.FetchNoticeUseCase
 import com.sooum.domain.usecase.setting.GetNoticeListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
  import javax.inject.Inject
@@ -13,12 +14,12 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class NoticeViewModel @Inject constructor(
     getNoticeListUseCase: GetNoticeListUseCase,
-    settingRepository: SettingRepository
+    fetchNoticeUseCase: FetchNoticeUseCase
 ) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            settingRepository.getNotice()
+           fetchNoticeUseCase()
         }
 
     }
