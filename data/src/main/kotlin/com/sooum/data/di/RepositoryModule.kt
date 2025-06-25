@@ -6,6 +6,7 @@ import com.sooum.data.repository.FriendRepositoryImpl
 import com.sooum.data.repository.MeetDetailCommentRepositoryImpl
 import com.sooum.data.repository.MeetDetailPlaceRepositoryImpl
 import com.sooum.data.repository.MeetDetailRepositoryImpl
+import com.sooum.data.repository.NotificationRepositoryImpl
 import com.sooum.data.repository.SettingRepositoryImpl
 import com.sooum.data.repository.SocialLoginRepositoryImpl
 import com.sooum.data.repository.UserRepositoryImpl
@@ -14,6 +15,7 @@ import com.sooum.domain.repository.FriendRepository
 import com.sooum.domain.repository.MeetDetailCommentRepository
 import com.sooum.domain.repository.MeetDetailPlaceRepository
 import com.sooum.domain.repository.MeetDetailRepository
+import com.sooum.domain.repository.NotificationRepository
 import com.sooum.domain.repository.SettingRepository
 import com.sooum.domain.repository.SocialLoginRepository
 import com.sooum.domain.repository.UserRepository
@@ -75,5 +77,11 @@ abstract class RepositoryModule {
     abstract fun settingRepository(
         impl: SettingRepositoryImpl
     ): SettingRepository
+
+    @Binds
+    @Singleton
+    abstract fun notificationRepository(
+        impl: NotificationRepositoryImpl
+    ): NotificationRepository
 
 }

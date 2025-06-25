@@ -4,11 +4,9 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sooum.domain.model.NotificationItem
 import com.sooum.where_android.databinding.FragmentNotificationBinding
 import com.sooum.where_android.view.hamburger.HamburgerBaseFragment
 import com.sooum.where_android.view.hamburger.main.adapter.NotificationRecyclerView
-import com.sooum.where_android.viewmodel.setting.NotificationViewModel
 import kotlinx.coroutines.launch
 
 class NotificationFragment : HamburgerBaseFragment<FragmentNotificationBinding>(
@@ -33,7 +31,11 @@ class NotificationFragment : HamburgerBaseFragment<FragmentNotificationBinding>(
                     textNoNotification.visibility = if (isEmpty) View.VISIBLE else View.GONE
                     recyclerNotification.visibility = if (isEmpty) View.GONE else View.VISIBLE
 
-                    notificationAdapter.submitList(list)
+                    notificationAdapter = NotificationRecyclerView(list)
+                    recyclerNotification.apply {
+                        adapter = notificationAdapter
+                        layoutManager = LinearLayoutManager(requireContext())
+                    }
                 }
             }
         }
