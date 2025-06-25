@@ -10,6 +10,8 @@ import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import com.sooum.core.notification.NotificationUtil
 import com.sooum.core.notification.di.FCMTool
+import com.sooum.domain.model.NotificationItem
+import com.sooum.domain.repository.NotificationRepository
 import com.sooum.domain.usecase.user.UpdateFcmToken
 import com.sooum.where_android.view.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +30,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     @Inject
     lateinit var updateFcmToken: UpdateFcmToken
 
+    @Inject
+    lateinit var notificationRepository: NotificationRepository
+
     // 메시지를 수신할 때 호출 된다.
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
@@ -42,6 +47,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
             if (title.isNotBlank() || body.isNotBlank()) {
                 sendNotification(title, body)
+            }
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val notificationEntity = NotificationItem(
+                    title = title,
+                    description = body,
+                    receiveTime = System.currentTimeMillis().toString()
+                )
+                notificationRepository.insertNotification(notificationEntity)
             }
 
             if (code.isNotBlank()) {
