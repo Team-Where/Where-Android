@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sooum.where_android.databinding.FragmentNotificationBinding
 import com.sooum.where_android.view.hamburger.HamburgerBaseFragment
+import com.sooum.where_android.view.hamburger.main.inquiry.InquiryWaitingAnswerFragment
+import com.sooum.where_android.view.hamburger.navigateHome
 import com.sooum.where_android.view.hamburger.main.adapter.NotificationRecyclerView
 import kotlinx.coroutines.launch
 
@@ -48,9 +50,9 @@ class NotificationFragment : HamburgerBaseFragment<FragmentNotificationBinding>(
     ) {
         super.setNavigation(navHostController)
         with(binding) {
-//            imageBack.setOnClickListener {
-//                navHostController.navigateHome()
-//            }
+            imageClose.setOnClickListener {
+                navHostController.navigateHome()
+            }
         }
     }
 }

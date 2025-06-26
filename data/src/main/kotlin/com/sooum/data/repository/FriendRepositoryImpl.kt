@@ -49,10 +49,11 @@ class FriendRepositoryImpl @Inject constructor(
         asyncScope.launch {
             val friendList = friendRemoteDataSource.getFriendList(userId).first()
             _friendListFlow.update {
-                friendList
+                friendList.distinctBy { it.id }
             }
         }
     }
+
 
     override fun getFriendById(friendId: Int): Flow<Friend?> = friendListFlow
         .map { list -> list.find { it.id == friendId } }

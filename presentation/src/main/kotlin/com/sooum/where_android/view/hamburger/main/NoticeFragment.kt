@@ -5,7 +5,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.lifecycle.Lifecycle
-import com.sooum.domain.model.NoticeResult
+import com.sooum.where_android.view.hamburger.main.inquiry.InquiryWaitingAnswerFragment
+import com.sooum.where_android.view.hamburger.navigateHome
 import com.sooum.where_android.databinding.FragmentNoticeBinding
 import com.sooum.where_android.view.hamburger.HamburgerBaseFragment
 import com.sooum.where_android.view.hamburger.main.adapter.NoticeRecyclerView
@@ -34,9 +35,9 @@ class NoticeFragment : HamburgerBaseFragment<FragmentNoticeBinding>(
     ) {
         super.setNavigation(navHostController)
         with(binding) {
-//            imageBack.setOnClickListener {
-//                navHostController.navigateHome()
-//            }
+            imageClose.setOnClickListener {
+                navHostController.navigateHome()
+            }
         }
     }
 

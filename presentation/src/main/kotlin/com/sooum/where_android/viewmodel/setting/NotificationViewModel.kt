@@ -14,20 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
     getNotificationUseCase: GetNotificationUseCase,
-    notificationRepository: NotificationRepository
 ) : ViewModel() {
-
-    val testItem = NotificationItem(
-        title = "ㅎㅇ",
-        description = "gdgddgdg",
-        receiveTime = System.currentTimeMillis().toString()
-    )
-
-    init {
-        viewModelScope.launch {
-            notificationRepository.insertNotification(testItem)
-        }
-    }
 
     val notificationList = getNotificationUseCase()
         .stateIn(

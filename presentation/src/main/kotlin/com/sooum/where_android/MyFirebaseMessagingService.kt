@@ -49,11 +49,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 sendNotification(title, body)
             }
 
+            val formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault())
+            val formattedTime = java.time.LocalDateTime.now().format(formatter)
+
             CoroutineScope(Dispatchers.IO).launch {
                 val notificationEntity = NotificationItem(
                     title = title,
                     description = body,
-                    receiveTime = System.currentTimeMillis().toString()
+                    receiveTime = formattedTime
                 )
                 notificationRepository.insertNotification(notificationEntity)
             }
