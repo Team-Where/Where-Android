@@ -17,7 +17,7 @@
             android:src="@drawable/icon_arrow_back"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:padding="15dp"
+            android:padding="20dp"
             />
 
         <TextView
@@ -30,7 +30,7 @@
             android:textColor="#4F46E5"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:padding="15dp"/>
+            android:padding="20dp"/>
 
         <ImageView
             android:id="@+id/imagePlace"
@@ -190,6 +190,7 @@
                 android:paddingEnd="20dp"
                 android:stateListAnimator="@null"
                 android:text="네이버 지도"
+                android:textColor="@color/black"
                 android:textSize="12sp"
                 app:iconSize="16dp" />
 
@@ -205,6 +206,7 @@
                 android:paddingStart="25dp"
                 android:paddingEnd="20dp"
                 android:stateListAnimator="@null"
+                android:textColor="@color/black"
                 android:text="카카오맵"
                 android:textSize="12sp" />
         </LinearLayout>

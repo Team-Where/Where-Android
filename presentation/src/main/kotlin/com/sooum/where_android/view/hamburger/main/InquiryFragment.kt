@@ -8,6 +8,7 @@ import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.hamburger.HamburgerBaseFragment
 import com.sooum.where_android.view.hamburger.main.inquiry.InquiryCompleteAnswerFragment
 import com.sooum.where_android.view.hamburger.main.inquiry.InquiryWaitingAnswerFragment
+import com.sooum.where_android.view.hamburger.navigateHome
 import com.sooum.where_android.view.main.myMeetDetail.fragment.MyMeetDetailFragment
 import com.sooum.where_android.view.main.myMeetDetail.fragment.MyMeetPlaceFragment
 
@@ -23,16 +24,18 @@ class InquiryFragment : HamburgerBaseFragment<FragmentInquiryBinding>(
     ) {
         super.setNavigation(navHostController)
         with(binding) {
-            //Back버튼
-//            imageBack.setOnClickListener {
-//                navHostController.navigateHome()
-//            }
+
+            imageBack.setOnClickListener {
+                navHostController.navigateHome()
+            }
 
             writeBtn.setOnClickListener {
                 navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Write) {
                     launchSingleTop = true
                 }
             }
+
+
 
         }
     }

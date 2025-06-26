@@ -108,34 +108,45 @@ class SocialLoginViewmodel @Inject constructor(
     }
 
     fun putNickNameAndProfile(
-        userId: Int,
         nickName: String,
         imageFile: Uri?,
         onSuccess: () -> Unit,
         onFail: (msg: String) -> Unit
     ) {
         viewModelScope.launch {
-            val nickNameJob = async {
-                nickNameUpdateUseCase(
-                    userId, nickName
-                )
-            }
-
-            val profileJob = async {
-                profileUpdateUseCase(
-                    userId, imageFile ?: Uri.EMPTY
-                )
-            }
-            joinAll(nickNameJob, profileJob)
-            nickNameJob.await().combine(profileJob.await()) { nickNameResult, profileResult ->
-                nickNameResult to profileResult
-            }.collect { (nickNameResult, profileResult) ->
-                if (nickNameResult is ApiResult.Success && profileResult is ApiResult.Success) {
-                    onSuccess()
-                } else {
-                    onFail("닉네임,프로필 반영 실패")
+            appManageDataStore.getUserId().collect { userId ->
+                if (userId == null) {
+                    onFail("로그인 정보를 찾을 수 없습니다.")
+                    return@collect
                 }
+
+                val nickNameJob = async {
+                    nickNameUpdateUseCase(
+                        userId, nickName
+                    )
+                }
+
+                val profileJob = async {
+                    profileUpdateUseCase(
+                        userId, imageFile ?: Uri.EMPTY
+                    )
+                }
+
+                joinAll(nickNameJob, profileJob)
+
+                nickNameJob.await().combine(profileJob.await()) { nickNameResult, profileResult ->
+                    nickNameResult to profileResult
+                }.collect { (nickNameResult, profileResult) ->
+                    if (nickNameResult is ApiResult.Success && profileResult is ApiResult.Success) {
+                        onSuccess()
+                    } else {
+                        onFail("닉네임 또는 프로필 이미지 반영 실패")
+                    }
+                }
+
+                return@collect
             }
         }
     }
+
 }

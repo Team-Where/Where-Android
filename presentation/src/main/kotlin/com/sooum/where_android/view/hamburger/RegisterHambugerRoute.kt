@@ -26,6 +26,7 @@ import com.sooum.where_android.view.hamburger.main.NoticeFragment
 import com.sooum.where_android.view.hamburger.main.NotificationFragment
 import com.sooum.where_android.view.hamburger.main.SettingView
 import com.sooum.where_android.view.hamburger.main.dialog.LogOutView
+import com.sooum.where_android.view.hamburger.main.inquiry.InquiryWriteFragment
 import com.sooum.where_android.view.hamburger.setting.DeleteAccountCompleteView
 import com.sooum.where_android.view.hamburger.setting.DeleteAccountView
 import com.sooum.where_android.view.hamburger.setting.EditPasswordFragment
@@ -138,35 +139,23 @@ private fun NavGraphBuilder.installInquiryRoute(
                         navHostController = mainNavController
                     )
                 }
-
-//                TextButton(
-//                    onClick = {
-//                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Write) {
-//                            launchSingleTop = true
-//                        }
-//                    }
-//                ) {
-//                    Text("Test-Write")
-//                }
             }
         }
         composable<ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Write> {
             Column(
                 modifier = parentModifier
             ) {
-                TextButton(
-                    onClick = {
-                        mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry) {
-                            launchSingleTop = true
-                            popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry) {
-
-                            }
-                        }
+                BackHandler {
+                    mainNavController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry) {
+                        launchSingleTop = true
+                        popUpTo(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry)
                     }
-                ) {
-                    Text("Back")
                 }
-                Text(text = "Write")
+                AndroidFragment<InquiryWriteFragment>(
+                    modifier = Modifier.fillMaxSize()
+                ) { fragment ->
+                    fragment.setNavigation(mainNavController)
+                }
             }
         }
     }

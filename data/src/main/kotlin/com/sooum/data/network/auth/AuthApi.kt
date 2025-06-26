@@ -16,6 +16,7 @@ import retrofit2.http.Query
 
 
 interface AuthApi {
+
     @POST("api/user/signup")
     suspend fun signUp(
         @Body data: SignUpRequest

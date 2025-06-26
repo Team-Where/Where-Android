@@ -62,5 +62,4 @@ interface AuthRepository {
     suspend fun checkEmail(
         email: String
     ): Flow<ApiResult<Unit>>
-
 }

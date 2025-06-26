@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/imageBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_back"
+        android:padding="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_notice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="문의 작성"
+        android:textSize="18sp"
+        android:textColor="@color/gray_scale_800"
+        android:fontFamily="@font/pretend_semibold"
+        android:layout_marginTop="13dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <EditText
+        android:id="@+id/edit_text_title"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/shape_rounded_gray_radius_12"
+        android:hint="제목을 입력해주세요"
+        android:textColorHint="#6B7280"
+        android:imeOptions="actionDone"
+        android:maxLines="2"
+        android:padding="16dp"
+        android:selectAllOnFocus="true"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageBack" />
+
+    <EditText
+        android:id="@+id/edit_text_content"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/shape_rounded_gray_radius_12"
+        android:gravity="top"
+        android:hint="내용을 자세하게 입력할수록 빠르게 답변을 받을 수 있어요."
+        android:imeOptions="actionDone"
+        android:maxLines="2"
+        android:padding="16dp"
+        android:selectAllOnFocus="true"
+        android:textColorHint="#6B7280"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_title" />
+
+    <TextView
+        android:id="@+id/text_add_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="사진첨부"
+        android:textSize="18sp"
+        android:fontFamily="@font/pretend_semibold"
+        android:textColor="@color/gray_scale_800"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_content"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/text_photo_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="참고해야하는 캡쳐 화면이 있다면 첨부해주세요. (최대 5장)"
+        android:textSize="14sp"
+        android:fontFamily="@font/pretend_regular"
+        android:textColor="#6B7280"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/text_add_photo"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <ImageView
+        android:id="@+id/inquiry_image1"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/icon_add_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_photo_description"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/inquiry_image2"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/icon_add_image"
+        app:layout_constraintBottom_toBottomOf="@id/inquiry_image1"
+        app:layout_constraintStart_toEndOf="@id/inquiry_image1"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/inquiry_image3"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/icon_add_image"
+        app:layout_constraintBottom_toBottomOf="@id/inquiry_image2"
+        app:layout_constraintStart_toEndOf="@id/inquiry_image2"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/inquiry_image4"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/icon_add_image"
+        app:layout_constraintBottom_toBottomOf="@id/inquiry_image3"
+        app:layout_constraintStart_toEndOf="@id/inquiry_image3"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" - 10MB 미만의 JPG,PNG,GIF 파일만 등록가능 합니다.\n - 문의와 무관한 내용이거나 음란/불법적인 내용은 통보없이 삭제될 수 있습니다."
+        android:textSize="12sp"
+        android:fontFamily="@font/pretend_regular"
+        android:textColor="#868296"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inquiry_image4"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/completeBtn"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="등록"
+        android:fontFamily="@font/pretend_semibold"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:background="@drawable/button_main_shape"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:stateListAnimator="@null"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="40dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

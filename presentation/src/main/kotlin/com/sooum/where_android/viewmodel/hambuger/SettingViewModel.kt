@@ -9,6 +9,7 @@ import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.domain.model.ActionResult
 import com.sooum.domain.usecase.user.DeleteFcmTokenUseCase
 import com.sooum.domain.usecase.user.UpdateFcmToken
+import com.sooum.domain.util.AppVersionProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -19,9 +20,12 @@ import javax.inject.Inject
 class SettingViewModel @Inject constructor(
     private val appManageDataStore: AppManageDataStore,
     private val deleteFcmTokenUseCase: DeleteFcmTokenUseCase,
-    private val updateFcmToken: UpdateFcmToken
+    private val updateFcmToken: UpdateFcmToken,
+    private val appVersionProvider: AppVersionProvider
 
 ) : ViewModel() {
+
+    val version = appVersionProvider.getVersionName()
 
     val notificationAllowed = appManageDataStore.getNotificationAllowed()
         .stateIn(

@@ -37,8 +37,8 @@ class DeleteAccountFragment : HamburgerBaseFragment<FragmentDeleteAccountBinding
                 intArrayOf(android.R.attr.state_checked)
             ),
             intArrayOf(
-                ContextCompat.getColor(requireContext(), R.color.main_color),
-                ContextCompat.getColor(requireContext(), R.color.white)
+                ContextCompat.getColor(requireContext(), R.color.light_gray),
+                ContextCompat.getColor(requireContext(), R.color.main_color)
             )
         )
 

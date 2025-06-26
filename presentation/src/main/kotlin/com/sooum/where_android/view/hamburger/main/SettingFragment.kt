@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.hamburger.main
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -20,7 +21,7 @@ import com.sooum.where_android.view.main.LocalLoadingProvider
 import com.sooum.where_android.viewmodel.hambuger.SettingViewModel
 import kotlinx.coroutines.launch
 
-class SettingFragment : HamburgerBaseFragment<FragmentSettingBinding>(
+    class SettingFragment : HamburgerBaseFragment<FragmentSettingBinding>(
     FragmentSettingBinding::inflate
 ) {
     private lateinit var settingViewModel: SettingViewModel
@@ -91,6 +92,10 @@ class SettingFragment : HamburgerBaseFragment<FragmentSettingBinding>(
             }
         }
         with(binding) {
+            //버전 정보 등록
+            val version = settingViewModel.version.first()
+            textAppVersion.text = version.toString()
+
             //CheckBox와 해당영역 전체에 액션읗 할당
             listOf(
                 alertToggle,

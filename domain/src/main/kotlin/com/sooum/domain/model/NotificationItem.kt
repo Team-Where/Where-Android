@@ -1,12 +1,12 @@
 package com.sooum.domain.model
 
-import android.media.Image
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity(tableName = "notification")
 data class NotificationItem (
-    val id: Int,
-    val imageSrc : String,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String,
     val description: String,
     val receiveTime: String,
-    val type: String
 )

@@ -253,6 +253,7 @@ private fun NewMeetStep1ViewContent(
         Step1TextField(
             text = title,
             onNewValue = updateTitle,
+            placeholderText = "모임 이름을 입력해주세요.",
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next
             ),
@@ -262,6 +263,7 @@ private fun NewMeetStep1ViewContent(
         Step1TextField(
             text = description,
             onNewValue = updateDescription,
+            placeholderText = "모임에 대한 간단한 소개를 입력해주세요.",
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
             ),
@@ -279,6 +281,7 @@ private fun NewMeetStep1ViewContent(
 private fun Step1TextField(
     text :String,
     onNewValue :(String) -> Unit,
+    placeholderText: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     maxLength :Int
@@ -295,7 +298,7 @@ private fun Step1TextField(
             },
             placeholder = {
                 Text(
-                    text = "모임에 대한 간단한 소개를 입력해주세요.",
+                    text = placeholderText,
                     color = GrayScale600,
                     fontFamily = pretendard,
                     fontWeight = FontWeight.Medium,
