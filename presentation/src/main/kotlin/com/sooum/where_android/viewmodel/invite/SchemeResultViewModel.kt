@@ -25,6 +25,7 @@ class SchemeResultViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val inviteByCode: ScreenRoute.HomeRoute.InviteByCode = savedStateHandle.toRoute()
+    private var isAccepting = false
 
     val name = inviteByCode.name
     val code = inviteByCode.code
@@ -63,15 +64,28 @@ class SchemeResultViewModel @Inject constructor(
         onSuccess: () -> Unit,
         onFail: (msg: String) -> Unit
     ) {
+        if (isAccepting) {
+
+            return
+        }
+        isAccepting = true
+
         viewModelScope.launch {
-            getLoginUserIdUseCase()?.let { userId ->
-                val result = acceptInviteByLinkUseCase(userId, code)
-                if (result is ActionResult.Success) {
-                    onSuccess()
-                } else if (result is ActionResult.Fail) {
-                    onFail(result.msg.ifEmpty { "초대장 수락에 실패했습니다." })
-                }
+            try {
+                getLoginUserIdUseCase()?.let { userId ->
+                    val result = acceptInviteByLinkUseCase(userId, code)
+                    if (result is ActionResult.Success) {
+                        onSuccess()
+                    } else if (result is ActionResult.Fail) {
+                        onFail(result.msg.ifEmpty { "초대장 수락에 실패했습니다." })
+                    }
+                } ?: onFail("로그인 정보가 없습니다.")
+            } catch (e: Exception) {
+                onFail(e.localizedMessage ?: "오류가 발생했습니다.")
+            } finally {
+                isAccepting = false
             }
         }
     }
+
 }
