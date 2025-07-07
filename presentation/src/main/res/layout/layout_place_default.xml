@@ -164,7 +164,7 @@
             android:paddingEnd="20dp"
             android:stateListAnimator="@null"
             android:text="네이버 지도"
-            android:textSize="12sp" />
+            android:textSize="11sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnKakaoMap"
@@ -180,7 +180,7 @@
             android:paddingEnd="20dp"
             android:stateListAnimator="@null"
             android:text="카카오맵"
-            android:textSize="12sp" />
+            android:textSize="11sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
