@@ -47,3 +47,19 @@ adb shell am start -a android.intent.action.VIEW \
     -d "audiwhere://invite/49144buebo?name=임의의값" \
     com.where.android
 ~~~
+
+## 개요
+모임을 만들고 초대된 사람들과 장소를 공유·의견을 나누며, 일정을 정하고 알림을 제공하는 모임 관리 앱 입니다.
++ 배포Url : 
+
+
+## 기술 스택
+
+| 분야             | 사용 기술                        |
+|------------------|-----------------------------------|
+| **Architecture**     | `MVVM`, `Clean Architecture`   |
+| **Networking**     | `Retrofit`, `Okhttp`, `FCM`   |
+| **JetPack**     | `Flow`, `coroutine`   |
+| **Local Data**     | `DataStore`, `Room`   |
+| **Image**     | `Glide`   |
+| **Dependency Injection**     | `Hile`   |
