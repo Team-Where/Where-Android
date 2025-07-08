@@ -62,4 +62,4 @@ adb shell am start -a android.intent.action.VIEW \
 | **JetPack**     | `Flow`, `coroutine`   |
 | **Local Data**     | `DataStore`, `Room`   |
 | **Image**     | `Glide`   |
-| **Dependency Injection**     | `Hile`   |
+| **Dependency Injection**     | `Hilt`   |
