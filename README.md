@@ -67,3 +67,14 @@ adb shell am start -a android.intent.action.VIEW \
 | **Local Data**     | `DataStore`, `Room`   |
 | **Image**     | `Glide`   |
 | **Dependency Injection**     | `Hilt`   |
+
+<table>
+  <tr>
+    <td align="center">
+      <strong>Splash 화면</strong><br>
+      <img src="https://github.com/user-attachments/assets/b6949e17-f2cd-42fb-ae9a-25ff7804d1ea" alt="Splash 화면" width="300"/>
+      <img src="https://github.com/user-attachments/assets/b345a614-a964-49f6-a369-2d13262ba199" alt="Splash 화면" width="300"/>
+    </td>
+  </tr>
+
+</table>
