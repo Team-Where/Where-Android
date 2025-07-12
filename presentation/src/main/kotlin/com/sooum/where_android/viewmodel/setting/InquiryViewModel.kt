@@ -6,21 +6,34 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sooum.data.datastore.AppManageDataStore
 import com.sooum.domain.model.ApiResult
+import com.sooum.domain.usecase.setting.FetchInquiryUseCase
+import com.sooum.domain.usecase.setting.GetInquiryListUseCase
 import com.sooum.domain.usecase.setting.PostInquiryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class InquiryViewModel @Inject constructor(
    private val postInquiryUseCase: PostInquiryUseCase,
-   private val appManageDataStore: AppManageDataStore
+   private val appManageDataStore: AppManageDataStore,
+    private val fetchInquiryUseCase: FetchInquiryUseCase,
+    private val getInquiryListUseCase: GetInquiryListUseCase
 )  : ViewModel(){
 
+    init {
+        viewModelScope.launch {
+            fetchInquiryUseCase()
+        }
+
+    }
+
+
     fun postInquiry(
-        title: String,
-        content: String,
+        title: String, content: String,
         imageUrls: List<Uri>,
         context: Context,
         onSuccess: () -> Unit,

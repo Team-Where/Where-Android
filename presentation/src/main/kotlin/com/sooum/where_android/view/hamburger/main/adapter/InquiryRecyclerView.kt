@@ -5,17 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sooum.domain.model.InquiryResult
+import com.sooum.domain.model.InquiryWriteResult
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ItemInquiryCompleteAnswerBinding
 import com.sooum.where_android.databinding.ItemInquiryWaitingAnswerBinding
 import com.sooum.where_android.util.InquiryDiffUtil
-import java.text.SimpleDateFormat
-import java.util.*
 
 class InquiryRecyclerView(
-    private val inquiryList: List<InquiryResult>
-) : ListAdapter<InquiryResult, RecyclerView.ViewHolder>(InquiryDiffUtil) {
+    private val inquiryList: List<InquiryWriteResult>
+) : ListAdapter<InquiryWriteResult, RecyclerView.ViewHolder>(InquiryDiffUtil) {
 
     companion object {
         private const val TYPE_WAITING = 0

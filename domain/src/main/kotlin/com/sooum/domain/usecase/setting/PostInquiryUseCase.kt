@@ -3,7 +3,7 @@ package com.sooum.domain.usecase.setting
 import android.content.Context
 import android.net.Uri
 import com.sooum.domain.model.ApiResult
-import com.sooum.domain.model.InquiryResult
+import com.sooum.domain.model.InquiryWriteResult
 import com.sooum.domain.repository.SettingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -17,7 +17,7 @@ class PostInquiryUseCase @Inject constructor(
         content: String,
         imageUrls: List<Uri>,
         context: Context
-    ): Flow<ApiResult<InquiryResult>> {
+    ): Flow<ApiResult<InquiryWriteResult>> {
         return settingRepository.createInquiry(
             title = title,
             content = content,
