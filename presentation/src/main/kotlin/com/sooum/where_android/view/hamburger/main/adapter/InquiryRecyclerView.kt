@@ -57,7 +57,7 @@ class InquiryRecyclerView(
         fun bind(position: Int) = with(binding) {
             val item = inquiryList[position]
             textTitle.text = item.title
-            textDate.text = formatDate(item.inquiryDate)
+            textDate.text = item.inquiryDate
             textContent.text = item.content
             textAnswer.text = item.answerContent
 
@@ -78,7 +78,7 @@ class InquiryRecyclerView(
         fun bind(position: Int) = with(binding) {
             val item = inquiryList[position]
             textTitle.text = item.title
-            textDate.text = formatDate(item.inquiryDate)
+            textDate.text = item.inquiryDate
             textContent.text = item.content
 
             val isExpanded = expandedPositions.contains(position)
@@ -100,11 +100,6 @@ class InquiryRecyclerView(
             expandedPositions.add(position)
         }
         notifyItemChanged(position)
-    }
-
-    private fun formatDate(date: Date): String {
-        val formatter = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
-        return formatter.format(date)
     }
 }
 

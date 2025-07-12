@@ -11,4 +11,5 @@ interface NoticeRemoteDataSource {
      */
     suspend fun getNotice(): Flow<ApiResult<List<NoticeResult>>>
 
+
 }

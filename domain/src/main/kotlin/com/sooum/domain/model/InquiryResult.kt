@@ -1,8 +1,10 @@
 package com.sooum.domain.model
 
+import kotlinx.serialization.Serializable
 import java.text.DateFormat
 import java.util.Date
 
+@Serializable
 data class InquiryResult (
     val id: Int,
     val title: String,
@@ -10,6 +12,5 @@ data class InquiryResult (
     val images: String,
     val answered: Boolean,
     val answerContent: String,
-    val inquiryDate: Date,
-    val answerDate: Date
+    val inquiryDate: String,
 )

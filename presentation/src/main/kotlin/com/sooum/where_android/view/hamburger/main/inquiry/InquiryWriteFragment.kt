@@ -1,5 +1,6 @@
 package com.sooum.where_android.view.hamburger.main.inquiry
 
+import android.net.Uri
 import android.widget.ImageView
 import com.sooum.domain.model.ImageAddType
 import com.sooum.where_android.R
@@ -16,6 +17,8 @@ class InquiryWriteFragment : HamburgerBaseFragment<FragmentInquiryWriteBinding>(
         listOf(binding.inquiryImage1, binding.inquiryImage2, binding.inquiryImage3, binding.inquiryImage4)
     }
 
+    private val selectedImageUris = mutableListOf<Uri>()
+
     override fun initView() = with(binding) {
 
             imageBack.setOnClickListener {
@@ -23,6 +26,27 @@ class InquiryWriteFragment : HamburgerBaseFragment<FragmentInquiryWriteBinding>(
             }
 
         setupImagePickers()
+
+        completeBtn.setOnClickListener {
+            loadingAlertProvider.startLoading()
+            val title = editTextTitle.text.toString()
+            val content = editTextContent.text.toString()
+
+            inquiryViewModel.postInquiry(
+                title,
+                content,
+                selectedImageUris,
+                context = requireContext(),
+                onSuccess = {
+                    loadingAlertProvider.endLoading()
+                    showToast("문의가 등록되었습니다.")
+                },
+                onFail = { message ->
+                    loadingAlertProvider.endLoadingWithMessage(message)
+                }
+            )
+
+        }
     }
 
     private fun setupImagePickers() {
@@ -39,6 +63,11 @@ class InquiryWriteFragment : HamburgerBaseFragment<FragmentInquiryWriteBinding>(
                                 is ImageAddType.Content -> {
                                     imageView.setImageURI(imageType.uri)
                                     imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                                    if (index < selectedImageUris.size) {
+                                        selectedImageUris[index] = imageType.uri
+                                    } else {
+                                        selectedImageUris.add(imageType.uri)
+                                    }
                                 }
                                 else -> {}
                             }
