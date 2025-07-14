@@ -102,7 +102,7 @@ import kotlinx.coroutines.launch
         with(binding) {
             //버전 정보 등록
             val version = settingViewModel.version
-            textAppVersion.text = version.toString()
+            textAppVersion.text = version
 
             //CheckBox와 해당영역 전체에 액션읗 할당
             listOf(
