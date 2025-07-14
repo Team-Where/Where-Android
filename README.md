@@ -69,7 +69,7 @@ adb shell am start -a android.intent.action.VIEW \
 | **Dependency Injection**     | `Hilt`   |
 
 
-https://github.com/user-attachments/assets/4b908eab-dbea-4c84-b1c8-8a4177293d6a
+
 
 <table>
   <tr>
