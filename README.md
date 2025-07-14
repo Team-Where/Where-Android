@@ -63,18 +63,39 @@ adb shell am start -a android.intent.action.VIEW \
 |------------------|-----------------------------------|
 | **Architecture**     | `MVVM`, `Clean Architecture`   |
 | **Networking**     | `Retrofit`, `Okhttp`, `FCM`   |
-| **JetPack**     | `Flow`, `coroutine`   |
+| **JetPack**     | `Flow`, `coroutine`, `Navigation` |
 | **Local Data**     | `DataStore`, `Room`   |
 | **Image**     | `Glide`   |
 | **Dependency Injection**     | `Hilt`   |
-
+https://github.com/user-attachments/assets/4b908eab-dbea-4c84-b1c8-8a4177293d6a
 <table>
   <tr>
     <td align="center">
       <strong>Splash 화면</strong><br>
-      <img src="https://github.com/user-attachments/assets/b6949e17-f2cd-42fb-ae9a-25ff7804d1ea" alt="Splash 화면" width="300"/>
-      <img src="https://github.com/user-attachments/assets/b345a614-a964-49f6-a369-2d13262ba199" alt="Splash 화면" width="300"/>
+      <img src="https://github.com/user-attachments/assets/b6949e17-f2cd-42fb-ae9a-25ff7804d1ea" alt="Splash 화면" width="250"/>
+      <img src="https://github.com/user-attachments/assets/b345a614-a964-49f6-a369-2d13262ba199" alt="Splash 화면" width="250"/>
+    </td>
+    <td align="center">
+      <strong>로그인 화면</strong><br>
+      <img src="https://github.com/user-attachments/assets/2a55de6e-26d4-41ae-bfe1-77a29bcb0c7a" alt="로그인 화면" width="250"/>
     </td>
   </tr>
-
+  <tr>
+    <td align="center" colspan="3">
+      <strong>메인 화면 & 친구목록 화면</strong><br>
+      <img src="https://github.com/user-attachments/assets/56657715-d916-43af-b256-470bb6d5b4c7" alt="메인 화면" width="250"/>
+      <img src="https://github.com/user-attachments/assets/225d8eea-3aca-4b88-bc33-a1910a20bbcc" alt="메인 화면" width="250"/>
+      <img src="https://github.com/user-attachments/assets/58c7c474-bd25-46ee-9129-c2cad4669065" alt="메인 화면" width="250"/>
+    </td>
+  </tr>
+ <tr>
+    <td align="center" colspan="2">
+      <strong>모임상세 화면</strong><br>
+      <img src="https://github.com/user-attachments/assets/8b8f3abf-d803-4484-bf3b-9be0de40168b" alt="메인 화면" width="250"/>
+      <img src="https://github.com/user-attachments/assets/ed2076ec-4978-4c70-bce0-a77fb2f4ca30" alt="메인 화면" width="250"/>
+     <img src="https://github.com/user-attachments/assets/ed2076ec-4978-4c70-bce0-a77fb2f4ca30" alt="메인 화면" width="250"/>
+    </td>
+  </tr>
+  
 </table>
+
