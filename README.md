@@ -93,7 +93,7 @@ https://github.com/user-attachments/assets/4b908eab-dbea-4c84-b1c8-8a4177293d6a
       <strong>모임상세 화면</strong><br>
       <img src="https://github.com/user-attachments/assets/8b8f3abf-d803-4484-bf3b-9be0de40168b" alt="메인 화면" width="250"/>
       <img src="https://github.com/user-attachments/assets/ed2076ec-4978-4c70-bce0-a77fb2f4ca30" alt="메인 화면" width="250"/>
-     <img src="https://github.com/user-attachments/assets/ed2076ec-4978-4c70-bce0-a77fb2f4ca30" alt="메인 화면" width="250"/>
+     <img src="https://github.com/user-attachments/assets/19e6c412-206b-4bcf-87aa-33e84cc9de71" alt="메인 화면" width="250"/>
     </td>
   </tr>
   
