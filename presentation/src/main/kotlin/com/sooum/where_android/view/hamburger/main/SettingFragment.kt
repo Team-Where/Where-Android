@@ -5,6 +5,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.core.view.isVisible
 import androidx.fragment.compose.AndroidFragment
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -27,7 +28,6 @@ import kotlinx.coroutines.launch
     private lateinit var settingViewModel: SettingViewModel
 
     override fun initView() {
-
     }
 
     override fun setNavigation(
@@ -84,10 +84,18 @@ import kotlinx.coroutines.launch
         loadingScreenProvider: LoadingScreenProvider
     ) {
         this.settingViewModel = viewModel
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 settingViewModel.notificationAllowed.collect {
                     binding.alertToggle.isChecked = it
+                }
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                settingViewModel.isSocialLogin.collect { isSocial ->
+                    binding.passwordChangeContentArea.isVisible = !isSocial
                 }
             }
         }

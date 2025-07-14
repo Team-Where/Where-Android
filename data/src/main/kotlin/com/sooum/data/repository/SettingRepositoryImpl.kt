@@ -57,6 +57,7 @@ class SettingRepositoryImpl @Inject constructor(
         }
     }
 
+    // 질문 답변을 불러오는 함수
     override suspend fun getInquiry() {
         inquiryRemoteDataSource.getInquiry().first().let { result ->
             if (result is ApiResult.Success) {
@@ -67,6 +68,7 @@ class SettingRepositoryImpl @Inject constructor(
         }
     }
 
+    //질문답변을 보내는 함수
     override suspend fun createInquiry(
         title: String,
         content: String,
@@ -92,7 +94,7 @@ class SettingRepositoryImpl @Inject constructor(
             val bytes = inputStream.readBytes()
             val requestBody = bytes.toRequestBody("image/*".toMediaTypeOrNull())
             MultipartBody.Part.createFormData(
-                "images",
+                "image",
                 "image_${System.currentTimeMillis()}.jpg",
                 requestBody
             )

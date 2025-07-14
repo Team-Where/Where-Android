@@ -17,7 +17,7 @@ class InquiryWriteFragment : HamburgerBaseFragment<FragmentInquiryWriteBinding>(
         listOf(binding.inquiryImage1, binding.inquiryImage2, binding.inquiryImage3, binding.inquiryImage4)
     }
 
-    private val selectedImageUris = mutableListOf<Uri>()
+    private val selectedImageUris = MutableList<Uri?>(4) { null }
 
     override fun initView() = with(binding) {
 
@@ -31,11 +31,13 @@ class InquiryWriteFragment : HamburgerBaseFragment<FragmentInquiryWriteBinding>(
             loadingAlertProvider.startLoading()
             val title = editTextTitle.text.toString()
             val content = editTextContent.text.toString()
+            val filteredUris = selectedImageUris.filterNotNull()
+
 
             inquiryViewModel.postInquiry(
                 title,
                 content,
-                selectedImageUris,
+                filteredUris,
                 context = requireContext(),
                 onSuccess = {
                     loadingAlertProvider.endLoading()
@@ -59,15 +61,12 @@ class InquiryWriteFragment : HamburgerBaseFragment<FragmentInquiryWriteBinding>(
                                 is ImageAddType.Default -> {
                                     imageView.setImageResource(R.drawable.image_profile_default_cover)
                                     imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                                    selectedImageUris[index] = null
                                 }
                                 is ImageAddType.Content -> {
                                     imageView.setImageURI(imageType.uri)
                                     imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-                                    if (index < selectedImageUris.size) {
-                                        selectedImageUris[index] = imageType.uri
-                                    } else {
-                                        selectedImageUris.add(imageType.uri)
-                                    }
+                                    selectedImageUris[index] = imageType.uri
                                 }
                                 else -> {}
                             }

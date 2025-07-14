@@ -11,7 +11,9 @@ import com.sooum.domain.usecase.user.DeleteFcmTokenUseCase
 import com.sooum.domain.usecase.user.UpdateFcmToken
 import com.sooum.domain.util.AppVersionProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,6 +28,13 @@ class SettingViewModel @Inject constructor(
 ) : ViewModel() {
 
     val version = appVersionProvider.getVersionName()
+
+    val isSocialLogin: Flow<Boolean> = combine(
+        appManageDataStore.getKakaoAccessToken(),
+        appManageDataStore.getNaverAccessToken()
+    ) { kakaoToken, naverToken ->
+        !kakaoToken.isNullOrEmpty() || !naverToken.isNullOrEmpty()
+    }
 
     val notificationAllowed = appManageDataStore.getNotificationAllowed()
         .stateIn(
