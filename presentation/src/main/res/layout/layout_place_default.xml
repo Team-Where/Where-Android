@@ -25,7 +25,7 @@
 
         <Space
             android:layout_width="wrap_content"
-            android:layout_height="5dp" />
+            android:layout_height="7dp" />
 
         <TextView
             android:id="@+id/textAddress"
@@ -38,7 +38,7 @@
 
         <Space
             android:layout_width="wrap_content"
-            android:layout_height="5dp" />
+            android:layout_height="10dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -91,7 +91,7 @@
                 android:id="@+id/heart_area"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
+                android:layout_marginStart="10dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -147,7 +147,7 @@
         app:layout_constraintVertical_bias="1"
         android:layout_width="0dp"
         android:layout_height="37dp"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="12dp"
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
@@ -164,7 +164,7 @@
             android:paddingEnd="20dp"
             android:stateListAnimator="@null"
             android:text="네이버 지도"
-            android:textSize="12sp" />
+            android:textSize="11sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnKakaoMap"
@@ -180,7 +180,7 @@
             android:paddingEnd="20dp"
             android:stateListAnimator="@null"
             android:text="카카오맵"
-            android:textSize="12sp" />
+            android:textSize="11sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

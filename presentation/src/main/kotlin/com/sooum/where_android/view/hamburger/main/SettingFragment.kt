@@ -5,6 +5,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.core.view.isVisible
 import androidx.fragment.compose.AndroidFragment
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -27,7 +28,6 @@ import kotlinx.coroutines.launch
     private lateinit var settingViewModel: SettingViewModel
 
     override fun initView() {
-
     }
 
     override fun setNavigation(
@@ -84,6 +84,7 @@ import kotlinx.coroutines.launch
         loadingScreenProvider: LoadingScreenProvider
     ) {
         this.settingViewModel = viewModel
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 settingViewModel.notificationAllowed.collect {
@@ -91,10 +92,17 @@ import kotlinx.coroutines.launch
                 }
             }
         }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                settingViewModel.isSocialLogin.collect { isSocial ->
+                    binding.passwordChangeContentArea.isVisible = !isSocial
+                }
+            }
+        }
         with(binding) {
             //버전 정보 등록
-            val version = settingViewModel.version.first()
-            textAppVersion.text = version.toString()
+            val version = settingViewModel.version
+            textAppVersion.text = version
 
             //CheckBox와 해당영역 전체에 액션읗 할당
             listOf(

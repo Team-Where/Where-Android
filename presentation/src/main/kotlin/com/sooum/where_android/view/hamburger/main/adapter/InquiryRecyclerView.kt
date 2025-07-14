@@ -5,17 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sooum.domain.model.InquiryResult
+import com.sooum.domain.model.InquiryWriteResult
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.ItemInquiryCompleteAnswerBinding
 import com.sooum.where_android.databinding.ItemInquiryWaitingAnswerBinding
 import com.sooum.where_android.util.InquiryDiffUtil
-import java.text.SimpleDateFormat
-import java.util.*
 
 class InquiryRecyclerView(
-    private val inquiryList: List<InquiryResult>
-) : ListAdapter<InquiryResult, RecyclerView.ViewHolder>(InquiryDiffUtil) {
+    private val inquiryList: List<InquiryWriteResult>
+) : ListAdapter<InquiryWriteResult, RecyclerView.ViewHolder>(InquiryDiffUtil) {
 
     companion object {
         private const val TYPE_WAITING = 0
@@ -57,7 +55,7 @@ class InquiryRecyclerView(
         fun bind(position: Int) = with(binding) {
             val item = inquiryList[position]
             textTitle.text = item.title
-            textDate.text = formatDate(item.inquiryDate)
+            textDate.text = item.inquiryDate
             textContent.text = item.content
             textAnswer.text = item.answerContent
 
@@ -78,7 +76,7 @@ class InquiryRecyclerView(
         fun bind(position: Int) = with(binding) {
             val item = inquiryList[position]
             textTitle.text = item.title
-            textDate.text = formatDate(item.inquiryDate)
+            textDate.text = item.inquiryDate
             textContent.text = item.content
 
             val isExpanded = expandedPositions.contains(position)
@@ -100,11 +98,6 @@ class InquiryRecyclerView(
             expandedPositions.add(position)
         }
         notifyItemChanged(position)
-    }
-
-    private fun formatDate(date: Date): String {
-        val formatter = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
-        return formatter.format(date)
     }
 }
 

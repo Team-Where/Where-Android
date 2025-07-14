@@ -54,7 +54,7 @@
         android:inputType="textEmailAddress"
         android:maxLines="1"
         android:padding="16dp"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_email" />
 
@@ -109,7 +109,7 @@
         android:background="@drawable/shape_rounded_gray_radius_12"
         android:hint="코드 6자리 입력해주세요"
         android:padding="16dp"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_password" />
 

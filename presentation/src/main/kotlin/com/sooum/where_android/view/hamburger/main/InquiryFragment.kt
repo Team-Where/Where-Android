@@ -9,8 +9,6 @@ import com.sooum.where_android.view.hamburger.HamburgerBaseFragment
 import com.sooum.where_android.view.hamburger.main.inquiry.InquiryCompleteAnswerFragment
 import com.sooum.where_android.view.hamburger.main.inquiry.InquiryWaitingAnswerFragment
 import com.sooum.where_android.view.hamburger.navigateHome
-import com.sooum.where_android.view.main.myMeetDetail.fragment.MyMeetDetailFragment
-import com.sooum.where_android.view.main.myMeetDetail.fragment.MyMeetPlaceFragment
 
 class InquiryFragment : HamburgerBaseFragment<FragmentInquiryBinding>(
     FragmentInquiryBinding ::inflate
@@ -51,7 +49,7 @@ class InquiryFragment : HamburgerBaseFragment<FragmentInquiryBinding>(
                 override fun onTabReselected(tab: TabLayout.Tab) {}
             })
 
-            inquiryViewModel.selectedTabPosition.let { position ->
+            inquiryTabViewModel.selectedTabPosition.let { position ->
                 if (position == 1) {
                     val tab = getTabAt(position)
                     selectTab(tab)
@@ -71,7 +69,7 @@ class InquiryFragment : HamburgerBaseFragment<FragmentInquiryBinding>(
             1 -> InquiryCompleteAnswerFragment()
             else -> return
         }
-        inquiryViewModel.selectedTabPosition = position
+        inquiryTabViewModel.selectedTabPosition = position
         parentFragmentManager.beginTransaction()
             .replace(binding.flame.id, fragment)
             .commit()

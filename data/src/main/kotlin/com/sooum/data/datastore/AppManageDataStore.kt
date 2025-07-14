@@ -111,6 +111,19 @@ class AppManageDataStore @Inject constructor(
         }
     }
 
+    fun getKakaoAccessToken(): Flow<String?> {
+        return appDataStore.data.map { preferences ->
+            preferences[KAKAO_ACCESS_TOKEN]
+        }
+    }
+
+    fun getNaverAccessToken(): Flow<String?> {
+        return appDataStore.data.map { preferences ->
+            preferences[NAVER_ACCESS_TOKEN]
+        }
+    }
+
+
     /**
      * 첫 실행인지 확인 한다. 값이 없으면 true로 준다
      */

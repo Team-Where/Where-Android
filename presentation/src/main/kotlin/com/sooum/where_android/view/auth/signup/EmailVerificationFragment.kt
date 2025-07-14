@@ -1,15 +1,18 @@
 package com.sooum.where_android.view.auth.signup
 
 import android.os.CountDownTimer
+import android.util.Patterns
 import android.view.View
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.lifecycleScope
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentEmailVerificationBinding
 import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.auth.AuthBaseFragment
 import com.sooum.where_android.view.auth.navigatePassword
+import com.sooum.where_android.view.common.modal.LoadingScreenProvider
 import com.sooum.where_android.view.widget.CustomSnackBar
 import com.sooum.where_android.view.widget.IconType
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +22,9 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
     FragmentEmailVerificationBinding::inflate
 ) {
     private var countDownTimer: CountDownTimer? = null
-
+    private val loadingScreenProvider by lazy { LoadingScreenProvider(
+        scope = viewLifecycleOwner.lifecycleScope
+    ) }
     override fun onDestroyView() {
         super.onDestroyView()
         countDownTimer?.cancel()
@@ -39,11 +44,13 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
                     onSuccess = { status ->
                         when (status) {
                             VERIFIED -> {
+                                loadingAlertProvider.endLoading()
                                 authViewModel.setEmail(binding.editTextEmail.text.toString().trim())
                                 navHostController.navigatePassword()
                             }
 
                             else -> {
+                                loadingAlertProvider.endLoading()
                                 showVerificationResultSnackBar(status)
                             }
                         }
@@ -147,7 +154,7 @@ class EmailVerificationFragment : AuthBaseFragment<FragmentEmailVerificationBind
     }
 
     private fun isValidEmail(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
     private fun setUpNextButtonStateObserver() {

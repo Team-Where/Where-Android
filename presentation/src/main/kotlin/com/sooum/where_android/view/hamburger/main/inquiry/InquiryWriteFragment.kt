@@ -1,10 +1,13 @@
 package com.sooum.where_android.view.hamburger.main.inquiry
 
+import android.net.Uri
 import android.widget.ImageView
+import androidx.navigation.NavHostController
 import com.sooum.domain.model.ImageAddType
 import com.sooum.where_android.R
 import com.sooum.where_android.databinding.FragmentInquiryBinding
 import com.sooum.where_android.databinding.FragmentInquiryWriteBinding
+import com.sooum.where_android.model.ScreenRoute
 import com.sooum.where_android.view.common.modal.ImagePickerDialogFragment
 import com.sooum.where_android.view.hamburger.HamburgerBaseFragment
 import com.sooum.where_android.view.hamburger.navigateHome
@@ -16,13 +19,52 @@ class InquiryWriteFragment : HamburgerBaseFragment<FragmentInquiryWriteBinding>(
         listOf(binding.inquiryImage1, binding.inquiryImage2, binding.inquiryImage3, binding.inquiryImage4)
     }
 
+    private val selectedImageUris = MutableList<Uri?>(4) { null }
+
     override fun initView() = with(binding) {
 
+        setupImagePickers()
+
+        completeBtn.setOnClickListener {
+            loadingAlertProvider.startLoading()
+            val title = editTextTitle.text.toString()
+            val content = editTextContent.text.toString()
+            val filteredUris = selectedImageUris.filterNotNull()
+
+
+            inquiryViewModel.postInquiry(
+                title,
+                content,
+                filteredUris,
+                context = requireContext(),
+                onSuccess = {
+                    loadingAlertProvider.endLoading()
+                    showToast("문의가 등록되었습니다.")
+                    navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry) {
+                        launchSingleTop = true
+                    }
+                },
+                onFail = { message ->
+                    loadingAlertProvider.endLoadingWithMessage(message)
+                }
+            )
+
+        }
+    }
+
+    override fun setNavigation(
+        navHostController: NavHostController
+    ) {
+        super.setNavigation(navHostController)
+        with(binding) {
+
             imageBack.setOnClickListener {
-                navHostController.navigateHome()
+                navHostController.navigate(ScreenRoute.HomeRoute.HamburgerRoute.InquiryRoute.Inquiry){
+                    launchSingleTop = true
+                }
             }
 
-        setupImagePickers()
+            }
     }
 
     private fun setupImagePickers() {
@@ -35,10 +77,12 @@ class InquiryWriteFragment : HamburgerBaseFragment<FragmentInquiryWriteBinding>(
                                 is ImageAddType.Default -> {
                                     imageView.setImageResource(R.drawable.image_profile_default_cover)
                                     imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                                    selectedImageUris[index] = null
                                 }
                                 is ImageAddType.Content -> {
                                     imageView.setImageURI(imageType.uri)
                                     imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                                    selectedImageUris[index] = imageType.uri
                                 }
                                 else -> {}
                             }
