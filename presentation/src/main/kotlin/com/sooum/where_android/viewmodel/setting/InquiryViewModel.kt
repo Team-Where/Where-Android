@@ -12,6 +12,7 @@ import com.sooum.domain.usecase.setting.PostInquiryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,8 +21,8 @@ import javax.inject.Inject
 class InquiryViewModel @Inject constructor(
    private val postInquiryUseCase: PostInquiryUseCase,
    private val appManageDataStore: AppManageDataStore,
-    private val fetchInquiryUseCase: FetchInquiryUseCase,
-    private val getInquiryListUseCase: GetInquiryListUseCase
+   private val fetchInquiryUseCase: FetchInquiryUseCase,
+   getInquiryListUseCase: GetInquiryListUseCase
 )  : ViewModel(){
 
     init {
@@ -30,6 +31,19 @@ class InquiryViewModel @Inject constructor(
         }
 
     }
+
+    // 문의 화면 문의 답장 목록
+    private val inquiryList = getInquiryListUseCase()
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000L),
+            emptyList()
+        )
+
+    // 문의 답장 된 목록
+    val answeredList = inquiryList.map { it.filter { it.answered } }
+    // 문의 답장 되지 않은 목록
+    val unAnsweredList = inquiryList.map { it.filter { !it.answered } }
 
 
     fun postInquiry(

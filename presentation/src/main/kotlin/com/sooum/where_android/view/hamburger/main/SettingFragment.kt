@@ -104,7 +104,7 @@ import kotlinx.coroutines.launch
             val version = settingViewModel.version
             textAppVersion.text = version
 
-            //CheckBox와 해당영역 전체에 액션읗 할당
+
             listOf(
                 alertToggle,
                 notificationContentArea
