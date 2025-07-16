@@ -95,17 +95,6 @@
                 android:layout_width="50dp"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="수정"
-                android:background="@drawable/shape_rounded_main_color_radius_24"
-                android:textSize="12sp"
-                android:layout_marginEnd="10dp"
-                android:fontFamily="@font/pretendard_medium"
-                android:textColor="@color/main_color"/>
-
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:gravity="center"
                 android:text="삭제"
                 android:background="@drawable/shape_rounded_main_color_radius_24"
                 android:textSize="12sp"
