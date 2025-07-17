@@ -211,6 +211,8 @@
                         android:layout_width="80dp"
                         android:layout_height="33dp"
                         android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
                         android:background="@drawable/shape_rounded_gray_radius_6"
                         android:drawableLeft="@drawable/icon_circle_plus"
                         android:fontFamily="@font/pretendard_semibold"
@@ -227,67 +229,11 @@
                         android:id="@+id/divider2"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="20dp"
                         android:background="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/icLocation" />
-
-                    <ImageView
-                        android:id="@+id/icFriend"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="20dp"
-                        android:src="@drawable/icon_friends"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/divider2" />
-
-                    <TextView
-                        android:id="@+id/tvFriend"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:fontFamily="@font/pretend_regular"
-                        android:text="초대된 친구 "
-                        android:textColor="#212529"
-                        android:textSize="14sp"
-                        app:layout_constraintBottom_toBottomOf="@id/icFriend"
-                        app:layout_constraintEnd_toStartOf="@+id/tvFriendNumber"
-                        app:layout_constraintStart_toEndOf="@id/icFriend"
-                        app:layout_constraintTop_toTopOf="@id/icFriend" />
-
-                    <TextView
-                        android:id="@+id/tvFriendNumber"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/pretend_regular"
-                        tools:text="0"
-                        android:textColor="#4F46E5"
-                        android:textSize="14sp"
-                        app:layout_constraintBottom_toBottomOf="@id/icFriend"
-                        app:layout_constraintEnd_toStartOf="@+id/btnFriend"
-                        app:layout_constraintStart_toEndOf="@id/tvFriend"
-                        app:layout_constraintTop_toTopOf="@id/icFriend" />
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btnFriend"
-                        android:layout_width="80dp"
-                        android:layout_height="33dp"
-                        android:layout_marginEnd="15dp"
-                        android:background="@drawable/shape_rounded_gray_radius_6"
-                        android:drawableLeft="@drawable/icon_invite_person"
-                        android:fontFamily="@font/pretendard_semibold"
-                        android:paddingStart="7dp"
-                        android:stateListAnimator="@null"
-                        android:text="친구 초대"
-                        android:textColor="#212529"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@id/icFriend"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/icFriend" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -319,7 +265,38 @@
                         android:fontFamily="@font/pretend_semibold"
                         android:text="초대된 친구"
                         android:textColor="#1F2937"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/text_invited_friend_count"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretend_semibold"
+                        tools:text="0"
+                        android:layout_marginStart="5dp"
+                        android:textColor="#4F46E5"
+                        android:textSize="15sp"
+                        app:layout_constraintStart_toEndOf="@id/invited_text"
+                        tools:ignore="MissingConstraints" />
+
+                    <ImageView
+                        android:id="@+id/icon_plus_circle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_add_plus_circle_purple"
+                        app:layout_constraintEnd_toStartOf="@id/text_invite_friend"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/text_invite_friend"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="친구초대"
+                        android:textColor="#4F46E5"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/pretend_medium"
+                        app:layout_constraintEnd_toEndOf="parent"
                         tools:ignore="MissingConstraints" />
 
                     <View
@@ -341,55 +318,14 @@
                         app:layout_constraintTop_toBottomOf="@id/divider3"
                         tools:layout_editor_absoluteX="16dp" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/waiting_friend_cardview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:background="#F9FAFB"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/invited_friend_cardview">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/joined_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/pretend_semibold"
-                        android:text="수락을 기다리는 친구"
-                        android:textColor="#1F2937"
-                        android:textSize="16sp"
-                        tools:ignore="MissingConstraints" />
-
-                    <View
-                        android:id="@+id/divider4"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="15dp"
-                        android:background="#F3F4F6"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/joined_text" />
-
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/waiting_friend_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"
                         android:overScrollMode="never"
-                        app:layout_constraintTop_toBottomOf="@id/divider4" />
+                        app:layout_constraintTop_toBottomOf="@id/invited_friend_list" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
@@ -406,7 +342,7 @@
                 android:text="모임 끝내기"
                 android:textColor="#4F46E5"
                 android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@id/waiting_friend_cardview" />
+                app:layout_constraintTop_toBottomOf="@id/invited_friend_cardview" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

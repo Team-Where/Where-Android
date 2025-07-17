@@ -47,7 +47,7 @@ class MyMeetDetailFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 myMeetDetailViewModel.invitedFriendList.collect { list ->
-                    binding.tvFriendNumber.text = list.size.toString()
+                    binding.textInvitedFriendCount.text = list.size.toString()
                     invitedFriendAdapter.submitList(list)
                 }
             }
@@ -82,7 +82,7 @@ class MyMeetDetailFragment :
                     R.id.action_tabFragment_to_ScheduleFragment
                 )
             }
-            btnFriend.setOnClickListener {
+            textInviteFriend.setOnClickListener {
                 findNavController().navigate(
                     R.id.action_tabFragment_to_InviteFriendFragment
                 )
